@@ -19,6 +19,9 @@ function transformProjectToCSVFormat(project) {
   return {
     Project: project.details[0]?.name || "",
     Project_Short: project.details[0]?.short_name || "",
+    Programme: project.details[0]?.programme_name || "",
+    Programme_Short: project.details[0]?.programme_short_name || "",
+    Description: project.details[0]?.project_description || "",
     Project_Area: "",
     DST_Area: "",
     Team: technicalContact,

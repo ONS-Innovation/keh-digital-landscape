@@ -108,7 +108,7 @@ function ProjectsPage() {
     if (!searchTerm.trim()) return projectsData;
 
     return projectsData.filter(project => {
-      const searchString = `${project.Project} ${project.Project_Short} ${project.Project_Area} ${project.Team}`.toLowerCase();
+      const searchString = `${project.Project} ${project.Project_Short} ${project.Project_Area} ${project.Team} ${project.Programme} ${project.Programme_Short} ${project.Description}`.toLowerCase();
       return searchString.includes(searchTerm.toLowerCase());
     });
   };

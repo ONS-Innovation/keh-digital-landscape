@@ -26,6 +26,9 @@ const ProjectModal = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [repoData, setRepoData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [expandedItems, setExpandedItems] = useState({
+    projectDetails: true
+  });
 
   useEffect(() => {
     const fetchRepoInfo = async () => {
@@ -261,6 +264,13 @@ const ProjectModal = ({
     );
   };
 
+  const toggleAccordionItem = (item) => {
+    setExpandedItems(prev => ({
+      ...prev,
+      [item]: !prev[item]
+    }));
+  };
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div
@@ -277,21 +287,6 @@ const ProjectModal = ({
                     ({project.Project_Short})
                   </div>
                 )}
-                {project.Repo || project.Documentation ? (
-                  <div className="project-links">
-                    {project.Documentation && (
-                      <a
-                        href={project.Documentation}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="project-link"
-                        title={project.Documentation}
-                      >
-                        View Documentation
-                      </a>
-                    )}
-                  </div>
-                ) : null}
               </div>
             )}
           </div>
@@ -309,6 +304,49 @@ const ProjectModal = ({
             <button className="modal-close" onClick={onClose}>
               <IoClose />
             </button>
+          </div>
+        </div>
+        
+        <div className="project-accordion">
+          <div className="project-accordion-item">
+            <div 
+              className="accordion-header" 
+              onClick={() => toggleAccordionItem('projectDetails')}
+            >
+              <h3>Project Details</h3>
+              <span className={`accordion-icon ${expandedItems.projectDetails ? 'expanded' : ''}`}>▼</span>
+            </div>
+            {expandedItems.projectDetails && (
+              <div className="accordion-content">
+                {project.Programme && (
+                  <div className="detail-section">
+                    <h4>Programme</h4>
+                    <p>{project.Programme} ({project.Programme_Short})</p>
+                  </div>
+                )}
+                
+                {project.Description && (
+                  <div className="detail-section">
+                    <h4>Description</h4>
+                    <p>{project.Description}</p>
+                  </div>
+                )}
+                
+                {project.Documentation && (
+                  <div className="detail-section">
+                    <h4>Documentation</h4>
+                    <a
+                      href={project.Documentation}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="project-link"
+                    >
+                      {project.Documentation}
+                    </a>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
