@@ -68,3 +68,7 @@ site/*
 terraform/service/highest_priority.txt
 terraform/service/highest_alb_listener_priority.txt
 *.pyc
+
+
+/mkdocs/venv
+/mkdocs/site
