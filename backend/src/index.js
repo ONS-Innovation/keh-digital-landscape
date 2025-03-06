@@ -218,7 +218,7 @@ app.post("/review/api/tech-radar/update", async (req, res) => {
 
     const bucketName = process.env.BUCKET_NAME
       ? process.env.BUCKET_NAME
-      : "sdp-dev-tech-radar";
+      : "sdp-dev-digital-landscape";
 
     // First, get the existing JSON to preserve the structure
     const getCommand = new GetObjectCommand({
