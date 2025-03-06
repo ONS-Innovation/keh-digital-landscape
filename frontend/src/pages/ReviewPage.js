@@ -80,7 +80,6 @@ const ReviewPage = () => {
 
         const categorizedEntries = categorizeEntries(radarData.entries);
         setEntries(categorizedEntries);
-        setProjectData(csvData);
 
         // After loading both data sources, scan for new technologies
         scanForNewTechnologies(radarData.entries, csvData);
