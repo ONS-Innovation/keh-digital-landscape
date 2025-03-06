@@ -27,7 +27,7 @@ const ProjectModal = ({
   const [repoData, setRepoData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [expandedItems, setExpandedItems] = useState({
-    projectDetails: true
+    projectDetails: true,
   });
 
   useEffect(() => {
@@ -104,7 +104,8 @@ const ProjectModal = ({
                     const status = getTechnologyStatus
                       ? getTechnologyStatus(lang.name)
                       : null;
-                    const isClickable = status && status !== 'review' && status !== 'ignore';
+                    const isClickable =
+                      status && status !== "review" && status !== "ignore";
                     return (
                       <span
                         key={i}
@@ -182,6 +183,7 @@ const ProjectModal = ({
       "UI_Tools",
       "Diagram_Tools",
     ],
+    repos: ["Repo"],
   };
 
   const fieldLabels = {
@@ -235,7 +237,7 @@ const ProjectModal = ({
   };
   const renderGroup = (title, keys) => {
     const filteredKeys = filterItems(keys);
-    const validKeys = filteredKeys.filter(key => {
+    const validKeys = filteredKeys.filter((key) => {
       const value = project[key];
       return value !== "None" && value !== "N/A" && value !== "none";
     });
@@ -249,7 +251,10 @@ const ProjectModal = ({
           {validKeys.map((key) => {
             const value = project[key];
             return (
-              <div key={key} className="detail-item">
+              <div
+                key={key}
+                className={`detail-item ${title === "Repositories" ? "large-span" : ""}`}
+              >
                 <h3>{fieldLabels[key] || key.replace(/_/g, " ")}:</h3>
                 <p>
                   {technologyListFields.includes(key)
@@ -264,10 +269,44 @@ const ProjectModal = ({
     );
   };
 
+  const renderRepositoryGroup = (title, keys) => {
+    const filteredKeys = filterItems(keys);
+    const validKeys = filteredKeys.filter((key) => {
+      const value = project[key];
+      return value !== "None" && value !== "N/A" && value !== "none";
+    });
+
+    if (validKeys.length === 0) return null;
+
+    return (
+      <div className="project-group">
+        <h3 className="group-title">{title}</h3>
+        <div className="group-content">
+          {validKeys.map((key) => {
+            const value = project[key];
+            const repoList = value.split(";").map((repo) => repo.trim());
+            return (
+              <>
+                {repoList.map((repo, index) => (
+                  <div key={index} className={`detail-item`}>
+                    <h3>Repository:</h3>
+                    <a href={repo} target="_blank" rel="noopener noreferrer">
+                      {repo}
+                    </a>
+                  </div>
+                ))}
+              </>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
   const toggleAccordionItem = (item) => {
-    setExpandedItems(prev => ({
+    setExpandedItems((prev) => ({
       ...prev,
-      [item]: !prev[item]
+      [item]: !prev[item],
     }));
   };
 
@@ -306,32 +345,38 @@ const ProjectModal = ({
             </button>
           </div>
         </div>
-        
+
         <div className="project-accordion">
           <div className="project-accordion-item">
-            <div 
-              className="accordion-header" 
-              onClick={() => toggleAccordionItem('projectDetails')}
+            <div
+              className="accordion-header"
+              onClick={() => toggleAccordionItem("projectDetails")}
             >
               <h3>Project Details</h3>
-              <span className={`accordion-icon ${expandedItems.projectDetails ? 'expanded' : ''}`}>▼</span>
+              <span
+                className={`accordion-icon ${expandedItems.projectDetails ? "expanded" : ""}`}
+              >
+                ▼
+              </span>
             </div>
             {expandedItems.projectDetails && (
               <div className="accordion-content">
                 {project.Programme && (
                   <div className="detail-section">
                     <h4>Programme</h4>
-                    <p>{project.Programme} ({project.Programme_Short})</p>
+                    <p>
+                      {project.Programme} ({project.Programme_Short})
+                    </p>
                   </div>
                 )}
-                
+
                 {project.Description && (
                   <div className="detail-section">
                     <h4>Description</h4>
                     <p>{project.Description}</p>
                   </div>
                 )}
-                
+
                 {project.Documentation && (
                   <div className="detail-section">
                     <h4>Documentation</h4>
@@ -360,6 +405,7 @@ const ProjectModal = ({
           {renderGroup("Data Management", groups.data)}
           {renderGroup("Integrations", groups.integrations)}
           {renderGroup("General Information", groups.general)}
+          {renderRepositoryGroup("Repositories", groups.repos)}
         </div>
       </div>
     </div>

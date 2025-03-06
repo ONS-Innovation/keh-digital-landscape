@@ -220,6 +220,10 @@
   text-align: left;
 }
 
+.large-span {
+  grid-column: span 2;
+}
+
 .detail-item h3 {
   margin: 0;
   font-size: 12px;
@@ -233,6 +237,22 @@
   line-height: 1.5;
   font-weight: 400;
   color: hsl(var(--foreground));
+}
+
+.detail-item a {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 400;
+  color: hsl(var(--foreground));
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+  transition: all 0.2s ease;
+}
+
+.detail-item a:hover {
+  color: hsl(var(--muted-foreground));
 }
 
 /* Responsive styles */
@@ -431,6 +451,8 @@
   text-align: left;
   color: hsl(var(--muted-foreground));
   border-radius: 8px;
+  padding: 0 8px;
+  box-sizing: border-box;
 }
 
 .project-accordion {
