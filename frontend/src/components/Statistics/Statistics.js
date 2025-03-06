@@ -5,6 +5,7 @@ import { subMonths, isValid, parseISO } from "date-fns";
 import SkeletonStatCard from "./Skeletons/SkeletonStatCard";
 import SkeletonLanguageCard from "./Skeletons/SkeletonLanguageCard";
 import MultiSelect from "../MultiSelect/MultiSelect";
+import { useTechnologyStatus } from "../../utilities/getTechnologyStatus";
 
 /**
  * Statistics component for displaying repository statistics.
@@ -28,9 +29,11 @@ function Statistics({
   searchTerm = ""
 }) {
   const [sortConfig, setSortConfig] = useState({
-    key: "repo_count",
-    direction: "desc",
+    key: "percentage",
+    direction: "descending",
   });
+  const [searchQuery, setSearchQuery] = useState(searchTerm);
+  const [isFiltersVisible, setIsFiltersVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState("all");
   const [hoveredLanguage, setHoveredLanguage] = useState(null);
   const [showTechRadarOnly, setShowTechRadarOnly] = useState(false);
@@ -46,6 +49,9 @@ function Statistics({
     { value: "12", label: "Last Year" },
     { value: "custom", label: "Custom Date" },
   ];
+
+  // Use our custom hook instead of local implementation
+  const getTechnologyStatus = useTechnologyStatus();
 
   /**
    * handleDateChange function handles the date change event.
@@ -75,20 +81,6 @@ function Statistics({
       onDateChange(new Date(date).toISOString(), repoView);
     }
   };
-
-  /**
-   * getTechnologyStatus function gets the technology status for a given language.
-   *
-   * @param {string} language - The language to get the status for.
-   * @returns {string|null} - The technology status or null if not found.
-   */
-  const getTechnologyStatus = useCallback((language) => {
-    if (!data || !data.radar_entries) return null;
-    const entry = data.radar_entries.find(
-      entry => entry.title.toLowerCase() === language.toLowerCase()
-    );
-    return entry ? entry.timeline[entry.timeline.length - 1].ringId.toLowerCase() : null;
-  }, [data]);
 
   /**
    * handleLanguageClick function handles the language click event.
@@ -147,7 +139,7 @@ function Statistics({
     let filtered = Object.entries(languageStats).filter(([language]) => {
       const matchesSearch = language
         .toLowerCase()
-        .includes(searchTerm.toLowerCase());
+        .includes(searchQuery.toLowerCase());
 
       if (showTechRadarOnly) {
         const status = getTechnologyStatus(language);
@@ -179,7 +171,7 @@ function Statistics({
     return filtered;
   }, [
     getCurrentLanguageStats,
-    searchTerm,
+    searchQuery,
     sortConfig,
     getTechnologyStatus,
     showTechRadarOnly,

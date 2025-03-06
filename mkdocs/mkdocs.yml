@@ -30,6 +30,7 @@ nav:
     - Statistics: components/statistics.md
     - Theme Toggle: components/themeToggle.md
   - Utilities:
+    - Technology Status: utilities/technologyStatus.md
     - Tech Radar Data: utilities/techRadarData.md
     - Project Data: utilities/projectData.md
     - Repository Data: utilities/repositoryData.md
