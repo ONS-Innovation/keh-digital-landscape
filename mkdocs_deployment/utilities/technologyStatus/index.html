@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../projectData/">
+        <link rel="prev" href="../../components/themeToggle/">
       
       
-        <link rel="next" href="../../testing/">
+        <link rel="next" href="../techRadarData/">
       
       
       <link rel="icon" href="../../assets/favicon.ico">
@@ -20,7 +20,7 @@
     
     
       
-        <title>Repository Data - Digital Landscape</title>
+        <title>Technology Status - Digital Landscape</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#repository-data-utility" class="md-skip">
+        <a href="#technology-status-utility" class="md-skip">
           Skip to content
         </a>
       
@@ -111,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Repository Data
+              Technology Status
             
           </span>
         </div>
@@ -1061,10 +1061,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../technologyStatus/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Technology Status
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -1073,6 +1093,95 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#core-functionality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Functionality
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Functionality">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usetechnologystatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      useTechnologyStatus
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-returned-by-the-hook" class="md-nav__link">
+    <span class="md-ellipsis">
+      Function Returned by the Hook
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Details
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-in-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage in Components
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-with-radarpage-and-projectspage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration with RadarPage and ProjectsPage
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error Handling
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1124,30 +1233,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Repository Data
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../repositoryData/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1156,86 +1245,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#core-functionality" class="md-nav__link">
-    <span class="md-ellipsis">
-      Core Functionality
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Core Functionality">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#fetchrepositorydata" class="md-nav__link">
-    <span class="md-ellipsis">
-      fetchRepositoryData
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      Parameters
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#implementation-details" class="md-nav__link">
-    <span class="md-ellipsis">
-      Implementation Details
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#integration-with-datacontext" class="md-nav__link">
-    <span class="md-ellipsis">
-      Integration with DataContext
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#error-handling" class="md-nav__link">
-    <span class="md-ellipsis">
-      Error Handling
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1374,9 +1383,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#fetchrepositorydata" class="md-nav__link">
+  <a href="#usetechnologystatus" class="md-nav__link">
     <span class="md-ellipsis">
-      fetchRepositoryData
+      useTechnologyStatus
     </span>
   </a>
   
@@ -1388,9 +1397,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
+  <a href="#function-returned-by-the-hook" class="md-nav__link">
     <span class="md-ellipsis">
-      Parameters
+      Function Returned by the Hook
     </span>
   </a>
   
@@ -1406,9 +1415,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#integration-with-datacontext" class="md-nav__link">
+  <a href="#usage-in-components" class="md-nav__link">
     <span class="md-ellipsis">
-      Integration with DataContext
+      Usage in Components
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-with-radarpage-and-projectspage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration with RadarPage and ProjectsPage
     </span>
   </a>
   
@@ -1441,149 +1459,133 @@
   
 
 
-<h1 id="repository-data-utility">Repository Data Utility</h1>
-<p>The Repository Data utility provides functions for fetching detailed repository information from the AWS S3 Bucket. It serves as a data provider for the DataContext, enabling the application to access and display repository-specific information with filtering capabilities.</p>
+<h1 id="technology-status-utility">Technology Status Utility</h1>
+<p>The Technology Status utility provides a React hook for accessing and determining the status of technologies in the Tech Radar. It centralises access to the radar data and optimises performance by supporting both synchronous and asynchronous operations.</p>
 <h2 id="core-functionality">Core Functionality</h2>
-<p>The utility exports a primary function:</p>
-<h3 id="fetchrepositorydata">fetchRepositoryData</h3>
-<div class="language-javascript highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">fetchRepositoryData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nx">repositories</span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nx">date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nx">archived</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="c1">// Implementation details</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">}</span>
+<p>The utility exports a primary hook:</p>
+<h3 id="usetechnologystatus">useTechnologyStatus</h3>
+<div class="language-javascript highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">useTechnologyStatus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="c1">// Implementation details</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">getTechnologyStatus</span><span class="p">;</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>This function:</p>
+<p>This hook:</p>
 <ol>
-<li>Fetches detailed data for specific repositories</li>
-<li>Supports filtering by date and archived status</li>
-<li>Handles environment-specific URLs (development vs production)</li>
-<li>Implements error handling with user feedback</li>
+<li>Returns a function that determines a technology's status (adopt, trial, assess, hold)</li>
+<li>Accesses radar data via the DataContext</li>
+<li>Supports both synchronous access (when data is available) and asynchronous access (returns a Promise)</li>
+<li>Implements filtering to exclude technologies with "review" or "ignore" status</li>
 </ol>
-<h2 id="parameters">Parameters</h2>
-<p>The function accepts the following parameters:</p>
+<h2 id="function-returned-by-the-hook">Function Returned by the Hook</h2>
+<p>The <code>useTechnologyStatus</code> hook returns a function with the following signature:</p>
+<div class="language-javascript highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">getTechnologyStatus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">tech</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="c1">// Implementation details</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">}</span>
+</span></code></pre></div>
 <table>
 <thead>
 <tr>
 <th>Parameter</th>
 <th>Type</th>
-<th>Default</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>repositories</code></td>
-<td>string[]</td>
-<td>Required</td>
-<td>Array of repository names to fetch data for</td>
+<td><code>tech</code></td>
+<td>string</td>
+<td>The technology name to check status for</td>
 </tr>
 <tr>
-<td><code>date</code></td>
-<td>string</td>
-<td><code>null</code></td>
-<td>ISO date string to filter repositories by last commit date</td>
-</tr>
-<tr>
-<td><code>archived</code></td>
-<td>string</td>
-<td><code>null</code></td>
-<td>'true'/'false' to filter archived repositories</td>
+<td>Returns</td>
+<td>string|null|Promise</td>
+<td>The status string ("adopt", "trial", "assess", "hold"), null if not found, or a Promise that resolves to status/null</td>
 </tr>
 </tbody>
 </table>
 <h2 id="implementation-details">Implementation Details</h2>
-<p>The function follows a structured request pattern:</p>
+<p>The implementation follows a flexible, performance-optimised approach:</p>
 <ol>
 <li>
-<p><strong>Parameter Validation</strong>: Checks if repositories array is valid</p>
+<p><strong>Context Integration</strong>: Uses React's Context API via the DataContext</p>
 <ul>
-<li>Returns <code>null</code> if repositories array is empty or undefined</li>
+<li>Accesses cached radar data for immediate response when available</li>
+<li>Automatically retrieves radar data when needed</li>
 </ul>
 </li>
 <li>
-<p><strong>URL Parameter Construction</strong>: Builds query parameters</p>
+<p><strong>Synchronous Operation</strong>: Returns immediate results when data is available</p>
 <ul>
-<li>Converts repository array to comma-separated string</li>
-<li>Adds optional date and archived parameters when provided</li>
+<li>Allows for direct usage in render functions without async handling</li>
+<li>Prevents unnecessary re-renders</li>
 </ul>
 </li>
 <li>
-<p><strong>Environment-Specific URL</strong>: Determines the correct API endpoint</p>
+<p><strong>Asynchronous Fallback</strong>: Returns a Promise when data needs to be fetched</p>
 <ul>
-<li>Uses <code>localhost:5001/api/repository/project/json</code> in development</li>
-<li>Uses <code>/api/repository/project/json</code> in production</li>
+<li>Transparently handles data loading when necessary</li>
+<li>Maintains API consistency regardless of data availability state</li>
 </ul>
 </li>
 <li>
-<p><strong>Request Execution</strong>: Fetches data with constructed URL and parameters</p>
+<p><strong>Status Determination Logic</strong>: Identifies the current status of a technology</p>
 <ul>
-<li>Validates response status</li>
-<li>Parses JSON response</li>
-</ul>
-</li>
-<li>
-<p><strong>Error Handling</strong>: Manages request failures</p>
-<ul>
-<li>Displays error toast notification</li>
-<li>Returns <code>null</code> to indicate failure</li>
+<li>Finds the technology in radar entries by case-insensitive matching</li>
+<li>Retrieves the most recent timeline entry for status</li>
+<li>Filters out technologies with "review" or "ignore" status </li>
+<li>Returns a normalised lowercase status for consistent usage</li>
 </ul>
 </li>
 </ol>
-<h2 id="integration-with-datacontext">Integration with DataContext</h2>
-<p>The DataContext uses this utility to:</p>
+<h2 id="usage-in-components">Usage in Components</h2>
+<p>The hook is designed for flexible usage within components:</p>
+<p>RadarPage (Line 562):
+<div class="language-javascript highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="w">  </span><span class="cm">/**</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="cm">   * renderTechnologyList function to render the technology list.</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="cm">   *</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="cm">   * @param {string} technologies - The technologies to render.</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="cm">   * @returns {JSX.Element|null} - The rendered technology list or null if not found.</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="cm">   */</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">renderTechnologyList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">technologies</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">technologies</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">technologies</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">).</span><span class="nx">map</span><span class="p">((</span><span class="nx">tech</span><span class="p">,</span><span class="w"> </span><span class="nx">index</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">trimmedTech</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">tech</span><span class="p">.</span><span class="nx">trim</span><span class="p">();</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">getTechnologyStatus</span><span class="p">(</span><span class="nx">trimmedTech</span><span class="p">);</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">        </span><span class="o">&lt;</span><span class="nx">span</span><span class="w"> </span><span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">index</span><span class="p">}</span><span class="o">&gt;</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">          </span><span class="p">{</span><span class="nx">index</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="s2">&quot;; &quot;</span><span class="p">}</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">          </span><span class="p">{</span><span class="nx">status</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">            </span><span class="o">&lt;</span><span class="nx">span</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">              </span><span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="sb">`clickable-tech </span><span class="si">${</span><span class="nx">status</span><span class="si">}</span><span class="sb">`</span><span class="p">}</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">              </span><span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">handleTechClick</span><span class="p">(</span><span class="nx">trimmedTech</span><span class="p">)}</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">            </span><span class="o">&gt;</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">              </span><span class="p">{</span><span class="nx">trimmedTech</span><span class="p">}</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">            </span><span class="o">&lt;</span><span class="err">/span&gt;</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">          </span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">            </span><span class="nx">trimmedTech</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">          </span><span class="p">)}</span>
+</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">        </span><span class="o">&lt;</span><span class="err">/span&gt;</span>
+</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">      </span><span class="p">);</span>
+</span><span id="__span-2-29"><a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="w">    </span><span class="p">});</span>
+</span><span id="__span-2-30"><a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="w">  </span><span class="p">};</span>
+</span></code></pre></div></p>
+<h2 id="integration-with-radarpage-and-projectspage">Integration with RadarPage and ProjectsPage</h2>
+<p>Both the RadarPage and ProjectsPage leverage this utility to:</p>
 <ol>
-<li>Fetch repository data when needed for specific views</li>
-<li>Apply filtering based on user selections (date ranges, archived status)</li>
-<li>Cache the returned data to minimize redundant API calls</li>
+<li>Determine if technologies should be clickable based on their status</li>
+<li>Apply appropriate styling based on the technology's status</li>
+<li>Create consistent visual indicators for technology adoption levels</li>
+<li>Filter out technologies that should not be highlighted (those with "review" or "ignore" status)</li>
 </ol>
-<p>Example usage within DataContext:</p>
-<div class="language-javascript highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">getRepositoryData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useCallback</span><span class="p">(</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">repositories</span><span class="p">,</span><span class="w"> </span><span class="nx">date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="nx">archived</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="nx">forceRefresh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="c1">// Create cache key based on parameters</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">cacheKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">repositories</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="si">}</span><span class="sb">:</span><span class="si">${</span><span class="nx">date</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="si">}</span><span class="sb">:</span><span class="si">${</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="nx">archived</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="si">}</span><span class="sb">`</span><span class="p">;</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="c1">// Check cache first unless forceRefresh is true</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">repositoryData</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">cacheKey</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nx">forceRefresh</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">repositoryData</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">cacheKey</span><span class="p">);</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="c1">// Check for pending request</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">pendingRequests</span><span class="p">.</span><span class="nx">repository</span><span class="o">?</span><span class="p">.[</span><span class="nx">cacheKey</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">pendingRequests</span><span class="p">.</span><span class="nx">repository</span><span class="p">[</span><span class="nx">cacheKey</span><span class="p">];</span>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">    </span><span class="c1">// Initialize repository requests object if needed</span>
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">pendingRequests</span><span class="p">.</span><span class="nx">repository</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">      </span><span class="nx">pendingRequests</span><span class="p">.</span><span class="nx">repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span>
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">    </span><span class="c1">// Create new request</span>
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">fetchRepositoryData</span><span class="p">(</span><span class="nx">repositories</span><span class="p">,</span><span class="w"> </span><span class="nx">date</span><span class="p">,</span><span class="w"> </span><span class="nx">archived</span><span class="p">);</span>
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">    </span><span class="nx">pendingRequests</span><span class="p">.</span><span class="nx">repository</span><span class="p">[</span><span class="nx">cacheKey</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">request</span><span class="p">;</span>
-</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">request</span><span class="p">;</span>
-</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">      </span><span class="c1">// Update cache with new data</span>
-</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">      </span><span class="nx">setRepositoryData</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nb">Map</span><span class="p">(</span><span class="nx">repositoryData</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">cacheKey</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="p">)));</span>
-</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">data</span><span class="p">;</span>
-</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">      </span><span class="c1">// Clean up pending request</span>
-</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">      </span><span class="nx">pendingRequests</span><span class="p">.</span><span class="nx">repository</span><span class="p">[</span><span class="nx">cacheKey</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
-</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="w">  </span><span class="p">},</span>
-</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="w">  </span><span class="p">[</span><span class="nx">repositoryData</span><span class="p">,</span><span class="w"> </span><span class="nx">pendingRequests</span><span class="p">]</span>
-</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="p">);</span>
-</span></code></pre></div>
 <h2 id="error-handling">Error Handling</h2>
-<p>The utility implements error handling:</p>
+<p>The utility implements comprehensive error handling:</p>
 <ul>
-<li>Catches and logs network errors</li>
-<li>Provides user feedback via toast notifications</li>
-<li>Returns <code>null</code> when data is unavailable</li>
+<li>Returns null for invalid or missing technology inputs</li>
+<li>Handles missing or incomplete radar data gracefully</li>
+<li>Maintains consistent behaviour in both synchronous and asynchronous modes</li>
+<li>Safely navigates potentially undefined properties in the radar data structure</li>
 </ul>
 
 
@@ -1622,7 +1624,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../projectData/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Project Data">
+          <a href="../../components/themeToggle/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Theme Toggle">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1632,20 +1634,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Project Data
+                Theme Toggle
               </div>
             </div>
           </a>
         
         
           
-          <a href="../../testing/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+          <a href="../techRadarData/" class="md-footer__link md-footer__link--next" aria-label="Next: Tech Radar Data">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Overview
+                Tech Radar Data
               </div>
             </div>
             <div class="md-footer__button md-icon">
