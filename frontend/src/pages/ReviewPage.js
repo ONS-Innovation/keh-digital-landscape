@@ -51,6 +51,15 @@ const ReviewPage = () => {
     CICD_Orchestration: "Infrastructure",
     Monitoring: "Infrastructure",
     Infrastructure: "Infrastructure",
+    Cloud_Services: "Infrastructure",
+    IAM_Services: "Infrastructure",
+    Containers: "Infrastructure",
+    Static_Analysis: "Supporting Tools",
+    Code_Formatter: "Supporting Tools",
+    Datastores: "Infrastructure",
+    Data_Output_Formats: "Infrastructure",
+    Integrations_ONS: "Infrastructure",
+    Integrations_External: "Infrastructure",    
   };
 
   const categoryOptions = [
