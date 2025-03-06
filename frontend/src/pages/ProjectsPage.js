@@ -113,7 +113,7 @@ function ProjectsPage() {
       return (
         <span key={index}>
           {index > 0 && "; "}
-          {status && status !== "review" && status !== "ignore" ? (
+          {status ? (
             <span
               className={`clickable-tech ${status}`}
               onClick={() => handleTechClick(trimmedTech)}

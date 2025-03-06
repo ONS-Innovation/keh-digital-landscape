@@ -53,9 +53,14 @@ export const useTechnologyStatus = () => {
         }
       }
     }
-    return entry
-      ? entry.timeline[entry.timeline.length - 1].ringId.toLowerCase()
+    let status = entry
+      ? entry.timeline[entry.timeline.length - 1].ringId.toLowerCase() 
       : null;
+    if (status === "review" || status === "ignore") {
+      return null;
+    } else {
+      return status;
+    }
   };
 
   return getTechnologyStatus;
