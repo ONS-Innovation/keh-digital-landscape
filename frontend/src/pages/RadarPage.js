@@ -13,6 +13,7 @@ import {
 } from "react-icons/io5";
 import ProjectModal from "../components/Projects/ProjectModal";
 import InfoBox from "../components/InfoBox/InfoBox";
+import { useTechnologyStatus } from "../utilities/getTechnologyStatus";
 
 /**
  * RadarPage component for displaying the radar page.
@@ -55,6 +56,7 @@ function RadarPage() {
   const location = useLocation();
 
   const { getTechRadarData, getCsvData } = useData();
+  const getTechnologyStatus = useTechnologyStatus();
 
   useBanner(
     'Tech Radar numbering does not correlate to technology popularity or usage.',
@@ -552,21 +554,6 @@ function RadarPage() {
   };
 
   /**
-   * getTechnologyStatus function to get the technology status.
-   *
-   * @param {string} tech - The technology to get the status for.
-   * @returns {string|null} - The technology status or null if not found.
-   */
-  const getTechnologyStatus = (tech) => {
-    const entry = data.entries.find(
-      (entry) => entry.title.toLowerCase() === tech.trim().toLowerCase()
-    );
-    return entry
-      ? entry.timeline[entry.timeline.length - 1].ringId.toLowerCase()
-      : null;
-  };
-
-  /**
    * renderTechnologyList function to render the technology list.
    *
    * @param {string} technologies - The technologies to render.
@@ -577,13 +564,12 @@ function RadarPage() {
 
     return technologies.split(";").map((tech, index) => {
       const trimmedTech = tech.trim();
-      const isInRadar = isTechnologyInRadar(trimmedTech);
-      const status = isInRadar ? getTechnologyStatus(trimmedTech) : null;
+      const status = getTechnologyStatus(trimmedTech);
 
       return (
         <span key={index}>
           {index > 0 && "; "}
-          {isInRadar && status && status !== "review" && status !== "ignore" ? (
+          {status && status !== "review" && status !== "ignore" ? (
             <span
               className={`clickable-tech ${status}`}
               onClick={() => handleTechClick(trimmedTech)}
@@ -1120,8 +1106,8 @@ function RadarPage() {
             onClose={() => setIsProjectModalOpen(false)}
             project={selectedProject}
             renderTechnologyList={renderTechnologyList}
-            getTechnologyStatus={getTechnologyStatus}
             onTechClick={handleTechClick}
+            getTechnologyStatus={getTechnologyStatus}
           />
         )}
       </div>

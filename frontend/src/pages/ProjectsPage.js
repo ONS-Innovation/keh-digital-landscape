@@ -7,7 +7,7 @@ import ProjectModal from "../components/Projects/ProjectModal";
 import { useData } from "../contexts/dataContext";
 import toast from "react-hot-toast";
 import "../styles/ProjectsPage.css";
-
+import { useTechnologyStatus } from "../utilities/getTechnologyStatus";
 /**
  * ProjectsPage component for displaying the projects page.
  *
@@ -22,6 +22,7 @@ function ProjectsPage() {
   const navigate = useNavigate();
   
   const { getCsvData, getTechRadarData } = useData();
+  const getTechnologyStatus = useTechnologyStatus();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,23 +41,6 @@ function ProjectsPage() {
 
     fetchData();
   }, [getCsvData, getTechRadarData]);
-
-  /**
-   * getTechnologyStatus function gets the technology status for a given technology.
-   *
-   * @param {string} tech - The technology to get the status for.
-   * @returns {string|null} - The technology status or null if not found.
-   */
-  const getTechnologyStatus = (tech) => {
-    if (!radarData || !tech) return null;
-
-    const entry = radarData.entries.find(
-      (entry) => entry.title.toLowerCase() === tech.trim().toLowerCase()
-    );
-    return entry
-      ? entry.timeline[entry.timeline.length - 1].ringId.toLowerCase()
-      : null;
-  };
 
   /**
    * handleProjectClick function handles the project click event.
@@ -160,10 +144,10 @@ function ProjectsPage() {
           onClose={() => {}}
           projectsData={filteredProjects}
           handleProjectClick={handleProjectClick}
-          getTechnologyStatus={getTechnologyStatus}
           onRefresh={handleRefresh}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
+          getTechnologyStatus={getTechnologyStatus}
         />
         {isProjectModalOpen && (
           <ProjectModal
@@ -171,8 +155,8 @@ function ProjectsPage() {
             onClose={() => setIsProjectModalOpen(false)}
             project={selectedProject}
             renderTechnologyList={renderTechnologyList}
-            getTechnologyStatus={getTechnologyStatus}
             onTechClick={handleTechClick}
+            getTechnologyStatus={getTechnologyStatus}
           />
         )}
       </div>
