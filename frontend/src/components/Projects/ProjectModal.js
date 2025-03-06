@@ -281,7 +281,7 @@ const ProjectModal = ({
     return (
       <div className="project-group">
         <h3 className="group-title">{title}</h3>
-        <div className="group-content">
+        <div className="group-content repo-grid">
           {validKeys.map((key) => {
             const value = project[key];
             const repoList = value.split(";").map((repo) => repo.trim());
