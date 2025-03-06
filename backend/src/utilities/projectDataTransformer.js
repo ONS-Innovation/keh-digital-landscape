@@ -29,22 +29,22 @@ function transformProjectToCSVFormat(project) {
     Language_Others: otherLanguages,
     Language_Frameworks: frameworks,
     Testing_Frameworks: "", // Not directly available in new format
-    Hosted: project.architecture.hosting.type.join("; "),
+    Hosted: project.architecture.hosting.type ? project.architecture.hosting.type.join("; ") : "",
     Messaging_Type: "",
     Containers: "", // Not directly available in new format
-    Architectures: project.architecture.hosting.details.join("; "),
+    Architectures: project.architecture.hosting.details ? project.architecture.hosting.details.join("; ") : "",
     Source_Control: sourceControl,
     Branching_Strategy: "",
-    Repo: project.source_control[0]?.links.map(link => link.url).join("; ") || "",
+    Repo: project.source_control[0]?.links ? project.source_control[0]?.links.map(link => link.url).join("; ") : "",
     Static_Analysis: "",
     Code_Formatter: "",
     Package_Manager: "",
     Security_Tools: "",
-    CICD: project.architecture.cicd.others.join("; "),
+    CICD: project.architecture.cicd.others ? project.architecture.cicd.others.join("; ") : "",
     CICD_Orchestration: "",
     Monitoring: "",
-    Datastores: project.architecture.database.others.join("; "),
-    Database_Technologies: project.architecture.database.main.join("; "),
+    Datastores: project.architecture.database.others ? project.architecture.database.others.join("; ") : "",
+    Database_Technologies: project.architecture.database.main ? project.architecture.database.main.join("; ") : "",
     Data_Output_Formats: "",
     Business_Dashboards: "",
     Integrations_ONS: "",
@@ -53,15 +53,15 @@ function transformProjectToCSVFormat(project) {
     Datasets_Used: "",
     Project_Tools: project.supporting_tools.project_tracking || "",
     Documentation: project.details[0]?.documentation_link?.join("; ") || "",
-    Infrastructure: project.architecture.infrastructure.others.join("; "),
+    Infrastructure: project.architecture.infrastructure.others ? project.architecture.infrastructure.others.join("; ") : "",
     // New fields
-    Code_Editors: project.supporting_tools.code_editors.others.join("; "),
-    Communication: project.supporting_tools.communication.others.join("; "),
-    Collaboration: project.supporting_tools.collaboration.others.join("; "),
+    Code_Editors: project.supporting_tools.code_editors.others ? project.supporting_tools.code_editors.others.join("; ") : "",
+    Communication: project.supporting_tools.communication.others ? project.supporting_tools.communication.others.join("; ") : "",
+    Collaboration: project.supporting_tools.collaboration.others ? project.supporting_tools.collaboration.others.join("; ") : "",
     Incident_Management: project.supporting_tools.incident_management || "",
-    Documentation_Tools: project.supporting_tools.documentation.others.join("; "),
-    UI_Tools: project.supporting_tools.user_interface.others.join("; "),
-    Diagram_Tools: project.supporting_tools.diagrams.others.join("; ")
+    Documentation_Tools: project.supporting_tools.documentation.others ? project.supporting_tools.documentation.others.join("; ") : "",
+    UI_Tools: project.supporting_tools.user_interface.others ? project.supporting_tools.user_interface.others.join("; ") : "",
+    Diagram_Tools: project.supporting_tools.diagrams.others ? project.supporting_tools.diagrams.others.join("; ") : ""
   };
 }
 

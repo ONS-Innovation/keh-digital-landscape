@@ -51,6 +51,10 @@ const ReviewPage = () => {
     CICD_Orchestration: "Infrastructure",
     Monitoring: "Infrastructure",
     Infrastructure: "Infrastructure",
+    Cloud_Services: "Infrastructure",
+    IAM_Services: "Infrastructure",
+    Containers: "Infrastructure",
+    Datastores: "Infrastructure" 
   };
 
   const categoryOptions = [
@@ -71,7 +75,6 @@ const ReviewPage = () => {
 
         const categorizedEntries = categorizeEntries(radarData.entries);
         setEntries(categorizedEntries);
-        setProjectData(csvData);
 
         // After loading both data sources, scan for new technologies
         scanForNewTechnologies(radarData.entries, csvData);
