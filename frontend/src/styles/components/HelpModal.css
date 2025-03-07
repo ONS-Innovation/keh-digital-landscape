@@ -2,12 +2,10 @@
   position: fixed;
   right: 24px;
   bottom: 0;
-  /* background: hsl(var(--background) / 0.8); */
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
   z-index: 1000;
-  /* backdrop-filter: blur(0.1px); */
   box-sizing: border-box;
   pointer-events: none;
   opacity: 0;
@@ -20,14 +18,9 @@
 }
 
 .help-modal-content {
-  /* position: fixed;
-  top:100vh;
-  right: 24px; */
   background: hsl(var(--card));
   padding: 24px;
   width: 600px;
-  /* max-width: 90vw;
-  max-height: 90vh; */
   overflow-y: auto;
   position: relative;
   border: 1px solid hsl(var(--border));
@@ -47,7 +40,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .help-modal-title {
@@ -78,10 +71,15 @@
   text-align: left;
 }
 
+.help-modal-body a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+}
+
 .help-modal-body h5 {
   font-size: 18px;
   font-weight: 600;
-  margin: 24px 0 12px 0;
+  margin: 12px 0;
   color: hsl(var(--foreground));
 }
 
@@ -103,7 +101,6 @@
 
 .help-modal-list > li {
   font-size: 14px;
-  /* line-height: 1.6; */
   margin: 4px 0;
   color: hsl(var(--foreground));
 }
@@ -116,7 +113,6 @@
 
 .help-modal-sublist li {
   font-size: 14px;
-  /* line-height: 1.6; */
   margin: 6px 0;
   color: hsl(var(--muted-foreground));
   position: relative;
@@ -128,7 +124,6 @@
   margin-right: 4px;
 }
 
-/* Responsive styles */
 @media (max-width: 768px) {
   .help-modal-overlay {
     right: 0;
