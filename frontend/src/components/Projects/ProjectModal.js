@@ -25,6 +25,7 @@ const ProjectModal = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [repoData, setRepoData] = useState(null);
+  const [otherRepoData, setOtherRepoData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [expandedItems, setExpandedItems] = useState({
     projectDetails: true,
@@ -49,6 +50,13 @@ const ProjectModal = ({
             setRepoData(data.repositories);
           }
         }
+        if (project.Repo) {
+          const otherRepos = project.Repo.split(";").filter(
+            (repo) => !projectRepos.includes(repo)
+          );
+          setOtherRepoData(otherRepos);
+        }
+
         setIsLoading(false);
       } else {
         setRepoData(null);
@@ -65,12 +73,12 @@ const ProjectModal = ({
 
     return (
       <div className="repo-info">
-        <h3 className="group-title">Linked Repositories</h3>
+        <h3 className="group-title">Repositories</h3>
         {isLoading ? (
           <SkeletonLanguageCard />
-        ) : repoData?.length > 0 ? (
+        ) : project.Repo? (
           <div className="repo-grid">
-            {repoData.map((repo, index) => (
+            {repoData?.map((repo, index) => (
               <div key={index} className="repo-card">
                 <div className="repo-stats">
                   <div className="repo-stats-left">
@@ -138,6 +146,37 @@ const ProjectModal = ({
                 )}
               </div>
             ))}
+            {otherRepoData && otherRepoData.length > 0 && (
+              <>
+                {otherRepoData.map((repo, index) => (
+                  <div key={index} className="repo-card">
+                    <div className="repo-stats">
+                      <div className="repo-stats-left">
+                        <a
+                          href={repo}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="repo-name"
+                        >
+                          {repo}
+                        </a>
+                      </div>
+                    </div>
+                    <div className="repo-languages">
+                    <div className="language-bars">
+                        <div
+                          className={`language-bar`}
+                          style={{
+                            width: `100%`,
+                          }}
+                          title={`Unknown`}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
           </div>
         ) : (
           <div className="repo-info-loading">
@@ -269,40 +308,6 @@ const ProjectModal = ({
     );
   };
 
-  const renderRepositoryGroup = (title, keys) => {
-    const filteredKeys = filterItems(keys);
-    const validKeys = filteredKeys.filter((key) => {
-      const value = project[key];
-      return value !== "None" && value !== "N/A" && value !== "none";
-    });
-
-    if (validKeys.length === 0) return null;
-
-    return (
-      <div className="project-group">
-        <h3 className="group-title">{title}</h3>
-        <div className="group-content repo-grid">
-          {validKeys.map((key) => {
-            const value = project[key];
-            const repoList = value.split(";").map((repo) => repo.trim());
-            return (
-              <>
-                {repoList.map((repo, index) => (
-                  <div key={index} className={`detail-item`}>
-                    <h3>Repository:</h3>
-                    <a href={repo} target="_blank" rel="noopener noreferrer">
-                      {repo}
-                    </a>
-                  </div>
-                ))}
-              </>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
-
   const toggleAccordionItem = (item) => {
     setExpandedItems((prev) => ({
       ...prev,
@@ -405,7 +410,6 @@ const ProjectModal = ({
           {renderGroup("Data Management", groups.data)}
           {renderGroup("Integrations", groups.integrations)}
           {renderGroup("General Information", groups.general)}
-          {renderRepositoryGroup("Repositories", groups.repos)}
         </div>
       </div>
     </div>
