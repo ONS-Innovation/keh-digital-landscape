@@ -35,31 +35,45 @@ const ProjectModal = ({
     const fetchRepoInfo = async () => {
       if (isOpen && project?.Repo) {
         setIsLoading(true);
-        // Extract repo names from project.Repo
-        const projectRepos = project.Repo.split(";")
+
+        const allRepoUrls = project.Repo.split(";").map(url => url.trim()).filter(url => url);
+
+        const onsDigitalRepos = allRepoUrls
           .map((repo) => {
-            const repoUrl = repo.split("#")[0];
-            const match = repoUrl.trim().match(/github\.com\/[^/]+\/([^/]+)/);
+            const repoUrl = repo.split("#")[0].trim();
+            const match = repoUrl.match(/github\.com\/ONSDigital\/([^/\s]+)/i);
             return match ? match[1] : null;
           })
           .filter(Boolean);
 
-        if (projectRepos.length > 0) {
-          const data = await fetchRepositoryData(projectRepos);
+        let repoDataResults = [];
+        if (onsDigitalRepos.length > 0) {
+          const data = await fetchRepositoryData(onsDigitalRepos);
           if (data?.repositories) {
+            repoDataResults = data.repositories;
             setRepoData(data.repositories);
           }
-        }
-        if (project.Repo) {
-          const otherRepos = project.Repo.split(";").filter(
-            (repo) => !projectRepos.includes(repo)
-          );
-          setOtherRepoData(otherRepos);
+        } else {
+          setRepoData([]);
         }
 
+        const fetchedRepoUrls = new Set(
+          repoDataResults.map(repo => repo.url.toLowerCase())
+        );
+
+        const otherRepos = allRepoUrls.filter(url => {
+          const normalizedUrl = url.toLowerCase();
+
+          return !Array.from(fetchedRepoUrls).some(fetchedUrl => 
+            normalizedUrl.includes(fetchedUrl) || fetchedUrl.includes(normalizedUrl)
+          );
+        });
+        
+        setOtherRepoData(otherRepos);
         setIsLoading(false);
       } else {
         setRepoData(null);
+        setOtherRepoData([]);
       }
     };
 
@@ -148,33 +162,44 @@ const ProjectModal = ({
             ))}
             {otherRepoData && otherRepoData.length > 0 && (
               <>
-                {otherRepoData.map((repo, index) => (
-                  <div key={index} className="repo-card">
-                    <div className="repo-stats">
-                      <div className="repo-stats-left">
-                        <a
-                          href={repo}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="repo-name"
-                        >
-                          {repo}
-                        </a>
+                {otherRepoData.map((repoUrl, index) => {
+                  let displayName = repoUrl;
+                  
+                  return (
+                    <div key={index} className="repo-card">
+                      <div className="repo-stats">
+                        <div className="repo-stats-left">
+                          <a
+                            href={repoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="repo-name"
+                          >
+                            {displayName}
+                          </a>
+                        </div>
+                        <div className="repo-badges">
+                          <span className="repo-badge">
+                            {repoUrl.includes('gitlab') ? 'GitLab' : 
+                             repoUrl.includes('github') ? 'GitHub' : 'Repository'}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="repo-languages">
+                        <div className="language-bars">
+                          <div
+                            className={`language-bar`}
+                            style={{
+                              width: `100%`,
+                              backgroundColor: "#cccccc"
+                            }}
+                            title={`Unknown`}
+                          />
+                        </div>
                       </div>
                     </div>
-                    <div className="repo-languages">
-                    <div className="language-bars">
-                        <div
-                          className={`language-bar`}
-                          style={{
-                            width: `100%`,
-                          }}
-                          title={`Unknown`}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </>
             )}
           </div>
