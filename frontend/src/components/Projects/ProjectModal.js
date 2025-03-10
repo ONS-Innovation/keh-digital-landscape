@@ -24,34 +24,61 @@ const ProjectModal = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [repoData, setRepoData] = useState(null);
+  const [otherRepoData, setOtherRepoData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [expandedItems, setExpandedItems] = useState({
-    projectDetails: true
+    projectDetails: true,
   });
   const getTechnologyStatus = useTechnologyStatus();
 
   useEffect(() => {
     const fetchRepoInfo = async () => {
+      // if the project modal is open and have Repo in the project object
       if (isOpen && project?.Repo) {
         setIsLoading(true);
-        // Extract repo names from project.Repo
-        const projectRepos = project.Repo.split(";")
+
+        // split the Repo string by ; and remove any whitespace
+        const allRepoUrls = project.Repo.split(";").map(url => url.trim()).filter(url => url);
+
+        // map the allRepoUrls to the github.com/ONSDigital repos
+        const onsDigitalRepos = allRepoUrls
           .map((repo) => {
-            const repoUrl = repo.split("#")[0];
-            const match = repoUrl.trim().match(/github\.com\/[^/]+\/([^/]+)/);
+            const repoUrl = repo.split("#")[0].trim();
+            const match = repoUrl.match(/github\.com\/ONSDigital\/([^/\s]+)/i);
             return match ? match[1] : null;
           })
           .filter(Boolean);
-
-        if (projectRepos.length > 0) {
-          const data = await fetchRepositoryData(projectRepos);
+        
+        // if there are any onsDigitalRepos, fetch the repository data
+        let repoDataResults = [];
+        if (onsDigitalRepos.length > 0) {
+          const data = await fetchRepositoryData(onsDigitalRepos);
           if (data?.repositories) {
+            repoDataResults = data.repositories;
             setRepoData(data.repositories);
           }
+        } else {
+          setRepoData([]);
         }
+
+        const fetchedRepoUrls = new Set(
+          repoDataResults.map(repo => repo.url.toLowerCase())
+        );
+
+        // other repos are the repos that are not in the onsDigitalRepos
+        const otherRepos = allRepoUrls.filter(url => {
+          const normalizedUrl = url.toLowerCase();
+
+          return !Array.from(fetchedRepoUrls).some(fetchedUrl => 
+            normalizedUrl.includes(fetchedUrl) || fetchedUrl.includes(normalizedUrl)
+          );
+        });
+        
+        setOtherRepoData(otherRepos);
         setIsLoading(false);
       } else {
         setRepoData(null);
+        setOtherRepoData([]);
       }
     };
 
@@ -65,12 +92,12 @@ const ProjectModal = ({
 
     return (
       <div className="repo-info">
-        <h3 className="group-title">Linked Repositories</h3>
+        <h3 className="group-title">Repositories</h3>
         {isLoading ? (
           <SkeletonLanguageCard />
-        ) : repoData?.length > 0 ? (
+        ) : project.Repo? (
           <div className="repo-grid">
-            {repoData.map((repo, index) => (
+            {repoData?.map((repo, index) => (
               <div key={index} className="repo-card">
                 <div className="repo-stats">
                   <div className="repo-stats-left">
@@ -101,9 +128,11 @@ const ProjectModal = ({
 
                 <div className="language-labels">
                   {repo.technologies.languages.map((lang, i) => {
-                    // First check if this language exists in the radar
-                    const status = getTechnologyStatus ? getTechnologyStatus(lang.name) : null;
-                    const isClickable = status && status !== 'review' && status !== 'ignore';
+                    const status = getTechnologyStatus
+                      ? getTechnologyStatus(lang.name)
+                      : null;
+                    const isClickable =
+                      status && status !== "review" && status !== "ignore";
                     return (
                       <span
                         key={i}
@@ -136,6 +165,48 @@ const ProjectModal = ({
                 )}
               </div>
             ))}
+            {otherRepoData && otherRepoData.length > 0 && (
+              <>
+                {otherRepoData.map((repoUrl, index) => {
+                  let displayName = repoUrl;
+                  
+                  return (
+                    <div key={index} className="repo-card">
+                      <div className="repo-stats">
+                        <div className="repo-stats-left">
+                          <a
+                            href={repoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="repo-name"
+                          >
+                            {displayName}
+                          </a>
+                        </div>
+                        <div className="repo-badges">
+                          <span className="repo-badge">
+                            {repoUrl.includes('gitlab') ? 'GitLab' : 
+                             repoUrl.includes('github') ? 'GitHub' : 'Repository'}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="repo-languages">
+                        <div className="language-bars">
+                          <div
+                            className={`language-bar`}
+                            style={{
+                              width: `100%`,
+                              backgroundColor: "#cccccc"
+                            }}
+                            title={`Unknown`}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </>
+            )}
           </div>
         ) : (
           <div className="repo-info-loading">
@@ -181,6 +252,7 @@ const ProjectModal = ({
       "UI_Tools",
       "Diagram_Tools",
     ],
+    repos: ["Repo"],
   };
 
   const fieldLabels = {
@@ -234,7 +306,7 @@ const ProjectModal = ({
   };
   const renderGroup = (title, keys) => {
     const filteredKeys = filterItems(keys);
-    const validKeys = filteredKeys.filter(key => {
+    const validKeys = filteredKeys.filter((key) => {
       const value = project[key];
       return value !== "None" && value !== "N/A" && value !== "none";
     });
@@ -248,7 +320,10 @@ const ProjectModal = ({
           {validKeys.map((key) => {
             const value = project[key];
             return (
-              <div key={key} className="detail-item">
+              <div
+                key={key}
+                className={`detail-item ${title === "Repositories" ? "large-span" : ""}`}
+              >
                 <h3>{fieldLabels[key] || key.replace(/_/g, " ")}:</h3>
                 <p>
                   {technologyListFields.includes(key)
@@ -264,9 +339,9 @@ const ProjectModal = ({
   };
 
   const toggleAccordionItem = (item) => {
-    setExpandedItems(prev => ({
+    setExpandedItems((prev) => ({
       ...prev,
-      [item]: !prev[item]
+      [item]: !prev[item],
     }));
   };
 
@@ -305,32 +380,38 @@ const ProjectModal = ({
             </button>
           </div>
         </div>
-        
+
         <div className="project-accordion">
           <div className="project-accordion-item">
-            <div 
-              className="accordion-header" 
-              onClick={() => toggleAccordionItem('projectDetails')}
+            <div
+              className="accordion-header"
+              onClick={() => toggleAccordionItem("projectDetails")}
             >
               <h3>Project Details</h3>
-              <span className={`accordion-icon ${expandedItems.projectDetails ? 'expanded' : ''}`}>▼</span>
+              <span
+                className={`accordion-icon ${expandedItems.projectDetails ? "expanded" : ""}`}
+              >
+                ▼
+              </span>
             </div>
             {expandedItems.projectDetails && (
               <div className="accordion-content">
                 {project.Programme && (
                   <div className="detail-section">
                     <h4>Programme</h4>
-                    <p>{project.Programme} ({project.Programme_Short})</p>
+                    <p>
+                      {project.Programme} ({project.Programme_Short})
+                    </p>
                   </div>
                 )}
-                
+
                 {project.Description && (
                   <div className="detail-section">
                     <h4>Description</h4>
                     <p>{project.Description}</p>
                   </div>
                 )}
-                
+
                 {project.Documentation && (
                   <div className="detail-section">
                     <h4>Documentation</h4>
