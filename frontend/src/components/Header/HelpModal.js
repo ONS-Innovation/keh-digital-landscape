@@ -36,6 +36,10 @@ function HelpModal({ show, onClose }) {
 
   if (!shouldRender) return null;
 
+  const githubPagesLink = () => {
+    return <span> To view more detailed information about the Digital Landscape, view this documentation: <a href="https://ons-innovation.github.io/keh-digital-landscape/" target="_blank" rel="noopener noreferrer">Digital Landscape Documentation</a>.</span>
+  }
+
   /**
    * getModalContent function returns the content for the help modal based on the current pathname.
    *
@@ -48,6 +52,7 @@ function HelpModal({ show, onClose }) {
           title: "Tech Radar Help",
           content: (
             <div className="help-modal-body">
+                {githubPagesLink()}
               <h5>Guide</h5>
               <span>
                 The Tech Radar is a visual representation of our technology
@@ -124,6 +129,7 @@ function HelpModal({ show, onClose }) {
           title: "Digital Landscape Help",
           content: (
             <div className="help-modal-body">
+              {githubPagesLink()}
               <h5>Overview</h5>
               <span>
                 Welcome to the Digital Landscape - your overview of our digital
@@ -142,6 +148,7 @@ function HelpModal({ show, onClose }) {
           title: "Statistics Help",
           content: (
             <div className="help-modal-body">
+              {githubPagesLink()}
               <h5>Guide</h5>
               <span>
                 The Statistics page is a visual representation of the languages
@@ -183,6 +190,7 @@ function HelpModal({ show, onClose }) {
           title: "Projects Help",
           content: (
             <div className="help-modal-body">
+              {githubPagesLink()}
               <h5>Guide</h5>
               <span>
                 The Projects page is a visual representation of the projects in
@@ -216,6 +224,7 @@ function HelpModal({ show, onClose }) {
           title: "Review Dashboard",
           content: (
             <div className="help-modal-body">
+              {githubPagesLink()}
               <h5>Guide</h5>
               <span>
                 This page should only be used by reviewers. Here is how to use
@@ -260,6 +269,7 @@ function HelpModal({ show, onClose }) {
           title: "Help",
           content: (
             <div className="help-modal-body">
+              {githubPagesLink()}
               <span>
                 Welcome to our platform. Use the navigation menu to explore
                 different sections.
