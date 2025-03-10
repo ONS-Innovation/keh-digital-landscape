@@ -4,6 +4,7 @@ import "../../styles/LangColours.css";
 import { IoClose, IoSearch } from "react-icons/io5";
 import SkeletonLanguageCard from "../Statistics/Skeletons/SkeletonLanguageCard";
 import { fetchRepositoryData } from "../../utilities/getRepositoryData";
+import { useTechnologyStatus } from "../../utilities/getTechnologyStatus";
 /**
  * ProjectModal component for displaying project details in a modal.
  *
@@ -12,7 +13,6 @@ import { fetchRepositoryData } from "../../utilities/getRepositoryData";
  * @param {Function} props.onClose - Function to call when the modal is closed.
  * @param {Object} props.project - The project object containing project details.
  * @param {Function} props.renderTechnologyList - Function to render technology list.
- * @param {Function} props.getTechnologyStatus - Function to get the technology status.
  * @param {Function} props.onTechClick - Function to handle technology click.
  */
 const ProjectModal = ({
@@ -20,7 +20,6 @@ const ProjectModal = ({
   onClose,
   project,
   renderTechnologyList,
-  getTechnologyStatus,
   onTechClick,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -29,6 +28,7 @@ const ProjectModal = ({
   const [expandedItems, setExpandedItems] = useState({
     projectDetails: true
   });
+  const getTechnologyStatus = useTechnologyStatus();
 
   useEffect(() => {
     const fetchRepoInfo = async () => {
@@ -101,9 +101,8 @@ const ProjectModal = ({
 
                 <div className="language-labels">
                   {repo.technologies.languages.map((lang, i) => {
-                    const status = getTechnologyStatus
-                      ? getTechnologyStatus(lang.name)
-                      : null;
+                    // First check if this language exists in the radar
+                    const status = getTechnologyStatus ? getTechnologyStatus(lang.name) : null;
                     const isClickable = status && status !== 'review' && status !== 'ignore';
                     return (
                       <span
