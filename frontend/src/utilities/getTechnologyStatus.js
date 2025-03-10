@@ -40,27 +40,23 @@ export const useTechnologyStatus = () => {
       return null;
     }
     
-    let entry = null;
     for (let i = 0; i < radarData.entries.length; i++) {
       if (radarData.entries[i].title.toLowerCase() === tech.trim().toLowerCase()) {
-        entry = radarData.entries[i];
-        let lastTimelineEntry =
-          entry.timeline[entry.timeline.length - 1].ringId.toLowerCase();
+        const entry = radarData.entries[i];
+        if (!entry.timeline || entry.timeline.length === 0) {
+          return null;
+        }
+        
+        const lastTimelineEntry = entry.timeline[entry.timeline.length - 1].ringId.toLowerCase();
         if (lastTimelineEntry === "review" || lastTimelineEntry === "ignore") {
           continue;
-        } else {
-          break;
         }
+        
+        return lastTimelineEntry;
       }
     }
-    let status = entry
-      ? entry.timeline[entry.timeline.length - 1].ringId.toLowerCase() 
-      : null;
-    if (status === "review" || status === "ignore") {
-      return null;
-    } else {
-      return status;
-    }
+    
+    return null;
   };
 
   return getTechnologyStatus;
