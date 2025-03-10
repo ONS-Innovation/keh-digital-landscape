@@ -33,11 +33,14 @@ const ProjectModal = ({
 
   useEffect(() => {
     const fetchRepoInfo = async () => {
+      // if the project modal is open and have Repo in the project object
       if (isOpen && project?.Repo) {
         setIsLoading(true);
 
+        // split the Repo string by ; and remove any whitespace
         const allRepoUrls = project.Repo.split(";").map(url => url.trim()).filter(url => url);
 
+        // map the allRepoUrls to the github.com/ONSDigital repos
         const onsDigitalRepos = allRepoUrls
           .map((repo) => {
             const repoUrl = repo.split("#")[0].trim();
@@ -45,7 +48,8 @@ const ProjectModal = ({
             return match ? match[1] : null;
           })
           .filter(Boolean);
-
+        
+        // if there are any onsDigitalRepos, fetch the repository data
         let repoDataResults = [];
         if (onsDigitalRepos.length > 0) {
           const data = await fetchRepositoryData(onsDigitalRepos);
@@ -61,6 +65,7 @@ const ProjectModal = ({
           repoDataResults.map(repo => repo.url.toLowerCase())
         );
 
+        // other repos are the repos that are not in the onsDigitalRepos
         const otherRepos = allRepoUrls.filter(url => {
           const normalizedUrl = url.toLowerCase();
 
