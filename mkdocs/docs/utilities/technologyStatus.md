@@ -67,7 +67,7 @@ The implementation follows a flexible, performance-optimised approach:
 
 The hook is designed for flexible usage within components:
 
-RadarPage (Line 562):
+RadarPage:
 ```javascript
 
   /**
