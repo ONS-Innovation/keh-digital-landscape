@@ -132,8 +132,3 @@
   background: hsl(var(--accent));
   color: hsl(var(--accent-foreground));
 }
-
-.multi-select-placeholder {
-  color: hsl(var(--muted-foreground));
-  padding: 2px;
-}

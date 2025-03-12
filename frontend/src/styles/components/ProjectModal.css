@@ -80,12 +80,6 @@
   gap: 8px;
 }
 
-.project-title-section h2 {
-  margin: 0;
-  font-size: 24px;
-  font-weight: bold;
-}
-
 .project-short-name-container {
   display: flex;
   align-items: center;
@@ -98,10 +92,6 @@
 }
 
 /* Links section */
-.project-links {
-  display: flex;
-  gap: 12px;
-}
 
 .project-link {
   color: hsl(var(--muted-foreground));
@@ -269,10 +259,6 @@
     border-left: none;
     border-right:none;
     padding: 16px;
-  }
-
-  .project-title-section h2 {
-    font-size: 20px;
   }
 
   .detail-item h3,
