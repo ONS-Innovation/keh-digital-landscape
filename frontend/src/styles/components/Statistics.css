@@ -359,7 +359,6 @@
 
   .language-grid {
     grid-template-columns: repeat(2, 1fr);
-    padding: 0;
   }
 
   .search-box input {
