@@ -1,13 +1,26 @@
-import React, { useState, useMemo, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useMemo,
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
 import {
   IoSearch,
   IoClose,
   IoOptions,
   IoChevronDown,
+  IoChevronUp,
   IoRefresh,
+  IoFilter,
+  IoTrash,
+  IoCheckmarkSharp,
+  IoChevronForward,
 } from "react-icons/io5";
 import SkeletonStatCard from "../Statistics/Skeletons/SkeletonStatCard";
+import PieChart from "./PieChart";
 import "../../styles/components/Projects.css";
+import MultiSelect from "../MultiSelect/MultiSelect";
 
 /**
  * Projects component for displaying a list of projects.
@@ -18,6 +31,8 @@ import "../../styles/components/Projects.css";
  * @param {Function} props.handleProjectClick - Function to handle project click.
  * @param {Function} props.getTechnologyStatus - Function to get technology status.
  * @param {Function} props.onRefresh - Function to refresh the projects data.
+ * @param {string} props.searchTerm - The search term to filter projects.
+ * @param {Function} props.setSearchTerm - Function to update the search term.
  */
 const Projects = ({
   isOpen,
@@ -25,23 +40,77 @@ const Projects = ({
   handleProjectClick,
   getTechnologyStatus,
   onRefresh,
+  searchTerm,
+  setSearchTerm,
 }) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState("order-earliest");
+  const [internalSearchTerm, setInternalSearchTerm] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isSortOpen, setIsSortOpen] = useState(false);
+  const [sortField, setSortField] = useState("name");
+  const [sortDirection, setSortDirection] = useState("asc");
   const [selectedType, setSelectedType] = useState("adopt");
-  const [selectedRatio, setSelectedRatio] = useState("most");
+  const [selectedRatio, setSelectedRatio] = useState("high");
+  const [selectedProgrammes, setSelectedProgrammes] = useState([]);
+  const [filters, setFilters] = useState({
+    stage: [],
+    developmentType: [],
+    hosting: [],
+    architecture: []
+  });
+  const [expandedSections, setExpandedSections] = useState({
+    stage: true,
+    developmentType: false,
+    hosting: false,
+    architecture: false,
+  });
+  const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
+  const filterRef = useRef(null);
+  const sortRef = useRef(null);
+  const searchInputRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (isFilterOpen && !event.target.closest(".projects-filter-wrapper")) {
-        setIsFilterOpen(false);
+      if (isSortOpen && sortRef.current && !sortRef.current.contains(event.target)) {
+        setIsSortOpen(false);
+      }
+      if (isFilterDropdownOpen && filterRef.current && !filterRef.current.contains(event.target)) {
+        setIsFilterDropdownOpen(false);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isFilterOpen]);
+  }, [isSortOpen, isFilterDropdownOpen]);
+
+  const clearAllFilters = () => {
+    setFilters({
+      stage: [],
+      developmentType: [],
+      hosting: [],
+      architecture: []
+    });
+  };
+
+  const getActiveFilterCount = () => {
+    return Object.values(filters).reduce(
+      (count, filterGroup) => count + filterGroup.length, 
+      0
+    );
+  };
+
+  const handleFilterChange = (category, value) => {
+    setFilters(prevFilters => {
+      const updatedFilters = { ...prevFilters };
+      
+      if (updatedFilters[category].includes(value)) {
+        updatedFilters[category] = updatedFilters[category].filter(item => item !== value);
+      } else {
+        updatedFilters[category] = [...updatedFilters[category], value];
+      }
+      
+      return updatedFilters;
+    });
+  };
 
   /**
    * calculateTechnologyDistribution function calculates the technology distribution for a given project.
@@ -102,14 +171,194 @@ const Projects = ({
     [getTechnologyStatus]
   );
 
+  /**
+   * Handles the click event for sorting.
+   * 
+   * @param {string} field - The field to sort by.
+   */
+  const handleSortClick = (field) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  };
+
+  /**
+   * Handles the click event for ring ratio sorting.
+   * 
+   * @param {string} ringType - The ring type to sort by.
+   */
+  const handleRingSortClick = (ringType) => {
+    if (selectedType === ringType) {
+      setSelectedRatio(selectedRatio === "high" ? "low" : "high");
+    } else {
+      setSelectedType(ringType);
+      setSelectedRatio("high");
+    }
+    setSortField("ring-ratio");
+  };
+
+  /**
+   * Filters and sorts the projects data.
+   * 
+   * @returns {Array} - The filtered and sorted projects data.
+   */
   const filteredAndSortedProjects = useMemo(() => {
     let filtered = projectsData || [];
 
     if (searchTerm.trim()) {
       filtered = filtered.filter((project) => {
-        const searchString =
-          `${project.Project} ${project.Project_Short} ${project.Project_Area} ${project.Team}`.toLowerCase();
-        return searchString.includes(searchTerm.toLowerCase());
+        const techColumns = [
+          "Language_Main",
+          "Language_Others",
+          "Language_Frameworks",
+          "Infrastructure",
+          "CICD",
+          "Cloud_Services",
+          "IAM_Services",
+          "Testing_Frameworks",
+          "Containers",
+          "Static_Analysis",
+          "Code_Formatter",
+          "Monitoring",
+          "Datastores",
+          "Data_Output_Formats",
+          "Integrations_ONS",
+          "Integrations_External",
+          "Database_Technologies",
+        ];
+
+        let mainFieldsString =
+          `${project.Project || ""} ${project.Project_Short || ""} ${project.Project_Area || ""} ${project.Team || ""}`.toLowerCase();
+        let techFieldsString = "";
+
+        techColumns.forEach((column) => {
+          if (project[column]) {
+            techFieldsString += ` ${project[column]}`;
+          }
+        });
+
+        techFieldsString = techFieldsString.toLowerCase();
+        const searchTermLower = searchTerm.toLowerCase();
+
+        const isMainMatch = mainFieldsString.includes(searchTermLower);
+        const isTechMatch = techFieldsString.includes(searchTermLower);
+        const isMatch = isMainMatch || isTechMatch;
+
+        if (isMatch) {
+          const matchedFields = [];
+
+          const basicFields = [
+            { key: "Project", label: "Project" },
+            { key: "Project_Short", label: "Project Short" },
+            { key: "Team", label: "Team" },
+          ];
+
+          basicFields.forEach((field) => {
+            if (
+              project[field.key] &&
+              project[field.key].toLowerCase().includes(searchTermLower)
+            ) {
+              matchedFields.push(field.label);
+            }
+          });
+
+          techColumns.forEach((column) => {
+            if (
+              project[column] &&
+              project[column].toLowerCase().includes(searchTermLower)
+            ) {
+              const readableColumn = column.replace(/_/g, " ");
+
+              const values = project[column].split(";").map((v) => v.trim());
+              const matchingValues = values.filter((v) =>
+                v.toLowerCase().includes(searchTermLower)
+              );
+
+              if (matchingValues.length > 0) {
+                matchedFields.push(
+                  `${readableColumn} (${matchingValues.join(", ")})`
+                );
+              } else {
+                matchedFields.push(readableColumn);
+              }
+            }
+          });
+
+          project.matchedFields = matchedFields;
+        }
+
+        return isMatch;
+      });
+    }
+
+    if (selectedProgrammes.length > 0) {
+      filtered = filtered.filter((project) =>
+        selectedProgrammes.some(
+          (programme) => programme.value === project.Programme
+        )
+      );
+    }
+
+    // Apply new filters
+    if (filters.stage.length > 0) {
+      filtered = filtered.filter(project => 
+        filters.stage.includes(project.Stage)
+      );
+    }
+
+    // Filter by development type
+    if (filters.developmentType.length > 0) {
+      filtered = filtered.filter(project => {
+        const developmentTypeMap = {
+          'I': 'In House',
+          'P': 'Partner',
+          'O': 'Outsourced'
+        };
+        
+        // Get the first character of the Developed field as the code
+        const typeCode = project.Developed ? project.Developed[0] : '';
+        const fullType = developmentTypeMap[typeCode] || '';
+        
+        return filters.developmentType.includes(fullType);
+      });
+    }
+
+    // Filter by hosting
+    if (filters.hosting.length > 0) {
+      filtered = filtered.filter(project =>
+        filters.hosting.includes(project.Hosted)
+      );
+    }
+
+    // Filter by architecture
+    if (filters.architecture.length > 0) {
+      filtered = filtered.filter(project => {
+        if (!project.Architectures) return false;
+        
+        const architectures = project.Architectures.split(';').map(arch => arch.trim());
+        
+        // Check for cloud providers
+        const hasAWS = architectures.some(arch => 
+          /aws|amazon|ec2|lambda|fargate|ecs|eks/i.test(arch)
+        );
+        const hasGCP = architectures.some(arch => 
+          /gcp|google cloud/i.test(arch)
+        );
+        const hasAzure = architectures.some(arch => 
+          /azure|microsoft/i.test(arch)
+        );
+        
+        // Check if any of the selected architectures match
+        return (
+          (filters.architecture.includes('AWS') && hasAWS) ||
+          (filters.architecture.includes('GCP') && hasGCP) ||
+          (filters.architecture.includes('Azure') && hasAzure) ||
+          (filters.architecture.includes('Other') && 
+            !hasAWS && !hasGCP && !hasAzure && architectures.length > 0)
+        );
       });
     }
 
@@ -125,269 +374,817 @@ const Projects = ({
         };
       };
 
-      switch (sortBy) {
-        case "name-asc":
-          return (a.Project || "").localeCompare(b.Project || "");
-        case "name-desc":
-          return (b.Project || "").localeCompare(a.Project || "");
-        case "tech-most":
-          return getDistribution(b).total - getDistribution(a).total;
-        case "tech-least":
-          return getDistribution(a).total - getDistribution(b).total;
-        case "adopt-high":
-        case "adopt-low":
-        case "trial-high":
-        case "trial-low":
-        case "assess-high":
-        case "assess-low":
-        case "hold-high":
-        case "hold-low": {
-          const [type, direction] = sortBy.split("-");
-          const aRatio = getDistribution(a)[`${type}Ratio`];
-          const bRatio = getDistribution(b)[`${type}Ratio`];
-          return direction === "high" ? bRatio - aRatio : aRatio - bRatio;
+      // Get the sortBy value from field and direction
+      const sortBy = `${sortField}-${sortDirection}`;
+
+      // Sort by specific ring ratio
+      if (sortField === "ring-ratio") {
+        const aDistribution = getDistribution(a);
+        const bDistribution = getDistribution(b);
+
+        let aValue = 0;
+        let bValue = 0;
+
+        switch (selectedType) {
+          case "adopt":
+            aValue = aDistribution.adoptRatio;
+            bValue = bDistribution.adoptRatio;
+            break;
+          case "trial":
+            aValue = aDistribution.trialRatio;
+            bValue = bDistribution.trialRatio;
+            break;
+          case "assess":
+            aValue = aDistribution.assessRatio;
+            bValue = bDistribution.assessRatio;
+            break;
+          case "hold":
+            aValue = aDistribution.holdRatio;
+            bValue = bDistribution.holdRatio;
+            break;
+          default:
+            aValue = aDistribution.adoptRatio;
+            bValue = bDistribution.adoptRatio;
+        }
+
+        return selectedRatio === "high" ? bValue - aValue : aValue - bValue;
+      }
+
+      switch (sortField) {
+        case "name":
+          return sortDirection === "asc"
+            ? (a.Project || "").localeCompare(b.Project || "")
+            : (b.Project || "").localeCompare(a.Project || "");
+        case "programme":
+          return sortDirection === "asc"
+            ? (a.Programme || "").localeCompare(b.Programme || "")
+            : (b.Programme || "").localeCompare(a.Programme || "");
+        case "tech": {
+          const aTotal = getDistribution(a).total;
+          const bTotal = getDistribution(b).total;
+          return sortDirection === "asc"
+            ? aTotal - bTotal // least technologies first
+            : bTotal - aTotal; // most technologies first
         }
         default:
           return 0;
       }
     });
-  }, [projectsData, sortBy, calculateTechnologyDistribution]);
+  }, [
+    projectsData,
+    searchTerm,
+    sortField,
+    sortDirection,
+    calculateTechnologyDistribution,
+    selectedProgrammes,
+    selectedType,
+    selectedRatio,
+    filters,
+  ]);
+
+  /**
+   * Counts the unique programmes in the filtered and sorted projects.
+   * 
+   * @returns {number} - The number of unique programmes.
+   */
+  const uniqueProgrammesCount = useMemo(() => {
+    if (!filteredAndSortedProjects || filteredAndSortedProjects.length === 0)
+      return 0;
+
+    const uniqueProgrammes = new Set();
+
+    filteredAndSortedProjects.forEach((project) => {
+      if (project.Programme) {
+        uniqueProgrammes.add(project.Programme);
+      }
+    });
+
+    return uniqueProgrammes.size;
+  }, [filteredAndSortedProjects]);
+
+  /**
+   * Highlights the search term within the text.
+   * 
+   * @param {string} text - The text to highlight.
+   * @param {string} term - The search term to highlight.
+   * @returns {string} - The highlighted text.
+   */
+  const highlightText = (text, term) => {
+    if (!term || !text) return text;
+
+    const regex = new RegExp(`(${term})`, "gi");
+    const parts = text.split(regex);
+
+    if (parts.length <= 1) return text;
+
+    return parts.map((part, i) =>
+      regex.test(part) ? (
+        <span key={i} className="highlighted-text">
+          {part}
+        </span>
+      ) : (
+        part
+      )
+    );
+  };
+
+  /**
+   * Generates a deterministic colour from a programme name.
+   * 
+   * @param {string} programmeName - The name of the programme.
+   * @returns {string} - The colour of the programme.
+   */
+  const getProgrammeColour = (programmeName) => {
+    if (!programmeName) return "hsl(200, 70%, 50%, 0.2)"; // Default colour
+
+    // Simple hash function for programme name
+    let hash = 0;
+    for (let i = 0; i < programmeName.length; i++) {
+      hash = programmeName.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    // Convert hash to a hue value (0-360)
+    const hue = hash % 360;
+
+    // Return HSL colour with fixed saturation and lightness for consistency
+    return `hsl(${hue}, 70%, 50%, 0.2)`;
+  };
+
+  /**
+   * Gets the first architecture for badge display.
+   * 
+   * @param {string} architectures - The architectures of the project.
+   * @returns {string} - The first architecture.
+   */
+  const getMainArchitecture = (architectures) => {
+    if (!architectures) return null;
+
+    const values = architectures.split(";").map((v) => v.trim());
+    if (values.length === 0) return null;
+
+    // Look for major cloud providers first
+    const providers = {
+      AWS: ["aws", "amazon", "ec2", "lambda", "fargate", "ecs", "eks"],
+      GCP: ["gcp", "google cloud"],
+      Azure: ["azure", "microsoft"],
+    };
+
+    for (const [provider, keywords] of Object.entries(providers)) {
+      for (const value of values) {
+        if (
+          keywords.some((keyword) =>
+            value.toLowerCase().includes(keyword.toLowerCase())
+          )
+        ) {
+          return provider;
+        }
+      }
+    }
+
+    // If no major provider found, return the first architecture
+    return values[0];
+  };
+
+  /**
+   * Extracts unique programme options.
+   * 
+   * @returns {Array} - The unique programme options.
+   */
+  const programmeOptions = useMemo(() => {
+    if (!projectsData || projectsData.length === 0) return [];
+
+    const uniqueProgrammes = new Set();
+
+    projectsData.forEach((project) => {
+      if (project.Programme) {
+        uniqueProgrammes.add(project.Programme);
+      }
+    });
+
+    return Array.from(uniqueProgrammes)
+      .sort()
+      .map((programme) => ({
+        value: programme,
+        label: programme,
+      }));
+  }, [projectsData]);
+
+  /**
+   * Toggles the accordion section.
+   * 
+   * @param {string} section - The section to toggle.
+   */
+  const toggleSection = (section) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
 
   if (!isOpen) return null;
 
   return (
-    <div className="projects-modal-content" onClick={(e) => e.stopPropagation()}>
-      <div className="projects-content-header">
-        <h2>Projects</h2>
-        <div className="projects-content-header-flex">
-          <span className="projects-modal-content-subtitle">
-            Click on a project to view its details. Hover over the coloured bar
-            to see the technology distribution.
-          </span>
-          <div className="projects-search-container">
-            <div className="projects-filter-wrapper">
-              <button
-                className="projects-filter-button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsFilterOpen(!isFilterOpen);
-                }}
-              >
-                <IoOptions />
-                Sort by
-              </button>
-              {isFilterOpen && (
-                <div className="projects-filter-dropdown">
-                  <div className="filter-group">
-                    <div className="filter-group-title">Name</div>
-                    <button
-                      className={sortBy === "name-asc" ? "active" : ""}
-                      onClick={() => setSortBy("name-asc")}
-                    >
-                      A to Z
-                    </button>
-                    <button
-                      className={sortBy === "name-desc" ? "active" : ""}
-                      onClick={() => setSortBy("name-desc")}
-                    >
-                      Z to A
-                    </button>
-                  </div>
-                  <div className="filter-group">
-                    <div className="filter-group-title">Technologies</div>
-                    <button
-                      className={sortBy === "tech-most" ? "active" : ""}
-                      onClick={() => setSortBy("tech-most")}
-                    >
-                      Most technologies
-                    </button>
-                    <button
-                      className={sortBy === "tech-least" ? "active" : ""}
-                      onClick={() => setSortBy("tech-least")}
-                    >
-                      Least technologies
-                    </button>
-                  </div>
-                  <div className="filter-group">
-                    <div className="filter-group-title">Technology Status</div>
-                    <div className="filter-controls">
-                      <div className="filter-select-wrapper">
-                        <select
-                          className="filter-select"
-                          value={selectedType}
-                          onChange={(e) => {
-                            setSelectedType(e.target.value);
-                            setSortBy(`${e.target.value}-${selectedRatio}`);
-                          }}
-                        >
-                          <option value="adopt">Adopt</option>
-                          <option value="trial">Trial</option>
-                          <option value="assess">Assess</option>
-                          <option value="hold">Hold</option>
-                        </select>
-                        <IoChevronDown className="select-chevron" />
-                      </div>
-
-                      <div className="filter-select-wrapper">
-                        <select
-                          className="filter-select"
-                          value={selectedRatio}
-                          onChange={(e) => {
-                            setSelectedRatio(e.target.value);
-                            setSortBy(`${selectedType}-${e.target.value}`);
-                          }}
-                        >
-                          <option value="high">Most Ratio</option>
-                          <option value="low">Least Ratio</option>
-                        </select>
-                        <IoChevronDown className="select-chevron" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <button
-              className="projects-filter-button projects-refresh-button"
-              onClick={onRefresh}
-              title="Refresh the data"
-            >
-              <IoRefresh />
-              Refresh
-            </button>
-
+    <>
+      <div className="projects-charts-wrapper">
+        <div className="projects-content-header">
+          <h2>Projects</h2>
+          <div className="projects-content-header-flex space-between">
+            <span className="projects-modal-content-subtitle">
+              Click on a project to view its details. Hover over the coloured
+              bar to see the technology distribution.
+            </span>
             <div className="projects-search-results">
               <span className="projects-search-count">
-                Found {filteredAndSortedProjects.length} project
-                {filteredAndSortedProjects.length !== 1 ? "s" : ""}
+                Found <b>{filteredAndSortedProjects.length}</b> project
+                {filteredAndSortedProjects.length !== 1
+                  ? "s"
+                  : ""} across <b>{uniqueProgrammesCount}</b> programme
+                {uniqueProgrammesCount !== 1 ? "s" : ""}
               </span>
             </div>
           </div>
         </div>
+        <div className="projects-charts-container">
+          <PieChart
+            projectsData={filteredAndSortedProjects}
+            title="Project Stages"
+            categoryField="Stage"
+            categories={["Active Support", "Development", "Unsupported"]}
+            categoryColours={{
+              "Active Support": "var(--color-adopt)",
+              Development: "var(--color-trial)",
+              Unsupported: "var(--color-hold)",
+            }}
+          />
+          <PieChart
+            projectsData={filteredAndSortedProjects}
+            title="Development Type"
+            categoryField="Developed"
+            categories={["I", "O", "P"]}
+            categoryLabels={{
+              I: "In House",
+              O: "Outsourced",
+              P: "Partner",
+            }}
+            categoryColours={{
+              I: "var(--color-adopt)",
+              O: "var(--color-trial)",
+              P: "var(--color-assess)",
+            }}
+            getCategoryValue={(project, field) => {
+              const developed = project[field] || "";
+              return developed.length > 0 ? developed[0] : "Unknown";
+            }}
+          />
+          <PieChart
+            projectsData={filteredAndSortedProjects}
+            title="Hosting Platform"
+            categoryField="Hosted"
+            categories={["Cloud", "On-premises", "Hybrid"]}
+            categoryColours={{
+              Cloud: "var(--color-adopt)",
+              "On-premises": "var(--color-trial)",
+              Hybrid: "var(--color-assess)",
+            }}
+          />
+          <PieChart
+            projectsData={filteredAndSortedProjects}
+            title="Architectures"
+            categoryField="Architectures"
+            splitSemicolon={true}
+            cloudProvidersOnly={true}
+            categoryColours={{
+              AWS: "var(--color-adopt)",
+              GCP: "var(--color-trial)",
+              Azure: "var(--color-hold)",
+              Other: "var(--color-assess)",
+            }}
+          />
+        </div>
       </div>
-
-      <div className="projects-list">
-        {!projectsData ? (
-          <div className="projects-loading-skeleton">
-            {[...Array(6)].map((_, index) => (
-              <div key={index} className="project-item-skeleton">
-                <SkeletonStatCard />
-                <div className="technology-distribution-skeleton">
-                  <div className="distribution-segment-skeleton" />
-                </div>
+      <div
+        className="projects-modal-content"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="projects-content-header">
+          <div className="projects-content-header-flex flex-end">
+            <div className="projects-search-container">
+              <div className="programme-filter-wrapper">
+                <MultiSelect
+                  options={programmeOptions}
+                  value={selectedProgrammes}
+                  onChange={setSelectedProgrammes}
+                  placeholder="Filter by Programme"
+                />
               </div>
-            ))}
-          </div>
-        ) : filteredAndSortedProjects.length > 0 ? (
-          filteredAndSortedProjects.map((project, index) => {
-            const distribution = calculateTechnologyDistribution(project);
-            const total = distribution.total || 1;
+              <div className="projects-filter-wrapper" ref={filterRef}>
+                <button
+                  className={`projects-filter-button ${isFilterDropdownOpen ? "active" : ""}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsFilterDropdownOpen(!isFilterDropdownOpen);
+                    setIsSortOpen(false);
+                  }}
+                >
+                  <IoFilter />
+                  Filter by
+                  {getActiveFilterCount() > 0 && (
+                    <span className="filter-badge">{getActiveFilterCount()}</span>
+                  )}
+                </button>
+                {isFilterDropdownOpen && (
+                  <div className="projects-filter-dropdown">
+                    <div className="filter-group">
+                      <div 
+                        className="filter-group-title filter-accordion-header" 
+                        onClick={() => toggleSection('stage')}
+                      >
+                        <span>Project Stage</span>
+                        <IoChevronForward 
+                          className={`accordion-icon ${expandedSections.stage ? 'expanded' : ''}`}
+                        />
+                      </div>
+                      {expandedSections.stage && (
+                        <div className="filter-checkbox-group">
+                          {["Active Support", "Development", "Unsupported"].map((stage) => (
+                            <label key={stage} className="filter-checkbox-label">
+                              <div className="custom-checkbox">
+                                {filters.stage.includes(stage) && (
+                                  <IoCheckmarkSharp className="checkbox-icon" />
+                                )}
+                              </div>
+                              <input
+                                type="checkbox"
+                                className="sr-only"
+                                checked={filters.stage.includes(stage)}
+                                onChange={() => handleFilterChange('stage', stage)}
+                              />
+                              <span>{stage}</span>
+                            </label>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="filter-group">
+                      <div 
+                        className="filter-group-title filter-accordion-header" 
+                        onClick={() => toggleSection('developmentType')}
+                      >
+                        <span>Development Type</span>
+                        <IoChevronForward 
+                          className={`accordion-icon ${expandedSections.developmentType ? 'expanded' : ''}`}
+                        />
+                      </div>
+                      {expandedSections.developmentType && (
+                        <div className="filter-checkbox-group">
+                          {["In House", "Partner", "Outsourced"].map((type) => (
+                            <label key={type} className="filter-checkbox-label">
+                              <div className="custom-checkbox">
+                                {filters.developmentType.includes(type) && (
+                                  <IoCheckmarkSharp className="checkbox-icon" />
+                                )}
+                              </div>
+                              <input
+                                type="checkbox"
+                                className="sr-only"
+                                checked={filters.developmentType.includes(type)}
+                                onChange={() => handleFilterChange('developmentType', type)}
+                              />
+                              <span>{type}</span>
+                            </label>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="filter-group">
+                      <div 
+                        className="filter-group-title filter-accordion-header" 
+                        onClick={() => toggleSection('hosting')}
+                      >
+                        <span>Hosting</span>
+                        <IoChevronForward 
+                          className={`accordion-icon ${expandedSections.hosting ? 'expanded' : ''}`}
+                        />
+                      </div>
+                      {expandedSections.hosting && (
+                        <div className="filter-checkbox-group">
+                          {["Cloud", "Hybrid", "On-premises"].map((hosting) => (
+                            <label key={hosting} className="filter-checkbox-label">
+                              <div className="custom-checkbox">
+                                {filters.hosting.includes(hosting) && (
+                                  <IoCheckmarkSharp className="checkbox-icon" />
+                                )}
+                              </div>
+                              <input
+                                type="checkbox"
+                                className="sr-only"
+                                checked={filters.hosting.includes(hosting)}
+                                onChange={() => handleFilterChange('hosting', hosting)}
+                              />
+                              <span>{hosting}</span>
+                            </label>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <div className="filter-group">
+                      <div 
+                        className="filter-group-title filter-accordion-header" 
+                        onClick={() => toggleSection('architecture')}
+                      >
+                        <span>Architectures</span>
+                        <IoChevronForward 
+                          className={`accordion-icon ${expandedSections.architecture ? 'expanded' : ''}`}
+                        />
+                      </div>
+                      {expandedSections.architecture && (
+                        <div className="filter-checkbox-group">
+                          {["AWS", "GCP", "Azure", "Other"].map((arch) => (
+                            <label key={arch} className="filter-checkbox-label">
+                              <div className="custom-checkbox">
+                                {filters.architecture.includes(arch) && (
+                                  <IoCheckmarkSharp className="checkbox-icon" />
+                                )}
+                              </div>
+                              <input
+                                type="checkbox"
+                                className="sr-only"
+                                checked={filters.architecture.includes(arch)}
+                                onChange={() => handleFilterChange('architecture', arch)}
+                              />
+                              <span>{arch}</span>
+                            </label>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    {getActiveFilterCount() > 0 && (
+                      <div className="filter-actions">
+                        <button className="clear-filters-button" onClick={clearAllFilters}>
+                          <IoTrash /> Clear all filters
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div className="projects-filter-wrapper" ref={sortRef}>
+                <button
+                  className={`projects-filter-button ${isSortOpen ? "active" : ""}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsSortOpen(!isSortOpen);
+                    setIsFilterDropdownOpen(false);
+                  }}
+                >
+                  <IoOptions />
+                  Sort by
+                </button>
+                {isSortOpen && (
+                  <div className="projects-filter-dropdown">
+                    <div className="filter-group">
+                      <div className="filter-group-title">Sort Options</div>
+                      <button
+                        className={sortField === "name" ? "active" : ""}
+                        onClick={() => handleSortClick("name")}
+                      >
+                        Name
+                        {sortField === "name" &&
+                          (sortDirection === "asc" ? (
+                            <IoChevronUp className="sort-arrow" />
+                          ) : (
+                            <IoChevronDown className="sort-arrow" />
+                          ))}
+                      </button>
+                      <button
+                        className={sortField === "programme" ? "active" : ""}
+                        onClick={() => handleSortClick("programme")}
+                      >
+                        Programme
+                        {sortField === "programme" &&
+                          (sortDirection === "asc" ? (
+                            <IoChevronUp className="sort-arrow" />
+                          ) : (
+                            <IoChevronDown className="sort-arrow" />
+                          ))}
+                      </button>
+                      <button
+                        className={sortField === "tech" ? "active" : ""}
+                        onClick={() => handleSortClick("tech")}
+                      >
+                        Technologies
+                        {sortField === "tech" &&
+                          (sortDirection === "asc" ? (
+                            <IoChevronUp className="sort-arrow" />
+                          ) : (
+                            <IoChevronDown className="sort-arrow" />
+                          ))}
+                      </button>
+                    </div>
 
-            return (
-              <div
-                key={index}
-                className="project-item"
-                onClick={() => handleProjectClick(project)}
+                    <div className="filter-group">
+                      <div className="filter-group-title">Technology Ring</div>
+                      <button
+                        className={
+                          sortField === "ring-ratio" && selectedType === "adopt"
+                            ? "active"
+                            : ""
+                        }
+                        onClick={() => handleRingSortClick("adopt")}
+                      >
+                        Adopt
+                        {sortField === "ring-ratio" &&
+                          selectedType === "adopt" &&
+                          (selectedRatio === "high" ? (
+                            <IoChevronDown className="sort-arrow" />
+                          ) : (
+                            <IoChevronUp className="sort-arrow" />
+                          ))}
+                      </button>
+                      <button
+                        className={
+                          sortField === "ring-ratio" && selectedType === "trial"
+                            ? "active"
+                            : ""
+                        }
+                        onClick={() => handleRingSortClick("trial")}
+                      >
+                        Trial
+                        {sortField === "ring-ratio" &&
+                          selectedType === "trial" &&
+                          (selectedRatio === "high" ? (
+                            <IoChevronDown className="sort-arrow" />
+                          ) : (
+                            <IoChevronUp className="sort-arrow" />
+                          ))}
+                      </button>
+                      <button
+                        className={
+                          sortField === "ring-ratio" &&
+                          selectedType === "assess"
+                            ? "active"
+                            : ""
+                        }
+                        onClick={() => handleRingSortClick("assess")}
+                      >
+                        Assess
+                        {sortField === "ring-ratio" &&
+                          selectedType === "assess" &&
+                          (selectedRatio === "high" ? (
+                            <IoChevronDown className="sort-arrow" />
+                          ) : (
+                            <IoChevronUp className="sort-arrow" />
+                          ))}
+                      </button>
+                      <button
+                        className={
+                          sortField === "ring-ratio" && selectedType === "hold"
+                            ? "active"
+                            : ""
+                        }
+                        onClick={() => handleRingSortClick("hold")}
+                      >
+                        Hold
+                        {sortField === "ring-ratio" &&
+                          selectedType === "hold" &&
+                          (selectedRatio === "high" ? (
+                            <IoChevronDown className="sort-arrow" />
+                          ) : (
+                            <IoChevronUp className="sort-arrow" />
+                          ))}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <button
+                className="projects-filter-button projects-refresh-button"
+                onClick={onRefresh}
+                title="Refresh the data"
               >
-                <div className="project-item-header">
-                  <div className="project-name">
-                    <span>{project.Project}</span>
-                    <span className="project-name-short">
-                      {project.Project_Short ? `(${project.Project_Short})` : ""}
-                    </span>
+                <IoRefresh />
+                Refresh
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="projects-list">
+          {!projectsData ? (
+            <div className="projects-loading-skeleton">
+              {[...Array(6)].map((_, index) => (
+                <div key={index} className="project-item-skeleton">
+                  <SkeletonStatCard />
+                  <div className="technology-distribution-skeleton">
+                    <div className="distribution-segment-skeleton" />
                   </div>
                 </div>
+              ))}
+            </div>
+          ) : filteredAndSortedProjects.length > 0 ? (
+            filteredAndSortedProjects.map((project, index) => {
+              const distribution = calculateTechnologyDistribution(project);
+              const total = distribution.total || 1;
+              const programmeColour = getProgrammeColour(project.Programme);
+              const mainArchitecture = getMainArchitecture(
+                project.Architectures
+              );
 
-                <div className="technology-distribution">
-                  {distribution.total > 0 ? (
-                    <>
-                      {distribution.adopt > 0 && (
-                        <div
-                          className="distribution-segment adopt"
-                          style={{
-                            width: `${(distribution.adopt / total) * 100}%`,
-                          }}
-                          title={`Adopt (${distribution.adopt}/${total})`}
-                        >
-                          <span className="segment-tooltip">
-                            Adopt ({distribution.adopt}/{total})
+              return (
+                <div
+                  key={index}
+                  className="project-item"
+                  onClick={() => handleProjectClick(project)}
+                >
+                  <div className="project-item-top">
+                    <div className="project-item-header">
+                      <span className="project-name-full">
+                        {searchTerm
+                          ? highlightText(project.Project, searchTerm)
+                          : project.Project}{" "}
+                        {project.Project_Short && (
+                          <>
+                            (
+                            {searchTerm
+                              ? highlightText(project.Project_Short, searchTerm)
+                              : project.Project_Short}
+                            )
+                          </>
+                        )}
+                      </span>
+                      {(project.Programme || project.Programme_Short) && (
+                        <span className="programme-name-full">
+                          <span
+                            className="programme-badge"
+                            style={{ backgroundColor: programmeColour }}
+                          >
+                            {project.Programme
+                              ? searchTerm
+                                ? highlightText(project.Programme, searchTerm)
+                                : project.Programme
+                              : "No Programme"}{" "}
+                            {project.Programme_Short && (
+                              <>
+                                (
+                                {searchTerm
+                                  ? highlightText(
+                                      project.Programme_Short,
+                                      searchTerm
+                                    )
+                                  : project.Programme_Short}
+                                )
+                              </>
+                            )}
                           </span>
+                        </span>
+                      )}
+                      <div className="project-item-description">
+                        {project.Description &&
+                        project.Description.length > 64 ? (
+                          searchTerm ? (
+                            <>
+                              {highlightText(
+                                project.Description.substring(0, 128),
+                                searchTerm
+                              )}
+                              ...
+                            </>
+                          ) : (
+                            `${project.Description.substring(0, 128)}...`
+                          )
+                        ) : searchTerm ? (
+                          highlightText(project.Description, searchTerm)
+                        ) : (
+                          project.Description
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="project-item-bottom">
+                    <div className="project-badges">
+                      {project.Stage && (
+                        <div
+                          className={`project-badge ${project.Stage.toLowerCase().replace(/ /g, "-")}`}
+                        >
+                          {project.Stage}
                         </div>
                       )}
-                      {distribution.trial > 0 && (
+                      {project.Developed && (
                         <div
-                          className="distribution-segment trial"
-                          style={{
-                            width: `${(distribution.trial / total) * 100}%`,
-                          }}
-                          title={`Trial (${distribution.trial}/${total})`}
+                          className={`project-badge ${project.Developed[0].toLowerCase().replace(/ /g, "-")}`}
                         >
-                          <span className="segment-tooltip">
-                            Trial ({distribution.trial}/{total})
-                          </span>
+                          {project.Developed}
                         </div>
                       )}
-                      {distribution.assess > 0 && (
+                      {project.Hosted && (
                         <div
-                          className="distribution-segment assess"
-                          style={{
-                            width: `${(distribution.assess / total) * 100}%`,
-                          }}
-                          title={`Assess (${distribution.assess}/${total})`}
+                          className={`project-badge hosted-${project.Hosted.toLowerCase().replace(/ /g, "-")}`}
                         >
-                          <span className="segment-tooltip">
-                            Assess ({distribution.assess}/{total})
-                          </span>
+                          {project.Hosted}
                         </div>
                       )}
-                      {distribution.hold > 0 && (
+                      {mainArchitecture && (
                         <div
-                          className="distribution-segment hold"
-                          style={{
-                            width: `${(distribution.hold / total) * 100}%`,
-                          }}
-                          title={`Hold (${distribution.hold}/${total})`}
+                          className={`project-badge arch-${mainArchitecture.toLowerCase().replace(/ /g, "-")}`}
                         >
-                          <span className="segment-tooltip">
-                            Hold ({distribution.hold}/{total})
-                          </span>
+                          {mainArchitecture}
                         </div>
                       )}
-                      {distribution.unknown > 0 && (
+                    </div>
+
+                    <div className="technology-distribution">
+                      {distribution.total > 0 ? (
+                        <>
+                          {distribution.adopt > 0 && (
+                            <div
+                              className="distribution-segment adopt"
+                              style={{
+                                width: `${(distribution.adopt / total) * 100}%`,
+                              }}
+                              title={`Adopt (${distribution.adopt}/${total})`}
+                            >
+                              <span className="segment-tooltip">
+                                Adopt ({distribution.adopt}/{total})
+                              </span>
+                            </div>
+                          )}
+                          {distribution.trial > 0 && (
+                            <div
+                              className="distribution-segment trial"
+                              style={{
+                                width: `${(distribution.trial / total) * 100}%`,
+                              }}
+                              title={`Trial (${distribution.trial}/${total})`}
+                            >
+                              <span className="segment-tooltip">
+                                Trial ({distribution.trial}/{total})
+                              </span>
+                            </div>
+                          )}
+                          {distribution.assess > 0 && (
+                            <div
+                              className="distribution-segment assess"
+                              style={{
+                                width: `${(distribution.assess / total) * 100}%`,
+                              }}
+                              title={`Assess (${distribution.assess}/${total})`}
+                            >
+                              <span className="segment-tooltip">
+                                Assess ({distribution.assess}/{total})
+                              </span>
+                            </div>
+                          )}
+                          {distribution.hold > 0 && (
+                            <div
+                              className="distribution-segment hold"
+                              style={{
+                                width: `${(distribution.hold / total) * 100}%`,
+                              }}
+                              title={`Hold (${distribution.hold}/${total})`}
+                            >
+                              <span className="segment-tooltip">
+                                Hold ({distribution.hold}/{total})
+                              </span>
+                            </div>
+                          )}
+                          {distribution.unknown > 0 && (
+                            <div
+                              className="distribution-segment unknown"
+                              style={{
+                                width: `${(distribution.unknown / total) * 100}%`,
+                              }}
+                              title={`Unknown (${distribution.unknown}/${total})`}
+                            >
+                              <span className="segment-tooltip">
+                                Unknown ({distribution.unknown}/{total})
+                              </span>
+                            </div>
+                          )}
+                        </>
+                      ) : (
                         <div
                           className="distribution-segment unknown"
-                          style={{
-                            width: `${(distribution.unknown / total) * 100}%`,
-                          }}
-                          title={`Unknown (${distribution.unknown}/${total})`}
+                          style={{ width: "100%" }}
+                          title="No technologies found"
                         >
                           <span className="segment-tooltip">
-                            Unknown ({distribution.unknown}/{total})
+                            No technologies found
                           </span>
                         </div>
                       )}
-                    </>
-                  ) : (
-                    <div
-                      className="distribution-segment unknown"
-                      style={{ width: "100%" }}
-                      title="No technologies found"
-                    >
-                      <span className="segment-tooltip">
-                        No technologies found
-                      </span>
                     </div>
-                  )}
+                  </div>
                 </div>
-              </div>
-            );
-          })
-        ) : (
-          <div className="projects-empty-state">No projects found</div>
-        )}
+              );
+            })
+          ) : (
+            <div className="projects-empty-state">No projects found</div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
