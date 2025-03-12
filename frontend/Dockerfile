@@ -1,46 +1,34 @@
-FROM node:18-alpine
+# ---- Build Stage ----
+FROM node:18-slim AS builder
 WORKDIR /app
-
-# Create non-root user
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-
-# Add build argument for NODE_ENV
-ARG NODE_ENV="production"
-# Make NODE_ENV available at runtime too
-ENV NODE_ENV=$NODE_ENV
-# Add Node memory settings for both build and runtime
-ENV NODE_OPTIONS="--max-old-space-size=2048"
-
-# Install serve globally if production
-RUN if [ "$NODE_ENV" = "production" ]; then \
-        npm install -g serve; \
-    fi
-
-# Set up npm cache directory
-RUN mkdir -p /app/.npm
 
 # Copy package files first
 COPY package*.json ./
 
-# Install dependencies with production flag for smaller footprint
-RUN npm ci --legacy-peer-deps --only=production && \
-    npm cache clean --force && \
-    chown -R appuser:appgroup /app
+# Install dependencies with production flag
+RUN npm ci --legacy-peer-deps
 
-# Switch to non-root user
+# Copy the rest of the app files
+COPY . .
+
+# Build the app
+RUN npm run build
+
+# ---- Run Stage ----
+FROM node:18-slim
+WORKDIR /app
+
+# Install serve for production
+RUN npm install -g serve
+
+# Copy only the built app from the builder stage
+COPY --from=builder /app/build ./build
+
+# Set non-root user
+RUN addgroup --system appgroup && adduser --system --group appuser
 USER appuser
 
-# Copy the rest of the application files
-COPY --chown=appuser:appgroup . .
-
-# Build for production or start dev server based on NODE_ENV
-# For production, we'll build with increased memory limit
-CMD if [ "$NODE_ENV" = "production" ]; then \
-        export NODE_OPTIONS="--max-old-space-size=2048" && \
-        npm run build && \
-        serve -s build -l 3000; \
-    else \
-        npm start; \
-    fi
+# Start the app
+CMD ["serve", "-s", "build", "-l", "3000"]
 
 EXPOSE 3000
