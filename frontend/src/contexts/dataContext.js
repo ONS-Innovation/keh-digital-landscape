@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useRef } from "react";
 import { fetchCSVFromS3 } from "../utilities/getCSVData";
 import { fetchTechRadarJSONFromS3 } from "../utilities/getTechRadarJson";
 import { fetchRepositoryData, fetchRepositoryStats } from "../utilities/getRepositoryData";
+import { fetchBanners } from "../utilities/getBanner";
 
 /**
  * DataContext provides centralized data management and caching for the application.
@@ -22,12 +23,14 @@ export function DataProvider({ children }) {
   const [techRadarData, setTechRadarData] = useState(null);
   const [repositoryData, setRepositoryData] = useState(new Map());
   const [repositoryStats, setRepositoryStats] = useState(new Map());
+  const [pageBanners, setPageBanners] = useState(new Map());
   
   const pendingRequests = useRef({
     csv: null,
     techRadar: null,
     repository: new Map(),
-    repositoryStats: new Map()
+    repositoryStats: new Map(),
+    banners: new Map()
   });
 
   /**
@@ -144,16 +147,52 @@ export function DataProvider({ children }) {
     return promise;
   };
 
+  /**
+   * Fetches and caches banners for a specific page.
+   * 
+   * @param {string} page - The page to get banners for ('radar', 'statistics', or 'projects')
+   * @param {boolean} [forceRefresh=false] - Whether to force a refresh of the cached data
+   * @returns {Promise<Array>} Array of banner objects for the specified page
+   */
+  const getPageBanners = async (page, forceRefresh = false) => {
+    if (!page) {
+      console.error("Page parameter is required for getPageBanners");
+      return [];
+    }
+
+    // Check cache first
+    if (!forceRefresh && pageBanners.has(page)) {
+      return pageBanners.get(page);
+    }
+
+    // If there's already a pending request for this page, return it
+    if (pendingRequests.current.banners.has(page)) {
+      return pendingRequests.current.banners.get(page);
+    }
+    
+    // Create new request
+    const promise = fetchBanners(page).then(data => {
+      setPageBanners(prev => new Map(prev).set(page, data));
+      pendingRequests.current.banners.delete(page);
+      return data;
+    });
+
+    pendingRequests.current.banners.set(page, promise);
+    return promise;
+  };
+
   const clearCache = () => {
     setCsvData(null);
     setTechRadarData(null);
     setRepositoryData(new Map());
     setRepositoryStats(new Map());
+    setPageBanners(new Map());
     pendingRequests.current = {
       csv: null,
       techRadar: null,
       repository: new Map(),
-      repositoryStats: new Map()
+      repositoryStats: new Map(),
+      banners: new Map()
     };
   };
 
@@ -166,6 +205,7 @@ export function DataProvider({ children }) {
         getTechRadarData,
         getRepositoryData,
         getRepositoryStats,
+        getPageBanners,
         clearCache
       }}
     >

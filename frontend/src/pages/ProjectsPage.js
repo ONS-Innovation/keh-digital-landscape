@@ -8,6 +8,7 @@ import { useData } from "../contexts/dataContext";
 import toast from "react-hot-toast";
 import "../styles/ProjectsPage.css";
 import { useTechnologyStatus } from "../utilities/getTechnologyStatus";
+import { BannerContainer } from "../components/Banner";
 /**
  * ProjectsPage component for displaying the projects page.
  *
@@ -138,6 +139,7 @@ function ProjectsPage() {
         searchResults={[]}
         onSearchResultClick={handleProjectClick}
       />
+      <BannerContainer page="projects" />
       <div className="projects-page">
         <Projects
           isOpen={true}

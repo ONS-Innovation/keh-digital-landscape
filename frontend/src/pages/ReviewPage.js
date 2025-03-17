@@ -40,6 +40,16 @@ const ReviewPage = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isDuplicate, setIsDuplicate] = useState(false);
+  const [bannerMessage, setBannerMessage] = useState("");
+  const [bannerTitle, setBannerTitle] = useState("");
+  const [bannerType, setBannerType] = useState("info");
+  const [selectedPages, setSelectedPages] = useState([]);
+  const [showBannerConfirmModal, setShowBannerConfirmModal] = useState(false);
+  const [bannerSaveStatus, setBannerSaveStatus] = useState(null);
+  const [existingBanners, setExistingBanners] = useState([]);
+  const [isLoadingBanners, setIsLoadingBanners] = useState(false);
+  const [showBannerManagementModal, setShowBannerManagementModal] =
+    useState(false);
 
   // Fields to scan from CSV and their corresponding categories
   const fieldsToScan = {
@@ -54,7 +64,7 @@ const ReviewPage = () => {
     Cloud_Services: "Infrastructure",
     IAM_Services: "Infrastructure",
     Containers: "Infrastructure",
-    Datastores: "Infrastructure" 
+    Datastores: "Infrastructure",
   };
 
   const categoryOptions = [
@@ -367,7 +377,9 @@ const ReviewPage = () => {
 
   const getDuplicateRing = () => {
     const duplicateRing = Object.keys(entries).find((ring) =>
-      entries[ring].some((entry) => entry.title.toLowerCase() === newTechnology.toLowerCase())
+      entries[ring].some(
+        (entry) => entry.title.toLowerCase() === newTechnology.toLowerCase()
+      )
     );
     return duplicateRing;
   };
@@ -435,7 +447,9 @@ const ReviewPage = () => {
 
   const handleConfirmModalYes = () => {
     const currentRing =
-      selectedItem.timeline[selectedItem.timeline.length - 1].ringId.toLowerCase();
+      selectedItem.timeline[
+        selectedItem.timeline.length - 1
+      ].ringId.toLowerCase();
 
     // Create timeline entry for the change
     const now = new Date().toISOString().split("T")[0];
@@ -626,6 +640,161 @@ const ReviewPage = () => {
     );
   };
 
+  const handleSaveBanner = () => {
+    setShowBannerConfirmModal(true);
+  };
+
+  const handleSaveBannerConfirm = async () => {
+    try {
+      const baseUrl =
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:5001/review/api/banners/update"
+          : "/review/api/banners/update";
+
+      const bannerData = {
+        message: bannerMessage,
+        title: bannerTitle,
+        type: bannerType,
+        pages: selectedPages.map((page) => page.value),
+        show: true,
+      };
+
+      const response = await fetch(baseUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ banner: bannerData }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save banner");
+      }
+
+      setBannerSaveStatus("success");
+      toast.success("Banner saved successfully!");
+
+      // Clear form after successful save
+      setTimeout(() => {
+        setBannerMessage("");
+        setBannerTitle("");
+        setBannerType("info");
+        setSelectedPages([]);
+        setShowBannerConfirmModal(false);
+        setBannerSaveStatus(null);
+      }, 2000);
+    } catch (error) {
+      console.error("Error saving banner:", error);
+      setBannerSaveStatus("error");
+      toast.error("Failed to save banner. Please try again.");
+      setShowBannerConfirmModal(false);
+    }
+  };
+
+  const handleSaveBannerCancel = () => {
+    setShowBannerConfirmModal(false);
+  };
+
+  const handleToggleBanner = async (index, shouldShow) => {
+    try {
+      const baseUrl =
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:5001/review/api/banners/toggle"
+          : "/review/api/banners/toggle";
+
+      const response = await fetch(baseUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          index,
+          show: shouldShow,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to toggle banner visibility");
+      }
+
+      // Update local state to reflect the change immediately
+      setExistingBanners((prevBanners) => {
+        const updatedBanners = [...prevBanners];
+        updatedBanners[index] = { ...updatedBanners[index], show: shouldShow };
+        return updatedBanners;
+      });
+
+      toast.success(
+        shouldShow ? "Banner is now visible" : "Banner is now hidden"
+      );
+    } catch (error) {
+      console.error("Error toggling banner:", error);
+      toast.error("Failed to update banner visibility");
+    }
+  };
+
+  const handleDeleteBanner = async (index) => {
+    if (window.confirm("Are you sure you want to delete this banner?")) {
+      try {
+        const baseUrl =
+          process.env.NODE_ENV === "development"
+            ? "http://localhost:5001/review/api/banners/delete"
+            : "/review/api/banners/delete";
+
+        const response = await fetch(baseUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ index }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to delete banner");
+        }
+
+        // Update local state to reflect the change immediately
+        setExistingBanners((prevBanners) =>
+          prevBanners.filter((_, i) => i !== index)
+        );
+
+        toast.success("Banner deleted successfully");
+      } catch (error) {
+        console.error("Error deleting banner:", error);
+        toast.error("Failed to delete banner");
+      }
+    }
+  };
+
+  // Add new useEffect to fetch existing banners
+  useEffect(() => {
+    const fetchBanners = async () => {
+      try {
+        setIsLoadingBanners(true);
+        const baseUrl =
+          process.env.NODE_ENV === "development"
+            ? "http://localhost:5001/review/api/banners"
+            : "/review/api/banners";
+
+        const response = await fetch(baseUrl);
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch banners");
+        }
+
+        const data = await response.json();
+        setExistingBanners(data.messages || []);
+      } catch (error) {
+        console.error("Error fetching banners:", error);
+        toast.error("Failed to load existing banners");
+      } finally {
+        setIsLoadingBanners(false);
+      }
+    };
+
+    fetchBanners();
+  }, [bannerSaveStatus]); // Refetch when a banner is saved
+
   return (
     <ThemeProvider>
       <Header
@@ -669,6 +838,13 @@ const ReviewPage = () => {
                     disabled={isLoading}
                   >
                     Add Technology
+                  </button>
+                  <button
+                    className="admin-button"
+                    onClick={() => setShowBannerManagementModal(true)}
+                    disabled={isLoading}
+                  >
+                    Manage Banners
                   </button>
                   <button
                     className="admin-button"
@@ -719,7 +895,13 @@ const ReviewPage = () => {
                   className={`technology-input`}
                 />
                 {isDuplicate && (
-                  <span className="error-message">Error: technology already exists in the <strong className={`${getDuplicateRing()}-box`}>{getDuplicateRing()}</strong> ring.</span>
+                  <span className="error-message">
+                    Error: technology already exists in the{" "}
+                    <strong className={`${getDuplicateRing()}-box`}>
+                      {getDuplicateRing()}
+                    </strong>{" "}
+                    ring.
+                  </span>
                 )}
               </div>
               <div className="admin-modal-field">
@@ -740,7 +922,9 @@ const ReviewPage = () => {
             <div className="modal-buttons">
               <button
                 onClick={handleAddClick}
-                disabled={!newTechnology.trim() || !selectedCategory || isDuplicate}
+                disabled={
+                  !newTechnology.trim() || !selectedCategory || isDuplicate
+                }
               >
                 Add
               </button>
@@ -788,13 +972,18 @@ const ReviewPage = () => {
             <h3>Add New Technology</h3>
             <p>Are you sure you want to add this technology?</p>
             <div>
-              <p>Name:</p><p>{pendingNewTechnology.title}</p>
+              <p>Name:</p>
+              <p>{pendingNewTechnology.title}</p>
             </div>
             <div className="modal-automatic">
-              <p>Ring:</p><p><i>automatic</i> Review </p>
+              <p>Ring:</p>
+              <p>
+                <i>automatic</i> Review{" "}
+              </p>
             </div>
             <div>
-              <p>Quadrant:</p><p>{pendingNewTechnology.description}</p>
+              <p>Quadrant:</p>
+              <p>{pendingNewTechnology.description}</p>
             </div>
             <div className="modal-buttons">
               <button onClick={handleAddConfirmModalYes}>Yes</button>
@@ -838,6 +1027,159 @@ const ReviewPage = () => {
                 Confirm
               </button>
               <button onClick={handleMoveCancel}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showBannerConfirmModal && (
+        <div className="modal-overlay" style={{ zIndex: 1001 }}>
+          <div className="admin-modal">
+            <h3>Confirm Banner Changes</h3>
+            <p>Are you sure you want to save these changes?</p>
+            <div className="modal-buttons">
+              <button onClick={handleSaveBannerConfirm}>Yes</button>
+              <button onClick={handleSaveBannerCancel}>No</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showBannerManagementModal && (
+        <div className="modal-overlay">
+          <div className="admin-modal banner-management-modal">
+            <h3>Banner Management</h3>
+
+            <div className="modal-tabs">
+              <div className="modal-tab-content">
+                <div className="admin-modal-inputs">
+                  <div className="admin-modal-field">
+                    <label>Title</label>
+                    <input
+                      type="text"
+                      value={bannerTitle}
+                      onChange={(e) => setBannerTitle(e.target.value)}
+                      placeholder="Enter banner title"
+                      className="technology-input"
+                    />
+                  </div>
+                  <div className="admin-modal-field">
+                    <label>Message</label>
+                    <textarea
+                      value={bannerMessage}
+                      onChange={(e) => setBannerMessage(e.target.value)}
+                      placeholder="Enter message to display in the banner..."
+                      className="technology-input"
+                      rows={3}
+                    />
+                  </div>
+                  <div className="admin-modal-field">
+                    <label>Type</label>
+                    <div className="banner-type-selector">
+                      <div
+                        className={`banner-type-option ${bannerType === "info" ? "selected" : ""}`}
+                        onClick={() => setBannerType("info")}
+                      >
+                        <span className="banner-type-indicator info"></span>
+                        Info
+                      </div>
+                      <div
+                        className={`banner-type-option ${bannerType === "warning" ? "selected" : ""}`}
+                        onClick={() => setBannerType("warning")}
+                      >
+                        <span className="banner-type-indicator warning"></span>
+                        Warning
+                      </div>
+                      <div
+                        className={`banner-type-option ${bannerType === "error" ? "selected" : ""}`}
+                        onClick={() => setBannerType("error")}
+                      >
+                        <span className="banner-type-indicator error"></span>
+                        Error
+                      </div>
+                    </div>
+                  </div>
+                  <div className="admin-modal-field">
+                    <label>Display on Pages</label>
+                    <MultiSelect
+                      options={[
+                        { label: "Radar", value: "radar" },
+                        { label: "Statistics", value: "statistics" },
+                        { label: "Projects", value: "projects" },
+                      ]}
+                      value={selectedPages}
+                      onChange={setSelectedPages}
+                      placeholder="Select pages..."
+                    />
+                  </div>
+                </div>
+
+                <h4 className="existing-banners-title">Existing Banners</h4>
+                {isLoadingBanners ? (
+                  <div className="banner-loading">Loading banners...</div>
+                ) : existingBanners.length === 0 ? (
+                  <div className="no-banners">
+                    No banners have been created yet.
+                  </div>
+                ) : (
+                  <div className="banner-list">
+                    {existingBanners.map((banner, index) => (
+                      <div className="banner-item" key={index}>
+                        <div className="banner-content">
+                          {banner.title && (
+                            <h4 className="banner-title">{banner.title}</h4>
+                          )}
+                          <p className="banner-message">{banner.message}</p>
+                        </div>
+                        <div className="banner-actions">
+                          <div className="banner-meta">
+                          {banner.pages?.map((page, i) => (
+                            <span key={i} className="banner-page">
+                              {page}
+                            </span>
+                          ))}
+                          {banner.show ? (
+                            <span className="status-active">Active</span>
+                          ) : (
+                            <span className="status-inactive">Hidden</span>
+                            )}
+                          </div>
+                          <div className="banner-actions-buttons">
+                          <button
+                            className="banner-toggle-btn"
+                            onClick={() =>
+                              handleToggleBanner(index, !banner.show)
+                            }
+                          >
+                            {banner.show ? "Hide" : "Show"}
+                          </button>
+                          <button
+                            className="banner-delete-btn"
+                            onClick={() => handleDeleteBanner(index)}
+                          >
+                            Delete
+                          </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="modal-buttons">
+              <button
+                onClick={handleSaveBanner}
+                disabled={
+                  !bannerMessage.trim() ||
+                  !bannerTitle.trim() ||
+                  selectedPages.length === 0
+                }
+              >
+                Save Banner
+              </button>
+              <button onClick={() => setShowBannerManagementModal(false)}>
+                Cancel
+              </button>
             </div>
           </div>
         </div>
