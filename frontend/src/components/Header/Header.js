@@ -4,7 +4,7 @@ import MenuDropdown from "../MenuDropdown/MenuDropdown";
 import HelpModal from "./HelpModal";
 import "../../styles/components/Header.css";
 import Logo from "../../assets/logo.png";
-import { IoClose, IoSearch, IoHelp } from "react-icons/io5";
+import { IoClose, IoSearch } from "react-icons/io5";
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
 
 /**

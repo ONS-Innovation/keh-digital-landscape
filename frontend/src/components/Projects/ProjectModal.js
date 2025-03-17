@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/components/ProjectModal.css";
 import "../../styles/LangColours.css";
-import { IoClose, IoSearch } from "react-icons/io5";
+import { IoClose, IoSearch, IoChevronDown } from "react-icons/io5";
 import SkeletonLanguageCard from "../Statistics/Skeletons/SkeletonLanguageCard";
 import { fetchRepositoryData } from "../../utilities/getRepositoryData";
 import { useTechnologyStatus } from "../../utilities/getTechnologyStatus";
@@ -391,7 +391,7 @@ const ProjectModal = ({
               <span
                 className={`accordion-icon ${expandedItems.projectDetails ? "expanded" : ""}`}
               >
-                ▼
+                <IoChevronDown />
               </span>
             </div>
             {expandedItems.projectDetails && (
@@ -405,12 +405,21 @@ const ProjectModal = ({
                   </div>
                 )}
 
-                {project.Description && (
+              {project.Technical_Contact && (
                   <div className="detail-section">
-                    <h4>Description</h4>
-                    <p>{project.Description}</p>
+                    <h4>Technical Contact</h4>
+                    <p>
+                      {project.Technical_Contact}
+                    </p>
                   </div>
                 )}
+
+                {project.Delivery_Manager && (
+                  <div className="detail-section">
+                    <h4>Delivery Manager</h4>
+                    <p>{project.Delivery_Manager}</p>
+                  </div>
+                )}  
 
                 {project.Documentation && (
                   <div className="detail-section">
@@ -421,8 +430,15 @@ const ProjectModal = ({
                       rel="noopener noreferrer"
                       className="project-link"
                     >
-                      {project.Documentation}
+                      {project.Documentation.length > 64 ? `${project.Documentation.slice(0, 64)}...` : project.Documentation}
                     </a>
+                  </div>
+                )}
+
+{project.Description && (
+                  <div className="detail-section">
+                    <h4>Description</h4>
+                    <p>{project.Description}</p>
                   </div>
                 )}
               </div>

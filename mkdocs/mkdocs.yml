@@ -25,6 +25,7 @@ nav:
     - Projects:
       - Projects: components/projects/index.md
       - Project Modal: components/projects/projectModal.md
+      - Pie Chart: components/projects/pieChart.md
     - MultiSelect: components/multiSelect.md
     - Skeletons: components/skeletons.md
     - Statistics: components/statistics.md

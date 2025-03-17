@@ -59,12 +59,6 @@
 .dropdown-content button.active, .dropdown-content a.active {
   background: hsl(var(--muted));
   font-weight: 600;
-}
-
-.theme-toggle-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
 } 
 
 .home-button-container {
