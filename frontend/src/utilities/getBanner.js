@@ -7,8 +7,8 @@ export const fetchBanners = async (page) => {
   try {
     const baseUrl =
       process.env.NODE_ENV === "development"
-        ? "http://localhost:5001/review/api/banners"
-        : "/review/api/banners";
+        ? "http://localhost:5001/api/banners"
+        : "/api/banners";
 
     const response = await fetch(baseUrl);
 
