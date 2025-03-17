@@ -121,46 +121,21 @@
   text-decoration-style: dotted;
   text-underline-offset: 4px;
   font-size: 14px;
-} */
+
+} 
 
 .project-name-full{
   font-size: 14px;
   color: hsl(var(--foreground));
   cursor: pointer;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
 }
 
-.programme-name-full{
-  font-size: 12px;
-  color: hsl(var(--secondary-foreground));
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.programme-badge {
-  display: inline-block;
-  border-radius: var(--radius);
-  font-size: 10px;
-  font-weight: 500;
-  white-space: nowrap;
-  background-color: inherit;
-  color: hsl(var(--secondary-foreground));
-  border: 1px solid hsl(var(--border));
-  padding: 1px 12px;
-  box-sizing: border-box;
-  margin-left: -4px;
-}
-
-.project-documentation-link{
-  font-size: 10px;
-  color: hsl(var(--muted-foreground));
-  font-weight: 400;
-  padding: 1px 12px;
-  box-sizing: border-box;
-  border-radius: var(--radius);
-  background-color: hsl(var(--muted));
-  border: 1px solid hsl(var(--border));
-  border-style: dashed;
+.project-name-short {
   margin-left: 4px;
   transition: all 0.2s ease;
   text-decoration: underline;
