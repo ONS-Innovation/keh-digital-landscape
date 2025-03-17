@@ -37,8 +37,8 @@ const AdminPage = () => {
     try {
       const baseUrl =
         process.env.NODE_ENV === "development"
-          ? "http://localhost:5001/review/api/banners"
-          : "/review/api/banners";
+          ? "http://localhost:5001/admin/api/banners"
+          : "/admin/api/banners";
 
       const response = await fetch(baseUrl);
       if (!response.ok) {
@@ -69,8 +69,8 @@ const AdminPage = () => {
     try {
       const baseUrl =
         process.env.NODE_ENV === "development"
-          ? "http://localhost:5001/review/api/banners/update"
-          : "/review/api/banners/update";
+          ? "http://localhost:5001/admin/api/banners/update"
+          : "/admin/api/banners/update";
 
       const bannerData = {
         message: bannerMessage,
@@ -127,8 +127,8 @@ const AdminPage = () => {
     try {
       const baseUrl =
         process.env.NODE_ENV === "development"
-          ? "http://localhost:5001/review/api/banners/toggle"
-          : "/review/api/banners/toggle";
+          ? "http://localhost:5001/admin/api/banners/toggle"
+          : "/admin/api/banners/toggle";
 
       const banner = existingBanners[index];
 
@@ -169,8 +169,8 @@ const AdminPage = () => {
     try {
       const baseUrl =
         process.env.NODE_ENV === "development"
-          ? "http://localhost:5001/review/api/banners/delete"
-          : "/review/api/banners/delete";
+          ? "http://localhost:5001/admin/api/banners/delete"
+          : "/admin/api/banners/delete";
 
       const response = await fetch(baseUrl, {
         method: "POST",
