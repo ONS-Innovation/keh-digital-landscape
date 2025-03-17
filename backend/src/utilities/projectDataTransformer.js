@@ -4,8 +4,11 @@
  * @returns {Object} The transformed project data in CSV format
  */
 function transformProjectToCSVFormat(project) {
-  // Find primary technical contact
-  const technicalContact = project.user.find(u => u.roles.includes("Technical Contact"))?.email || "";
+
+
+  const technicalContact = project.user.find(u => u.roles.includes("Technical Contact") && (u.email?.includes("@ons.gov.uk") || u.email?.includes("@ext.ons.gov.uk"))) ? `${project.user.find(u => u.roles.includes("Technical Contact")).email} (${project.user.find(u => u.roles.includes("Technical Contact")).grade})` : "";
+  const deliveryManager = project.user.find(u => u.roles.includes("Delivery Manager") && (u.email?.includes("@ons.gov.uk") || u.email?.includes("@ext.ons.gov.uk"))) ? `${project.user.find(u => u.roles.includes("Delivery Manager")).email} (${project.user.find(u => u.roles.includes("Delivery Manager")).grade})` : "";
+
   
   // Get main languages and others as comma-separated strings
   const mainLanguages = project.architecture.languages.main.join("; ");
@@ -24,7 +27,8 @@ function transformProjectToCSVFormat(project) {
     Description: project.details[0]?.project_description || "",
     Stage: project.stage || "",
     Developed: developed,
-    Team: technicalContact,
+    Technical_Contact: technicalContact,
+    Delivery_Manager: deliveryManager,
     Language_Main: mainLanguages,
     Language_Others: otherLanguages,
     Language_Frameworks: frameworks,

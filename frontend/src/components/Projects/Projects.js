@@ -55,7 +55,7 @@ const Projects = ({
     stage: [],
     developmentType: [],
     hosting: [],
-    architecture: []
+    architecture: [],
   });
   const [expandedSections, setExpandedSections] = useState({
     stage: true,
@@ -70,10 +70,18 @@ const Projects = ({
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (isSortOpen && sortRef.current && !sortRef.current.contains(event.target)) {
+      if (
+        isSortOpen &&
+        sortRef.current &&
+        !sortRef.current.contains(event.target)
+      ) {
         setIsSortOpen(false);
       }
-      if (isFilterDropdownOpen && filterRef.current && !filterRef.current.contains(event.target)) {
+      if (
+        isFilterDropdownOpen &&
+        filterRef.current &&
+        !filterRef.current.contains(event.target)
+      ) {
         setIsFilterDropdownOpen(false);
       }
     };
@@ -87,27 +95,30 @@ const Projects = ({
       stage: [],
       developmentType: [],
       hosting: [],
-      architecture: []
+      architecture: [],
     });
+    setSelectedProgrammes([]);
   };
 
   const getActiveFilterCount = () => {
     return Object.values(filters).reduce(
-      (count, filterGroup) => count + filterGroup.length, 
+      (count, filterGroup) => count + filterGroup.length,
       0
     );
   };
 
   const handleFilterChange = (category, value) => {
-    setFilters(prevFilters => {
+    setFilters((prevFilters) => {
       const updatedFilters = { ...prevFilters };
-      
+
       if (updatedFilters[category].includes(value)) {
-        updatedFilters[category] = updatedFilters[category].filter(item => item !== value);
+        updatedFilters[category] = updatedFilters[category].filter(
+          (item) => item !== value
+        );
       } else {
         updatedFilters[category] = [...updatedFilters[category], value];
       }
-      
+
       return updatedFilters;
     });
   };
@@ -173,7 +184,7 @@ const Projects = ({
 
   /**
    * Handles the click event for sorting.
-   * 
+   *
    * @param {string} field - The field to sort by.
    */
   const handleSortClick = (field) => {
@@ -187,7 +198,7 @@ const Projects = ({
 
   /**
    * Handles the click event for ring ratio sorting.
-   * 
+   *
    * @param {string} ringType - The ring type to sort by.
    */
   const handleRingSortClick = (ringType) => {
@@ -202,7 +213,7 @@ const Projects = ({
 
   /**
    * Filters and sorts the projects data.
-   * 
+   *
    * @returns {Array} - The filtered and sorted projects data.
    */
   const filteredAndSortedProjects = useMemo(() => {
@@ -304,60 +315,65 @@ const Projects = ({
 
     // Apply new filters
     if (filters.stage.length > 0) {
-      filtered = filtered.filter(project => 
+      filtered = filtered.filter((project) =>
         filters.stage.includes(project.Stage)
       );
     }
 
     // Filter by development type
     if (filters.developmentType.length > 0) {
-      filtered = filtered.filter(project => {
+      filtered = filtered.filter((project) => {
         const developmentTypeMap = {
-          'I': 'In House',
-          'P': 'Partner',
-          'O': 'Outsourced'
+          I: "In House",
+          P: "Partner",
+          O: "Outsourced",
         };
-        
+
         // Get the first character of the Developed field as the code
-        const typeCode = project.Developed ? project.Developed[0] : '';
-        const fullType = developmentTypeMap[typeCode] || '';
-        
+        const typeCode = project.Developed ? project.Developed[0] : "";
+        const fullType = developmentTypeMap[typeCode] || "";
+
         return filters.developmentType.includes(fullType);
       });
     }
 
     // Filter by hosting
     if (filters.hosting.length > 0) {
-      filtered = filtered.filter(project =>
+      filtered = filtered.filter((project) =>
         filters.hosting.includes(project.Hosted)
       );
     }
 
     // Filter by architecture
     if (filters.architecture.length > 0) {
-      filtered = filtered.filter(project => {
+      filtered = filtered.filter((project) => {
         if (!project.Architectures) return false;
-        
-        const architectures = project.Architectures.split(';').map(arch => arch.trim());
-        
+
+        const architectures = project.Architectures.split(";").map((arch) =>
+          arch.trim()
+        );
+
         // Check for cloud providers
-        const hasAWS = architectures.some(arch => 
+        const hasAWS = architectures.some((arch) =>
           /aws|amazon|ec2|lambda|fargate|ecs|eks/i.test(arch)
         );
-        const hasGCP = architectures.some(arch => 
+        const hasGCP = architectures.some((arch) =>
           /gcp|google cloud/i.test(arch)
         );
-        const hasAzure = architectures.some(arch => 
+        const hasAzure = architectures.some((arch) =>
           /azure|microsoft/i.test(arch)
         );
-        
+
         // Check if any of the selected architectures match
         return (
-          (filters.architecture.includes('AWS') && hasAWS) ||
-          (filters.architecture.includes('GCP') && hasGCP) ||
-          (filters.architecture.includes('Azure') && hasAzure) ||
-          (filters.architecture.includes('Other') && 
-            !hasAWS && !hasGCP && !hasAzure && architectures.length > 0)
+          (filters.architecture.includes("AWS") && hasAWS) ||
+          (filters.architecture.includes("GCP") && hasGCP) ||
+          (filters.architecture.includes("Azure") && hasAzure) ||
+          (filters.architecture.includes("Other") &&
+            !hasAWS &&
+            !hasGCP &&
+            !hasAzure &&
+            architectures.length > 0)
         );
       });
     }
@@ -444,7 +460,7 @@ const Projects = ({
 
   /**
    * Counts the unique programmes in the filtered and sorted projects.
-   * 
+   *
    * @returns {number} - The number of unique programmes.
    */
   const uniqueProgrammesCount = useMemo(() => {
@@ -464,7 +480,7 @@ const Projects = ({
 
   /**
    * Highlights the search term within the text.
-   * 
+   *
    * @param {string} text - The text to highlight.
    * @param {string} term - The search term to highlight.
    * @returns {string} - The highlighted text.
@@ -490,7 +506,7 @@ const Projects = ({
 
   /**
    * Generates a deterministic colour from a programme name.
-   * 
+   *
    * @param {string} programmeName - The name of the programme.
    * @returns {string} - The colour of the programme.
    */
@@ -512,7 +528,7 @@ const Projects = ({
 
   /**
    * Gets the first architecture for badge display.
-   * 
+   *
    * @param {string} architectures - The architectures of the project.
    * @returns {string} - The first architecture.
    */
@@ -547,7 +563,7 @@ const Projects = ({
 
   /**
    * Extracts unique programme options.
-   * 
+   *
    * @returns {Array} - The unique programme options.
    */
   const programmeOptions = useMemo(() => {
@@ -571,13 +587,13 @@ const Projects = ({
 
   /**
    * Toggles the accordion section.
-   * 
+   *
    * @param {string} section - The section to toggle.
    */
   const toggleSection = (section) => {
-    setExpandedSections(prev => ({
+    setExpandedSections((prev) => ({
       ...prev,
-      [section]: !prev[section]
+      [section]: !prev[section],
     }));
   };
 
@@ -596,9 +612,8 @@ const Projects = ({
             <div className="projects-search-results">
               <span className="projects-search-count">
                 Found <b>{filteredAndSortedProjects.length}</b> project
-                {filteredAndSortedProjects.length !== 1
-                  ? "s"
-                  : ""} across <b>{uniqueProgrammesCount}</b> programme
+                {filteredAndSortedProjects.length !== 1 ? "s" : ""} across{" "}
+                <b>{uniqueProgrammesCount}</b> programme
                 {uniqueProgrammesCount !== 1 ? "s" : ""}
               </span>
             </div>
@@ -669,14 +684,6 @@ const Projects = ({
         <div className="projects-content-header">
           <div className="projects-content-header-flex flex-end">
             <div className="projects-search-container">
-              <div className="programme-filter-wrapper">
-                <MultiSelect
-                  options={programmeOptions}
-                  value={selectedProgrammes}
-                  onChange={setSelectedProgrammes}
-                  placeholder="Filter by Programme"
-                />
-              </div>
               <div className="projects-filter-wrapper" ref={filterRef}>
                 <button
                   className={`projects-filter-button ${isFilterDropdownOpen ? "active" : ""}`}
@@ -689,51 +696,60 @@ const Projects = ({
                   <IoFilter />
                   Filter by
                   {getActiveFilterCount() > 0 && (
-                    <span className="filter-badge">{getActiveFilterCount()}</span>
+                    <span className="filter-badge">
+                      {getActiveFilterCount()}
+                    </span>
                   )}
                 </button>
                 {isFilterDropdownOpen && (
                   <div className="projects-filter-dropdown">
                     <div className="filter-group">
-                      <div 
-                        className="filter-group-title filter-accordion-header" 
-                        onClick={() => toggleSection('stage')}
+                      <div
+                        className="filter-group-title filter-accordion-header"
+                        onClick={() => toggleSection("stage")}
                       >
                         <span>Project Stage</span>
-                        <IoChevronForward 
-                          className={`accordion-icon ${expandedSections.stage ? 'expanded' : ''}`}
+                        <IoChevronForward
+                          className={`accordion-icon ${expandedSections.stage ? "expanded" : ""}`}
                         />
                       </div>
                       {expandedSections.stage && (
                         <div className="filter-checkbox-group">
-                          {["Active Support", "Development", "Unsupported"].map((stage) => (
-                            <label key={stage} className="filter-checkbox-label">
-                              <div className="custom-checkbox">
-                                {filters.stage.includes(stage) && (
-                                  <IoCheckmarkSharp className="checkbox-icon" />
-                                )}
-                              </div>
-                              <input
-                                type="checkbox"
-                                className="sr-only"
-                                checked={filters.stage.includes(stage)}
-                                onChange={() => handleFilterChange('stage', stage)}
-                              />
-                              <span>{stage}</span>
-                            </label>
-                          ))}
+                          {["Active Support", "Development", "Unsupported"].map(
+                            (stage) => (
+                              <label
+                                key={stage}
+                                className="filter-checkbox-label"
+                              >
+                                <div className="custom-checkbox">
+                                  {filters.stage.includes(stage) && (
+                                    <IoCheckmarkSharp className="checkbox-icon" />
+                                  )}
+                                </div>
+                                <input
+                                  type="checkbox"
+                                  className="sr-only"
+                                  checked={filters.stage.includes(stage)}
+                                  onChange={() =>
+                                    handleFilterChange("stage", stage)
+                                  }
+                                />
+                                <span>{stage}</span>
+                              </label>
+                            )
+                          )}
                         </div>
                       )}
                     </div>
-                    
+
                     <div className="filter-group">
-                      <div 
-                        className="filter-group-title filter-accordion-header" 
-                        onClick={() => toggleSection('developmentType')}
+                      <div
+                        className="filter-group-title filter-accordion-header"
+                        onClick={() => toggleSection("developmentType")}
                       >
                         <span>Development Type</span>
-                        <IoChevronForward 
-                          className={`accordion-icon ${expandedSections.developmentType ? 'expanded' : ''}`}
+                        <IoChevronForward
+                          className={`accordion-icon ${expandedSections.developmentType ? "expanded" : ""}`}
                         />
                       </div>
                       {expandedSections.developmentType && (
@@ -749,7 +765,9 @@ const Projects = ({
                                 type="checkbox"
                                 className="sr-only"
                                 checked={filters.developmentType.includes(type)}
-                                onChange={() => handleFilterChange('developmentType', type)}
+                                onChange={() =>
+                                  handleFilterChange("developmentType", type)
+                                }
                               />
                               <span>{type}</span>
                             </label>
@@ -757,21 +775,24 @@ const Projects = ({
                         </div>
                       )}
                     </div>
-                    
+
                     <div className="filter-group">
-                      <div 
-                        className="filter-group-title filter-accordion-header" 
-                        onClick={() => toggleSection('hosting')}
+                      <div
+                        className="filter-group-title filter-accordion-header"
+                        onClick={() => toggleSection("hosting")}
                       >
                         <span>Hosting</span>
-                        <IoChevronForward 
-                          className={`accordion-icon ${expandedSections.hosting ? 'expanded' : ''}`}
+                        <IoChevronForward
+                          className={`accordion-icon ${expandedSections.hosting ? "expanded" : ""}`}
                         />
                       </div>
                       {expandedSections.hosting && (
                         <div className="filter-checkbox-group">
                           {["Cloud", "Hybrid", "On-premises"].map((hosting) => (
-                            <label key={hosting} className="filter-checkbox-label">
+                            <label
+                              key={hosting}
+                              className="filter-checkbox-label"
+                            >
                               <div className="custom-checkbox">
                                 {filters.hosting.includes(hosting) && (
                                   <IoCheckmarkSharp className="checkbox-icon" />
@@ -781,7 +802,9 @@ const Projects = ({
                                 type="checkbox"
                                 className="sr-only"
                                 checked={filters.hosting.includes(hosting)}
-                                onChange={() => handleFilterChange('hosting', hosting)}
+                                onChange={() =>
+                                  handleFilterChange("hosting", hosting)
+                                }
                               />
                               <span>{hosting}</span>
                             </label>
@@ -790,13 +813,13 @@ const Projects = ({
                       )}
                     </div>
                     <div className="filter-group">
-                      <div 
-                        className="filter-group-title filter-accordion-header" 
-                        onClick={() => toggleSection('architecture')}
+                      <div
+                        className="filter-group-title filter-accordion-header"
+                        onClick={() => toggleSection("architecture")}
                       >
                         <span>Architectures</span>
-                        <IoChevronForward 
-                          className={`accordion-icon ${expandedSections.architecture ? 'expanded' : ''}`}
+                        <IoChevronForward
+                          className={`accordion-icon ${expandedSections.architecture ? "expanded" : ""}`}
                         />
                       </div>
                       {expandedSections.architecture && (
@@ -812,7 +835,9 @@ const Projects = ({
                                 type="checkbox"
                                 className="sr-only"
                                 checked={filters.architecture.includes(arch)}
-                                onChange={() => handleFilterChange('architecture', arch)}
+                                onChange={() =>
+                                  handleFilterChange("architecture", arch)
+                                }
                               />
                               <span>{arch}</span>
                             </label>
@@ -820,9 +845,20 @@ const Projects = ({
                         </div>
                       )}
                     </div>
-                    {getActiveFilterCount() > 0 && (
+                    <div className="programme-filter-wrapper filter-group">
+                      <MultiSelect
+                        options={programmeOptions}
+                        value={selectedProgrammes}
+                        onChange={setSelectedProgrammes}
+                        placeholder="Filter by Programme"
+                      />
+                    </div>
+                    {getActiveFilterCount() > 0 || selectedProgrammes.length > 0 && (
                       <div className="filter-actions">
-                        <button className="clear-filters-button" onClick={clearAllFilters}>
+                        <button
+                          className="clear-filters-button"
+                          onClick={clearAllFilters}
+                        >
                           <IoTrash /> Clear all filters
                         </button>
                       </div>
@@ -845,9 +881,9 @@ const Projects = ({
                 {isSortOpen && (
                   <div className="projects-filter-dropdown">
                     <div className="filter-group">
-                      <div className="filter-group-title">Sort Options</div>
+                      <div className="filter-group-title">Sort Options <span className="sort-direction-label">({sortDirection === "asc" ? "ascending" : "descending"})</span></div>
                       <button
-                        className={sortField === "name" ? "active" : ""}
+                        className={`sort-by-button ${sortField === "name" ? "active" : ""}`}
                         onClick={() => handleSortClick("name")}
                       >
                         Name
@@ -859,7 +895,7 @@ const Projects = ({
                           ))}
                       </button>
                       <button
-                        className={sortField === "programme" ? "active" : ""}
+                        className={`sort-by-button ${sortField === "programme" ? "active" : ""}`}
                         onClick={() => handleSortClick("programme")}
                       >
                         Programme
@@ -871,7 +907,7 @@ const Projects = ({
                           ))}
                       </button>
                       <button
-                        className={sortField === "tech" ? "active" : ""}
+                        className={`sort-by-button ${sortField === "tech" ? "active" : ""}`}
                         onClick={() => handleSortClick("tech")}
                       >
                         Technologies
@@ -885,13 +921,9 @@ const Projects = ({
                     </div>
 
                     <div className="filter-group">
-                      <div className="filter-group-title">Technology Ring</div>
+                      <div className="filter-group-title">Technology Ring <span className="sort-direction-label">({selectedRatio === "high" ? "descending" : "ascending"})</span></div>
                       <button
-                        className={
-                          sortField === "ring-ratio" && selectedType === "adopt"
-                            ? "active"
-                            : ""
-                        }
+                        className={`sort-by-button ${sortField === "ring-ratio" && selectedType === "adopt" ? "active" : ""}`}
                         onClick={() => handleRingSortClick("adopt")}
                       >
                         Adopt
@@ -904,11 +936,7 @@ const Projects = ({
                           ))}
                       </button>
                       <button
-                        className={
-                          sortField === "ring-ratio" && selectedType === "trial"
-                            ? "active"
-                            : ""
-                        }
+                        className={`sort-by-button ${sortField === "ring-ratio" && selectedType === "trial" ? "active" : ""}`}
                         onClick={() => handleRingSortClick("trial")}
                       >
                         Trial
@@ -921,12 +949,7 @@ const Projects = ({
                           ))}
                       </button>
                       <button
-                        className={
-                          sortField === "ring-ratio" &&
-                          selectedType === "assess"
-                            ? "active"
-                            : ""
-                        }
+                        className={`sort-by-button ${sortField === "ring-ratio" && selectedType === "assess" ? "active" : ""}`}
                         onClick={() => handleRingSortClick("assess")}
                       >
                         Assess
@@ -939,11 +962,7 @@ const Projects = ({
                           ))}
                       </button>
                       <button
-                        className={
-                          sortField === "ring-ratio" && selectedType === "hold"
-                            ? "active"
-                            : ""
-                        }
+                        className={`sort-by-button ${sortField === "ring-ratio" && selectedType === "hold" ? "active" : ""}`}
                         onClick={() => handleRingSortClick("hold")}
                       >
                         Hold
@@ -1038,6 +1057,9 @@ const Projects = ({
                               </>
                             )}
                           </span>
+                          <a className="project-documentation-link" href={project.Documentation} target="_blank" rel="noopener noreferrer">
+                            Documentation
+                          </a>
                         </span>
                       )}
                       <div className="project-item-description">

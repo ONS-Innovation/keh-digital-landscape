@@ -456,7 +456,6 @@
   padding: 8px;
   box-sizing: border-box;
   background-color: hsl(var(--background));
-  border-bottom: 1px solid hsl(var(--border));
   cursor: pointer;
   transition: background-color 0.2s;
   
@@ -488,8 +487,11 @@
   border-top: 1px solid var(--border);
   background-color: var(--card);
   border: 1px solid hsl(var(--border));
-  border-top: none;
   border-radius: 0 0 var(--radius) var(--radius);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: auto;
+  gap: 12px;
 }
 
 .accordion-content p {
@@ -499,12 +501,9 @@
   color: hsl(var(--foreground));
 }
 
-.detail-section {
-  margin-bottom: 12px;
-}
-
 .detail-section:last-child {
   margin-bottom: 0;
+  grid-column: span 2;
 }
 
 .detail-section h4 {

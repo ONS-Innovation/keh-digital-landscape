@@ -151,6 +151,28 @@
   margin-left: -4px;
 }
 
+.project-documentation-link{
+  font-size: 10px;
+  color: hsl(var(--muted-foreground));
+  font-weight: 400;
+  padding: 1px 12px;
+  box-sizing: border-box;
+  border-radius: var(--radius);
+  background-color: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  border-style: dashed;
+  margin-left: 4px;
+  transition: all 0.2s ease;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 1px;
+}
+
+.project-documentation-link:hover{
+  background-color: hsl(var(--primary) / 0.1);
+  border-color: hsl(var(--border));
+}
+
 .project-item-description{
   font-size: 12px;
   color: hsl(var(--muted-foreground));
@@ -281,10 +303,10 @@
 }
 
 .projects-search-results {
-  height: 38px;
   width: 50%;
   max-width: 300px;
-  padding: 0 12px;
+  padding: 8px 12px;
+  box-sizing: border-box; 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -368,6 +390,7 @@ text-align: left;
 
 .filter-group {
   padding: 8px;
+  box-sizing: border-box;
   border-bottom: 1px solid hsl(var(--border));
 }
 
@@ -540,12 +563,15 @@ text-align: left;
   }
 }
 
+.sort-by-button {
+  padding: 8px;
+  margin-bottom: 4px;
+}
+
 .filter-group button {
   background: none;
   border: none;
   border-radius: var(--radius);
-  padding: 8px 12px;
-  margin-bottom: 4px;
   color: hsl(var(--foreground));
   font-size: 14px;
   cursor: pointer;
@@ -694,22 +720,89 @@ text-align: left;
   border: 1px solid hsl(var(--border));
 }
 
+.project-badge.active-support{
+  background-color: var(--color-bg-adopt);
+  color: var(--color-adopt);
+  border-color: var(--color-adopt);
+}
+
 .project-badge.development{
   background-color: var(--color-bg-trial);
+  color: var(--color-trial);
+  border-color: var(--color-trial);
+}
+
+.project-badge.unsupported{
+  background-color: var(--color-bg-hold);
+  color: var(--color-hold);
+  border-color: var(--color-hold);
 }
 
 .project-badge.i{
   background-color: var(--color-bg-adopt);
+  color: var(--color-adopt);
+  border-color: var(--color-adopt);
 }
 
 .project-badge.p{
   background-color: var(--color-bg-trial);
+  color: var(--color-trial);
+  border-color: var(--color-trial); 
+}
+
+.project-badge.o{
+  background-color: var(--color-bg-assess);
+  color: var(--color-assess);
+  border-color: var(--color-assess);
 }
 
 /* Hosting platform badges */
+.project-badge.hosted-cloud {
+  background-color: var(--color-bg-adopt);
+  color: var(--color-adopt);
+  border-color: var(--color-adopt);
+}
+
+.project-badge.hosted-on-premises {
+  background-color: var(--color-bg-trial);
+  color: var(--color-trial);
+  border-color: var(--color-trial);
+}
+
+.project-badge.hosted-hybrid {
+  background-color: var(--color-bg-assess);
+  color: var(--color-assess);
+  border-color: var(--color-assess);
+}
 
 /* Architecture badges */
+.project-badge.arch-aws {
+  background-color: var(--color-bg-adopt);
+  color: var(--color-adopt);
+  border-color: var(--color-adopt);
+}
 
+.project-badge.arch-gcp {
+  background-color: var(--color-bg-trial);
+  color: var(--color-trial);
+  border-color: var(--color-trial);
+}
+
+.project-badge.arch-azure {
+  background-color: #e6f2f8;
+  color: var(--color-assess);
+  border-color: var(--color-assess);
+}
+
+.project-badge.arch-lambda,
+.project-badge.arch-ec2,
+.project-badge.arch-fargate,
+.project-badge.arch-ecs,
+.project-badge.arch-eks {
+  background-color: #f9f2d9;
+  color: var(--color-adopt);
+  border-color: var(--color-adopt);
+}
 .projects-charts-wrapper {
   width: 100%;
   background: hsl(var(--background));
