@@ -660,6 +660,215 @@ app.get("/api/repository/project/json", async (req, res) => {
 });
 
 /**
+ * Endpoint to fetch banner messages.
+ * @route GET /admin/api/banners
+ * @returns {Object} Banner messages data
+ * @throws {Error} 500 - If fetching fails
+ */
+app.get("/admin/api/banners", async (req, res) => {
+  try {
+    const bucketName = process.env.BUCKET_NAME
+      ? process.env.BUCKET_NAME
+      : "sdp-dev-digital-landscape";
+
+    let messagesData = { messages: [] };
+    
+    try {
+      // Try to get existing messages.json file
+      const getCommand = new GetObjectCommand({
+        Bucket: bucketName,
+        Key: "messages.json",
+      });
+
+      const { Body } = await s3Client.send(getCommand);
+      messagesData = JSON.parse(await Body.transformToString());
+    } catch (error) {
+      // If file doesn't exist, return empty array
+      logger.info("No messages.json file found, returning empty array");
+      messagesData = { messages: [] };
+    }
+
+    res.json(messagesData);
+  } catch (error) {
+    logger.error("Error fetching banner messages:", { error: error.message });
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * Endpoint to update banner messages.
+ * @route POST /admin/api/banners/update
+ * @param {Object} req.body.banner - The banner data
+ * @returns {Object} Success message
+ * @throws {Error} 400 - If banner data is invalid
+ * @throws {Error} 500 - If update fails
+ */
+app.post("/admin/api/banners/update", async (req, res) => {
+  try {
+    const { banner } = req.body;
+
+    // Validate banner data
+    if (!banner || !banner.message || !Array.isArray(banner.pages) || banner.pages.length === 0) {
+      return res.status(400).json({ error: "Invalid banner data" });
+    }
+
+    const bucketName = process.env.BUCKET_NAME
+      ? process.env.BUCKET_NAME
+      : "sdp-dev-digital-landscape";
+
+    let messagesData;
+    
+    try {
+      // Try to get existing messages.json file
+      const getCommand = new GetObjectCommand({
+        Bucket: bucketName,
+        Key: "messages.json",
+      });
+
+      const { Body } = await s3Client.send(getCommand);
+      messagesData = JSON.parse(await Body.transformToString());
+    } catch (error) {
+      // If file doesn't exist, create a new structure
+      messagesData = { messages: [] };
+      logger.info("Creating new messages.json file");
+    }
+
+    // Add the new banner to messages
+    messagesData.messages.push({
+      title: banner.title || "",
+      message: banner.message,
+      description: banner.message, // For backwards compatibility
+      type: banner.type || "info",
+      pages: banner.pages,
+      show: banner.show !== false // Default to true if not explicitly set to false
+    });
+
+    // Save the updated JSON back to S3
+    const putCommand = new PutObjectCommand({
+      Bucket: bucketName,
+      Key: "messages.json",
+      Body: JSON.stringify(messagesData, null, 2),
+      ContentType: "application/json",
+    });
+
+    await s3Client.send(putCommand);
+    res.json({ message: "Banner added successfully" });
+  } catch (error) {
+    logger.error("Error updating banner messages:", { error: error.message });
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * Endpoint to toggle a banner's visibility.
+ * @route POST /admin/api/banners/toggle
+ * @param {number} req.body.index - The index of the banner to toggle
+ * @param {boolean} req.body.show - Whether to show or hide the banner
+ * @returns {Object} Success message
+ * @throws {Error} 400 - If index is invalid
+ * @throws {Error} 500 - If toggle fails
+ */
+app.post("/admin/api/banners/toggle", async (req, res) => {
+  try {
+    const { index, show } = req.body;
+
+    // Validate index
+    if (index === undefined || index < 0) {
+      return res.status(400).json({ error: "Invalid banner index" });
+    }
+
+    const bucketName = process.env.BUCKET_NAME
+      ? process.env.BUCKET_NAME
+      : "sdp-dev-digital-landscape";
+
+    // Get existing messages.json file
+    const getCommand = new GetObjectCommand({
+      Bucket: bucketName,
+      Key: "messages.json",
+    });
+
+    const { Body } = await s3Client.send(getCommand);
+    const messagesData = JSON.parse(await Body.transformToString());
+
+    // Check if index is valid
+    if (!messagesData.messages || index >= messagesData.messages.length) {
+      return res.status(400).json({ error: "Banner index out of range" });
+    }
+
+    // Update the banner visibility
+    messagesData.messages[index].show = show;
+
+    // Save the updated JSON back to S3
+    const putCommand = new PutObjectCommand({
+      Bucket: bucketName,
+      Key: "messages.json",
+      Body: JSON.stringify(messagesData, null, 2),
+      ContentType: "application/json",
+    });
+
+    await s3Client.send(putCommand);
+    res.json({ message: `Banner ${show ? 'shown' : 'hidden'} successfully` });
+  } catch (error) {
+    logger.error("Error toggling banner visibility:", { error: error.message });
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * Endpoint to delete a banner.
+ * @route POST /admin/api/banners/delete
+ * @param {number} req.body.index - The index of the banner to delete
+ * @returns {Object} Success message
+ * @throws {Error} 400 - If index is invalid
+ * @throws {Error} 500 - If deletion fails
+ */
+app.post("/admin/api/banners/delete", async (req, res) => {
+  try {
+    const { index } = req.body;
+
+    // Validate index
+    if (index === undefined || index < 0) {
+      return res.status(400).json({ error: "Invalid banner index" });
+    }
+
+    const bucketName = process.env.BUCKET_NAME
+      ? process.env.BUCKET_NAME
+      : "sdp-dev-digital-landscape";
+
+    // Get existing messages.json file
+    const getCommand = new GetObjectCommand({
+      Bucket: bucketName,
+      Key: "messages.json",
+    });
+
+    const { Body } = await s3Client.send(getCommand);
+    const messagesData = JSON.parse(await Body.transformToString());
+
+    // Check if index is valid
+    if (!messagesData.messages || index >= messagesData.messages.length) {
+      return res.status(400).json({ error: "Banner index out of range" });
+    }
+
+    // Remove the banner at the specified index
+    messagesData.messages.splice(index, 1);
+
+    // Save the updated JSON back to S3
+    const putCommand = new PutObjectCommand({
+      Bucket: bucketName,
+      Key: "messages.json",
+      Body: JSON.stringify(messagesData, null, 2),
+      ContentType: "application/json",
+    });
+
+    await s3Client.send(putCommand);
+    res.json({ message: "Banner deleted successfully" });
+  } catch (error) {
+    logger.error("Error deleting banner:", { error: error.message });
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
  * Health check endpoint to verify server status.
  * @route GET /api/health
  * @returns {Object} Health status information

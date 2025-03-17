@@ -105,6 +105,18 @@
   text-decoration-style: dotted;
   text-underline-offset: 4px;
   font-size: 14px;
+
+} 
+
+.project-name-full{
+  font-size: 14px;
+  color: hsl(var(--foreground));
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
 }
 
 .project-name-short {
