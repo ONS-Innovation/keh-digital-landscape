@@ -97,10 +97,12 @@
   font-size: 12px;
   flex: 1;
   min-width: 50px;
+  font-family: inherit;
 }
 
 .multi-select-input::placeholder {
   color: hsl(var(--muted-foreground));
+  font-weight: 500;
 }
 
 .multi-select-dropdown {
