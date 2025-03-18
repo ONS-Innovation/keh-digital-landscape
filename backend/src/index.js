@@ -236,7 +236,6 @@ app.post("/review/api/tech-radar/update", async (req, res) => {
       "ignore",
       "review",
     ]);
-    console.log(validQuadrantIds, validRingIds);
 
     // Validate each entry
     const validEntries = entries.every((entry) => {

@@ -94,6 +94,50 @@ Tests the endpoint's handling of invalid data structures:
 
 ::: testing.backend.test_main.test_tech_radar_update_invalid_structure
 
+### Admin API Tests
+
+#### Banner Retrieval
+
+Tests retrieving banner messages:
+
+::: testing.backend.test_main.test_admin_banner_get
+
+#### Banner Creation
+
+Tests creating new banner messages:
+
+::: testing.backend.test_main.test_admin_banner_update
+
+#### Banner Creation Validation
+
+Tests validation of banner creation requests:
+
+::: testing.backend.test_main.test_admin_banner_update_invalid
+
+#### Banner Visibility Toggle
+
+Tests toggling banner visibility:
+
+::: testing.backend.test_main.test_admin_banner_toggle
+
+#### Banner Visibility Toggle Validation
+
+Tests validation of banner toggle requests:
+
+::: testing.backend.test_main.test_admin_banner_toggle_invalid
+
+#### Banner Deletion
+
+Tests deleting banner messages:
+
+::: testing.backend.test_main.test_admin_banner_delete
+
+#### Banner Deletion Validation
+
+Tests validation of banner deletion requests:
+
+::: testing.backend.test_main.test_admin_banner_delete_invalid
+
 ## Error Handling Tests
 
 ### Invalid Endpoints
@@ -124,4 +168,5 @@ These backend tests validate the same endpoints that are used by the frontend ut
 
 1. **Project Data Utility**: The `test_csv_endpoint()` test validates the endpoint used by `fetchCSVFromS3()`
 2. **Repository Data Utility**: The repository project tests validate the endpoint used by `fetchRepositoryData()`
-3. **Tech Radar Data Utility**: The `test_tech_radar_json_endpoint()` test validates the endpoint used by `fetchTechRadarJSONFromS3()` 
+3. **Tech Radar Data Utility**: The `test_tech_radar_json_endpoint()` test validates the endpoint used by `fetchTechRadarJSONFromS3()`
+4. **Admin Utilities**: The admin API tests validate the endpoints used by the admin interface for banner management 

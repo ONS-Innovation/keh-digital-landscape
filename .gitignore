@@ -72,3 +72,5 @@ terraform/service/highest_alb_listener_priority.txt
 
 /mkdocs/venv
 /mkdocs/site
+
+/testing/venv
