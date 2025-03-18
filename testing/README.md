@@ -31,30 +31,60 @@ make setup
 
 Make sure the backend server is running on localhost:5001 before running tests.
 
+### Running All Tests
+
 To run all tests:
 ```bash
 make test
 ```
 
-Ensure tests are passing before committing.
+### Running Specific Test Sets
 
-## Running a specific test
+The tests are organized into three main categories:
 
-Make sure the backend server is running on localhost:5001 before running the test.
+1. **Main API tests** - Core API endpoints like health check, CSV data, and repository statistics:
+```bash
+make test-main
+```
 
-Find the test name and add it to this structure:
+2. **Admin API tests** - Admin banner management endpoints:
+```bash
+make test-admin
+```
+
+3. **Review API tests** - Tech radar update endpoints:
+```bash
+make test-review
+```
+
+### Running a Specific Test
+
+To run a specific test, use:
 
 ```bash
-python3 -m pytest backend/test_main.py::<test_name> -v
+python3 -m pytest backend/test_main.py::test_name -v
 ```
 
 For example:
 
 ```bash
-python3 -m pytest backend/test_main.py::test_tech_radar_update_valid_structure -v
+python3 -m pytest backend/test_main.py::test_health_check -v
+python3 -m pytest backend/test_admin.py::test_admin_banner_update -v
+python3 -m pytest backend/test_review.py::test_tech_radar_update_valid_structure -v
 ```
 
-## Cleaning Up
+Ensure tests are passing before committing.
+
+## Linting and Cleaning
+
+### Linting
+
+To run linting checks on all test files:
+```bash
+make lint
+```
+
+### Cleaning Up
 
 To clean Python cache files:
 ```bash
@@ -63,21 +93,21 @@ make clean
 
 ## Test Structure
 
-The tests cover three main endpoints:
-- `/api/health` - Basic health check endpoint
-- `/api/csv` - CSV data endpoint
-- `/api/json` - Repository statistics endpoint with filtering capabilities 
-- `/api/repository/project/json` - Repository project JSON endpoint with filtering capabilities 
+The tests cover these main endpoint groups:
+
+| Test File | Endpoint Group | Description |
+|---|---|---|
+| `test_main.py` | `/api/*` | Core API endpoints (health, CSV, JSON, repository) |
+| `test_admin.py` | `/admin/api/*` | Admin API endpoints for banner management |
+| `test_review.py` | `/review/api/*` | Review API endpoints for tech radar updates |
 
 ## Making changes to the tests
 
-To make changes to the tests, edit the `backend/test_main.py` file.
+To make changes to the tests, edit the appropriate test file in the `backend/` directory.
 
-To run the tests after making changes, run:
+After making changes, run the specific test set or all tests to verify they still pass:
 ```bash
 make test
 ```
 
-Once created, please run `make lint` to check for any linting errors.
-
-Then run `make clean` to clean up the cache files.
+Also run `make lint` to check for any linting errors, and `make clean` to clean up cache files before committing.

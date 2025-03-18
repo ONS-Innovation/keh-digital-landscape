@@ -12,6 +12,17 @@ The testing framework is built using Python with pytest and follows these key pr
 - **Comprehensive Coverage**: Tests cover all API endpoints and their various parameters
 - **Clear Documentation**: Each test includes detailed docstrings explaining purpose and expectations
 - **Error Handling Validation**: Tests verify proper error responses for invalid inputs
+- **Organized Structure**: Tests are grouped by API type across multiple files
+
+## Test Structure
+
+The tests are organized into three main files:
+
+| Test File | Endpoint Group | Description |
+|---|---|---|
+| `test_main.py` | `/api/*` | Core API endpoints (health, CSV, JSON, repository) |
+| `test_admin.py` | `/admin/api/*` | Admin API endpoints for banner management |
+| `test_review.py` | `/review/api/*` | Review API endpoints for tech radar updates |
 
 ## Test Setup
 
@@ -42,6 +53,15 @@ The testing framework provides several commands for running tests:
 ```bash
 # Run all tests
 make test
+
+# Run only core API tests
+make test-main
+
+# Run only admin API tests
+make test-admin
+
+# Run only review API tests
+make test-review
 
 # Run a specific test
 python3 -m pytest backend/test_main.py::test_name -v
@@ -112,7 +132,23 @@ Tests the endpoints for updating Tech Radar data:
 - Structure validation
 - Reference validation
 
-::: testing.backend.test_main.test_tech_radar_update_valid_structure
+::: testing.backend.test_review.test_tech_radar_update_valid_structure
+
+::: testing.backend.test_review.test_tech_radar_update_invalid_structure
+
+### Admin Banner Management Endpoints
+
+Tests the endpoints for managing banner messages:
+
+- Banner retrieval
+- Banner creation
+- Banner visibility toggling
+- Banner deletion
+- Validation of requests
+
+::: testing.backend.test_admin.test_admin_banner_get
+
+::: testing.backend.test_admin.test_admin_banner_update
 
 ## Error Handling Tests
 
@@ -150,5 +186,6 @@ The tests validate the same endpoints used by the frontend utilities:
 - **Project Data Utility**: Tests the `/api/csv` endpoint used by `fetchCSVFromS3()`
 - **Repository Data Utility**: Tests the `/api/repository/project/json` endpoint used by `fetchRepositoryData()`
 - **Tech Radar Data Utility**: Tests the `/api/tech-radar/json` endpoint used by `fetchTechRadarJSONFromS3()`
+- **Admin Utilities**: Tests the `/admin/api/banners*` endpoints used by the admin interface for banner management
 
 This ensures that the data providers for the DataContext are functioning correctly and returning the expected data structures.

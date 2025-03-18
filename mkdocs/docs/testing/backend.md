@@ -6,7 +6,11 @@ The backend testing suite validates the API endpoints that serve data to the Dig
 
 ## Test Implementation
 
-The backend tests are implemented in `testing/backend/test_main.py` using the pytest framework and the requests library to make HTTP calls to the API endpoints.
+The backend tests are implemented in the `testing/backend/` directory using the pytest framework and the requests library to make HTTP calls to the API endpoints. The tests are organized into three main files:
+
+- `test_main.py` - Tests for core API endpoints
+- `test_admin.py` - Tests for admin API endpoints
+- `test_review.py` - Tests for review API endpoints
 
 ### Base Configuration
 
@@ -14,6 +18,24 @@ All tests use a common base URL configuration:
 
 ```python
 BASE_URL = "http://localhost:5001"
+```
+
+### Running Tests
+
+The testing framework provides several commands for running tests:
+
+```bash
+# Run all tests
+make test
+
+# Run only main API tests
+make test-main
+
+# Run only admin API tests
+make test-admin
+
+# Run only review API tests
+make test-review
 ```
 
 ### Health Check Tests
@@ -82,61 +104,89 @@ Tests retrieving data for multiple repositories:
 
 ### Tech Radar Update Tests
 
+These tests are located in `test_review.py` and verify the review API endpoints.
+
+#### Missing Entries
+
+Tests handling of missing entries data:
+
+::: testing.backend.test_review.test_tech_radar_update_no_entries
+
+#### Partial Updates
+
+Tests processing of partial updates:
+
+::: testing.backend.test_review.test_tech_radar_update_partial
+
+#### Invalid Entries
+
+Tests validation of invalid entries:
+
+::: testing.backend.test_review.test_tech_radar_update_invalid_entries
+
 #### Valid Structure
 
 Tests updating the Tech Radar with valid data:
 
-::: testing.backend.test_main.test_tech_radar_update_valid_structure
+::: testing.backend.test_review.test_tech_radar_update_valid_structure
 
 #### Invalid Structure
 
 Tests the endpoint's handling of invalid data structures:
 
-::: testing.backend.test_main.test_tech_radar_update_invalid_structure
+::: testing.backend.test_review.test_tech_radar_update_invalid_structure
+
+#### Invalid References
+
+Tests validation of references between entries and quadrants/rings:
+
+::: testing.backend.test_review.test_tech_radar_update_invalid_references
 
 ### Admin API Tests
+
+These tests are located in `test_admin.py` and verify the admin API endpoints.
 
 #### Banner Retrieval
 
 Tests retrieving banner messages:
 
-::: testing.backend.test_main.test_admin_banner_get
+::: testing.backend.test_admin.test_admin_banner_get
 
 #### Banner Creation
 
 Tests creating new banner messages:
 
-::: testing.backend.test_main.test_admin_banner_update
+::: testing.backend.test_admin.test_admin_banner_update
 
 #### Banner Creation Validation
 
 Tests validation of banner creation requests:
 
-::: testing.backend.test_main.test_admin_banner_update_invalid
+::: testing.backend.test_admin.test_admin_banner_update_invalid
 
 #### Banner Visibility Toggle
 
 Tests toggling banner visibility:
 
-::: testing.backend.test_main.test_admin_banner_toggle
+::: testing.backend.test_admin.test_admin_banner_toggle
 
 #### Banner Visibility Toggle Validation
 
 Tests validation of banner toggle requests:
 
-::: testing.backend.test_main.test_admin_banner_toggle_invalid
+::: testing.backend.test_admin.test_admin_banner_toggle_invalid
 
 #### Banner Deletion
 
 Tests deleting banner messages:
 
-::: testing.backend.test_main.test_admin_banner_delete
+::: testing.backend.test_admin.test_admin_banner_delete
 
 #### Banner Deletion Validation
 
 Tests validation of banner deletion requests:
 
-::: testing.backend.test_main.test_admin_banner_delete_invalid
+::: testing.backend.test_admin.test_admin_banner_delete_invalid
 
 ## Error Handling Tests
 
