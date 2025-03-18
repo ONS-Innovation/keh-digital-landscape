@@ -387,7 +387,9 @@ const Projects = ({
       });
     }
 
+    // Sort the filtered projects array by creating a new copy and applying sort function
     return [...filtered].sort((a, b) => {
+      // Helper function to calculate technology distribution ratios for a project
       const getDistribution = (project) => {
         const distribution = calculateTechnologyDistribution(project);
         return {
@@ -399,17 +401,19 @@ const Projects = ({
         };
       };
 
-      // Get the sortBy value from field and direction
+      // Combine sort field and direction into single string for switch statement
       const sortBy = `${sortField}-${sortDirection}`;
 
-      // Sort by specific ring ratio
+      // Special case: Sort by technology ring ratio (adopt/trial/assess/hold)
       if (sortField === "ring-ratio") {
+        // Get distribution stats for both projects being compared
         const aDistribution = getDistribution(a);
         const bDistribution = getDistribution(b);
 
         let aValue = 0;
         let bValue = 0;
 
+        // Select which ratio to compare based on selected ring type
         switch (selectedType) {
           case "adopt":
             aValue = aDistribution.adoptRatio;
@@ -432,19 +436,24 @@ const Projects = ({
             bValue = bDistribution.adoptRatio;
         }
 
+        // Sort high-to-low or low-to-high based on selectedRatio
         return selectedRatio === "high" ? bValue - aValue : aValue - bValue;
       }
 
+      // Handle standard field sorting
       switch (sortField) {
         case "name":
+          // Sort projects alphabetically by name
           return sortDirection === "asc"
             ? (a.Project || "").localeCompare(b.Project || "")
             : (b.Project || "").localeCompare(a.Project || "");
         case "programme":
+          // Sort projects alphabetically by programme name
           return sortDirection === "asc"
             ? (a.Programme || "").localeCompare(b.Programme || "")
             : (b.Programme || "").localeCompare(a.Programme || "");
         case "tech": {
+          // Sort by total number of technologies used
           const aTotal = getDistribution(a).total;
           const bTotal = getDistribution(b).total;
           return sortDirection === "asc"
