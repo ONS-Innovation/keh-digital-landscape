@@ -28,7 +28,7 @@ variable "service_subdomain" {
 variable "service_title" {
   description = "Service name used in auth emails"
   type        = string
-  default     = "ONS Tech Radar"
+  default     = "ONS Digital Landscape"
 }
 
 variable "domain" {

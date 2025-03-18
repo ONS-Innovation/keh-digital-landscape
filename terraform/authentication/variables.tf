@@ -16,13 +16,13 @@ variable "aws_secret_access_key" {
 variable "service_subdomain" {
   description = "Service subdomain"
   type        = string
-  default     = "tech-radar"
+  default     = "digital-landscape"
 }
 
 variable "service_title" {
   description = "Service name used in auth emails"
   type        = string
-  default     = "ONS Tech Radar"
+  default     = "ONS Digital Landscape"
 }
 
 variable "domain" {
