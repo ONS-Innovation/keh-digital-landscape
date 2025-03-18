@@ -5,8 +5,27 @@
  */
 function transformProjectToCSVFormat(project) {
 
-  const technicalContact = project.user.find(u => u.roles.includes("Technical Contact") && (u.email?.includes("@ons.gov.uk") || u.email?.includes("@ext.ons.gov.uk"))) ? `${project.user.find(u => u.roles.includes("Technical Contact")).email} (${project.user.find(u => u.roles.includes("Technical Contact")).grade})` : "";
-  const deliveryManager = project.user.find(u => u.roles.includes("Delivery Manager") && (u.email?.includes("@ons.gov.uk") || u.email?.includes("@ext.ons.gov.uk"))) ? `${project.user.find(u => u.roles.includes("Delivery Manager")).email} (${project.user.find(u => u.roles.includes("Delivery Manager")).grade})` : "";
+  // Find technical contact with ONS email
+  const technicalContactUser = project.user.find(u => 
+    u.roles.includes("Technical Contact") && 
+    (u.email?.includes("@ons.gov.uk") || u.email?.includes("@ext.ons.gov.uk"))
+  );
+
+  // Format technical contact string if found
+  const technicalContact = technicalContactUser 
+    ? `${technicalContactUser.email} (${technicalContactUser.grade})`
+    : "";
+
+  // Find delivery manager with ONS email  
+  const deliveryManagerUser = project.user.find(u =>
+    u.roles.includes("Delivery Manager") &&
+    (u.email?.includes("@ons.gov.uk") || u.email?.includes("@ext.ons.gov.uk"))
+  );
+
+  // Format delivery manager string if found
+  const deliveryManager = deliveryManagerUser
+    ? `${deliveryManagerUser.email} (${deliveryManagerUser.grade})`
+    : "";
 
   // Get main languages and others as comma-separated strings
   const mainLanguages = project.architecture.languages.main.join("; ");
