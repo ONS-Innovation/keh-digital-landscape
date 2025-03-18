@@ -36,17 +36,10 @@ The PieChart component accepts the following props:
 
 ```jsx
 import PieChart from '../components/Projects/PieChart';
+import { PROJECT_STAGES, CATEGORY_COLOURS } from '../../constants/projectConstants';
 
 function ProjectsOverview() {
   const [projectsData, setProjectsData] = useState([]);
-  
-  // Example category colours
-  const stageColours = {
-    "Development": "var(--color-assess)",
-    "Active Support": "var(--color-adopt)",
-    "Unsupported": "var(--color-hold)",
-    "Other": "#b7b7b7"
-  };
   
   // Example category labels
   const stageLabels = {
@@ -62,9 +55,9 @@ function ProjectsOverview() {
         projectsData={projectsData}
         title="Projects by Stage"
         categoryField="Stage"
-        categories={["Development", "Active Support", "Unsupported", "Other"]}
+        categories={PROJECT_STAGES}
         categoryLabels={stageLabels}
-        categoryColours={stageColours}
+        categoryColours={CATEGORY_COLOURS}
       />
       
       {/* Example with dynamic categories */}
@@ -109,7 +102,7 @@ When `dynamicCategories` is enabled, the component:
 When `cloudProvidersOnly` is enabled, the component:
 
 1. Specifically identifies major cloud providers (AWS, GCP, Azure)
-2. Matches technologies against predefined provider-specific keywords
+2. Matches technologies against predefined provider-specific keywords from [projectConstants](../../constants/projectConstants.md)
 3. Categorises unmatched technologies as "Other"
 4. Presents the distribution of cloud provider usage across projects
 
@@ -126,7 +119,7 @@ When `splitSemicolon` is enabled, the component:
 
 The PieChart offers several visual customisation options:
 
-- **Colours**: Custom colours can be specified through the `categoryColours` prop
+- **Colours**: Custom colours can be specified through the `categoryColours` prop, with consistent colours defined in [projectConstants](../../constants/projectConstants.md)
 - **Labels**: Custom display names through the `categoryLabels` prop
 - **Percentages**: Automatically displayed on chart segments exceeding 5%
 - **Tooltips**: Interactive tooltips showing count and percentage information
@@ -141,3 +134,7 @@ The PieChart uses the styling defined in the main application CSS with:
 - Customisable tooltip styling
 - Accessible text labelling with appropriate contrast
 - Dynamic colour palette when custom colours aren't specified
+
+## Resulting PieCharts
+
+![PieChart](../../assets/pieCharts.png)
