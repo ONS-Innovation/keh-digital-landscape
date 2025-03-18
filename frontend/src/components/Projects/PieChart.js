@@ -7,6 +7,7 @@ import {
   Legend,
   ResponsiveContainer
 } from "recharts";
+import { CLOUD_PROVIDERS } from "../../constants/projectConstants";
 
 /**
  * PieChart component displays the percentage of projects by a specified category.
@@ -59,12 +60,7 @@ const PieChart = ({
   ];
 
   // Pre-defined cloud providers detection for architecture field - this can change
-  const cloudProviders = {
-    "AWS": ["aws", "amazon", "ec2", "lambda", "fargate", "ecs", "eks"],
-    "GCP": ["gcp", "google cloud", "cloud run", "gke", "app engine"],
-    "Azure": ["azure", "microsoft"],
-    "Other": []
-  };
+  const cloudProviders = CLOUD_PROVIDERS;
 
   // Use useMemo to calculate the data only when dependencies change
   const data = useMemo(() => {

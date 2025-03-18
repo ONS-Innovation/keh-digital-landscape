@@ -21,6 +21,15 @@ import SkeletonStatCard from "../Statistics/Skeletons/SkeletonStatCard";
 import PieChart from "./PieChart";
 import "../../styles/components/Projects.css";
 import MultiSelect from "../MultiSelect/MultiSelect";
+import {
+  CLOUD_PROVIDERS,
+  PROJECT_STAGES,
+  DEVELOPMENT_TYPES,
+  DEVELOPMENT_TYPE_CODES,
+  HOSTING_TYPES,
+  ARCHITECTURE_CATEGORIES,
+  CATEGORY_COLOURS
+} from "../../constants/projectConstants";
 
 /**
  * Projects component for displaying a list of projects.
@@ -539,11 +548,7 @@ const Projects = ({
     if (values.length === 0) return null;
 
     // Look for major cloud providers first
-    const providers = {
-      AWS: ["aws", "amazon", "ec2", "lambda", "fargate", "ecs", "eks"],
-      GCP: ["gcp", "google cloud"],
-      Azure: ["azure", "microsoft"],
-    };
+    const providers = CLOUD_PROVIDERS;
 
     for (const [provider, keywords] of Object.entries(providers)) {
       for (const value of values) {
@@ -624,28 +629,16 @@ const Projects = ({
             projectsData={filteredAndSortedProjects}
             title="Project Stages"
             categoryField="Stage"
-            categories={["Active Support", "Development", "Unsupported"]}
-            categoryColours={{
-              "Active Support": "var(--color-adopt)",
-              Development: "var(--color-trial)",
-              Unsupported: "var(--color-hold)",
-            }}
+            categories={PROJECT_STAGES}
+            categoryColours={CATEGORY_COLOURS}
           />
           <PieChart
             projectsData={filteredAndSortedProjects}
             title="Development Type"
             categoryField="Developed"
-            categories={["I", "O", "P"]}
-            categoryLabels={{
-              I: "In House",
-              O: "Outsourced",
-              P: "Partner",
-            }}
-            categoryColours={{
-              I: "var(--color-adopt)",
-              O: "var(--color-trial)",
-              P: "var(--color-assess)",
-            }}
+            categories={Object.keys(DEVELOPMENT_TYPE_CODES)}
+            categoryLabels={DEVELOPMENT_TYPE_CODES}
+            categoryColours={CATEGORY_COLOURS}
             getCategoryValue={(project, field) => {
               const developed = project[field] || "";
               return developed.length > 0 ? developed[0] : "Unknown";
@@ -655,12 +648,8 @@ const Projects = ({
             projectsData={filteredAndSortedProjects}
             title="Hosting Platform"
             categoryField="Hosted"
-            categories={["Cloud", "On-premises", "Hybrid"]}
-            categoryColours={{
-              Cloud: "var(--color-adopt)",
-              "On-premises": "var(--color-trial)",
-              Hybrid: "var(--color-assess)",
-            }}
+            categories={HOSTING_TYPES}
+            categoryColours={CATEGORY_COLOURS}
           />
           <PieChart
             projectsData={filteredAndSortedProjects}
@@ -668,12 +657,7 @@ const Projects = ({
             categoryField="Architectures"
             splitSemicolon={true}
             cloudProvidersOnly={true}
-            categoryColours={{
-              AWS: "var(--color-adopt)",
-              GCP: "var(--color-trial)",
-              Azure: "var(--color-hold)",
-              Other: "var(--color-assess)",
-            }}
+            categoryColours={CATEGORY_COLOURS}
           />
         </div>
       </div>
@@ -715,7 +699,7 @@ const Projects = ({
                       </div>
                       {expandedSections.stage && (
                         <div className="filter-checkbox-group">
-                          {["Active Support", "Development", "Unsupported"].map(
+                          {PROJECT_STAGES.map(
                             (stage) => (
                               <label
                                 key={stage}
@@ -754,7 +738,7 @@ const Projects = ({
                       </div>
                       {expandedSections.developmentType && (
                         <div className="filter-checkbox-group">
-                          {["In House", "Partner", "Outsourced"].map((type) => (
+                          {DEVELOPMENT_TYPES.map((type) => (
                             <label key={type} className="filter-checkbox-label">
                               <div className="custom-checkbox">
                                 {filters.developmentType.includes(type) && (
@@ -788,7 +772,7 @@ const Projects = ({
                       </div>
                       {expandedSections.hosting && (
                         <div className="filter-checkbox-group">
-                          {["Cloud", "Hybrid", "On-premises"].map((hosting) => (
+                          {HOSTING_TYPES.map((hosting) => (
                             <label
                               key={hosting}
                               className="filter-checkbox-label"
@@ -824,7 +808,7 @@ const Projects = ({
                       </div>
                       {expandedSections.architecture && (
                         <div className="filter-checkbox-group">
-                          {["AWS", "GCP", "Azure", "Other"].map((arch) => (
+                          {ARCHITECTURE_CATEGORIES.map((arch) => (
                             <label key={arch} className="filter-checkbox-label">
                               <div className="custom-checkbox">
                                 {filters.architecture.includes(arch) && (
