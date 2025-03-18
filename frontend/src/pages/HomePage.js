@@ -77,7 +77,7 @@ function HomePage() {
                 <FaUserShield />
                 <h2>Admin</h2>
               </div>
-              <p>Manage system-wide settings and configurations</p>
+              <p>Manage system-wide settings and configurations.</p>
             </a>
           </div>
         </div>
