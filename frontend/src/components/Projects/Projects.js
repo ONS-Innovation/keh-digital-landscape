@@ -21,6 +21,7 @@ import SkeletonStatCard from "../Statistics/Skeletons/SkeletonStatCard";
 import PieChart from "./PieChart";
 import "../../styles/components/Projects.css";
 import MultiSelect from "../MultiSelect/MultiSelect";
+import FilterGroup from "./FilterGroup";
 import {
   CLOUD_PROVIDERS,
   PROJECT_STAGES,
@@ -332,15 +333,9 @@ const Projects = ({
     // Filter by development type
     if (filters.developmentType.length > 0) {
       filtered = filtered.filter((project) => {
-        const developmentTypeMap = {
-          I: "In House",
-          P: "Partner",
-          O: "Outsourced",
-        };
-
         // Get the first character of the Developed field as the code
         const typeCode = project.Developed ? project.Developed[0] : "";
-        const fullType = developmentTypeMap[typeCode] || "";
+        const fullType = DEVELOPMENT_TYPE_CODES[typeCode] || "";
 
         return filters.developmentType.includes(fullType);
       });
@@ -359,19 +354,20 @@ const Projects = ({
         if (!project.Architectures) return false;
 
         const architectures = project.Architectures.split(";").map((arch) =>
-          arch.trim()
+          arch.trim().toLowerCase()
         );
 
-        // Check for cloud providers
-        const hasAWS = architectures.some((arch) =>
-          /aws|amazon|ec2|lambda|fargate|ecs|eks/i.test(arch)
-        );
-        const hasGCP = architectures.some((arch) =>
-          /gcp|google cloud/i.test(arch)
-        );
-        const hasAzure = architectures.some((arch) =>
-          /azure|microsoft/i.test(arch)
-        );
+        // Check for cloud providers using keywords
+        const hasProvider = (provider) => {
+          const keywords = CLOUD_PROVIDERS[provider] || [];
+          return architectures.some((arch) => 
+            keywords.some(keyword => arch.includes(keyword.toLowerCase()))
+          );
+        };
+        
+        const hasAWS = hasProvider("AWS");
+        const hasGCP = hasProvider("GCP");
+        const hasAzure = hasProvider("Azure");
 
         // Check if any of the selected architectures match
         return (
@@ -696,148 +692,46 @@ const Projects = ({
                 </button>
                 {isFilterDropdownOpen && (
                   <div className="projects-filter-dropdown">
-                    <div className="filter-group">
-                      <div
-                        className="filter-group-title filter-accordion-header"
-                        onClick={() => toggleSection("stage")}
-                      >
-                        <span>Project Stage</span>
-                        <IoChevronForward
-                          className={`accordion-icon ${expandedSections.stage ? "expanded" : ""}`}
-                        />
-                      </div>
-                      {expandedSections.stage && (
-                        <div className="filter-checkbox-group">
-                          {PROJECT_STAGES.map(
-                            (stage) => (
-                              <label
-                                key={stage}
-                                className="filter-checkbox-label"
-                              >
-                                <div className="custom-checkbox">
-                                  {filters.stage.includes(stage) && (
-                                    <IoCheckmarkSharp className="checkbox-icon" />
-                                  )}
-                                </div>
-                                <input
-                                  type="checkbox"
-                                  className="sr-only"
-                                  checked={filters.stage.includes(stage)}
-                                  onChange={() =>
-                                    handleFilterChange("stage", stage)
-                                  }
-                                />
-                                <span>{stage}</span>
-                              </label>
-                            )
-                          )}
-                        </div>
-                      )}
-                    </div>
+                    <FilterGroup 
+                      title="Project Stage"
+                      sectionKey="stage"
+                      isExpanded={expandedSections.stage}
+                      toggleSection={toggleSection}
+                      items={PROJECT_STAGES}
+                      selectedItems={filters.stage}
+                      onItemChange={handleFilterChange}
+                    />
 
-                    <div className="filter-group">
-                      <div
-                        className="filter-group-title filter-accordion-header"
-                        onClick={() => toggleSection("developmentType")}
-                      >
-                        <span>Development Type</span>
-                        <IoChevronForward
-                          className={`accordion-icon ${expandedSections.developmentType ? "expanded" : ""}`}
-                        />
-                      </div>
-                      {expandedSections.developmentType && (
-                        <div className="filter-checkbox-group">
-                          {DEVELOPMENT_TYPES.map((type) => (
-                            <label key={type} className="filter-checkbox-label">
-                              <div className="custom-checkbox">
-                                {filters.developmentType.includes(type) && (
-                                  <IoCheckmarkSharp className="checkbox-icon" />
-                                )}
-                              </div>
-                              <input
-                                type="checkbox"
-                                className="sr-only"
-                                checked={filters.developmentType.includes(type)}
-                                onChange={() =>
-                                  handleFilterChange("developmentType", type)
-                                }
-                              />
-                              <span>{type}</span>
-                            </label>
-                          ))}
-                        </div>
-                      )}
-                    </div>
+                    <FilterGroup 
+                      title="Development Type"
+                      sectionKey="developmentType"
+                      isExpanded={expandedSections.developmentType}
+                      toggleSection={toggleSection}
+                      items={DEVELOPMENT_TYPES}
+                      selectedItems={filters.developmentType}
+                      onItemChange={handleFilterChange}
+                    />
 
-                    <div className="filter-group">
-                      <div
-                        className="filter-group-title filter-accordion-header"
-                        onClick={() => toggleSection("hosting")}
-                      >
-                        <span>Hosting</span>
-                        <IoChevronForward
-                          className={`accordion-icon ${expandedSections.hosting ? "expanded" : ""}`}
-                        />
-                      </div>
-                      {expandedSections.hosting && (
-                        <div className="filter-checkbox-group">
-                          {HOSTING_TYPES.map((hosting) => (
-                            <label
-                              key={hosting}
-                              className="filter-checkbox-label"
-                            >
-                              <div className="custom-checkbox">
-                                {filters.hosting.includes(hosting) && (
-                                  <IoCheckmarkSharp className="checkbox-icon" />
-                                )}
-                              </div>
-                              <input
-                                type="checkbox"
-                                className="sr-only"
-                                checked={filters.hosting.includes(hosting)}
-                                onChange={() =>
-                                  handleFilterChange("hosting", hosting)
-                                }
-                              />
-                              <span>{hosting}</span>
-                            </label>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                    <div className="filter-group">
-                      <div
-                        className="filter-group-title filter-accordion-header"
-                        onClick={() => toggleSection("architecture")}
-                      >
-                        <span>Architectures</span>
-                        <IoChevronForward
-                          className={`accordion-icon ${expandedSections.architecture ? "expanded" : ""}`}
-                        />
-                      </div>
-                      {expandedSections.architecture && (
-                        <div className="filter-checkbox-group">
-                          {ARCHITECTURE_CATEGORIES.map((arch) => (
-                            <label key={arch} className="filter-checkbox-label">
-                              <div className="custom-checkbox">
-                                {filters.architecture.includes(arch) && (
-                                  <IoCheckmarkSharp className="checkbox-icon" />
-                                )}
-                              </div>
-                              <input
-                                type="checkbox"
-                                className="sr-only"
-                                checked={filters.architecture.includes(arch)}
-                                onChange={() =>
-                                  handleFilterChange("architecture", arch)
-                                }
-                              />
-                              <span>{arch}</span>
-                            </label>
-                          ))}
-                        </div>
-                      )}
-                    </div>
+                    <FilterGroup 
+                      title="Hosting"
+                      sectionKey="hosting"
+                      isExpanded={expandedSections.hosting}
+                      toggleSection={toggleSection}
+                      items={HOSTING_TYPES}
+                      selectedItems={filters.hosting}
+                      onItemChange={handleFilterChange}
+                    />
+
+                    <FilterGroup 
+                      title="Architectures"
+                      sectionKey="architecture"
+                      isExpanded={expandedSections.architecture}
+                      toggleSection={toggleSection}
+                      items={ARCHITECTURE_CATEGORIES}
+                      selectedItems={filters.architecture}
+                      onItemChange={handleFilterChange}
+                    />
+
                     <div className="programme-filter-wrapper filter-group">
                       <MultiSelect
                         options={programmeOptions}
