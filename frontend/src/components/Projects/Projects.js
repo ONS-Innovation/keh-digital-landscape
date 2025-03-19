@@ -907,7 +907,8 @@ const Projects = ({
                   <div className="project-item-top">
                     <div className="project-item-header">
                       <span className="project-name-full">
-                        {searchTerm
+                        <div>
+                           {searchTerm
                           ? highlightText(project.Project, searchTerm)
                           : project.Project}{" "}
                         {project.Project_Short && (
@@ -919,6 +920,15 @@ const Projects = ({
                             )
                           </>
                         )}
+                        </div>
+                       
+                        {project.Stage && (
+                        <div
+                          className={`project-badge ${project.Stage.toLowerCase().replace(/ /g, "-")}`}
+                        >
+                          {project.Stage}
+                        </div>
+                      )}
                       </span>
                       {(project.Programme || project.Programme_Short) && (
                         <span className="programme-name-full">
@@ -973,13 +983,6 @@ const Projects = ({
                   </div>
                   <div className="project-item-bottom">
                     <div className="project-badges">
-                      {project.Stage && (
-                        <div
-                          className={`project-badge ${project.Stage.toLowerCase().replace(/ /g, "-")}`}
-                        >
-                          {project.Stage}
-                        </div>
-                      )}
                       {project.Developed && (
                         <div
                           className={`project-badge ${project.Developed[0].toLowerCase().replace(/ /g, "-")}`}

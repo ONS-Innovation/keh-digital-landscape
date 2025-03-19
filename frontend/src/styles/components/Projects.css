@@ -128,6 +128,11 @@
   color: hsl(var(--foreground));
   cursor: pointer;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  width: 100%;
 }
 
 .programme-name-full{
