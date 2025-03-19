@@ -6,6 +6,7 @@
  */
 
 // Cloud providers with their identifying keywords
+// To be removed once data validation is in place - data should only be GCP,AWS,Azure or another cloud provider
 export const CLOUD_PROVIDERS = {
   AWS: ["aws", "amazon", "ec2", "lambda", "fargate", "ecs", "eks"],
   GCP: ["gcp", "google cloud", "cloud run", "gke", "app engine"],
