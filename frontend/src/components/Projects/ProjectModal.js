@@ -419,7 +419,14 @@ const ProjectModal = ({
                     <h4>Delivery Manager</h4>
                     <p>{project.Delivery_Manager}</p>
                   </div>
-                )}  
+                )} 
+
+                {project.Developed && (
+                  <div className="detail-section">
+                    <h4>Developed</h4>
+                    <p>{project.Developed}</p>
+                  </div>
+                )} 
 
                 {project.Documentation && (
                   <div className="detail-section">
