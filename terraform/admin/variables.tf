@@ -13,10 +13,10 @@ variable "aws_secret_access_key" {
   type        = string
 }
 
-variable "user_pool_name" {
-  description = "User pool name"
+variable "scope" {
+  description = "Scope of the service"
   type        = string
-  default     = "digital-landscape-admin"
+  default     = "admin"
 }
 
 variable "service_subdomain" {

@@ -1,9 +1,8 @@
-# Create a service running on fargate with a task definition and service definition
 terraform {
   backend "s3" {
     # Backend is selected using terraform init -backend-config=path/to/backend-<env>.tfbackend
     # bucket         = "sdp-dev-tf-state"
-    # key            = "sdp-dev-ecs-github-audit-auth/terraform.tfstate"
+    # key            = "sdp-dev-ecs-digital-landscape-admin-auth/terraform.tfstate"
     # region         = "eu-west-2"
     # dynamodb_table = "terraform-state-lock"
   }
@@ -11,9 +10,9 @@ terraform {
 }
 
 module "cognito" {
-  source = "git::https://github.com/ONS-Innovation/keh-cognito-auth-tf-module.git?ref=custom-name-v0.0.3"
+  source = "git::https://github.com/ONS-Innovation/keh-cognito-auth-tf-module.git?ref=v1.1.0"
 
-  user_pool_name     = var.user_pool_name
+  scope              = var.scope  
   domain             = var.domain
   service_subdomain  = var.service_subdomain
   domain_extension   = var.domain_extension
