@@ -54,7 +54,7 @@ const ReviewPage = () => {
     Cloud_Services: "Infrastructure",
     IAM_Services: "Infrastructure",
     Containers: "Infrastructure",
-    Datastores: "Infrastructure" 
+    Datastores: "Infrastructure",
   };
 
   const categoryOptions = [
@@ -367,7 +367,9 @@ const ReviewPage = () => {
 
   const getDuplicateRing = () => {
     const duplicateRing = Object.keys(entries).find((ring) =>
-      entries[ring].some((entry) => entry.title.toLowerCase() === newTechnology.toLowerCase())
+      entries[ring].some(
+        (entry) => entry.title.toLowerCase() === newTechnology.toLowerCase()
+      )
     );
     return duplicateRing;
   };
@@ -435,7 +437,9 @@ const ReviewPage = () => {
 
   const handleConfirmModalYes = () => {
     const currentRing =
-      selectedItem.timeline[selectedItem.timeline.length - 1].ringId.toLowerCase();
+      selectedItem.timeline[
+        selectedItem.timeline.length - 1
+      ].ringId.toLowerCase();
 
     // Create timeline entry for the change
     const now = new Date().toISOString().split("T")[0];
@@ -719,7 +723,13 @@ const ReviewPage = () => {
                   className={`technology-input`}
                 />
                 {isDuplicate && (
-                  <span className="error-message">Error: technology already exists in the <strong className={`${getDuplicateRing()}-box`}>{getDuplicateRing()}</strong> ring.</span>
+                  <span className="error-message">
+                    Error: technology already exists in the{" "}
+                    <strong className={`${getDuplicateRing()}-box`}>
+                      {getDuplicateRing()}
+                    </strong>{" "}
+                    ring.
+                  </span>
                 )}
               </div>
               <div className="admin-modal-field">
@@ -740,7 +750,9 @@ const ReviewPage = () => {
             <div className="modal-buttons">
               <button
                 onClick={handleAddClick}
-                disabled={!newTechnology.trim() || !selectedCategory || isDuplicate}
+                disabled={
+                  !newTechnology.trim() || !selectedCategory || isDuplicate
+                }
               >
                 Add
               </button>
@@ -788,13 +800,18 @@ const ReviewPage = () => {
             <h3>Add New Technology</h3>
             <p>Are you sure you want to add this technology?</p>
             <div>
-              <p>Name:</p><p>{pendingNewTechnology.title}</p>
+              <p>Name:</p>
+              <p>{pendingNewTechnology.title}</p>
             </div>
             <div className="modal-automatic">
-              <p>Ring:</p><p><i>automatic</i> Review </p>
+              <p>Ring:</p>
+              <p>
+                <i>automatic</i> Review{" "}
+              </p>
             </div>
             <div>
-              <p>Quadrant:</p><p>{pendingNewTechnology.description}</p>
+              <p>Quadrant:</p>
+              <p>{pendingNewTechnology.description}</p>
             </div>
             <div className="modal-buttons">
               <button onClick={handleAddConfirmModalYes}>Yes</button>

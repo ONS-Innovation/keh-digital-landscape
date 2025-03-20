@@ -13,10 +13,16 @@ variable "aws_secret_access_key" {
   type        = string
 }
 
+variable "scope" {
+  description = "Scope of the service"
+  type        = string
+  default     = "admin"
+}
+
 variable "service_subdomain" {
   description = "Service subdomain"
   type        = string
-  default     = "digital-landscape"
+  default     = "tech-radar"
 }
 
 variable "service_title" {

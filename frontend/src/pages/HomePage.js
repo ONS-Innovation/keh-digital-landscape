@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ThemeProvider } from "../contexts/ThemeContext";
 import Header from "../components/Header/Header";
 import { IoStatsChart, IoPeople } from "react-icons/io5";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaUserShield } from "react-icons/fa";
 import { MdOutlineRadar } from "react-icons/md";
 import "../styles/HomePage.css";
 
@@ -71,6 +71,13 @@ function HomePage() {
                 <h2>Review</h2>
               </div>
               <p>Authorised users can update the data on the Tech Radar.</p>
+            </a>
+            <a className="nav-card" href="/admin/dashboard">
+              <div className="nav-card-header">
+                <FaUserShield />
+                <h2>Admin</h2>
+              </div>
+              <p>Manage system-wide settings and configurations.</p>
             </a>
           </div>
         </div>

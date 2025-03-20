@@ -1,16 +1,25 @@
-.PHONY: setup test clean
+.PHONY: setup test test-main test-admin test-review clean lint ruff pylint
 
 setup:
 	python3 -m pip install -r requirements.txt
 
-test:
+test: # Run all tests
+	python3 -m pytest backend/test_*.py -v
+
+test-main: # Run only the main API tests
 	python3 -m pytest backend/test_main.py -v
 
+test-admin: # Run only the admin API tests
+	python3 -m pytest backend/test_admin.py -v
+
+test-review: # Run only the review API tests
+	python3 -m pytest backend/test_review.py -v
+
 ruff:
-	python3 -m ruff check backend/test_main.py
+	python3 -m ruff check backend/test_*.py
 
 pylint:
-	python3 -m pylint backend/test_main.py || true
+	python3 -m pylint backend/test_*.py || true
 
 lint:
 	make ruff

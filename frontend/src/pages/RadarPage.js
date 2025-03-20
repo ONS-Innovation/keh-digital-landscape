@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";
 import "../styles/App.css";
 import Header from "../components/Header/Header";
 import { ThemeProvider } from "../contexts/ThemeContext";
-import { useBanner } from "../contexts/banner";
 import { useData } from "../contexts/dataContext";
 import {
   IoInformationCircle,
@@ -14,6 +13,7 @@ import {
 import ProjectModal from "../components/Projects/ProjectModal";
 import InfoBox from "../components/InfoBox/InfoBox";
 import { useTechnologyStatus } from "../utilities/getTechnologyStatus";
+import { BannerContainer } from "../components/Banner";
 
 /**
  * RadarPage component for displaying the radar page.
@@ -57,11 +57,6 @@ function RadarPage() {
 
   const { getTechRadarData, getCsvData } = useData();
   const getTechnologyStatus = useTechnologyStatus();
-
-  useBanner(
-    'Tech Radar numbering does not correlate to technology popularity or usage.',
-    'hasSeenNumberingInfo'
-  );
 
   /**
    * useEffect hook to fetch the tech radar data from S3.
@@ -625,6 +620,7 @@ function RadarPage() {
         onOpenProjects={() => setIsProjectsModalOpen(true)}
         onStatsTechClick={handleStatsTechClick}
       />
+      <BannerContainer page="radar" />
       <div className="radar-page">
         {isInfoBoxVisible && (
           <InfoBox

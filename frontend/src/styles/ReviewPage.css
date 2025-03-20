@@ -122,39 +122,6 @@
   font-size: 14px;
 }
 
-.admin-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 16px;
-  gap: 16px;
-  box-sizing: border-box;
-  border-radius: var(--radius);
-  border: 1px solid hsl(var(--border));
-}
-
-.admin-container h1 {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-size: 24px;
-  font-weight: 600;
-  color: hsl(var(--card-foreground));
-}
-
-.admin-container div {
-  width: 100%;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-}
-
-.admin-container span {
-  font-size: 12px;
-  text-align: left;
-  color: hsl(var(--muted-foreground));
-}
 
 .admin-grid-container {
   display: flex;
@@ -785,7 +752,7 @@ textarea.technology-input {
   box-sizing: border-box;
   border-radius: var(--radius);
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 400;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -795,23 +762,36 @@ textarea.technology-input {
 }
 
 .modal-buttons button:first-child {
-  background: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
-  border: 1px solid hsl(var(--primary));
+  background: hsl(var(--primary) / .1);
+  color: hsl(var(--primary));
+  border: 1px solid hsl(var(--primary) / .2);
+  box-shadow: 0 3px 0 hsl(var(--primary) / .2);
 }
 
 .modal-buttons button:first-child:hover {
   background: hsl(var(--primary) / 0.9);
+  color: hsl(var(--primary-foreground));
+  box-shadow: none;
+  transform: translateY(3px);
+}
+
+.modal-buttons button:first-child:active {
+  border: 1px solid hsl(var(--primary));
 }
 
 .modal-buttons button:last-child {
-  background: hsl(var(--destructive));
-  color: hsl(var(--destructive-foreground));
-  border: 1px solid hsl(var(--destructive));
+  background: hsl(var(--destructive) / .1);
+  color: hsl(var(--destructive));
+  border: 1px solid hsl(var(--destructive) / .2);
+  box-shadow: 0 3px 0 hsl(var(--destructive) / .6);
+
 }
 
 .modal-buttons button:last-child:hover {
   background: hsl(var(--destructive) / 0.9);
+  color: hsl(var(--destructive-foreground));
+  box-shadow: none;
+  transform: translateY(3px);
 }
 
 .admin-actions {
@@ -890,6 +870,7 @@ textarea.technology-input {
   .admin-modal {
     border: none;
     width: 100%;
+    max-width: 100%;
     border-top: 1px solid hsl(var(--border));
   }
 }
@@ -917,6 +898,11 @@ textarea.technology-input {
   font-weight: 600;
 }
 
+.admin-modal-field .admin-buttons {
+  display: flex;
+  gap: 8px;
+}
+
 .error-message {
   color: hsl(var(--primary));
   background: hsl(var(--destructive) / 0.3);
@@ -932,4 +918,206 @@ textarea.technology-input {
   font-weight: 600;
   padding: 2px 4px;
   border-radius: var(--radius);
+}
+
+/* Banner Management Styles */
+.admin-container {
+  padding: 24px;  
+  box-sizing: border-box;
+  background: hsl(var(--card));
+  border-radius: var(--radius);
+  width: 100%;
+}
+
+.admin-container h2 {
+  margin: 0 0 16px 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+
+.existing-banners-title {
+  margin: 24px 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  border-bottom: 1px solid hsl(var(--border));
+  padding-bottom: 8px;
+}
+
+.banner-type-selector {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.banner-type-option {
+  padding: 4px 16px;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.banner-type-option:hover {
+  background: hsl(var(--accent));
+}
+
+.banner-type-option.selected {
+  background: hsl(var(--accent));
+  border-color: hsl(var(--primary));
+}
+
+.banner-type-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.banner-type-indicator.info {
+  background-color: hsl(210, 100%, 50%);
+}
+
+.banner-type-indicator.warning {
+  background-color: hsl(45, 100%, 50%);
+}
+
+.banner-type-indicator.error {
+  background-color: hsl(0, 100%, 65%);
+}
+
+.existing-banners {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.banner-item {
+  padding: 16px;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  background: hsl(var(--card));
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.banner-content {
+  flex: 1;
+}
+
+.banner-content h4 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.banner-content p {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+}
+
+.banner-meta {
+  display: flex;
+  gap: 12px;
+}
+
+.banner-type, .banner-pages, .banner-status {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: var(--radius);
+  background: hsl(var(--muted));
+  text-transform: capitalize;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.banner-type.info {
+  background-color: hsl(210, 100%, 95%);
+  color: hsl(210, 100%, 30%);
+}
+
+.banner-type.warning {
+  background-color: hsl(45, 100%, 90%);
+  color: hsl(45, 100%, 30%);
+}
+
+.banner-type.error {
+  background-color: hsl(0, 100%, 95%);
+  color: hsl(0, 100%, 45%);
+}
+
+.banner-status.active {
+  background-color: hsl(120, 100%, 95%);
+  color: hsl(120, 100%, 25%);
+}
+
+.banner-status.hidden {
+  background-color: hsl(0, 0%, 95%);
+  color: hsl(0, 0%, 40%);
+}
+
+.banner-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.banner-toggle-btn, .banner-delete-btn {
+  padding: 4px 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 12px;
+  border: 1px solid hsl(var(--border));
+  transition: all 0.2s ease;
+}
+
+.banner-toggle-btn {
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+}
+
+.banner-toggle-btn:hover {
+  background-color: hsl(var(--accent));
+}
+
+.banner-delete-btn {
+  background-color: hsl(var(--destructive) / 0.1);
+  color: hsl(var(--destructive));
+}
+
+.banner-delete-btn:hover {
+  background-color: hsl(var(--destructive));
+  color: hsl(var(--destructive-foreground));
+}
+
+/* Dark mode adjustments */
+:root[class~="dark"] .banner-type.info {
+  background-color: hsl(210, 50%, 20%);
+  color: hsl(210, 100%, 85%);
+}
+
+:root[class~="dark"] .banner-type.warning {
+  background-color: hsl(45, 50%, 20%);
+  color: hsl(45, 100%, 85%);
+}
+
+:root[class~="dark"] .banner-type.error {
+  background-color: hsl(0, 50%, 20%);
+  color: hsl(0, 100%, 85%);
+}
+
+:root[class~="dark"] .banner-status.active {
+  background-color: hsl(120, 50%, 20%);
+  color: hsl(120, 100%, 80%);
+}
+
+:root[class~="dark"] .banner-status.hidden {
+  background-color: hsl(0, 0%, 20%);
+  color: hsl(0, 0%, 70%);
 }

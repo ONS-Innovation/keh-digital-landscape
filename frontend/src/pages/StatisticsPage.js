@@ -6,6 +6,7 @@ import { ThemeProvider } from "../contexts/ThemeContext";
 import { toast } from "react-hot-toast";
 import '../styles/StatisticsPage.css';
 import { useData } from "../contexts/dataContext";
+import { BannerContainer } from "../components/Banner";
 
 /**
  * StatisticsPage component for displaying the statistics page.
@@ -223,12 +224,13 @@ function StatisticsPage() {
 
   return (
     <ThemeProvider>
-      <Header 
+      <Header
         searchTerm={searchTerm}
         onSearchChange={(value) => setSearchTerm(value)}
         searchResults={[]}
         onSearchResultClick={(result) => handleTechClick(result.language)}
       />
+      <BannerContainer page="statistics" />
       <div className="statistics-page">
         <Statistics
           data={statsData}
