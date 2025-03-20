@@ -37,7 +37,7 @@ function HelpModal({ show, onClose }) {
   if (!shouldRender) return null;
 
   const githubPagesLink = () => {
-    return <span> To view more detailed information about the Digital Landscape, view this documentation: <a href="https://ons-innovation.github.io/keh-digital-landscape/" target="_blank" rel="noopener noreferrer">Digital Landscape Documentation</a>.</span>
+    return <span> To view more detailed information about the Digital Landscape, view this documentation:<br /> <a href="https://ons-innovation.github.io/keh-digital-landscape/" target="_blank" rel="noopener noreferrer">Digital Landscape Documentation</a>.</span>
   }
 
   /**

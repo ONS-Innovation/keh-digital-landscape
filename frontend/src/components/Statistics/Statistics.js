@@ -29,7 +29,7 @@ function Statistics({
   searchTerm = ""
 }) {
   const [sortConfig, setSortConfig] = useState({
-    key: "percentage",
+    key: "repo_count",
     direction: "descending",
   });
   const [searchQuery, setSearchQuery] = useState(searchTerm);

@@ -25,6 +25,8 @@ nav:
     - Projects:
       - Projects: components/projects/index.md
       - Project Modal: components/projects/projectModal.md
+      - Pie Chart: components/projects/pieChart.md
+      - Filter Group: components/projects/filterGroup.md
     - MultiSelect: components/multiSelect.md
     - Skeletons: components/skeletons.md
     - Statistics: components/statistics.md
@@ -34,6 +36,8 @@ nav:
     - Tech Radar Data: utilities/techRadarData.md
     - Project Data: utilities/projectData.md
     - Repository Data: utilities/repositoryData.md
+  - Constants:
+    - Project Constants: constants/projectConstants.md
   - Testing:
     - Overview: testing/index.md
     - Backend: testing/backend.md
