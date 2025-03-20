@@ -5,7 +5,8 @@
   background: hsl(var(--background));
   display: flex;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: flex-start;
+  flex-direction: column;
   padding: 24px;
   box-sizing: border-box;
 }

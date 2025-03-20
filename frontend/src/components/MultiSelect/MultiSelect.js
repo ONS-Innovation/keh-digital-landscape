@@ -57,8 +57,8 @@ const MultiSelect = ({
   );
 
   return (
-    <div className="multi-select" ref={containerRef}>
-      <div className="multi-select-control" onClick={handleInputClick}>
+    <div className={`multi-select`} ref={containerRef}>
+      <div className={`multi-select-control ${isOpen ? "active" : ""}`} onClick={handleInputClick}>
         <div className="multi-select-values">
           {value.map((v) => (
             <div key={v.value} className="multi-select-value">
