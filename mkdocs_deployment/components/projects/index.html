@@ -1239,6 +1239,27 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="filterGroup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Filter Group
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1495,7 +1516,7 @@
             
   
   <span class="md-ellipsis">
-    Testing
+    Constants
   </span>
   
 
@@ -1504,6 +1525,74 @@
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Constants
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../constants/projectConstants/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Project Constants
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Testing
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             Testing
           </label>
@@ -1980,7 +2069,7 @@
 <p>Visualises the distribution of cloud providers and other architectures (AWS, GCP, Azure, Other)</p>
 <p>Each pie chart is interactive with tooltips showing exact counts and percentages.</p>
 <h2 id="filtering-system">Filtering System</h2>
-<p>The component includes an advanced filtering system allowing users to filter projects by:</p>
+<p>The component includes an advanced filtering system allowing users to filter projects by multiple criteria. The filtering interface utilises the reusable <a href="filterGroup/">FilterGroup</a> component to create consistent, collapsible filter sections for each category:</p>
 <h3 id="project-stage">Project Stage</h3>
 <p>Filter by development stages (Active Support, Development, Unsupported)</p>
 <h3 id="development-type_1">Development Type</h3>
@@ -1991,7 +2080,7 @@
 <p>Filter by cloud providers and architectures (AWS, GCP, Azure, Other)</p>
 <h3 id="programme">Programme</h3>
 <p>Filter by specific programmes using a multi-select dropdown</p>
-<p>The filtering system maintains a count of active filters and provides a clear all option for easy reset.</p>
+<p>The filtering system maintains a count of active filters and provides a clear all option for easy reset. All filter categories and options are defined centrally in the <a href="../../constants/projectConstants/">projectConstants</a> file to ensure consistency throughout the application.</p>
 <h2 id="sorting-options">Sorting Options</h2>
 <p>The component provides multiple sorting mechanisms:</p>
 <h3 id="name-sorting">Name Sorting</h3>
