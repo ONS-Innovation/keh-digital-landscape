@@ -1,0 +1,126 @@
+.changelog-container {
+  background-color: hsl(var(--card));
+  border-radius: var(--radius);
+  box-sizing: border-box;
+  margin: 16px;
+  margin-top: 0;
+  width: calc(100% - 32px);
+}
+
+.changelog-container h2 {
+  color: hsl(var(--foreground));
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.changelog-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.changelog-item {
+  border-left: 1px solid hsl(var(--muted-foreground));
+  padding-left: 1rem;
+  padding-bottom: 1rem;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.changelog-item::before {
+  content: "";
+  position: absolute;
+  left: -4px;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: hsl(var(--muted-foreground));
+}
+
+.changelog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.changelog-header h3 {
+  color: hsl(var(--foreground));
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.changelog-date {
+  color: hsl(var(--muted-foreground));
+  font-size: 0.9rem;
+}
+
+.changelog-body {
+  color: hsl(var(--foreground));
+  margin-bottom: 0.75rem;
+}
+
+.changelog-entry {
+  margin: 0.5rem 0;
+  line-height: 1.25;
+  font-size: 14px;
+}
+
+.changelog-entry a {
+  color: hsl(var(--primary));
+  font-weight: 500;
+}
+
+.changelog-entry a:hover {
+  text-decoration: underline;
+}
+
+.changelog-link {
+  color: hsl(var(--primary));
+  font-size: 0.9rem;
+  display: inline-block;
+}
+
+.changelog-link:hover {
+  text-decoration: underline;
+}
+
+.changelog-loading,
+.changelog-error {
+  text-align: center;
+  padding: 2rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.changelog-error {
+  color: hsl(var(--destructive));
+}
+
+.changelog-load-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.changelog-load-more-button {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.5rem 1.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.changelog-load-more-button:hover:not(:disabled) {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.changelog-load-more-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
