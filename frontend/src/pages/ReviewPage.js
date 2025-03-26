@@ -8,6 +8,8 @@ import { toast } from "react-hot-toast";
 import SkeletonStatCard from "../components/Statistics/Skeletons/SkeletonStatCard";
 import MultiSelect from "../components/MultiSelect/MultiSelect";
 import InfoBox from "../components/InfoBox/InfoBox";
+import ProjectModal from "../components/Projects/ProjectModal";
+import { useTechnologyStatus } from "../utilities/getTechnologyStatus";
 
 const ReviewPage = () => {
   const [entries, setEntries] = useState({
@@ -40,6 +42,13 @@ const ReviewPage = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isDuplicate, setIsDuplicate] = useState(false);
+  const [projectsData, setProjectsData] = useState(null);
+  const [projectsForTech, setProjectsForTech] = useState([]);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
+  const [showProjectCount, setShowProjectCount] = useState(false);
+  const [projectCountMap, setProjectCountMap] = useState({});
+  const getTechnologyStatus = useTechnologyStatus();
 
   // Fields to scan from CSV and their corresponding categories
   const fieldsToScan = {
@@ -75,6 +84,7 @@ const ReviewPage = () => {
 
         const categorizedEntries = categorizeEntries(radarData.entries);
         setEntries(categorizedEntries);
+        setProjectsData(csvData);
 
         // After loading both data sources, scan for new technologies
         scanForNewTechnologies(radarData.entries, csvData);
@@ -86,6 +96,13 @@ const ReviewPage = () => {
     };
     fetchAllData();
   }, []);
+
+  // Update project counts when project data is loaded and counts are shown
+  useEffect(() => {
+    if (projectsData && showProjectCount && Object.keys(projectCountMap).length === 0) {
+      calculateAllProjectCounts();
+    }
+  }, [projectsData, showProjectCount]);
 
   const categorizeEntries = (radarEntries) => {
     const categorized = {
@@ -276,6 +293,9 @@ const ReviewPage = () => {
       setSelectedItem(updatedItem);
     }
 
+    // No need to update project counts as the technology itself hasn't changed,
+    // just its location in the radar
+
     setShowMoveModal(false);
     setPendingMove(null);
     setMoveDescription("");
@@ -340,6 +360,10 @@ const ReviewPage = () => {
       setEditedTitle("");
       setEditedCategory("");
     }
+
+    // Find projects using this technology
+    const projects = findProjectsUsingTechnology(item.title);
+    setProjectsForTech(projects);
 
     setSelectedItem(selectedItem?.id === item.id ? null : item);
   };
@@ -487,6 +511,16 @@ const ReviewPage = () => {
     setSelectedCategory("");
     setPendingNewTechnology(null);
     setShowAddConfirmModal(false);
+    
+    // Update project count for the new technology if project counts are shown
+    if (showProjectCount) {
+      const techName = pendingNewTechnology.title;
+      setProjectCountMap(prev => ({
+        ...prev,
+        [techName]: findProjectsUsingTechnology(techName).length
+      }));
+    }
+    
     toast.success("Technology added to Review");
   };
 
@@ -530,6 +564,51 @@ const ReviewPage = () => {
     };
   }, [isDragging, dragOffset]);
 
+  /**
+   * Find projects using the selected technology
+   * @param {string} tech - The technology name
+   * @returns {Array} - Array of projects using the technology
+   */
+  const findProjectsUsingTechnology = (tech) => {
+    if (!projectsData) return [];
+
+    return projectsData.filter((project) => {
+      const allTechColumns = [
+        "Language_Main",
+        "Language_Others",
+        "Language_Frameworks",
+        "Infrastructure",
+        "CICD",
+        "Cloud_Services",
+        "IAM_Services",
+        "Testing_Frameworks",
+        "Containers",
+        "Static_Analysis",
+        "Code_Formatter",
+        "Monitoring",
+        "Datastores",
+        "Data_Output_Formats",
+        "Integrations_ONS",
+        "Integrations_External",
+        "Database_Technologies",
+      ];
+
+      return allTechColumns.some((column) => {
+        const value = project[column];
+        if (!value) return false;
+
+        return value
+          .split(";")
+          .some((item) => item.trim().toLowerCase() === tech.toLowerCase());
+      });
+    });
+  };
+
+  const handleProjectClick = (project) => {
+    setSelectedProject(project);
+    setIsProjectModalOpen(true);
+  };
+
   const renderTimeline = () => {
     if (!selectedItem) {
       return null;
@@ -545,8 +624,8 @@ const ReviewPage = () => {
         setTimelineAscending={setTimelineAscending}
         selectedTimelineItem={expandedTimelineEntry}
         setSelectedTimelineItem={setExpandedTimelineEntry}
-        projectsForTech={[]}
-        handleProjectClick={() => {}}
+        projectsForTech={projectsForTech}
+        handleProjectClick={handleProjectClick}
         onEditConfirm={(title, category) => {
           setEditedTitle(title);
           setEditedCategory(category);
@@ -555,6 +634,42 @@ const ReviewPage = () => {
         onEditCancel={handleCancelEdit}
       />
     );
+  };
+
+  /**
+   * Calculates project counts for all technologies
+   */
+  const calculateAllProjectCounts = () => {
+    if (!projectsData) return;
+    
+    const countMap = {};
+    
+    // Get all technologies from all entries
+    const allTechnologies = Object.values(entries)
+      .flat()
+      .map(entry => entry.title);
+    
+    // Calculate counts for each technology
+    allTechnologies.forEach(tech => {
+      if (!countMap[tech]) {
+        countMap[tech] = findProjectsUsingTechnology(tech).length;
+      }
+    });
+    
+    setProjectCountMap(countMap);
+  };
+
+  /**
+   * Toggle showing project counts
+   */
+  const toggleProjectCount = () => {
+    const newState = !showProjectCount;
+    setShowProjectCount(newState);
+    
+    // Calculate project counts when enabling the feature
+    if (newState && Object.keys(projectCountMap).length === 0) {
+      calculateAllProjectCounts();
+    }
   };
 
   const renderBox = (title, items, id) => {
@@ -605,29 +720,75 @@ const ReviewPage = () => {
             <div key={description} className="droppable-group">
               <div className="droppable-group-header">{description}</div>
               <div className="droppable-group-items">
-                {groupItems.map((item) => (
-                  <div
-                    key={item.id}
-                    className="draggable-item"
-                    draggable
-                    onDragStart={(e) => handleDragStart(e, item, id)}
-                    onClick={() => handleItemClick(item)}
-                    style={{
-                      backgroundColor:
-                        selectedItem?.id === item.id
-                          ? "hsl(var(--accent))"
-                          : undefined,
-                    }}
-                  >
-                    {item.title}
-                  </div>
-                ))}
+                {groupItems.map((item) => {
+                  const projectCount = showProjectCount ? (projectCountMap[item.title] || 0) : 0;
+                  return (
+                    <div
+                      key={item.id}
+                      className="draggable-item"
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, item, id)}
+                      onClick={() => handleItemClick(item)}
+                      style={{
+                        backgroundColor:
+                          selectedItem?.id === item.id
+                            ? "hsl(var(--accent))"
+                            : undefined,
+                      }}
+                    >
+                      <div className="draggable-item-content">
+                        <span className="item-title">{item.title}</span>
+                        {showProjectCount && projectCount > 0 && (
+                          <span className="project-count-badge">{projectCount}</span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           ))}
         </div>
       </div>
     );
+  };
+
+  // Add this near other utility functions
+  const renderTechnologyList = (technologies) => {
+    if (!technologies) return null;
+
+    return technologies.split(";").map((tech, index) => {
+      const trimmedTech = tech.trim();
+      const status = getTechnologyStatus(trimmedTech);
+
+      return (
+        <span key={index}>
+          {index > 0 && "; "}
+          {status ? (
+            <span
+              className={`clickable-tech ${status}`}
+              onClick={() => handleTechClick(trimmedTech)}
+            >
+              {trimmedTech}
+            </span>
+          ) : (
+            trimmedTech
+          )}
+        </span>
+      );
+    });
+  };
+
+  // Add this near other utility functions
+  const handleTechClick = (tech) => {
+    const foundTech = Object.values(entries)
+      .flat()
+      .find(entry => entry.title.toLowerCase() === tech.toLowerCase());
+    
+    if (foundTech) {
+      setIsProjectModalOpen(false);
+      handleItemClick(foundTech);
+    }
   };
 
   return (
@@ -673,6 +834,12 @@ const ReviewPage = () => {
                     disabled={isLoading}
                   >
                     Add Technology
+                  </button>
+                  <button
+                    className="admin-button"
+                    onClick={toggleProjectCount}
+                  >
+                    {showProjectCount ? 'Hide Project Count' : 'Show Project Count'}
                   </button>
                   <button
                     className="admin-button"
@@ -858,6 +1025,16 @@ const ReviewPage = () => {
             </div>
           </div>
         </div>
+      )}
+      {isProjectModalOpen && selectedProject && (
+        <ProjectModal
+          isOpen={isProjectModalOpen}
+          onClose={() => setIsProjectModalOpen(false)}
+          project={selectedProject}
+          renderTechnologyList={renderTechnologyList}
+          onTechClick={handleTechClick}
+          getTechnologyStatus={getTechnologyStatus}
+        />
       )}
     </ThemeProvider>
   );
