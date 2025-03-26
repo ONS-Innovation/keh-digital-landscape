@@ -122,7 +122,7 @@ const Changelog = () => {
             <div className="changelog-body">
               {release.body.split('\n').map((line, index) => {
                 if (line.startsWith('*')) {
-                  const processedLine = processChangelogLine(line.replace('*', '•'));
+                  const processedLine = processChangelogLine(line.replace(/\*/g, '•'));
                   return (
                     <p 
                       key={index} 
