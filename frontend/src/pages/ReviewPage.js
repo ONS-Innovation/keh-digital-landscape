@@ -125,9 +125,15 @@ const ReviewPage = () => {
 
   const scanForNewTechnologies = (radarEntries, csvData) => {
     // Create a set of existing technology titles (case insensitive)
-    const existingTech = new Set(
+    const existingTechLowercase = new Set(
       radarEntries.map((entry) => entry.title.toLowerCase())
     );
+
+    // Also create a map to preserve original case for existing technologies
+    const existingTechMap = radarEntries.reduce((map, entry) => {
+      map[entry.title.toLowerCase()] = entry.title;
+      return map;
+    }, {});
 
     const newTechnologies = new Map();
 
@@ -140,9 +146,19 @@ const ReviewPage = () => {
 
           technologies.forEach((tech) => {
             const trimmedTech = tech.trim();
-            if (trimmedTech && !existingTech.has(trimmedTech.toLowerCase())) {
-              // Use Map to prevent duplicates and maintain category
-              newTechnologies.set(trimmedTech, category);
+            const techLowercase = trimmedTech.toLowerCase();
+            
+            if (trimmedTech) {
+              if (!newTechnologies.has(techLowercase)) {
+                // Brand new technology - add to the map using the case from the CSV
+                newTechnologies.set(techLowercase, {
+                  title: trimmedTech,
+                  category: category
+                });
+              } else {
+                // Found duplicate in CSV with different case
+                const existingEntry = newTechnologies.get(techLowercase);
+              }
             }
           });
         }
@@ -158,12 +174,12 @@ const ReviewPage = () => {
         Infrastructure: "4",
       };
 
-      const newEntries = Array.from(newTechnologies).map(
-        ([tech, category]) => ({
+      const newEntries = Array.from(newTechnologies.values()).map(
+        ({ title, category }) => ({
           id: `tech-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-          title: tech,
+          title: title,
           description: category,
-          key: tech.toLowerCase().replace(/\s+/g, "-"),
+          key: title.toLowerCase().replace(/\s+/g, "-"),
           url: "#",
           quadrant: categoryToQuadrant[category],
           timeline: [
@@ -638,6 +654,7 @@ const ReviewPage = () => {
 
   /**
    * Calculates project counts for all technologies
+   * @returns {void}
    */
   const calculateAllProjectCounts = () => {
     if (!projectsData) return;
@@ -661,6 +678,7 @@ const ReviewPage = () => {
 
   /**
    * Toggle showing project counts
+   * @returns {void}
    */
   const toggleProjectCount = () => {
     const newState = !showProjectCount;
@@ -672,6 +690,13 @@ const ReviewPage = () => {
     }
   };
 
+  /**
+   * Renders a box with a list of technologies
+   * @param {string} title - The title of the box
+   * @param {Array} items - Array of technology items to display
+   * @param {string} id - The ID of the box
+   * @returns {React.ReactNode} - The rendered box
+   */
   const renderBox = (title, items, id) => {
     if (isLoading) {
       return (
@@ -686,7 +711,11 @@ const ReviewPage = () => {
       );
     }
 
-    // Filter items based on search term and selected categories
+    /**
+     * Filters items based on search term and selected categories
+     * @param {Array} items - Array of technology items to filter
+     * @returns {Array} Filtered array of items matching search and category criteria
+     */
     const filteredItems = items.filter((item) => {
       const matchesSearch =
         searchTerm === "" ||
@@ -697,7 +726,11 @@ const ReviewPage = () => {
       return matchesSearch && matchesCategories;
     });
 
-    // Group filtered items by description
+    /**
+     * Groups filtered items by their description category
+     * @param {Array} filteredItems - Array of filtered technology items
+     * @returns {Object} Object with description keys mapping to arrays of items
+     */
     const groupedItems = filteredItems.reduce((acc, item) => {
       const description = item.description || "Other";
       if (!acc[description]) {
@@ -753,7 +786,11 @@ const ReviewPage = () => {
     );
   };
 
-  // Add this near other utility functions
+  /**
+   * Renders a list of technologies with statuses
+   * @param {string} technologies - The technologies to render
+   * @returns {React.ReactNode} - The rendered list of technologies
+   */
   const renderTechnologyList = (technologies) => {
     if (!technologies) return null;
 
@@ -779,7 +816,6 @@ const ReviewPage = () => {
     });
   };
 
-  // Add this near other utility functions
   const handleTechClick = (tech) => {
     const foundTech = Object.values(entries)
       .flat()
@@ -805,11 +841,6 @@ const ReviewPage = () => {
           <div className="admin-header-left">
             <div className="admin-review-title">
               <h1>Reviewer Dashboard</h1>
-              <span>
-                {/* Update and add to the Tech Radar. Please{" "}
-                <strong>take caution</strong> when changing details about
-                technologies. <strong>You cannot undo changes.</strong> */}
-              </span>
             </div>
             <div className="admin-filter-search-flex">
               <div className="admin-filter-section-container">
