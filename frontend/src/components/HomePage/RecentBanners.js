@@ -81,6 +81,9 @@ const RecentBanners = () => {
   return (
     <div className="recent-banners-container">
       <h2>Recent Announcements</h2>
+      <span>
+        These announcements are shown as banners at the bottom of different pages across the Digital Landscape. 
+      </span>
       <div className="recent-banners-list">
         {banners.map((banner, index) => (
           <div key={index} className={`recent-banner-item banner-${banner.type}`}>

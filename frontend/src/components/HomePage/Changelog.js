@@ -30,6 +30,7 @@ const Changelog = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [expandedItems, setExpandedItems] = useState(new Set());
 
   const fetchReleases = async (pageNum) => {
     try {
@@ -67,6 +68,18 @@ const Changelog = () => {
     fetchReleases(page + 1);
   };
 
+  const toggleExpand = (releaseId) => {
+    setExpandedItems(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(releaseId)) {
+        newSet.delete(releaseId);
+      } else {
+        newSet.add(releaseId);
+      }
+      return newSet;
+    });
+  };
+
   if (loading && !loadingMore) {
     return <div className="changelog-loading">Loading changelog...</div>;
   }
@@ -78,9 +91,15 @@ const Changelog = () => {
   return (
     <div className="changelog-container">
       <h2>Recent Updates</h2>
+      <span>
+        This is a list of the most recent updates to the Digital Landscape. If you have any features or changes you would like to see, please let us know by adding to the <a href='https://github.com/ONS-Innovation/keh-digital-landscape/discussions' target='_blank' rel='noopener noreferrer'>GitHub discussion board</a>.
+      </span>
       <div className="changelog-list">
         {releases.map((release) => (
-          <div key={release.id} className="changelog-item">
+          <div 
+            key={release.id} 
+            className={`changelog-item ${expandedItems.has(release.id) ? 'expanded' : ''}`}
+          >
             <div className="changelog-header">
               <h3>{release.name}</h3>
               <span className="changelog-date">
@@ -102,14 +121,21 @@ const Changelog = () => {
                 return null;
               })}
             </div>
-            <a
-              href={release.html_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="changelog-link"
-            >
-              View on GitHub
-            </a>
+            <div className="changelog-footer">
+              <a
+                href={release.html_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="changelog-link"
+                onClick={(e) => e.stopPropagation()}
+              >
+                View on GitHub
+              </a>
+              <div className="changelog-footer-divider" />
+              <button className="changelog-expand-button" onClick={() => toggleExpand(release.id)}>
+                {expandedItems.has(release.id) ? 'Show less' : 'Show more'}
+              </button>
+            </div>
           </div>
         ))}
       </div>

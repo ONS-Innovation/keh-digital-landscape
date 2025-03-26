@@ -12,12 +12,24 @@
   margin: 0;
   font-size: 1.25rem;
   font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.changelog-container span {
+  color: hsl(var(--muted-foreground));
   margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+
+.changelog-container span a {
+  color: hsl(var(--primary));
+  font-weight: 500;
 }
 
 .changelog-list {
   display: flex;
   flex-direction: column;
+  margin-top: 8px;
 }
 
 .changelog-item {
@@ -26,6 +38,8 @@
   padding-bottom: 1rem;
   box-sizing: border-box;
   position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .changelog-item::before {
@@ -43,7 +57,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.75rem;
 }
 
 .changelog-header h3 {
@@ -60,6 +73,31 @@
 .changelog-body {
   color: hsl(var(--foreground));
   margin-bottom: 0.75rem;
+  position: relative;
+  max-height: 150px;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.changelog-item.expanded .changelog-body {
+  max-height: none;
+}
+
+.changelog-body::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to bottom, transparent, hsl(var(--card)));
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.changelog-item.expanded .changelog-body::after {
+  opacity: 0;
 }
 
 .changelog-entry {
@@ -77,14 +115,40 @@
   text-decoration: underline;
 }
 
+.changelog-footer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px
+}
+
+.changelog-footer-divider {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: hsl(var(--muted-foreground));
+  margin-top: 3px;
+}
+
 .changelog-link {
   color: hsl(var(--primary));
   font-size: 0.9rem;
   display: inline-block;
+  text-decoration: underline;
 }
 
 .changelog-link:hover {
   text-decoration: underline;
+}
+
+.changelog-expand-button {
+  background: none;
+  border: none;
+  color: hsl(var(--primary));
+  font-size: 0.9rem;
+  padding: 0;
+  cursor: pointer;
+  border-radius: var(--radius);
 }
 
 .changelog-loading,
