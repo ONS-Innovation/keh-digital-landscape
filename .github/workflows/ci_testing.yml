@@ -1,0 +1,49 @@
+---
+name: CI Testing
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'testing/**'
+  pull_request:
+    branches: [master]
+    paths:
+      - 'testing/**'
+
+concurrency:
+  group: "${{ github.head_ref || github.ref }}-${{ github.workflow }}"
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Lint and Test
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: testing
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: testing/requirements.txt
+        
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+
+      - name: Install dependencies
+        run: make setup
+
+      - name: Run linting
+        run: make lint
+
+      - name: Run tests
+        run: make test

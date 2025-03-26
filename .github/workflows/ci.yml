@@ -23,9 +23,3 @@ jobs:
         
     - name: Run Linting
       run: make lint
-
-    - name: Install Test Dependencies
-      run: cd testing && make setup
-
-    - name: Run Tests
-      run: cd testing && make lint
