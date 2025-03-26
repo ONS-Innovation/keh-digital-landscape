@@ -3,11 +3,11 @@ name: CI Testing
 
 on:
   push:
-    branches: [master]
+    branches: [main]
     paths:
       - 'testing/**'
   pull_request:
-    branches: [master]
+    branches: [main]
     paths:
       - 'testing/**'
 
