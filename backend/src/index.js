@@ -695,6 +695,110 @@ app.get("/api/banners", async (req, res) => {
 });
 
 /**
+ * Endpoint for fetching array data from the Tech Audit Tool bucket.
+ * @route GET /admin/api/array-data
+ * @returns {Object} Object containing categorized technology arrays
+ * @throws {Error} 500 - If fetching operation fails
+ */
+app.get("/admin/api/array-data", async (req, res) => {
+  try {
+    const command = new GetObjectCommand({
+      Bucket: tatBucketName,
+      Key: "array_data.json",
+    });
+
+    try {
+      const { Body } = await s3Client.send(command);
+      const arrayData = JSON.parse(await Body.transformToString());
+      
+      res.json(arrayData);
+    } catch (error) {
+      logger.error("Error fetching array data:", { error: error.message });
+      res.status(500).json({ error: "Failed to fetch technology data" });
+    }
+  } catch (error) {
+    logger.error("Error in array data endpoint:", { error: error.message });
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * Endpoint for updating array data in the Tech Audit Tool bucket.
+ * @route POST /admin/api/array-data/update
+ * @param {Object} req.body - The updated array data
+ * @param {string} req.body.category - Category to update
+ * @param {string[]} req.body.items - Updated list of items for the category
+ * @returns {Object} Success message or error response
+ * @throws {Error} 400 - If data is invalid
+ * @throws {Error} 500 - If update operation fails
+ */
+app.post("/admin/api/array-data/update", async (req, res) => {
+  try {
+    const { category, items } = req.body;
+
+    // Validate input
+    if (!category || !items || !Array.isArray(items)) {
+      return res.status(400).json({ error: "Invalid data format. Category and items array are required." });
+    }
+
+    // Get existing array data
+    const getCommand = new GetObjectCommand({
+      Bucket: tatBucketName,
+      Key: "array_data.json",
+    });
+
+    let arrayData;
+    try {
+      const { Body } = await s3Client.send(getCommand);
+      arrayData = JSON.parse(await Body.transformToString());
+    } catch (error) {
+      logger.error("Error fetching existing array data:", { error: error.message });
+      return res.status(500).json({ error: "Failed to fetch existing data for update" });
+    }
+
+    // Update the specified category
+    arrayData[category] = items;
+
+    // Save the updated data back to S3
+    const putCommand = new PutObjectCommand({
+      Bucket: tatBucketName,
+      Key: "array_data.json",
+      Body: JSON.stringify(arrayData, null, 2),
+      ContentType: "application/json",
+    });
+
+    await s3Client.send(putCommand);
+    res.json({ message: `Technology list for ${category} updated successfully` });
+  } catch (error) {
+    logger.error("Error updating array data:", { error: error.message });
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * Endpoint for fetching tech radar data for the admin page.
+ * @route GET /admin/api/tech-radar
+ * @returns {Object} The tech radar configuration data
+ * @throws {Error} 500 - If JSON fetching fails
+ */
+app.get("/admin/api/tech-radar", async (req, res) => {
+  try {
+    const command = new GetObjectCommand({
+      Bucket: bucketName,
+      Key: "onsRadarSkeleton.json",
+    });
+
+    const { Body } = await s3Client.send(command);
+    const radarData = JSON.parse(await Body.transformToString());
+    
+    res.json(radarData);
+  } catch (error) {
+    logger.error("Error fetching tech radar data:", { error: error.message });
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
  * Health check endpoint to verify server status.
  * @route GET /api/health
  * @returns {Object} Health status information
