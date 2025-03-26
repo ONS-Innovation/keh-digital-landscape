@@ -2,6 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import '../../styles/components/Changelog.css';
 
+
+/**
+ * Processes a changelog line to convert GitHub URLs into formatted HTML links
+ * @param {string} line - The changelog line to process
+ * @returns {string} The processed line with URLs converted to HTML links
+ * 
+ * The function handles three cases:
+ * 1. Pull request URLs - Converts to "Pull Request #{number}" 
+ * 2. Compare URLs - Converts to "Changelog Link"
+ * 3. Other URLs - Displays the full URL as the link text
+ * 
+ * If the line is empty or contains no URLs, returns the original line unchanged.
+ */
 const processChangelogLine = (line) => {
   // Skip empty lines or lines that don't contain links
   if (!line || !line.includes('http')) {
