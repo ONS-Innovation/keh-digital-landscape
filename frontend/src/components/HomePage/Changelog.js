@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import '../../styles/components/Changelog.css';
 
-
 /**
  * Processes a changelog line to convert GitHub URLs into formatted HTML links
  * @param {string} line - The changelog line to process
