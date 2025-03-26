@@ -129,12 +129,6 @@ const ReviewPage = () => {
       radarEntries.map((entry) => entry.title.toLowerCase())
     );
 
-    // Also create a map to preserve original case for existing technologies
-    const existingTechMap = radarEntries.reduce((map, entry) => {
-      map[entry.title.toLowerCase()] = entry.title;
-      return map;
-    }, {});
-
     const newTechnologies = new Map();
 
     // Process CSV data
@@ -149,15 +143,15 @@ const ReviewPage = () => {
             const techLowercase = trimmedTech.toLowerCase();
             
             if (trimmedTech) {
-              if (!newTechnologies.has(techLowercase)) {
+              // Only add if it doesn't exist in radar (case-insensitive)
+              // AND hasn't already been added to newTechnologies
+              if (!existingTechLowercase.has(techLowercase) && 
+                  !newTechnologies.has(techLowercase)) {
                 // Brand new technology - add to the map using the case from the CSV
                 newTechnologies.set(techLowercase, {
                   title: trimmedTech,
                   category: category
                 });
-              } else {
-                // Found duplicate in CSV with different case
-                const existingEntry = newTechnologies.get(techLowercase);
               }
             }
           });
