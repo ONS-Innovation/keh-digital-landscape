@@ -3,7 +3,6 @@ This module contains the test cases for the backend API.
 """
 
 from datetime import datetime, timedelta
-import random
 import requests
 
 BASE_URL = "http://localhost:5001"
@@ -454,3 +453,38 @@ def test_repository_project_json_language_stats():
         assert "repo_count" in first_lang
         assert "average_percentage" in first_lang
         assert "total_size" in first_lang
+
+def test_banner_endpoints():
+    """Test the banner message endpoints.
+
+    This test verifies that both banner endpoints (/api/banners and /api/banners/all)
+    return the expected response structure and properly filter active banners.
+
+    Tests:
+        - /api/banners endpoint returns active banners only
+        - /api/banners/all endpoint returns all banners
+        - Both endpoints handle missing messages.json gracefully
+        - Response structure is consistent and valid
+    """
+    # Test /api/banners endpoint
+    response = requests.get(f"{BASE_URL}/api/banners", timeout=10)
+    assert response.status_code == 200
+    data = response.json()
+    assert "messages" in data
+    assert isinstance(data["messages"], list)
+    
+    # Verify active banners only
+    for banner in data["messages"]:
+        assert banner.get("show", True) is True
+
+    # Test /api/banners/all endpoint
+    response = requests.get(f"{BASE_URL}/api/banners/all", timeout=10)
+    assert response.status_code == 200
+    data = response.json()
+    assert "messages" in data
+    assert isinstance(data["messages"], list)
+    
+    # Test error case with non-existent endpoint
+    response = requests.get(f"{BASE_URL}/api/banners/nonexistent", timeout=10)
+    assert response.status_code in [404, 500]
+

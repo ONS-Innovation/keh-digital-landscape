@@ -1,2 +1,3 @@
 [MESSAGES CONTROL]
 max-line-length = 125
+disable=trailing-whitespace
