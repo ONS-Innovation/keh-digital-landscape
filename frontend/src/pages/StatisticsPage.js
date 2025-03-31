@@ -4,7 +4,6 @@ import Statistics from "../components/Statistics/Statistics";
 import Header from "../components/Header/Header";
 import { ThemeProvider } from "../contexts/ThemeContext";
 import { toast } from "react-hot-toast";
-import '../styles/StatisticsPage.css';
 import { useData } from "../contexts/dataContext";
 import { BannerContainer } from "../components/Banner";
 
