@@ -41,6 +41,15 @@
   box-sizing: border-box;
 }
 
+.home-page {
+  width: 100%;
+  background: hsl(var(--background));
+  padding: 24px 0;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+}
+
 @media (max-width: 768px) {
   .projects-page {
     padding: 12px 8px;

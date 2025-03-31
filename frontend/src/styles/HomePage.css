@@ -1,12 +1,3 @@
-.home-page {
-  width: 100%;
-  min-height: calc(100vh - var(--header-height));
-  background: hsl(var(--background));
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
-
 .home-content {
   max-width: 1400px;
   text-align: left;
