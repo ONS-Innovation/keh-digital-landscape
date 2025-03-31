@@ -6,7 +6,6 @@ import Projects from "../components/Projects/Projects";
 import ProjectModal from "../components/Projects/ProjectModal";
 import { useData } from "../contexts/dataContext";
 import toast from "react-hot-toast";
-import "../styles/ProjectsPage.css";
 import { useTechnologyStatus } from "../utilities/getTechnologyStatus";
 import { BannerContainer } from "../components/Banner";
 /**

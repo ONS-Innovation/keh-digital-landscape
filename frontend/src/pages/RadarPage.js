@@ -28,7 +28,7 @@ function RadarPage() {
   const [searchResults, setSearchResults] = useState([]);
   const [isInfoBoxVisible, setIsInfoBoxVisible] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
-  const [dragPosition, setDragPosition] = useState({ x: 24, y: 80 });
+  const [dragPosition, setDragPosition] = useState({ x: 148, y: 80 });
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [expandedQuadrants, setExpandedQuadrants] = useState({
     1: true,
@@ -635,7 +635,7 @@ function RadarPage() {
           <InfoBox
             isAdmin={false}
             selectedItem={selectedBlip || lockedBlip}
-            initialPosition={{ x: 24, y: 80 }}
+            initialPosition={{ x: 272, y: 80 }}
             onClose={() => setIsInfoBoxVisible(false)}
             timelineAscending={timelineAscending}
             setTimelineAscending={setTimelineAscending}
