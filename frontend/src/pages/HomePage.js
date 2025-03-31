@@ -2,6 +2,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ThemeProvider } from "../contexts/ThemeContext";
 import Header from "../components/Header/Header";
+import Changelog from "../components/HomePage/Changelog";
+import RecentBanners from "../components/HomePage/RecentBanners";
 import { IoStatsChart, IoPeople } from "react-icons/io5";
 import { FaEdit, FaUserShield } from "react-icons/fa";
 import { MdOutlineRadar } from "react-icons/md";
@@ -80,6 +82,9 @@ function HomePage() {
               <p>Manage system-wide settings and configurations.</p>
             </a>
           </div>
+
+          <RecentBanners />
+          <Changelog />
         </div>
       </div>
     </ThemeProvider>

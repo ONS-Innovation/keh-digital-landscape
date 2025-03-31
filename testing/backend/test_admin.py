@@ -6,9 +6,10 @@ import requests
 
 BASE_URL = "http://localhost:5001"
 
+
 def test_admin_banner_get():
     """Test the admin banners endpoint for retrieving banner messages.
-    
+
     This test verifies that the endpoint correctly returns banner messages
     from the S3 bucket. It checks the structure of the response and ensures
     the messages array is present.
@@ -24,14 +25,15 @@ def test_admin_banner_get():
     response = requests.get(f"{BASE_URL}/admin/api/banners", timeout=10)
     assert response.status_code == 200
     data = response.json()
-    
+
     # Verify the response structure
     assert "messages" in data
     assert isinstance(data["messages"], list)
 
+
 def test_admin_banner_update():
     """Test the admin banners update endpoint.
-    
+
     This test verifies that the endpoint correctly processes banner 
     updates with valid data and saves them to the S3 bucket.
 
@@ -57,7 +59,7 @@ def test_admin_banner_update():
             "show": True
         }
     }
-    
+
     response = requests.post(
         f"{BASE_URL}/admin/api/banners/update",
         json=test_data,
@@ -67,15 +69,15 @@ def test_admin_banner_update():
     data = response.json()
     assert "message" in data
     assert data["message"] == "Banner added successfully"
-    
+
     # Verify the banner was added
     get_response = requests.get(f"{BASE_URL}/admin/api/banners", timeout=10)
     assert get_response.status_code == 200
     get_data = get_response.json()
     assert "messages" in get_data
-    
+
     # Find the added banner by message
-    added_banner = next((banner for banner in get_data["messages"] 
+    added_banner = next((banner for banner in get_data["messages"]
                          if banner["message"] == "Test Banner Message"), None)
     assert added_banner is not None
     assert added_banner["title"] == "Test Banner"
@@ -84,9 +86,10 @@ def test_admin_banner_update():
     assert "statistics" in added_banner["pages"]
     assert added_banner["show"] is True
 
+
 def test_admin_banner_update_invalid():
     """Test the admin banners update endpoint with invalid data.
-    
+
     This test verifies that the endpoint correctly validates banner data
     and returns appropriate error responses for invalid inputs.
 
@@ -110,7 +113,7 @@ def test_admin_banner_update_invalid():
     )
     assert response.status_code == 400
     assert response.json()["error"] == "Invalid banner data"
-    
+
     # Test with empty pages array
     response = requests.post(
         f"{BASE_URL}/admin/api/banners/update",
@@ -119,7 +122,7 @@ def test_admin_banner_update_invalid():
     )
     assert response.status_code == 400
     assert response.json()["error"] == "Invalid banner data"
-    
+
     # Test with malformed request body
     response = requests.post(
         f"{BASE_URL}/admin/api/banners/update",
@@ -129,9 +132,10 @@ def test_admin_banner_update_invalid():
     assert response.status_code == 400
     assert response.json()["error"] == "Invalid banner data"
 
+
 def test_admin_banner_toggle():
     """Test the admin banners toggle endpoint.
-    
+
     This test verifies that the endpoint correctly toggles banner visibility
     by updating the 'show' property in the S3 bucket.
 
@@ -155,30 +159,30 @@ def test_admin_banner_toggle():
             "show": True
         }
     }
-    
+
     # Add the banner
     requests.post(
         f"{BASE_URL}/admin/api/banners/update",
         json=test_data,
         timeout=10
     )
-    
+
     # Get all banners
     get_response = requests.get(f"{BASE_URL}/admin/api/banners", timeout=10)
     assert get_response.status_code == 200
     banners = get_response.json()["messages"]
-    
+
     # Find the index of our test banner
-    test_banner_index = next((i for i, banner in enumerate(banners) 
+    test_banner_index = next((i for i, banner in enumerate(banners)
                              if banner["message"] == "Toggle Test Banner"), None)
     assert test_banner_index is not None
-    
+
     # Toggle the banner visibility
     toggle_data = {
         "index": test_banner_index,
         "show": False
     }
-    
+
     response = requests.post(
         f"{BASE_URL}/admin/api/banners/toggle",
         json=toggle_data,
@@ -187,15 +191,16 @@ def test_admin_banner_toggle():
     assert response.status_code == 200
     data = response.json()
     assert data["message"] == "Banner visibility updated successfully"
-    
+
     # Verify the banner was toggled
     get_response = requests.get(f"{BASE_URL}/admin/api/banners", timeout=10)
     updated_banners = get_response.json()["messages"]
     assert updated_banners[test_banner_index]["show"] is False
 
+
 def test_admin_banner_toggle_invalid():
     """Test the admin banners toggle endpoint with invalid data.
-    
+
     This test verifies that the endpoint correctly validates toggle data
     and returns appropriate error responses for invalid inputs.
 
@@ -219,7 +224,7 @@ def test_admin_banner_toggle_invalid():
     )
     assert response.status_code == 400
     assert "Invalid banner index" in response.json()["error"]
-    
+
     # Test with missing index
     response = requests.post(
         f"{BASE_URL}/admin/api/banners/toggle",
@@ -229,9 +234,10 @@ def test_admin_banner_toggle_invalid():
     assert response.status_code == 400
     assert "Invalid banner index" in response.json()["error"]
 
+
 def test_admin_banner_delete():
     """Test the admin banners delete endpoint.
-    
+
     This test verifies that the endpoint correctly deletes banners
     from the S3 bucket based on their index.
 
@@ -253,29 +259,29 @@ def test_admin_banner_delete():
             "pages": ["radar"]
         }
     }
-    
+
     # Add the banner
     requests.post(
         f"{BASE_URL}/admin/api/banners/update",
         json=test_data,
         timeout=10
     )
-    
+
     # Get all banners
     get_response = requests.get(f"{BASE_URL}/admin/api/banners", timeout=10)
     assert get_response.status_code == 200
     banners = get_response.json()["messages"]
-    
+
     # Find the index of our test banner
-    test_banner_index = next((i for i, banner in enumerate(banners) 
+    test_banner_index = next((i for i, banner in enumerate(banners)
                              if banner["message"] == "Delete Test Banner"), None)
     assert test_banner_index is not None
-    
+
     # Delete the banner
     delete_data = {
         "index": test_banner_index
     }
-    
+
     response = requests.post(
         f"{BASE_URL}/admin/api/banners/delete",
         json=delete_data,
@@ -284,19 +290,20 @@ def test_admin_banner_delete():
     assert response.status_code == 200
     data = response.json()
     assert data["message"] == "Banner deleted successfully"
-    
+
     # Verify the banner was deleted
     get_response = requests.get(f"{BASE_URL}/admin/api/banners", timeout=10)
     updated_banners = get_response.json()["messages"]
-    
+
     # The banner should no longer exist
-    deleted_banner = next((banner for banner in updated_banners 
+    deleted_banner = next((banner for banner in updated_banners
                           if banner["message"] == "Delete Test Banner"), None)
     assert deleted_banner is None
 
+
 def test_admin_banner_delete_invalid():
     """Test the admin banners delete endpoint with invalid data.
-    
+
     This test verifies that the endpoint correctly validates delete data
     and returns appropriate error responses for invalid inputs.
 

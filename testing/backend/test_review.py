@@ -7,9 +7,10 @@ import requests
 
 BASE_URL = "http://localhost:5001"
 
+
 def test_tech_radar_update_no_entries():
     """Test the tech radar update endpoint with missing entries.
-    
+
     This test verifies that the endpoint correctly handles requests with
     missing entries data by returning an appropriate error response.
 
@@ -21,15 +22,17 @@ def test_tech_radar_update_no_entries():
         - JSON response with error message
         - Error message indicating invalid or missing title
     """
-    response = requests.post(f"{BASE_URL}/review/api/tech-radar/update", json={}, timeout=10)
+    response = requests.post(
+        f"{BASE_URL}/review/api/tech-radar/update", json={}, timeout=10)
     assert response.status_code == 400
     data = response.json()
     assert "error" in data
     assert data["error"] == "Invalid or empty entries data"
 
+
 def test_tech_radar_update_partial():
     """Test the tech radar update endpoint with a partial update.
-    
+
     This test verifies that the endpoint correctly processes updates
     when provided with the complete tech radar structure.
 
@@ -45,7 +48,7 @@ def test_tech_radar_update_partial():
         - Successful update of entries
         - Correct structure in stored data
     """
-    random_number = random.randint(100,1000)
+    random_number = random.randint(100, 1000)
     test_data = {
         "entries": [
             {
@@ -67,28 +70,29 @@ def test_tech_radar_update_partial():
             }
         ]
     }
-    
+
     response = requests.post(
         f"{BASE_URL}/review/api/tech-radar/update",
         json=test_data,
         timeout=10
     )
     assert response.status_code == 200
-    
+
     # Verify the updates
     get_response = requests.get(f"{BASE_URL}/api/tech-radar/json", timeout=10)
     assert get_response.status_code == 200
     updated_data = get_response.json()
-    
+
     # Verify our entry exists and is correct
     updated_entries = {entry["id"]: entry for entry in updated_data["entries"]}
     assert "test-entry-partial-1" in updated_entries
     assert updated_entries["test-entry-partial-1"]["timeline"][0]["ringId"] == "ignore"
     assert updated_entries["test-entry-partial-1"]["quadrant"] == "1"
 
+
 def test_tech_radar_update_invalid_entries():
     """Test the tech radar update endpoint with invalid entries format.
-    
+
     This test verifies that the endpoint correctly handles requests with
     invalid entries data format by returning an appropriate error response.
 
@@ -114,9 +118,10 @@ def test_tech_radar_update_invalid_entries():
     assert response.status_code == 400
     assert response.json()["error"] == "Invalid or empty entries data"
 
+
 def test_tech_radar_update_invalid_structure():
     """Test the tech radar update endpoint with invalid structure.
-    
+
     This test verifies that the endpoint correctly validates the complete
     structure of the tech radar data, including title, quadrants, rings,
     and entries.
@@ -176,9 +181,10 @@ def test_tech_radar_update_invalid_structure():
     assert response.status_code == 400
     assert response.json()["error"] == "Invalid or empty entries data"
 
+
 def test_tech_radar_update_valid_structure():
     """Test the tech radar update endpoint with valid complete structure.
-    
+
     This test verifies that the endpoint correctly processes a complete
     tech radar update with valid structure for all components.
 
@@ -196,7 +202,7 @@ def test_tech_radar_update_valid_structure():
         - Successful update confirmation
         - Correct structure in stored data
     """
-    random_number = random.randint(100,1000)
+    random_number = random.randint(100, 1000)
     test_data = {
         "entries": [
             {
@@ -218,7 +224,7 @@ def test_tech_radar_update_valid_structure():
             }
         ]
     }
-    
+
     response = requests.post(
         f"{BASE_URL}/review/api/tech-radar/update",
         json=test_data,
@@ -234,13 +240,16 @@ def test_tech_radar_update_valid_structure():
 
     # Verify entry structure
     entries = updated_data["entries"]
-    test_entry = next((entry for entry in entries if entry["id"] == "test-entry-1"), None)
+    test_entry = next(
+        (entry for entry in entries if entry["id"] == "test-entry-1"), None)
     assert test_entry is not None, "No entry with id 'test-entry-1' found"
-    assert str(random_number) in test_entry["timeline"][0]["description"], "Entry with id 'test-entry-1' does not have the expected description"
+    assert str(
+        random_number) in test_entry["timeline"][0]["description"], "Entry with id 'test-entry-1' does not have the expected description"
+
 
 def test_tech_radar_update_invalid_references():
     """Test the tech radar update endpoint with invalid references.
-    
+
     This test verifies that the endpoint correctly validates references
     between entries and their quadrants/rings.
 
@@ -281,7 +290,7 @@ def test_tech_radar_update_invalid_references():
             }
         ]
     }
-    
+
     response = requests.post(
         f"{BASE_URL}/review/api/tech-radar/update",
         json=test_data,

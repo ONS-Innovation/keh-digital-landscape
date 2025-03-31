@@ -21,6 +21,9 @@ nav:
     - Header:
       - Header: components/header/index.md
       - Help Modal: components/header/helpModal.md
+    - Homepage:
+      - Changelog: components/homepage/Changelog.md
+      - Recent Banners: components/homepage/RecentBanners.md
     - Info Box: components/infoBox.md
     - Projects:
       - Projects: components/projects/index.md
