@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -97,7 +97,7 @@ body {
 }
 
 body {
-  font-family: "Inter Tight", sans-serif;
+  font-family: "Geist", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: hsl(var(--background));
@@ -105,5 +105,5 @@ body {
 }
 
 button {
-  font-family: "Inter Tight", sans-serif;
+  font-family: "Geist", sans-serif;
 }

@@ -4,8 +4,7 @@ import { ThemeProvider } from "../contexts/ThemeContext";
 import Header from "../components/Header/Header";
 import Changelog from "../components/HomePage/Changelog";
 import RecentBanners from "../components/HomePage/RecentBanners";
-import { IoStatsChart, IoPeople } from "react-icons/io5";
-import { FaEdit, FaUserShield } from "react-icons/fa";
+import { TbSmartHome, TbEditCircle, TbUserShield, TbUsers, TbChartBar, TbHelp } from "react-icons/tb";
 import { MdOutlineRadar } from "react-icons/md";
 import "../styles/HomePage.css";
 
@@ -47,7 +46,7 @@ function HomePage() {
 
             <div className="nav-card" onClick={() => navigate("/statistics")}>
               <div className="nav-card-header">
-                <IoStatsChart />
+                <TbChartBar />
                 <h2>Statistics</h2>
               </div>
               <p>
@@ -58,7 +57,7 @@ function HomePage() {
 
             <div className="nav-card" onClick={() => navigate("/projects")}>
               <div className="nav-card-header">
-                <IoPeople />
+                <TbUsers />
                 <h2>Projects</h2>
               </div>
               <p>
@@ -69,14 +68,14 @@ function HomePage() {
 
             <a className="nav-card" href="/review/dashboard">
               <div className="nav-card-header">
-                <FaEdit />
+                <TbEditCircle />
                 <h2>Review</h2>
               </div>
               <p>Authorised users can update the data on the Tech Radar.</p>
             </a>
             <a className="nav-card" href="/admin/dashboard">
               <div className="nav-card-header">
-                <FaUserShield />
+                <TbUserShield />
                 <h2>Admin</h2>
               </div>
               <p>Manage system-wide settings and configurations.</p>
