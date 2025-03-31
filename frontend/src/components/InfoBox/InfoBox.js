@@ -4,6 +4,8 @@ import {
   IoArrowDownOutline,
   IoRemoveOutline,
   IoGridOutline,
+  IoChevronDownOutline,
+  IoChevronUpOutline,
 } from "react-icons/io5";
 import { FaSortAmountDownAlt, FaSortAmountUpAlt, FaEdit, FaCheck, FaTimes } from "react-icons/fa";
 
@@ -29,6 +31,7 @@ const InfoBox = ({
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [localTitle, setLocalTitle] = useState(selectedItem?.title || "");
   const [localCategory, setLocalCategory] = useState(selectedItem?.description || "");
+  const [showProjects, setShowProjects] = useState(true);
 
   const handleMouseDown = (e) => {
     e.stopPropagation(); // Prevent event from bubbling to parent
@@ -139,7 +142,7 @@ const InfoBox = ({
         resize: "both",
         overflow: "auto",
         maxWidth: "90vw",
-        maxHeight: "450px",
+        maxHeight: "80vh",
       }}
     >
       <button className="info-box-close" onClick={onClose}>
@@ -220,7 +223,7 @@ const InfoBox = ({
         <p>Click a box to show the description of the event</p>
       </div>
 
-      <div className="timeline-container">
+      <div className="timeline-container" style={{ flexDirection: selectedTimelineItem ? "column" : "row" }}>
         {[...selectedItem.timeline]
           .reverse()
           .slice()
@@ -250,32 +253,48 @@ const InfoBox = ({
                       year: "numeric",
                     })}
               </div>
-              {index < array.length - 1 && <div className="timeline-connector" />}
+              {index < array.length - 1 && !selectedTimelineItem && <div className="timeline-connector" />}
             </div>
           ))}
       </div>
 
       {projectsForTech.length > 0 && (
         <div className="info-box-projects">
-          <h4>
-            <strong>
-              {projectsForTech.length}{" "}
-              {projectsForTech.length === 1 ? "project" : "projects"}
-            </strong>{" "}
-            using this technology:
-          </h4>
-          <p>Click a project to view more details</p>
-          <ul>
-            {projectsForTech.map((project, index) => (
-              <li
-                key={index}
-                onClick={() => handleProjectClick(project)}
-                className="info-box-project-item clickable-tech"
-              >
-                {project.Project || project.Project_Short}
-              </li>
-            ))}
-          </ul>
+          <div className="info-box-projects-header">
+            <h4>
+              <strong>
+                {projectsForTech.length}{" "}
+                {projectsForTech.length === 1 ? "project" : "projects"}
+              </strong>{" "}
+              using this technology:
+            </h4>
+            <button 
+              className="show-hide-button" 
+              onClick={() => setShowProjects(!showProjects)}
+            >
+              {showProjects ? (
+                <>Hide <IoChevronUpOutline /></>
+              ) : (
+                <>Show <IoChevronDownOutline /></>
+              )}
+            </button>
+          </div>
+          {showProjects && (
+            <>
+              <p>Click a project to view more details</p>
+              <ul>
+                {projectsForTech.map((project, index) => (
+                  <li
+                    key={index}
+                    onClick={() => handleProjectClick(project)}
+                    className="info-box-project-item clickable-tech"
+                  >
+                    {project.Project || project.Project_Short}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </div>
       )}
 
