@@ -4,6 +4,7 @@ import MultiSelect from "../MultiSelect/MultiSelect";
 import { fetchTechRadarJSONFromS3 } from "../../utilities/getTechRadarJson";
 import { fetchCSVFromS3 } from "../../utilities/getCSVData";
 import Header from "../Header/Header";
+import { FaCheck, FaRegTimesCircle, FaPencilAlt, FaPencilRuler, FaTrash, FaPlus } from "react-icons/fa";
 
 const TechManage = () => {
   // Fields to scan from CSV and their corresponding categories
@@ -27,6 +28,7 @@ const TechManage = () => {
   const [radarData, setRadarData] = useState({ entries: [], quadrants: [] });
   const [csvData, setCsvData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [editorContent, setEditorContent] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [selectedQuadrants, setSelectedQuadrants] = useState([]);
@@ -47,11 +49,11 @@ const TechManage = () => {
   const [newTechnology, setNewTechnology] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [viewAllCategories, setViewAllCategories] = useState(false);
   const [selectedAddOption, setSelectedAddOption] = useState("");
   const [selectedTargetCategory, setSelectedTargetCategory] = useState("");
   const [editingTech, setEditingTech] = useState(null);
   const [editValue, setEditValue] = useState("");
+  const [showAddFormCategory, setShowAddFormCategory] = useState(null);
 
   // Handle select all checkbox
   const handleSelectAll = (e) => {
@@ -76,7 +78,7 @@ const TechManage = () => {
   const fetchAllData = async () => {
     try {
       setIsLoading(true);
-    const [radarData, csvData] = await Promise.all([
+      const [radarData, csvData] = await Promise.all([
         fetchTechRadarJSONFromS3(),
         fetchCSVFromS3(),
       ]);
@@ -164,7 +166,7 @@ const TechManage = () => {
     const radarDataTech = new Set(
       radarData.entries.map((entry) => entry.title.trim())
     );
-    
+
     // Collect all technologies from array-data
     Object.values(arrayData).forEach((technologies) => {
       technologies.forEach((tech) => {
@@ -256,12 +258,29 @@ const TechManage = () => {
   };
 
   /**
-   * Handles category change
+   * Gets category options for MultiSelect
    */
-  const handleCategoryChange = (e) => {
-    const category = e.target.value;
-    setSelectedCategory(category);
-    updateEditorContent(category, arrayData);
+  const getCategoryOptions = () => {
+    return Object.keys(arrayData).map((category) => ({
+      label: category,
+      value: category,
+      id: category,
+    }));
+  };
+
+  /**
+   * Handles category change for MultiSelect
+   */
+  const handleCategoryChange = (selected) => {
+    setSelectedCategories(selected);
+    if (selected.length === 1) {
+      const category = selected[0].value;
+      setSelectedCategory(category);
+      updateEditorContent(category, arrayData);
+    } else if (selected.length === 0) {
+      setSelectedCategory("");
+      setEditorContent("");
+    }
   };
 
   /**
@@ -280,50 +299,32 @@ const TechManage = () => {
    * Handles saving the editor content
    */
   const handleSaveEditorContent = async () => {
-    if (!selectedCategory) {
-      toast.error("No category selected");
-      return;
-    }
-
-    // Process the content - split by lines and filter empty lines
-    const items = editorContent
-      .split("\n")
-      .map((line) => line.trim())
-      .filter((line) => line.length > 0);
-
     try {
       const baseUrl =
         process.env.NODE_ENV === "development"
           ? "http://localhost:5001/admin/api/array-data/update"
           : "/admin/api/array-data/update";
 
+      // Save all categories at once
       const response = await fetch(baseUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          category: selectedCategory,
-          items,
+          allCategories: true,
+          items: arrayData,
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to update technology list");
+        throw new Error("Failed to update technology lists");
       }
 
-      // Update local state
-      setArrayData({
-        ...arrayData,
-        [selectedCategory]: items,
-      });
-
-      toast.success(
-        `Technology list for ${selectedCategory} updated successfully!`
-      );
+      toast.success("All technology lists updated successfully!");
     } catch (error) {
-      console.error("Error updating technology list:", error);
-      toast.error("Failed to update technology list. Please try again.");
+      console.error("Error updating technology lists:", error);
+      toast.error("Failed to update technology lists. Please try again.");
     }
   };
 
@@ -391,7 +392,11 @@ const TechManage = () => {
   };
 
   // Handle edit technology
-  const handleEditTechnology = async (oldTech, newTech, category = selectedCategory) => {
+  const handleEditTechnology = async (
+    oldTech,
+    newTech,
+    category = selectedCategory
+  ) => {
     if (!newTech.trim() || oldTech === newTech) {
       setEditingTech(null);
       setEditValue("");
@@ -401,14 +406,15 @@ const TechManage = () => {
     const targetCategory = category || selectedCategory;
     if (!targetCategory) return;
 
-    const updatedTechs = arrayData[targetCategory].map(tech => 
+    const updatedTechs = arrayData[targetCategory].map((tech) =>
       tech === oldTech ? newTech : tech
     );
 
     try {
-      const baseUrl = process.env.NODE_ENV === "development"
-        ? "http://localhost:5001/admin/api/array-data/update"
-        : "/admin/api/array-data/update";
+      const baseUrl =
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:5001/admin/api/array-data/update"
+          : "/admin/api/array-data/update";
 
       const response = await fetch(baseUrl, {
         method: "POST",
@@ -471,9 +477,9 @@ const TechManage = () => {
                       className="add-tech-input"
                       autoFocus
                       onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
+                        if (e.key === "Enter") {
                           handleEditTechnology(tech, editValue);
-                        } else if (e.key === 'Escape') {
+                        } else if (e.key === "Escape") {
                           setEditingTech(null);
                           setEditValue("");
                         }
@@ -491,7 +497,7 @@ const TechManage = () => {
                         onClick={() => handleEditTechnology(tech, editValue)}
                         disabled={!editValue.trim() || editValue === tech}
                       >
-                        ✓
+                        <FaCheck />
                       </button>
                       <button
                         className="table-action-btn cancel-btn"
@@ -500,7 +506,7 @@ const TechManage = () => {
                           setEditValue("");
                         }}
                       >
-                        ✕
+                        <FaRegTimesCircle />
                       </button>
                     </>
                   ) : (
@@ -513,14 +519,14 @@ const TechManage = () => {
                         }}
                         title="Edit technology"
                       >
-                        ✎
+                        <FaPencilAlt />
                       </button>
                       <button
                         className="table-action-btn remove-btn"
                         onClick={() => handleRemoveTechnology(tech)}
                         title="Remove technology"
                       >
-                        −
+                        <FaTrash />
                       </button>
                     </>
                   )}
@@ -546,7 +552,7 @@ const TechManage = () => {
                       onClick={handleAddNewTechnology}
                       disabled={!newTechnology.trim()}
                     >
-                      ✓
+                      <FaCheck />
                     </button>
                     <button
                       className="table-action-btn cancel-btn"
@@ -555,7 +561,7 @@ const TechManage = () => {
                         setNewTechnology("");
                       }}
                     >
-                      ✕
+                      <FaRegTimesCircle />
                     </button>
                   </div>
                 </td>
@@ -567,7 +573,7 @@ const TechManage = () => {
                     className="add-tech-btn"
                     onClick={() => setShowAddForm(true)}
                   >
-                    <span>+</span> Add Technology
+                        <FaPlus /> Add Technology
                   </button>
                 </td>
               </tr>
@@ -677,9 +683,58 @@ const TechManage = () => {
         } else {
           return countB - countA;
         }
+      } else if (sortConfig.key === "quadrant") {
+        if (sortConfig.direction === "ascending") {
+          return a[1].category.localeCompare(b[1].category);
+        } else {
+          return b[1].category.localeCompare(a[1].category);
+        }
+      } else if (sortConfig.key === "location") {
+        const getLocationValue = (info) => {
+          if (!info.status.inArrayData && !info.status.inRadarData) return "Not tracked";
+          return info.status.inRadarData ? "Radar" : "Ref. List";
+        };
+        const locA = getLocationValue(a[1]);
+        const locB = getLocationValue(b[1]);
+        
+        if (sortConfig.direction === "ascending") {
+          return locA.localeCompare(locB);
+        } else {
+          return locB.localeCompare(locA);
+        }
       }
       return 0;
     });
+  };
+
+  // Sort all reference list technologies
+  const handleSortAllCategories = (sortType) => {
+    const updatedArrayData = { ...arrayData };
+    
+    Object.keys(updatedArrayData).forEach(category => {
+      const technologies = [...updatedArrayData[category]];
+      
+      switch (sortType) {
+        case "alpha-asc":
+          technologies.sort((a, b) => a.localeCompare(b));
+          break;
+        case "alpha-desc":
+          technologies.sort((a, b) => b.localeCompare(a));
+          break;
+        case "length-desc":
+          technologies.sort((a, b) => b.length - a.length);
+          break;
+        case "length-asc":
+          technologies.sort((a, b) => a.length - b.length);
+          break;
+        default:
+          return;
+      }
+      
+      updatedArrayData[category] = technologies;
+    });
+    
+    setArrayData(updatedArrayData);
   };
 
   // Add selected technologies to Tech Radar in Review ring
@@ -741,6 +796,7 @@ const TechManage = () => {
 
       // Clear selection
       setSelectedTechIds([]);
+      setShowAddModal(false);
       toast.success(`Added ${selectedTechIds.length} technologies to Review`);
     } catch (error) {
       console.error("Error adding technologies to review:", error);
@@ -760,16 +816,11 @@ const TechManage = () => {
         .filter(([tech]) => selectedTechIds.includes(tech))
         .map(([tech]) => tech);
 
-      // Get current technologies in the category
-      const currentTechs = editorContent
-        .split("\n")
-        .filter((tech) => tech.trim());
+      // Get current technologies in the target category
+      const currentTechs = arrayData[category] || [];
 
       // Combine and remove duplicates
       const updatedTechs = [...new Set([...currentTechs, ...selectedTechs])];
-
-      // Update the editor content
-      setEditorContent(updatedTechs.join("\n"));
 
       // Save changes to backend
       const baseUrl =
@@ -800,6 +851,11 @@ const TechManage = () => {
 
       // Clear selection
       setSelectedTechIds([]);
+      setShowAddModal(false);
+      setConfirmAddChecked(false);
+      setSelectedAddOption("");
+      setSelectedTargetCategory("");
+      
       toast.success(
         `Added ${selectedTechs.length} technologies to ${category}`
       );
@@ -886,95 +942,229 @@ const TechManage = () => {
     }
   };
 
+  // Add a new technology to a specific category
+  const handleAddNewTechnologyToCategory = async (category) => {
+    if (!newTechnology.trim() || !category) return;
+
+    try {
+      const updatedTechs = [...arrayData[category], newTechnology];
+
+      const baseUrl =
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:5001/admin/api/array-data/update"
+          : "/admin/api/array-data/update";
+
+      const response = await fetch(baseUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          category,
+          items: updatedTechs,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update technology list");
+      }
+
+      // Update local state
+      setArrayData({
+        ...arrayData,
+        [category]: updatedTechs,
+      });
+
+      setNewTechnology("");
+      setShowAddFormCategory(null);
+      toast.success(`Added ${newTechnology} to ${category}`);
+    } catch (error) {
+      console.error("Error updating technology list:", error);
+      toast.error("Failed to update technology list");
+    }
+  };
+
+  // Sort technologies in a specific category
+  const handleSortCategory = (category, sortType) => {
+    const technologies = [...arrayData[category]];
+    let sortedTechs;
+
+    switch (sortType) {
+      case "alpha-asc":
+        sortedTechs = technologies.sort((a, b) => a.localeCompare(b));
+        break;
+      case "alpha-desc":
+        sortedTechs = technologies.sort((a, b) => b.localeCompare(a));
+        break;
+      case "length-desc":
+        sortedTechs = technologies.sort((a, b) => b.length - a.length);
+        break;
+      case "length-asc":
+        sortedTechs = technologies.sort((a, b) => a.length - b.length);
+        break;
+      default:
+        return;
+    }
+
+    setArrayData({
+      ...arrayData,
+      [category]: sortedTechs,
+    });
+  };
+
   // Render all categories content
   const renderAllCategories = () => {
-    return Object.entries(arrayData).map(([category, technologies]) => {
-      const filteredTechs = technologies.filter(tech => 
-        !searchTerm.trim() || tech.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+    return Object.entries(arrayData)
+      .filter(([category]) => 
+        selectedCategories.length === 0 || 
+        selectedCategories.some(selected => selected.value === category)
+      )
+      .map(([category, technologies]) => {
+        const filteredTechs = technologies.filter(
+          (tech) =>
+            !searchTerm.trim() ||
+            tech.toLowerCase().includes(searchTerm.toLowerCase())
+        );
 
-      if (filteredTechs.length === 0) return null;
+        if (filteredTechs.length === 0) return null;
 
-      return (
-        <div key={category} className="category-section">
-          <div className="category-header">
-            <h4>{category}</h4>
-            <span className="tech-count">({filteredTechs.length})</span>
-          </div>
-          <table className="tech-table editor-table">
-            <tbody>
-              {filteredTechs.map((tech, index) => (
-                <tr key={`${tech}-${index}`}>
-                  <td className="name-cell">
-                    {editingTech === tech ? (
+        return (
+          <div key={category} className="category-section">
+            <div className="category-header">
+              <div className="category-header-left">
+                <h4>{category}</h4>
+                <span className="tech-count">({filteredTechs.length})</span>
+              </div>
+            </div>
+            <table className="tech-table editor-table">
+              <tbody>
+                {filteredTechs.map((tech, index) => (
+                  <tr key={`${tech}-${index}`}>
+                    <td className="name-cell">
+                      {editingTech === tech ? (
+                        <input
+                          type="text"
+                          value={editValue}
+                          onChange={(e) => setEditValue(e.target.value)}
+                          className="add-tech-input"
+                          autoFocus
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              handleEditTechnology(tech, editValue, category);
+                            } else if (e.key === "Escape") {
+                              setEditingTech(null);
+                              setEditValue("");
+                            }
+                          }}
+                        />
+                      ) : (
+                        tech
+                      )}
+                    </td>
+                    <td className="actions-cell">
+                      {editingTech === tech ? (
+                        <>
+                          <button
+                            className="table-action-btn confirm-btn"
+                            onClick={() =>
+                              handleEditTechnology(tech, editValue, category)
+                            }
+                            disabled={!editValue.trim() || editValue === tech}
+                          >
+                            <FaCheck />
+                          </button>
+                          <button
+                            className="table-action-btn cancel-btn"
+                            onClick={() => {
+                              setEditingTech(null);
+                              setEditValue("");
+                            }}
+                          >
+                            <FaRegTimesCircle />
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            className="table-action-btn edit-btn"
+                            onClick={() => {
+                              setEditingTech(tech);
+                              setEditValue(tech);
+                            }}
+                            title="Edit technology"
+                          >
+                            <FaPencilAlt />
+                          </button>
+                          <button
+                            className="table-action-btn remove-btn"
+                            onClick={() => handleRemoveTechnology(tech, category)}
+                            title="Remove technology"
+                          >
+                            <FaTrash />
+                          </button>
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+                {showAddFormCategory === category ? (
+                  <tr className="add-tech-form-row">
+                    <td>
                       <input
                         type="text"
-                        value={editValue}
-                        onChange={(e) => setEditValue(e.target.value)}
+                        value={newTechnology}
+                        onChange={(e) => setNewTechnology(e.target.value)}
                         className="add-tech-input"
+                        placeholder="Enter technology name"
                         autoFocus
                         onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            handleEditTechnology(tech, editValue, category);
-                          } else if (e.key === 'Escape') {
-                            setEditingTech(null);
-                            setEditValue("");
+                          if (e.key === "Enter") {
+                            handleAddNewTechnologyToCategory(category);
+                          } else if (e.key === "Escape") {
+                            setShowAddFormCategory(null);
+                            setNewTechnology("");
                           }
                         }}
                       />
-                    ) : (
-                      tech
-                    )}
-                  </td>
-                  <td className="actions-cell">
-                    {editingTech === tech ? (
-                      <>
+                    </td>
+                    <td>
+                      <div className="add-tech-actions">
                         <button
                           className="table-action-btn confirm-btn"
-                          onClick={() => handleEditTechnology(tech, editValue, category)}
-                          disabled={!editValue.trim() || editValue === tech}
+                          onClick={() => handleAddNewTechnologyToCategory(category)}
+                          disabled={!newTechnology.trim()}
                         >
-                          ✓
+                          <FaCheck />
                         </button>
                         <button
                           className="table-action-btn cancel-btn"
                           onClick={() => {
-                            setEditingTech(null);
-                            setEditValue("");
+                            setShowAddFormCategory(null);
+                            setNewTechnology("");
                           }}
                         >
-                          ✕
+                          <FaRegTimesCircle />
                         </button>
-                      </>
-                    ) : (
-                      <>
-                        <button
-                          className="table-action-btn edit-btn"
-                          onClick={() => {
-                            setEditingTech(tech);
-                            setEditValue(tech);
-                          }}
-                          title="Edit technology"
-                        >
-                          ✎
-                        </button>
-                        <button
-                          className="table-action-btn remove-btn"
-                          onClick={() => handleRemoveTechnology(tech, category)}
-                          title="Remove technology"
-                        >
-                          −
-                        </button>
-                      </>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      );
-    });
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  <tr className="add-tech-row">
+                    <td colSpan={2}>
+                      <button
+                        className="add-tech-btn"
+                        onClick={() => setShowAddFormCategory(category)}
+                      >
+                        <FaPlus /> Add Technology
+                      </button>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        );
+      });
   };
 
   return (
@@ -1000,7 +1190,7 @@ const TechManage = () => {
                 )}
               </h3>
               <div className="tech-radar-filter">
-                {selectedTechIds.length > 0 ? (
+                {selectedTechIds.length > 0 && (
                   <div className="batch-actions">
                     <button
                       className="admin-button batch-action-btn"
@@ -1015,14 +1205,13 @@ const TechManage = () => {
                       Clear Selection
                     </button>
                   </div>
-                ) : (
+                )}
                 <MultiSelect
                   options={getQuadrantOptions()}
                   value={selectedQuadrants}
                   onChange={setSelectedQuadrants}
                   placeholder="Filter by quadrants"
                 />
-                )}
               </div>
             </div>
             <div className="admin-modal-field untracked-modal">
@@ -1045,7 +1234,7 @@ const TechManage = () => {
                         {sortConfig.key === "name" && (
                           <span className="sort-indicator">
                             {sortConfig.direction === "ascending" ? "↑" : "↓"}
-                      </span>
+                          </span>
                         )}
                       </th>
                       <th
@@ -1059,10 +1248,30 @@ const TechManage = () => {
                           </span>
                         )}
                       </th>
-                      <th>Quadrant</th>
-                      <th>Location</th>
-                      <th>Sources</th>
-                      <th>Normalise</th>
+                      <th
+                        className={`sortable-header ${sortConfig.key === "quadrant" ? `sorted-${sortConfig.direction}` : ""}`}
+                        onClick={() => requestSort("quadrant")}
+                      >
+                        Quadrant
+                        {sortConfig.key === "quadrant" && (
+                          <span className="sort-indicator">
+                            {sortConfig.direction === "ascending" ? "↑" : "↓"}
+                          </span>
+                        )}
+                      </th>
+                      <th
+                        className={`sortable-header ${sortConfig.key === "location" ? `sorted-${sortConfig.direction}` : ""}`}
+                        onClick={() => requestSort("location")}
+                      >
+                        Location
+                        {sortConfig.key === "location" && (
+                          <span className="sort-indicator">
+                            {sortConfig.direction === "ascending" ? "↑" : "↓"}
+                          </span>
+                        )}
+                      </th>
+                      <th>Source Question</th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1088,21 +1297,21 @@ const TechManage = () => {
                           {!info.status.inArrayData && !info.status.inRadarData
                             ? "Not tracked"
                             : info.status.inRadarData
-                              ? "Radar"
+                              ? "Radar and Review"
                               : "Ref. List"}
                         </td>
                         <td className="sources-cell">
-                    <div className="tech-item-sources">
-                      {Array.from(info.sources).map((source) => (
+                          <div className="tech-item-sources">
+                            {Array.from(info.sources).map((source) => (
                               <span
                                 key={source}
                                 className="source-tag"
                                 title="Source from Tech Audit"
                               >
-                          {source}
-                        </span>
-                      ))}
-                    </div>
+                                {source}
+                              </span>
+                            ))}
+                          </div>
                         </td>
                         <td className="actions-cell">
                           <button
@@ -1110,7 +1319,7 @@ const TechManage = () => {
                             onClick={() => handleOpenNormaliseModal(tech)}
                             title="Normalise technology name"
                           >
-                            ⟳
+                            <FaPencilRuler />
                           </button>
                         </td>
                       </tr>
@@ -1126,55 +1335,37 @@ const TechManage = () => {
               <div className="technology-editor-header">
                 <h3 className="existing-banners-title">Reference List</h3>
                 <div className="editor-actions">
-                  {!viewAllCategories && (
                     <>
-                <select
-            className="sort-select"
-            value={selectedCategory}
-            onChange={handleCategoryChange}
-                        disabled={isLoading || viewAllCategories}
-          >
-            {Object.keys(arrayData).map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
-                  <select
-                    className="sort-select"
-                    onChange={(e) => handleSort(e.target.value)}
-                    defaultValue=""
-                  >
-                        <option value="" disabled>
-                          Sort by...
-                        </option>
-                    <option value="alpha-asc">A to Z</option>
-                    <option value="alpha-desc">Z to A</option>
-                    <option value="length-desc">Longest first</option>
-                    <option value="length-asc">Shortest first</option>
-                  </select>
-                  <button
-                    className="admin-button"
-                    onClick={handleSaveEditorContent}
-                    disabled={!editorContent.trim() || !selectedCategory}
-                  >
-                    Save Changes
+                      <MultiSelect
+                        options={getCategoryOptions()}
+                        value={selectedCategories}
+                        onChange={setSelectedCategories}
+                        placeholder="Filter categories"
+                      />
+                      <select
+                        className="sort-select"
+                        onChange={(e) => handleSortAllCategories(e.target.value)}
+                        defaultValue=""
+                      >
+                        <option value="" disabled>Sort all by...</option>
+                        <option value="alpha-asc">A to Z</option>
+                        <option value="alpha-desc">Z to A</option>
+                        <option value="length-desc">Longest first</option>
+                        <option value="length-asc">Shortest first</option>
+                      </select>
+                      <button
+                        className="admin-button"
+                        onClick={handleSaveEditorContent}
+                        disabled={!editorContent.trim() || !selectedCategory}
+                      >
+                        Save Changes
                       </button>
                     </>
-                  )}
-                  <button
-                    className="admin-button"
-                    onClick={() => setViewAllCategories(!viewAllCategories)}
-                  >
-                    {viewAllCategories ? "Single View" : "View All"}
-                  </button>
                 </div>
               </div>
 
               <div className="editor-content">
-                {viewAllCategories
-                  ? renderAllCategories()
-                  : renderEditorContent()}
+                {renderAllCategories()}
               </div>
             </div>
           </div>

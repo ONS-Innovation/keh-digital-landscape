@@ -726,19 +726,27 @@ app.get("/admin/api/array-data", async (req, res) => {
  * Endpoint for updating array data in the Tech Audit Tool bucket.
  * @route POST /admin/api/array-data/update
  * @param {Object} req.body - The updated array data
- * @param {string} req.body.category - Category to update
- * @param {string[]} req.body.items - Updated list of items for the category
+ * @param {boolean} [req.body.allCategories] - Whether this is updating all categories at once
+ * @param {string} [req.body.category] - Category to update (for single category updates)
+ * @param {string[]} [req.body.items] - Updated list of items for the category (for single category updates)
+ * @param {Object} [req.body.items] - Complete array data object (for all categories update)
  * @returns {Object} Success message or error response
  * @throws {Error} 400 - If data is invalid
  * @throws {Error} 500 - If update operation fails
  */
 app.post("/admin/api/array-data/update", async (req, res) => {
   try {
-    const { category, items } = req.body;
+    const { allCategories, category, items } = req.body;
 
     // Validate input
-    if (!category || !items || !Array.isArray(items)) {
-      return res.status(400).json({ error: "Invalid data format. Category and items array are required." });
+    if (allCategories) {
+      if (!items || typeof items !== 'object') {
+        return res.status(400).json({ error: "Invalid data format. Complete items object is required for all categories update." });
+      }
+    } else {
+      if (!category || !items || !Array.isArray(items)) {
+        return res.status(400).json({ error: "Invalid data format. Category and items array are required for single category update." });
+      }
     }
 
     // Get existing array data
@@ -756,8 +764,14 @@ app.post("/admin/api/array-data/update", async (req, res) => {
       return res.status(500).json({ error: "Failed to fetch existing data for update" });
     }
 
-    // Update the specified category
-    arrayData[category] = items;
+    // Update the data
+    if (allCategories) {
+      // For all categories update, replace the entire object
+      arrayData = items;
+    } else {
+      // For single category update, update just that category
+      arrayData[category] = items;
+    }
 
     // Save the updated data back to S3
     const putCommand = new PutObjectCommand({
@@ -768,7 +782,11 @@ app.post("/admin/api/array-data/update", async (req, res) => {
     });
 
     await s3Client.send(putCommand);
-    res.json({ message: `Technology list for ${category} updated successfully` });
+    res.json({ 
+      message: allCategories 
+        ? "All technology lists updated successfully" 
+        : `Technology list for ${category} updated successfully` 
+    });
   } catch (error) {
     logger.error("Error updating array data:", { error: error.message });
     res.status(500).json({ error: error.message });

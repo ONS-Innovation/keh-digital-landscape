@@ -933,6 +933,12 @@ textarea.technology-input {
   max-height: 100%;
 }
 
+@media screen and (max-width: 1200px) {
+  .admin-container {
+    padding: 16px;
+  }
+}
+
 .admin-container h2 {
   margin: 0 0 16px 0;
   font-size: 20px;
