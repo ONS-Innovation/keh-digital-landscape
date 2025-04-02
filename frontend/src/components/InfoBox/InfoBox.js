@@ -223,7 +223,7 @@ const InfoBox = ({
         <p>Click a box to show the description of the event</p>
       </div>
 
-      <div className="timeline-container" style={{ flexDirection: selectedTimelineItem ? "column" : "row" }}>
+      <div className="timeline-container">
         {[...selectedItem.timeline]
           .reverse()
           .slice()
@@ -246,17 +246,21 @@ const InfoBox = ({
                   {timelineItem.moved === 0 && <IoRemoveOutline size={10} />}
                   {timelineItem.moved < 0 && <IoArrowDownOutline size={10} />}
                 </span>
-                {selectedTimelineItem === timelineItem
-                  ? timelineItem.description
-                  : new Date(timelineItem.date).toLocaleDateString("en-GB", {
+                {new Date(timelineItem.date).toLocaleDateString("en-GB", {
                       month: "short",
                       year: "numeric",
                     })}
               </div>
-              {index < array.length - 1 && !selectedTimelineItem && <div className="timeline-connector" />}
+              {index < array.length - 1 && <div className="timeline-connector" />}
             </div>
           ))}
       </div>
+      {selectedTimelineItem && (
+        <div className="info-box-timeline-item">
+          <span> Event Description</span>
+          <p>{selectedTimelineItem.description}</p>
+        </div>
+      )}
 
       {projectsForTech.length > 0 && (
         <div className="info-box-projects">
