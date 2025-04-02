@@ -834,6 +834,134 @@ app.get("/api/health", (req, res) => {
   res.status(200).json(healthResponse);
 });
 
+/**
+ * Endpoint for normalizing technology names in project data.
+ * @route POST /admin/api/normalise-technology
+ * @param {Object} req.body - The normalization data
+ * @param {string} req.body.from - Original technology name
+ * @param {string} req.body.to - New technology name
+ * @returns {Object} Success message or error response
+ * @throws {Error} 400 - If data is invalid
+ * @throws {Error} 500 - If normalization operation fails
+ */
+app.post("/admin/api/normalise-technology", async (req, res) => {
+  try {
+    const { from, to } = req.body;
+
+    // Validate input
+    if (!from || !to) {
+      return res.status(400).json({ error: "Both 'from' and 'to' values are required" });
+    }
+
+    // Get existing project data
+    const command = new GetObjectCommand({
+      Bucket: tatBucketName,
+      Key: "new_project_data.json",
+    });
+
+    let projectData;
+    try {
+      const { Body } = await s3Client.send(command);
+      projectData = JSON.parse(await Body.transformToString());
+    } catch (error) {
+      logger.error("Error fetching project data:", { error: error.message });
+      return res.status(500).json({ error: "Failed to fetch project data" });
+    }
+
+    // Update technology names in project data
+    let updateCount = 0;
+    projectData.projects = projectData.projects.map(project => {
+      let updated = false;
+
+      // Update languages
+      if (project.architecture.languages) {
+        if (project.architecture.languages.main) {
+          const index = project.architecture.languages.main.indexOf(from);
+          if (index !== -1) {
+            project.architecture.languages.main[index] = to;
+            updated = true;
+          }
+        }
+        if (project.architecture.languages.others) {
+          const index = project.architecture.languages.others.indexOf(from);
+          if (index !== -1) {
+            project.architecture.languages.others[index] = to;
+            updated = true;
+          }
+        }
+      }
+
+      // Update frameworks
+      if (project.architecture.frameworks?.others) {
+        const index = project.architecture.frameworks.others.indexOf(from);
+        if (index !== -1) {
+          project.architecture.frameworks.others[index] = to;
+          updated = true;
+        }
+      }
+
+      // Update infrastructure
+      if (project.architecture.infrastructure?.others) {
+        const index = project.architecture.infrastructure.others.indexOf(from);
+        if (index !== -1) {
+          project.architecture.infrastructure.others[index] = to;
+          updated = true;
+        }
+      }
+
+      // Update CICD
+      if (project.architecture.cicd?.others) {
+        const index = project.architecture.cicd.others.indexOf(from);
+        if (index !== -1) {
+          project.architecture.cicd.others[index] = to;
+          updated = true;
+        }
+      }
+
+      // Update database
+      if (project.architecture.database) {
+        if (project.architecture.database.main) {
+          const index = project.architecture.database.main.indexOf(from);
+          if (index !== -1) {
+            project.architecture.database.main[index] = to;
+            updated = true;
+          }
+        }
+        if (project.architecture.database.others) {
+          const index = project.architecture.database.others.indexOf(from);
+          if (index !== -1) {
+            project.architecture.database.others[index] = to;
+            updated = true;
+          }
+        }
+      }
+
+      if (updated) {
+        updateCount++;
+      }
+
+      return project;
+    });
+
+    // Save the updated data back to S3
+    const putCommand = new PutObjectCommand({
+      Bucket: tatBucketName,
+      Key: "new_project_data.json",
+      Body: JSON.stringify(projectData, null, 2),
+      ContentType: "application/json",
+    });
+
+    await s3Client.send(putCommand);
+    res.json({ 
+      message: "Technology names normalised successfully",
+      updatedProjects: updateCount
+    });
+  } catch (error) {
+    logger.error("Error normalizing technology names:", { error: error.message });
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Add error handling
 process.on("uncaughtException", (error) => {
   logger.error("Uncaught Exception:", { error });
