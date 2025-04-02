@@ -3,6 +3,7 @@ import { toast } from "react-hot-toast";
 import MultiSelect from "../MultiSelect/MultiSelect";
 import { fetchTechRadarJSONFromS3 } from "../../utilities/getTechRadarJson";
 import { fetchCSVFromS3 } from "../../utilities/getCSVData";
+import Header from "../Header/Header";
 
 const TechManage = () => {
   // Fields to scan from CSV and their corresponding categories
@@ -32,7 +33,10 @@ const TechManage = () => {
   const [untrackedTechnologies, setUntrackedTechnologies] = useState(new Map());
   const [selectedTechIds, setSelectedTechIds] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
+  const [sortConfig, setSortConfig] = useState({
+    key: null,
+    direction: "ascending",
+  });
   const [showAddModal, setShowAddModal] = useState(false);
   const [confirmAddChecked, setConfirmAddChecked] = useState(false);
   const [showNormaliseModal, setShowNormaliseModal] = useState(false);
@@ -42,6 +46,12 @@ const TechManage = () => {
   const textareaRef = useRef(null);
   const [newTechnology, setNewTechnology] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [viewAllCategories, setViewAllCategories] = useState(false);
+  const [selectedAddOption, setSelectedAddOption] = useState("");
+  const [selectedTargetCategory, setSelectedTargetCategory] = useState("");
+  const [editingTech, setEditingTech] = useState(null);
+  const [editValue, setEditValue] = useState("");
 
   // Handle select all checkbox
   const handleSelectAll = (e) => {
@@ -59,7 +69,7 @@ const TechManage = () => {
     if (isChecked) {
       setSelectedTechIds([...selectedTechIds, tech]);
     } else {
-      setSelectedTechIds(selectedTechIds.filter(id => id !== tech));
+      setSelectedTechIds(selectedTechIds.filter((id) => id !== tech));
     }
   };
 
@@ -87,14 +97,14 @@ const TechManage = () => {
   // Check if all visible technologies are selected
   useEffect(() => {
     const filteredTechs = getFilteredTechnologies().map(([tech]) => tech);
-    const allSelected = filteredTechs.length > 0 && 
-      filteredTechs.every(tech => selectedTechIds.includes(tech));
+    const allSelected =
+      filteredTechs.length > 0 &&
+      filteredTechs.every((tech) => selectedTechIds.includes(tech));
     setSelectAll(allSelected);
   }, [selectedTechIds, selectedQuadrants, untrackedTechnologies]);
 
   // Fetch both data sources on mount
   useEffect(() => {
-    
     fetchAllData();
   }, []);
 
@@ -152,13 +162,13 @@ const TechManage = () => {
     }
     const arrayDataTech = new Set();
     const radarDataTech = new Set(
-      radarData.entries.map((entry) => entry.title.toLowerCase().trim())
+      radarData.entries.map((entry) => entry.title.trim())
     );
 
     // Collect all technologies from array-data
     Object.values(arrayData).forEach((technologies) => {
       technologies.forEach((tech) => {
-        arrayDataTech.add(tech.toLowerCase().trim());
+        arrayDataTech.add(tech.trim());
       });
     });
 
@@ -173,15 +183,14 @@ const TechManage = () => {
 
           technologies.forEach((tech) => {
             const trimmedTech = tech.trim();
-            const normalisedTech = trimmedTech.toLowerCase();
 
             // Count occurrences of each technology
-            if (!techOccurrences.has(normalisedTech)) {
-              techOccurrences.set(normalisedTech, 1);
+            if (!techOccurrences.has(trimmedTech)) {
+              techOccurrences.set(trimmedTech, 1);
             } else {
               techOccurrences.set(
-                normalisedTech,
-                techOccurrences.get(normalisedTech) + 1
+                trimmedTech,
+                techOccurrences.get(trimmedTech) + 1
               );
             }
           });
@@ -197,23 +206,22 @@ const TechManage = () => {
 
           technologies.forEach((tech) => {
             const trimmedTech = tech.trim();
-            const normalisedTech = trimmedTech.toLowerCase();
 
             // Skip if tech is in both data sources
             if (
-              arrayDataTech.has(normalisedTech) &&
-              radarDataTech.has(normalisedTech)
+              arrayDataTech.has(trimmedTech) &&
+              radarDataTech.has(trimmedTech)
             ) {
               return;
             }
 
             // Determine the tech's status
             const status = {
-              inArrayData: arrayDataTech.has(normalisedTech),
-              inRadarData: radarDataTech.has(normalisedTech),
+              inArrayData: arrayDataTech.has(trimmedTech),
+              inRadarData: radarDataTech.has(trimmedTech),
             };
 
-            const occurrenceCount = techOccurrences.get(normalisedTech);
+            const occurrenceCount = techOccurrences.get(trimmedTech);
 
             if (!newTechnologies.has(trimmedTech)) {
               const techInfo = {
@@ -322,31 +330,126 @@ const TechManage = () => {
   // Add a new technology to the editor
   const handleAddNewTechnology = () => {
     if (!newTechnology.trim()) return;
-    
-    const updatedContent = editorContent.trim() 
-      ? `${editorContent}\n${newTechnology}` 
+
+    const updatedContent = editorContent.trim()
+      ? `${editorContent}\n${newTechnology}`
       : newTechnology;
-    
+
     setEditorContent(updatedContent);
     setNewTechnology("");
     setShowAddForm(false);
   };
 
   // Handle removing a technology from the reference list
-  const handleRemoveTechnology = (techToRemove) => {
-    const updatedTechs = editorContent
-      .split("\n")
-      .filter(tech => tech.trim() && tech !== techToRemove);
-    
-    setEditorContent(updatedTechs.join("\n"));
+  const handleRemoveTechnology = async (
+    techToRemove,
+    category = selectedCategory
+  ) => {
+    const targetCategory = category || selectedCategory;
+    if (!targetCategory) return;
+
+    const updatedTechs = arrayData[targetCategory].filter(
+      (tech) => tech !== techToRemove
+    );
+
+    try {
+      const baseUrl =
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:5001/admin/api/array-data/update"
+          : "/admin/api/array-data/update";
+
+      const response = await fetch(baseUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          category: targetCategory,
+          items: updatedTechs,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update technology list");
+      }
+
+      // Update local state
+      setArrayData({
+        ...arrayData,
+        [targetCategory]: updatedTechs,
+      });
+
+      if (targetCategory === selectedCategory) {
+        setEditorContent(updatedTechs.join("\n"));
+      }
+
+      toast.success(`Removed ${techToRemove} from ${targetCategory}`);
+    } catch (error) {
+      console.error("Error updating technology list:", error);
+      toast.error("Failed to update technology list");
+    }
+  };
+
+  // Handle edit technology
+  const handleEditTechnology = async (oldTech, newTech, category = selectedCategory) => {
+    if (!newTech.trim() || oldTech === newTech) {
+      setEditingTech(null);
+      setEditValue("");
+      return;
+    }
+
+    const targetCategory = category || selectedCategory;
+    if (!targetCategory) return;
+
+    const updatedTechs = arrayData[targetCategory].map(tech => 
+      tech === oldTech ? newTech : tech
+    );
+
+    try {
+      const baseUrl = process.env.NODE_ENV === "development"
+        ? "http://localhost:5001/admin/api/array-data/update"
+        : "/admin/api/array-data/update";
+
+      const response = await fetch(baseUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          category: targetCategory,
+          items: updatedTechs,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update technology");
+      }
+
+      // Update local state
+      setArrayData({
+        ...arrayData,
+        [targetCategory]: updatedTechs,
+      });
+
+      if (targetCategory === selectedCategory) {
+        setEditorContent(updatedTechs.join("\n"));
+      }
+
+      setEditingTech(null);
+      setEditValue("");
+      toast.success(`Updated ${oldTech} to ${newTech}`);
+    } catch (error) {
+      console.error("Error updating technology:", error);
+      toast.error("Failed to update technology");
+    }
   };
 
   /**
    * Render the editor content with a table instead of a textarea
    */
   const renderEditorContent = () => {
-    const technologies = editorContent.split("\n").filter(tech => tech.trim());
-    
+    const technologies = getFilteredEditorContent();
+
     return (
       <div className="editor-table-container">
         <table className="tech-table editor-table">
@@ -359,23 +462,76 @@ const TechManage = () => {
           <tbody>
             {technologies.map((tech, index) => (
               <tr key={`${tech}-${index}`}>
-                <td className="name-cell">{tech}</td>
+                <td className="name-cell">
+                  {editingTech === tech ? (
+                    <input
+                      type="text"
+                      value={editValue}
+                      onChange={(e) => setEditValue(e.target.value)}
+                      className="add-tech-input"
+                      autoFocus
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleEditTechnology(tech, editValue);
+                        } else if (e.key === 'Escape') {
+                          setEditingTech(null);
+                          setEditValue("");
+                        }
+                      }}
+                    />
+                  ) : (
+                    tech
+                  )}
+                </td>
                 <td className="actions-cell">
-                  <button 
-                    className="table-action-btn remove-btn"
-                    onClick={() => handleRemoveTechnology(tech)}
-                    title="Remove technology"
-                  >
-                    −
-                  </button>
+                  {editingTech === tech ? (
+                    <>
+                      <button
+                        className="table-action-btn confirm-btn"
+                        onClick={() => handleEditTechnology(tech, editValue)}
+                        disabled={!editValue.trim() || editValue === tech}
+                      >
+                        ✓
+                      </button>
+                      <button
+                        className="table-action-btn cancel-btn"
+                        onClick={() => {
+                          setEditingTech(null);
+                          setEditValue("");
+                        }}
+                      >
+                        ✕
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        className="table-action-btn edit-btn"
+                        onClick={() => {
+                          setEditingTech(tech);
+                          setEditValue(tech);
+                        }}
+                        title="Edit technology"
+                      >
+                        ✎
+                      </button>
+                      <button
+                        className="table-action-btn remove-btn"
+                        onClick={() => handleRemoveTechnology(tech)}
+                        title="Remove technology"
+                      >
+                        −
+                      </button>
+                    </>
+                  )}
                 </td>
               </tr>
             ))}
             {showAddForm ? (
               <tr className="add-tech-form-row">
                 <td>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={newTechnology}
                     onChange={(e) => setNewTechnology(e.target.value)}
                     className="add-tech-input"
@@ -385,14 +541,14 @@ const TechManage = () => {
                 </td>
                 <td>
                   <div className="add-tech-actions">
-                    <button 
-                      className="table-action-btn confirm-btn" 
+                    <button
+                      className="table-action-btn confirm-btn"
                       onClick={handleAddNewTechnology}
                       disabled={!newTechnology.trim()}
                     >
                       ✓
                     </button>
-                    <button 
+                    <button
                       className="table-action-btn cancel-btn"
                       onClick={() => {
                         setShowAddForm(false);
@@ -407,7 +563,10 @@ const TechManage = () => {
             ) : (
               <tr className="add-tech-row">
                 <td colSpan={2}>
-                  <button className="add-tech-btn" onClick={() => setShowAddForm(true)}>
+                  <button
+                    className="add-tech-btn"
+                    onClick={() => setShowAddForm(true)}
+                  >
                     <span>+</span> Add Technology
                   </button>
                 </td>
@@ -446,22 +605,52 @@ const TechManage = () => {
     setEditorContent(sortedLines.join("\n"));
   };
 
-  // Filter technologies based on selected quadrants
+  // Filter technologies based on selected quadrants and search term
   const getFilteredTechnologies = () => {
-    if (selectedQuadrants.length === 0) {
-      return Array.from(untrackedTechnologies.entries());
+    let technologies = Array.from(untrackedTechnologies.entries());
+
+    // Filter by search term
+    if (searchTerm.trim()) {
+      technologies = technologies.filter(([tech]) =>
+        tech.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     }
 
-    return Array.from(untrackedTechnologies.entries()).filter(([_, info]) =>
-      selectedQuadrants.some((quadrant) => quadrant.value === info.category)
+    // Filter by quadrants
+    if (selectedQuadrants.length > 0) {
+      technologies = technologies.filter(([_, info]) =>
+        selectedQuadrants.some((quadrant) => quadrant.value === info.category)
+      );
+    }
+
+    return technologies;
+  };
+
+  // Filter reference list based on search term
+  const getFilteredEditorContent = () => {
+    const technologies = editorContent
+      .split("\n")
+      .filter((tech) => tech.trim());
+
+    if (!searchTerm.trim()) {
+      return technologies;
+    }
+
+    return technologies.filter((tech) =>
+      tech.toLowerCase().includes(searchTerm.toLowerCase())
     );
+  };
+
+  // Handle search term changes
+  const handleSearchChange = (value) => {
+    setSearchTerm(value);
   };
 
   // Sorting function for the main table
   const requestSort = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
+    let direction = "ascending";
+    if (sortConfig.key === key && sortConfig.direction === "ascending") {
+      direction = "descending";
     }
     setSortConfig({ key, direction });
   };
@@ -469,21 +658,21 @@ const TechManage = () => {
   // Get the sorted list of technologies
   const getSortedTechnologies = () => {
     const technologies = getFilteredTechnologies();
-    
+
     if (!sortConfig.key) return technologies;
 
     return [...technologies].sort((a, b) => {
-      if (sortConfig.key === 'name') {
-        if (sortConfig.direction === 'ascending') {
+      if (sortConfig.key === "name") {
+        if (sortConfig.direction === "ascending") {
           return a[0].localeCompare(b[0]);
         } else {
           return b[0].localeCompare(a[0]);
         }
-      } else if (sortConfig.key === 'projects') {
+      } else if (sortConfig.key === "projects") {
         const countA = a[1].occurrenceCount || 0;
         const countB = b[1].occurrenceCount || 0;
-        
-        if (sortConfig.direction === 'ascending') {
+
+        if (sortConfig.direction === "ascending") {
           return countA - countB;
         } else {
           return countB - countA;
@@ -498,27 +687,36 @@ const TechManage = () => {
     if (selectedTechIds.length === 0) return;
 
     try {
-      const selectedTechs = getFilteredTechnologies()
-        .filter(([tech]) => selectedTechIds.includes(tech));
+      const selectedTechs = getFilteredTechnologies().filter(([tech]) =>
+        selectedTechIds.includes(tech)
+      );
 
       const newEntries = selectedTechs.map(([tech, info]) => ({
-        id: `tech-${Date.now()}-${tech.toLowerCase().replace(/\s+/g, '-')}`,
+        id: `tech-${Date.now()}-${tech.toLowerCase().replace(/\s+/g, "-")}`,
         title: tech,
-        quadrant: info.category === "Languages" ? "1" :
-                 info.category === "Frameworks" ? "2" :
-                 info.category === "Supporting Tools" ? "3" : "4",
+        quadrant:
+          info.category === "Languages"
+            ? "1"
+            : info.category === "Frameworks"
+              ? "2"
+              : info.category === "Supporting Tools"
+                ? "3"
+                : "4",
         description: info.category,
-        timeline: [{
-          moved: 0,
-          ringId: "review",
-          date: new Date().toISOString().split('T')[0],
-          description: `Added for review from tech audit (${Array.from(info.sources).join(', ')})`
-        }]
+        timeline: [
+          {
+            moved: 0,
+            ringId: "review",
+            date: new Date().toISOString().split("T")[0],
+            description: `Added for review from tech audit (${Array.from(info.sources).join(", ")})`,
+          },
+        ],
       }));
 
-      const baseUrl = process.env.NODE_ENV === "development"
-        ? "http://localhost:5001/review/api/tech-radar/update"
-        : "/review/api/tech-radar/update";
+      const baseUrl =
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:5001/review/api/tech-radar/update"
+          : "/review/api/tech-radar/update";
 
       const response = await fetch(baseUrl, {
         method: "POST",
@@ -526,7 +724,7 @@ const TechManage = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          entries: newEntries
+          entries: newEntries,
         }),
       });
 
@@ -537,10 +735,10 @@ const TechManage = () => {
       // Update local state
       const updatedRadarData = {
         ...radarData,
-        entries: [...radarData.entries, ...newEntries]
+        entries: [...radarData.entries, ...newEntries],
       };
       setRadarData(updatedRadarData);
-      
+
       // Clear selection
       setSelectedTechIds([]);
       toast.success(`Added ${selectedTechIds.length} technologies to Review`);
@@ -551,8 +749,8 @@ const TechManage = () => {
   };
 
   // Add selected technologies to Reference List
-  const handleAddToRefList = async () => {
-    if (selectedTechIds.length === 0 || !selectedCategory) {
+  const handleAddToRefList = async (category) => {
+    if (selectedTechIds.length === 0 || !category) {
       toast.error("Please select a category and technologies to add");
       return;
     }
@@ -565,7 +763,7 @@ const TechManage = () => {
       // Get current technologies in the category
       const currentTechs = editorContent
         .split("\n")
-        .filter(tech => tech.trim());
+        .filter((tech) => tech.trim());
 
       // Combine and remove duplicates
       const updatedTechs = [...new Set([...currentTechs, ...selectedTechs])];
@@ -574,9 +772,10 @@ const TechManage = () => {
       setEditorContent(updatedTechs.join("\n"));
 
       // Save changes to backend
-      const baseUrl = process.env.NODE_ENV === "development"
-        ? "http://localhost:5001/admin/api/array-data/update"
-        : "/admin/api/array-data/update";
+      const baseUrl =
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:5001/admin/api/array-data/update"
+          : "/admin/api/array-data/update";
 
       const response = await fetch(baseUrl, {
         method: "POST",
@@ -584,7 +783,7 @@ const TechManage = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          category: selectedCategory,
+          category: category,
           items: updatedTechs,
         }),
       });
@@ -596,12 +795,14 @@ const TechManage = () => {
       // Update local state
       setArrayData({
         ...arrayData,
-        [selectedCategory]: updatedTechs,
+        [category]: updatedTechs,
       });
 
       // Clear selection
       setSelectedTechIds([]);
-      toast.success(`Added ${selectedTechs.length} technologies to ${selectedCategory}`);
+      toast.success(
+        `Added ${selectedTechs.length} technologies to ${category}`
+      );
     } catch (error) {
       console.error("Error updating technology list:", error);
       toast.error("Failed to update technology list");
@@ -609,9 +810,9 @@ const TechManage = () => {
   };
 
   // Handle adding to both lists
-  const handleAddToBoth = async () => {
+  const handleAddToBoth = async (category) => {
     await handleAddToReview();
-    await handleAddToRefList();
+    await handleAddToRefList(category);
     setShowAddModal(false);
     setConfirmAddChecked(false);
   };
@@ -621,22 +822,22 @@ const TechManage = () => {
     setNormaliseFrom(tech);
     // Find all existing technologies from both radar and reference list
     const existingTechs = new Set();
-    
+
     // Add technologies from radar
-    radarData.entries.forEach(entry => {
+    radarData.entries.forEach((entry) => {
       existingTechs.add(entry.title);
     });
 
     // Add technologies from reference lists
-    Object.values(arrayData).forEach(techs => {
-      techs.forEach(tech => existingTechs.add(tech));
+    Object.values(arrayData).forEach((techs) => {
+      techs.forEach((tech) => existingTechs.add(tech));
     });
 
     // Find affected projects
-    const affected = csvData.filter(project => {
+    const affected = csvData.filter((project) => {
       return Object.entries(fieldsToScan).some(([field]) => {
         const technologies = project[field]?.split(";") || [];
-        return technologies.some(t => t.trim() === tech);
+        return technologies.some((t) => t.trim() === tech);
       });
     });
 
@@ -649,9 +850,10 @@ const TechManage = () => {
     if (!normaliseFrom || !normaliseTo) return;
 
     try {
-      const baseUrl = process.env.NODE_ENV === "development"
-        ? "http://localhost:5001/admin/api/normalise-technology"
-        : "/admin/api/normalise-technology";
+      const baseUrl =
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:5001/admin/api/normalise-technology"
+          : "/admin/api/normalise-technology";
 
       const response = await fetch(baseUrl, {
         method: "POST",
@@ -670,8 +872,10 @@ const TechManage = () => {
 
       // Refresh data after normalization
       await fetchAllData();
-      
-      toast.success(`Successfully normalised ${normaliseFrom} to ${normaliseTo}`);
+
+      toast.success(
+        `Successfully normalised ${normaliseFrom} to ${normaliseTo}`
+      );
       setShowNormaliseModal(false);
       setNormaliseFrom("");
       setNormaliseTo("");
@@ -682,8 +886,104 @@ const TechManage = () => {
     }
   };
 
+  // Render all categories content
+  const renderAllCategories = () => {
+    return Object.entries(arrayData).map(([category, technologies]) => {
+      const filteredTechs = technologies.filter(tech => 
+        !searchTerm.trim() || tech.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+
+      if (filteredTechs.length === 0) return null;
+
+      return (
+        <div key={category} className="category-section">
+          <div className="category-header">
+            <h4>{category}</h4>
+            <span className="tech-count">({filteredTechs.length})</span>
+          </div>
+          <table className="tech-table editor-table">
+            <tbody>
+              {filteredTechs.map((tech, index) => (
+                <tr key={`${tech}-${index}`}>
+                  <td className="name-cell">
+                    {editingTech === tech ? (
+                      <input
+                        type="text"
+                        value={editValue}
+                        onChange={(e) => setEditValue(e.target.value)}
+                        className="add-tech-input"
+                        autoFocus
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            handleEditTechnology(tech, editValue, category);
+                          } else if (e.key === 'Escape') {
+                            setEditingTech(null);
+                            setEditValue("");
+                          }
+                        }}
+                      />
+                    ) : (
+                      tech
+                    )}
+                  </td>
+                  <td className="actions-cell">
+                    {editingTech === tech ? (
+                      <>
+                        <button
+                          className="table-action-btn confirm-btn"
+                          onClick={() => handleEditTechnology(tech, editValue, category)}
+                          disabled={!editValue.trim() || editValue === tech}
+                        >
+                          ✓
+                        </button>
+                        <button
+                          className="table-action-btn cancel-btn"
+                          onClick={() => {
+                            setEditingTech(null);
+                            setEditValue("");
+                          }}
+                        >
+                          ✕
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          className="table-action-btn edit-btn"
+                          onClick={() => {
+                            setEditingTech(tech);
+                            setEditValue(tech);
+                          }}
+                          title="Edit technology"
+                        >
+                          ✎
+                        </button>
+                        <button
+                          className="table-action-btn remove-btn"
+                          onClick={() => handleRemoveTechnology(tech, category)}
+                          title="Remove technology"
+                        >
+                          −
+                        </button>
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    });
+  };
+
   return (
     <div className="admin-container" style={{ paddingTop: "0px" }}>
+      <Header
+        searchTerm={searchTerm}
+        onSearchChange={handleSearchChange}
+        hideSearch={false}
+      />
       {isLoading ? (
         <p>Loading technology data...</p>
       ) : (
@@ -692,21 +992,24 @@ const TechManage = () => {
             <div className="technology-editor-header">
               <h3 className="existing-banners-title">
                 Untracked Technologies
-                {selectedTechIds.length > 0 && 
-                  <span className="selection-info"> - {selectedTechIds.length} selected</span>
-                }
+                {selectedTechIds.length > 0 && (
+                  <span className="selection-info">
+                    {" "}
+                    - {selectedTechIds.length} selected
+                  </span>
+                )}
               </h3>
               <div className="tech-radar-filter">
                 {selectedTechIds.length > 0 ? (
                   <div className="batch-actions">
-                    <button 
+                    <button
                       className="admin-button batch-action-btn"
                       onClick={() => setShowAddModal(true)}
                     >
                       Add to Lists
                     </button>
-                    <button 
-                      className="admin-button batch-action-btn" 
+                    <button
+                      className="admin-button batch-action-btn"
                       onClick={() => setSelectedTechIds([])}
                     >
                       Clear Selection
@@ -727,26 +1030,32 @@ const TechManage = () => {
                 <table className="tech-table">
                   <thead>
                     <tr>
-                      <th><input type="checkbox" checked={selectAll} onChange={handleSelectAll} /></th>
-                      <th 
-                        className={`sortable-header ${sortConfig.key === 'name' ? `sorted-${sortConfig.direction}` : ''}`}
-                        onClick={() => requestSort('name')}
+                      <th>
+                        <input
+                          type="checkbox"
+                          checked={selectAll}
+                          onChange={handleSelectAll}
+                        />
+                      </th>
+                      <th
+                        className={`sortable-header ${sortConfig.key === "name" ? `sorted-${sortConfig.direction}` : ""}`}
+                        onClick={() => requestSort("name")}
                       >
                         Technology ({getFilteredTechnologies().length})
-                        {sortConfig.key === 'name' && (
+                        {sortConfig.key === "name" && (
                           <span className="sort-indicator">
-                            {sortConfig.direction === 'ascending' ? '↑' : '↓'}
+                            {sortConfig.direction === "ascending" ? "↑" : "↓"}
                           </span>
                         )}
                       </th>
-                      <th 
-                        className={`sortable-header ${sortConfig.key === 'projects' ? `sorted-${sortConfig.direction}` : ''}`}
-                        onClick={() => requestSort('projects')}
+                      <th
+                        className={`sortable-header ${sortConfig.key === "projects" ? `sorted-${sortConfig.direction}` : ""}`}
+                        onClick={() => requestSort("projects")}
                       >
                         Projects
-                        {sortConfig.key === 'projects' && (
+                        {sortConfig.key === "projects" && (
                           <span className="sort-indicator">
-                            {sortConfig.direction === 'ascending' ? '↑' : '↓'}
+                            {sortConfig.direction === "ascending" ? "↑" : "↓"}
                           </span>
                         )}
                       </th>
@@ -758,31 +1067,29 @@ const TechManage = () => {
                   </thead>
                   <tbody>
                     {getSortedTechnologies().map(([tech, info]) => (
-                      <tr 
-                        key={tech}
-                      >
+                      <tr key={tech}>
                         <td className="checkbox-cell">
-                          <input 
-                            type="checkbox" 
+                          <input
+                            type="checkbox"
                             checked={selectedTechIds.includes(tech)}
-                            onChange={(e) => handleSelectTech(tech, e.target.checked)}
+                            onChange={(e) =>
+                              handleSelectTech(tech, e.target.checked)
+                            }
                           />
                         </td>
-                        <td className="name-cell">
-                          {tech}
-                        </td>
+                        <td className="name-cell">{tech}</td>
                         <td className="count-cell">
                           {info.occurrenceCount || 0}
                         </td>
-                        <td className="quadrant-cell">
-                          {info.category}
-                        </td>
-                        <td className={`location-cell ${info.status.inArrayData ? "tech-in-array" : info.status.inRadarData ? "tech-in-radar" : "tech-not-tracked"}`}>
-                            {!info.status.inArrayData && !info.status.inRadarData
-                              ? "Not tracked"
-                              : info.status.inRadarData
-                                ? "Radar"
-                                : "Ref. List"}
+                        <td className="quadrant-cell">{info.category}</td>
+                        <td
+                          className={`location-cell ${info.status.inArrayData ? "tech-in-array" : info.status.inRadarData ? "tech-in-radar" : "tech-not-tracked"}`}
+                        >
+                          {!info.status.inArrayData && !info.status.inRadarData
+                            ? "Not tracked"
+                            : info.status.inRadarData
+                              ? "Radar"
+                              : "Ref. List"}
                         </td>
                         <td className="sources-cell">
                           <div className="tech-item-sources">
@@ -798,7 +1105,7 @@ const TechManage = () => {
                           </div>
                         </td>
                         <td className="actions-cell">
-                          <button 
+                          <button
                             className="table-action-btn normalise-btn"
                             onClick={() => handleOpenNormaliseModal(tech)}
                             title="Normalise technology name"
@@ -817,82 +1124,121 @@ const TechManage = () => {
           <div className="technology-editor-column">
             <div className="technology-editor-container">
               <div className="technology-editor-header">
-                <h3 className="existing-banners-title">
-                  Reference List
-                </h3>
+                <h3 className="existing-banners-title">Reference List</h3>
                 <div className="editor-actions">
-                  <select
-                    className="sort-select"
-                    value={selectedCategory}
-                    onChange={handleCategoryChange}
-                    disabled={isLoading}
-                  >
-                    {Object.keys(arrayData).map((category) => (
-                      <option key={category} value={category}>
-                        {category}
-                      </option>
-                    ))}
-                  </select>
-                  <select
-                    className="sort-select"
-                    onChange={(e) => handleSort(e.target.value)}
-                    defaultValue=""
-                  >
-                    <option value="" disabled>
-                      Sort by...
-                    </option>
-                    <option value="alpha-asc">A to Z</option>
-                    <option value="alpha-desc">Z to A</option>
-                    <option value="length-desc">Longest first</option>
-                    <option value="length-asc">Shortest first</option>
-                  </select>
+                  {!viewAllCategories && (
+                    <>
+                      <select
+                        className="sort-select"
+                        value={selectedCategory}
+                        onChange={handleCategoryChange}
+                        disabled={isLoading || viewAllCategories}
+                      >
+                        {Object.keys(arrayData).map((category) => (
+                          <option key={category} value={category}>
+                            {category}
+                          </option>
+                        ))}
+                      </select>
+                      <select
+                        className="sort-select"
+                        onChange={(e) => handleSort(e.target.value)}
+                        defaultValue=""
+                      >
+                        <option value="" disabled>
+                          Sort by...
+                        </option>
+                        <option value="alpha-asc">A to Z</option>
+                        <option value="alpha-desc">Z to A</option>
+                        <option value="length-desc">Longest first</option>
+                        <option value="length-asc">Shortest first</option>
+                      </select>
+                      <button
+                        className="admin-button"
+                        onClick={handleSaveEditorContent}
+                        disabled={!editorContent.trim() || !selectedCategory}
+                      >
+                        Save Changes
+                      </button>
+                    </>
+                  )}
                   <button
                     className="admin-button"
-                    onClick={handleSaveEditorContent}
-                    disabled={!editorContent.trim() || !selectedCategory}
+                    onClick={() => setViewAllCategories(!viewAllCategories)}
                   >
-                    Save Changes
+                    {viewAllCategories ? "Single View" : "View All"}
                   </button>
                 </div>
               </div>
 
-              {renderEditorContent()}
+              <div className="editor-content">
+                {viewAllCategories
+                  ? renderAllCategories()
+                  : renderEditorContent()}
+              </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Add Modal */}
+      {/* Updated Add Modal */}
       {showAddModal && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h3>Add Selected Technologies</h3>
             <div className="modal-options">
-              <button 
-                className="admin-button batch-action-btn"
-                onClick={handleAddToReview}
-                disabled={!confirmAddChecked}
-              >
-                Add to Review
-              </button>
-              <button 
-                className="admin-button batch-action-btn"
-                onClick={handleAddToRefList}
-                disabled={!confirmAddChecked || !selectedCategory}
-              >
-                Add to Ref. List
-              </button>
-              <button 
-                className="admin-button batch-action-btn"
-                onClick={handleAddToBoth}
-                disabled={!confirmAddChecked || !selectedCategory}
-              >
-                Add to Both
-              </button>
+              <div className="radio-options">
+                <label>
+                  <input
+                    type="radio"
+                    name="addOption"
+                    value="review"
+                    checked={selectedAddOption === "review"}
+                    onChange={(e) => setSelectedAddOption(e.target.value)}
+                  />
+                  Add to Review
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="addOption"
+                    value="refList"
+                    checked={selectedAddOption === "refList"}
+                    onChange={(e) => setSelectedAddOption(e.target.value)}
+                  />
+                  Add to Ref. List
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="addOption"
+                    value="both"
+                    checked={selectedAddOption === "both"}
+                    onChange={(e) => setSelectedAddOption(e.target.value)}
+                  />
+                  Add to Both
+                </label>
+              </div>
+
+              {(selectedAddOption === "refList" ||
+                selectedAddOption === "both") && (
+                <select
+                  className="sort-select"
+                  value={selectedTargetCategory}
+                  onChange={(e) => setSelectedTargetCategory(e.target.value)}
+                >
+                  <option value="">Select category...</option>
+                  {Object.keys(arrayData).map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
             <div className="modal-confirm">
               <label>
-                <input 
+                <input
                   type="checkbox"
                   checked={confirmAddChecked}
                   onChange={(e) => setConfirmAddChecked(e.target.checked)}
@@ -900,12 +1246,35 @@ const TechManage = () => {
                 I confirm I want to add these technologies
               </label>
             </div>
-            <div className="modal-actions">
-              <button 
-                className="admin-button batch-action-btn secondary"
+            <div className="modal-buttons">
+              <button
+                className="admin-button"
+                onClick={() => {
+                  if (selectedAddOption === "review") {
+                    handleAddToReview();
+                  } else if (selectedAddOption === "refList") {
+                    handleAddToRefList(selectedTargetCategory);
+                  } else if (selectedAddOption === "both") {
+                    handleAddToBoth(selectedTargetCategory);
+                  }
+                }}
+                disabled={
+                  !confirmAddChecked ||
+                  !selectedAddOption ||
+                  ((selectedAddOption === "refList" ||
+                    selectedAddOption === "both") &&
+                    !selectedTargetCategory)
+                }
+              >
+                Confirm
+              </button>
+              <button
+                className="admin-button secondary"
                 onClick={() => {
                   setShowAddModal(false);
                   setConfirmAddChecked(false);
+                  setSelectedAddOption("");
+                  setSelectedTargetCategory("");
                 }}
               >
                 Cancel
@@ -918,13 +1287,13 @@ const TechManage = () => {
       {/* Normalise Modal */}
       {showNormaliseModal && (
         <div className="modal-overlay">
-          <div className="modal-content">
+          <div className="modal-content admin-dash-modal">
             <h3>Normalise Technology Name</h3>
             <div className="normalise-form">
               <div className="form-group">
                 <label>From:</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={normaliseFrom}
                   readOnly
                   className="normalise-input"
@@ -932,8 +1301,8 @@ const TechManage = () => {
               </div>
               <div className="form-group">
                 <label>To:</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={normaliseTo}
                   onChange={(e) => setNormaliseTo(e.target.value)}
                   className="normalise-input"
@@ -941,28 +1310,30 @@ const TechManage = () => {
                 />
               </div>
             </div>
-            
+
             <div className="affected-projects">
               <h4>This will update {affectedProjects.length} projects:</h4>
               <div className="affected-list">
                 {affectedProjects.map((project, index) => (
                   <div key={index} className="affected-item">
                     <span className="affected-name">{project.Project}</span>
-                    <span className="affected-programme">({project.Programme})</span>
+                    <span className="affected-programme">
+                      ({project.Programme})
+                    </span>
                   </div>
                 ))}
               </div>
             </div>
 
             <div className="modal-buttons">
-              <button 
+              <button
                 className="admin-button"
                 onClick={handleNormalise}
                 disabled={!normaliseTo.trim()}
               >
                 Confirm Changes
               </button>
-              <button 
+              <button
                 className="admin-button secondary"
                 onClick={() => {
                   setShowNormaliseModal(false);
