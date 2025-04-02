@@ -539,6 +539,24 @@ text {
   font-size: 12px;
 }
 
+.info-box-timeline-item {
+  padding-top: 12px;
+  box-sizing: border-box;
+  border-top: 1px solid hsl(var(--border));
+}
+
+.info-box-timeline-item p{
+  margin-bottom: 0 !important;
+  margin-top: 4px;
+  color: hsl(var(--foreground));
+}
+
+.info-box-timeline-item span{
+  color: hsl(var(--foreground));
+  font-size: 14px;
+  font-weight: 500;
+}
+
 .info-box-placeholder {
   color: hsl(var(--muted-foreground));
   text-align: center;
