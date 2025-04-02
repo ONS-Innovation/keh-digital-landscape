@@ -35,6 +35,10 @@ const TechManage = () => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
   const [showAddModal, setShowAddModal] = useState(false);
   const [confirmAddChecked, setConfirmAddChecked] = useState(false);
+  const [showNormaliseModal, setShowNormaliseModal] = useState(false);
+  const [normaliseFrom, setNormaliseFrom] = useState("");
+  const [normaliseTo, setNormaliseTo] = useState("");
+  const [affectedProjects, setAffectedProjects] = useState([]);
   const textareaRef = useRef(null);
   const [newTechnology, setNewTechnology] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
@@ -59,6 +63,27 @@ const TechManage = () => {
     }
   };
 
+  const fetchAllData = async () => {
+    try {
+      setIsLoading(true);
+      const [radarData, csvData] = await Promise.all([
+        fetchTechRadarJSONFromS3(),
+        fetchCSVFromS3(),
+      ]);
+
+      setRadarData(radarData);
+      setCsvData(csvData);
+
+      // Also fetch the array data
+      await fetchArrayData();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      toast.error("Failed to load data");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // Check if all visible technologies are selected
   useEffect(() => {
     const filteredTechs = getFilteredTechnologies().map(([tech]) => tech);
@@ -69,28 +94,7 @@ const TechManage = () => {
 
   // Fetch both data sources on mount
   useEffect(() => {
-    const fetchAllData = async () => {
-      try {
-        setIsLoading(true);
-        const [radarData, csvData] = await Promise.all([
-          fetchTechRadarJSONFromS3(),
-          fetchCSVFromS3(),
-        ]);
-
-        console.log(csvData);
-
-        setRadarData(radarData);
-        setCsvData(csvData);
-
-        // Also fetch the array data
-        await fetchArrayData();
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        toast.error("Failed to load data");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    
     fetchAllData();
   }, []);
 
@@ -169,15 +173,15 @@ const TechManage = () => {
 
           technologies.forEach((tech) => {
             const trimmedTech = tech.trim();
-            const normalizedTech = trimmedTech.toLowerCase();
+            const normalisedTech = trimmedTech.toLowerCase();
 
             // Count occurrences of each technology
-            if (!techOccurrences.has(normalizedTech)) {
-              techOccurrences.set(normalizedTech, 1);
+            if (!techOccurrences.has(normalisedTech)) {
+              techOccurrences.set(normalisedTech, 1);
             } else {
               techOccurrences.set(
-                normalizedTech,
-                techOccurrences.get(normalizedTech) + 1
+                normalisedTech,
+                techOccurrences.get(normalisedTech) + 1
               );
             }
           });
@@ -193,23 +197,23 @@ const TechManage = () => {
 
           technologies.forEach((tech) => {
             const trimmedTech = tech.trim();
-            const normalizedTech = trimmedTech.toLowerCase();
+            const normalisedTech = trimmedTech.toLowerCase();
 
             // Skip if tech is in both data sources
             if (
-              arrayDataTech.has(normalizedTech) &&
-              radarDataTech.has(normalizedTech)
+              arrayDataTech.has(normalisedTech) &&
+              radarDataTech.has(normalisedTech)
             ) {
               return;
             }
 
             // Determine the tech's status
             const status = {
-              inArrayData: arrayDataTech.has(normalizedTech),
-              inRadarData: radarDataTech.has(normalizedTech),
+              inArrayData: arrayDataTech.has(normalisedTech),
+              inRadarData: radarDataTech.has(normalisedTech),
             };
 
-            const occurrenceCount = techOccurrences.get(normalizedTech);
+            const occurrenceCount = techOccurrences.get(normalisedTech);
 
             if (!newTechnologies.has(trimmedTech)) {
               const techInfo = {
@@ -612,6 +616,72 @@ const TechManage = () => {
     setConfirmAddChecked(false);
   };
 
+  // Handle opening normalise modal
+  const handleOpenNormaliseModal = (tech) => {
+    setNormaliseFrom(tech);
+    // Find all existing technologies from both radar and reference list
+    const existingTechs = new Set();
+    
+    // Add technologies from radar
+    radarData.entries.forEach(entry => {
+      existingTechs.add(entry.title);
+    });
+
+    // Add technologies from reference lists
+    Object.values(arrayData).forEach(techs => {
+      techs.forEach(tech => existingTechs.add(tech));
+    });
+
+    // Find affected projects
+    const affected = csvData.filter(project => {
+      return Object.entries(fieldsToScan).some(([field]) => {
+        const technologies = project[field]?.split(";") || [];
+        return technologies.some(t => t.trim() === tech);
+      });
+    });
+
+    setAffectedProjects(affected);
+    setShowNormaliseModal(true);
+  };
+
+  // Handle normalizing technology names
+  const handleNormalise = async () => {
+    if (!normaliseFrom || !normaliseTo) return;
+
+    try {
+      const baseUrl = process.env.NODE_ENV === "development"
+        ? "http://localhost:5001/admin/api/normalise-technology"
+        : "/admin/api/normalise-technology";
+
+      const response = await fetch(baseUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: normaliseFrom,
+          to: normaliseTo,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to normalise technology");
+      }
+
+      // Refresh data after normalization
+      await fetchAllData();
+      
+      toast.success(`Successfully normalised ${normaliseFrom} to ${normaliseTo}`);
+      setShowNormaliseModal(false);
+      setNormaliseFrom("");
+      setNormaliseTo("");
+      setAffectedProjects([]);
+    } catch (error) {
+      console.error("Error normalizing technology:", error);
+      toast.error("Failed to normalise technology");
+    }
+  };
+
   return (
     <div className="admin-container" style={{ paddingTop: "0px" }}>
       {isLoading ? (
@@ -683,6 +753,7 @@ const TechManage = () => {
                       <th>Quadrant</th>
                       <th>Location</th>
                       <th>Sources</th>
+                      <th>Normalise</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -725,6 +796,15 @@ const TechManage = () => {
                               </span>
                             ))}
                           </div>
+                        </td>
+                        <td className="actions-cell">
+                          <button 
+                            className="table-action-btn normalise-btn"
+                            onClick={() => handleOpenNormaliseModal(tech)}
+                            title="Normalise technology name"
+                          >
+                            ⟳
+                          </button>
                         </td>
                       </tr>
                     ))}
@@ -826,6 +906,69 @@ const TechManage = () => {
                 onClick={() => {
                   setShowAddModal(false);
                   setConfirmAddChecked(false);
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Normalise Modal */}
+      {showNormaliseModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Normalise Technology Name</h3>
+            <div className="normalise-form">
+              <div className="form-group">
+                <label>From:</label>
+                <input 
+                  type="text" 
+                  value={normaliseFrom}
+                  readOnly
+                  className="normalise-input"
+                />
+              </div>
+              <div className="form-group">
+                <label>To:</label>
+                <input 
+                  type="text" 
+                  value={normaliseTo}
+                  onChange={(e) => setNormaliseTo(e.target.value)}
+                  className="normalise-input"
+                  placeholder="Enter normalised name..."
+                />
+              </div>
+            </div>
+            
+            <div className="affected-projects">
+              <h4>This will update {affectedProjects.length} projects:</h4>
+              <div className="affected-list">
+                {affectedProjects.map((project, index) => (
+                  <div key={index} className="affected-item">
+                    <span className="affected-name">{project.Project}</span>
+                    <span className="affected-programme">({project.Programme})</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="modal-buttons">
+              <button 
+                className="admin-button"
+                onClick={handleNormalise}
+                disabled={!normaliseTo.trim()}
+              >
+                Confirm Changes
+              </button>
+              <button 
+                className="admin-button secondary"
+                onClick={() => {
+                  setShowNormaliseModal(false);
+                  setNormaliseFrom("");
+                  setNormaliseTo("");
+                  setAffectedProjects([]);
                 }}
               >
                 Cancel
