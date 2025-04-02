@@ -76,7 +76,7 @@ const TechManage = () => {
   const fetchAllData = async () => {
     try {
       setIsLoading(true);
-      const [radarData, csvData] = await Promise.all([
+    const [radarData, csvData] = await Promise.all([
         fetchTechRadarJSONFromS3(),
         fetchCSVFromS3(),
       ]);
@@ -164,7 +164,7 @@ const TechManage = () => {
     const radarDataTech = new Set(
       radarData.entries.map((entry) => entry.title.trim())
     );
-
+    
     // Collect all technologies from array-data
     Object.values(arrayData).forEach((technologies) => {
       technologies.forEach((tech) => {
@@ -1016,12 +1016,12 @@ const TechManage = () => {
                     </button>
                   </div>
                 ) : (
-                  <MultiSelect
-                    options={getQuadrantOptions()}
-                    value={selectedQuadrants}
-                    onChange={setSelectedQuadrants}
-                    placeholder="Filter by quadrants"
-                  />
+                <MultiSelect
+                  options={getQuadrantOptions()}
+                  value={selectedQuadrants}
+                  onChange={setSelectedQuadrants}
+                  placeholder="Filter by quadrants"
+                />
                 )}
               </div>
             </div>
@@ -1045,7 +1045,7 @@ const TechManage = () => {
                         {sortConfig.key === "name" && (
                           <span className="sort-indicator">
                             {sortConfig.direction === "ascending" ? "↑" : "↓"}
-                          </span>
+                      </span>
                         )}
                       </th>
                       <th
@@ -1092,17 +1092,17 @@ const TechManage = () => {
                               : "Ref. List"}
                         </td>
                         <td className="sources-cell">
-                          <div className="tech-item-sources">
-                            {Array.from(info.sources).map((source) => (
+                    <div className="tech-item-sources">
+                      {Array.from(info.sources).map((source) => (
                               <span
                                 key={source}
                                 className="source-tag"
                                 title="Source from Tech Audit"
                               >
-                                {source}
-                              </span>
-                            ))}
-                          </div>
+                          {source}
+                        </span>
+                      ))}
+                    </div>
                         </td>
                         <td className="actions-cell">
                           <button
@@ -1128,37 +1128,37 @@ const TechManage = () => {
                 <div className="editor-actions">
                   {!viewAllCategories && (
                     <>
-                      <select
-                        className="sort-select"
-                        value={selectedCategory}
-                        onChange={handleCategoryChange}
+                <select
+            className="sort-select"
+            value={selectedCategory}
+            onChange={handleCategoryChange}
                         disabled={isLoading || viewAllCategories}
-                      >
-                        {Object.keys(arrayData).map((category) => (
-                          <option key={category} value={category}>
-                            {category}
-                          </option>
-                        ))}
-                      </select>
-                      <select
-                        className="sort-select"
-                        onChange={(e) => handleSort(e.target.value)}
-                        defaultValue=""
-                      >
+          >
+            {Object.keys(arrayData).map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+                  <select
+                    className="sort-select"
+                    onChange={(e) => handleSort(e.target.value)}
+                    defaultValue=""
+                  >
                         <option value="" disabled>
                           Sort by...
                         </option>
-                        <option value="alpha-asc">A to Z</option>
-                        <option value="alpha-desc">Z to A</option>
-                        <option value="length-desc">Longest first</option>
-                        <option value="length-asc">Shortest first</option>
-                      </select>
-                      <button
-                        className="admin-button"
-                        onClick={handleSaveEditorContent}
-                        disabled={!editorContent.trim() || !selectedCategory}
-                      >
-                        Save Changes
+                    <option value="alpha-asc">A to Z</option>
+                    <option value="alpha-desc">Z to A</option>
+                    <option value="length-desc">Longest first</option>
+                    <option value="length-asc">Shortest first</option>
+                  </select>
+                  <button
+                    className="admin-button"
+                    onClick={handleSaveEditorContent}
+                    disabled={!editorContent.trim() || !selectedCategory}
+                  >
+                    Save Changes
                       </button>
                     </>
                   )}
