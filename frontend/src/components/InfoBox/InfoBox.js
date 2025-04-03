@@ -7,7 +7,13 @@ import {
   IoChevronDownOutline,
   IoChevronUpOutline,
 } from "react-icons/io5";
-import { FaSortAmountDownAlt, FaSortAmountUpAlt, FaEdit, FaCheck, FaTimes } from "react-icons/fa";
+import {
+  FaSortAmountDownAlt,
+  FaSortAmountUpAlt,
+  FaEdit,
+  FaCheck,
+  FaTimes,
+} from "react-icons/fa";
 
 const InfoBox = ({
   isAdmin = false,
@@ -30,21 +36,38 @@ const InfoBox = ({
   const [dragPosition, setDragPosition] = useState(initialPosition);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [localTitle, setLocalTitle] = useState(selectedItem?.title || "");
-  const [localCategory, setLocalCategory] = useState(selectedItem?.description || "");
+  const [localCategory, setLocalCategory] = useState(
+    selectedItem?.description || ""
+  );
   const [showProjects, setShowProjects] = useState(true);
 
   const handleMouseDown = (e) => {
     e.stopPropagation(); // Prevent event from bubbling to parent
     setIsDragging(true);
-    const infoBox = e.currentTarget.closest('.info-box');
+    const infoBox = e.currentTarget.closest(".info-box");
     const infoBoxRect = infoBox.getBoundingClientRect();
     const clickX = e.clientX - infoBoxRect.left;
     const clickY = e.clientY - infoBoxRect.top;
-    
+
     setDragOffset({
       x: clickX,
       y: clickY,
     });
+  };
+
+  const formatTimelineDate = (date) => {
+    const dateObj = new Date(date);
+    const day = dateObj.getDate();
+    const suffix = 
+      day % 10 === 1 && day !== 11 ? "st" :
+      day % 10 === 2 && day !== 12 ? "nd" :
+      day % 10 === 3 && day !== 13 ? "rd" : "th";
+    
+    return dateObj.toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short", 
+      year: "numeric"
+    }).replace(/\d+/, day + suffix);
   };
 
   useEffect(() => {
@@ -153,9 +176,9 @@ const InfoBox = ({
           <IoGridOutline size={12} />
         </div>
         {selectedItem.number && (
-             <span className="info-box-number">#{selectedItem.number}</span>
+          <span className="info-box-number">#{selectedItem.number}</span>
         )}
-       
+
         {isEditing ? (
           <>
             <input
@@ -175,7 +198,10 @@ const InfoBox = ({
               <option value="Infrastructure">Infrastructure</option>
             </select>
             <div className="edit-buttons">
-              <button className="edit-confirm-button" onClick={handleConfirmEdit}>
+              <button
+                className="edit-confirm-button"
+                onClick={handleConfirmEdit}
+              >
                 <FaCheck size={12} />
               </button>
               <button className="edit-cancel-button" onClick={handleCancelEdit}>
@@ -234,7 +260,7 @@ const InfoBox = ({
               className="timeline-item"
             >
               <div
-                className={`timeline-node ${timelineItem.ringId.toLowerCase()}`}
+                className={`timeline-node ${timelineItem.ringId.toLowerCase()} ${timelineItem === selectedTimelineItem ? "active" : ""}`}
                 onClick={() =>
                   setSelectedTimelineItem(
                     timelineItem === selectedTimelineItem ? null : timelineItem
@@ -246,18 +272,22 @@ const InfoBox = ({
                   {timelineItem.moved === 0 && <IoRemoveOutline size={10} />}
                   {timelineItem.moved < 0 && <IoArrowDownOutline size={10} />}
                 </span>
-                {new Date(timelineItem.date).toLocaleDateString("en-GB", {
-                      month: "short",
-                      year: "numeric",
-                    })}
+
+                {formatTimelineDate(timelineItem.date)}
               </div>
-              {index < array.length - 1 && <div className="timeline-connector" />}
+              {index < array.length - 1 && (
+                <div className="timeline-connector" />
+              )}
             </div>
           ))}
       </div>
       {selectedTimelineItem && (
         <div className="info-box-timeline-item">
-          <span> Event Description</span>
+          <span>
+            Review {" - "}
+            {formatTimelineDate(selectedTimelineItem.date)}
+
+          </span>
           <p>{selectedTimelineItem.description}</p>
         </div>
       )}
@@ -272,14 +302,18 @@ const InfoBox = ({
               </strong>{" "}
               using this technology:
             </h4>
-            <button 
-              className="show-hide-button" 
+            <button
+              className="show-hide-button"
               onClick={() => setShowProjects(!showProjects)}
             >
               {showProjects ? (
-                <>Hide <IoChevronUpOutline /></>
+                <>
+                  Hide <IoChevronUpOutline />
+                </>
               ) : (
-                <>Show <IoChevronDownOutline /></>
+                <>
+                  Show <IoChevronDownOutline />
+                </>
               )}
             </button>
           </div>

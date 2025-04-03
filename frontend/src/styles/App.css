@@ -1107,8 +1107,7 @@ text {
   align-items: flex-start;
   overflow-y: scroll;
   margin: 0;
-  scrollbar-width: thin;
-  scrollbar-color: hsl(var(--muted)) transparent;
+  scrollbar-width: none;
   position: relative;
   min-height: fit-content;
   max-height: 65px;
@@ -1136,7 +1135,8 @@ text {
 .timeline-node {
   padding: 2px 12px;
   box-sizing: border-box;
-  border-radius: 12px;
+  border-radius: 50px;
+  border: 1px solid transparent;
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
@@ -1150,6 +1150,10 @@ text {
   /* max-width: 300px; */
   overflow-y: auto;
   text-wrap: nowrap;
+}
+
+.timeline-node.active {
+  border: 1px solid hsl(var(--primary));
 }
 
 .timeline-movement {
