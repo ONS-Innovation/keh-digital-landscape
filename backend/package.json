@@ -5,6 +5,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.705.0",
     "@aws-sdk/s3-request-presigner": "^3.705.0",
+    "@octokit/core": "^6.1.5",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "node-fetch": "^2.6.9",

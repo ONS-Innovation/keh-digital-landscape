@@ -1,11 +1,12 @@
 import React from "react";
+import { ThemeProvider } from "../contexts/ThemeContext";
+import Header from "../components/Header/Header";
 
 function CopilotDashboard() {
   return (
-    <div>
-      <h1>Copilot Dashboard</h1>
-      <p>Welcome to the Copilot Dashboard!</p>
-    </div>
+    <ThemeProvider>
+      <Header hideSearch={true}/>
+    </ThemeProvider>
   );
 }
 
