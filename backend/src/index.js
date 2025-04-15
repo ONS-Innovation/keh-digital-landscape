@@ -19,6 +19,7 @@ const app = express();
 const port = process.env.PORT || 5001;
 const bucketName = process.env.BUCKET_NAME || "sdp-dev-digital-landscape";
 const tatBucketName = process.env.TAT_BUCKET_NAME || "sdp-dev-tech-audit-tool-api";
+const org = process.env.ORG || "ONSdigital";
 
 app.use(
   cors({
@@ -32,6 +33,60 @@ app.use(express.json());
 
 const s3Client = new S3Client({
   region: "eu-west-2",
+});
+
+/**
+ * Endpoint for fetching Copilot organisation usage data from the Github API.
+ * @route GET /api/org/live
+ * @returns {Object} Organisation usage JSON data
+ * @throws {Error} 500 - If fetching fails
+ */
+app.get("/api/org/live", async (req, res) => {
+  const token = process.env.GITHUB_TOKEN;
+
+  try {
+    const { Octokit } = await import("@octokit/core");
+    const octokit = new Octokit({ auth: token });
+
+    const response = await octokit.request(`GET /orgs/${org}/copilot/metrics`, {
+      org: org,
+      headers: {
+        "X-GitHub-Api-Version": "2022-11-28",
+      }
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("GitHub API error:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * Endpoint for fetching Copilot seat data from the Github API.
+ * @route GET /api/seats
+ * @returns {Object} Copilot seat JSON data
+ * @throws {Error} 500 - If JSON fetching fails
+ */
+app.get("/api/seats", async (req, res) => {
+  const token = process.env.GITHUB_TOKEN;
+
+  try {
+    const { Octokit } = await import("@octokit/core");
+    const octokit = new Octokit({ auth: token });
+
+    const response = await octokit.request(`GET /orgs/${org}/copilot/billing/seats`, {
+      org: org,
+      headers: {
+        "X-GitHub-Api-Version": "2022-11-28",
+      }
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("GitHub API error:", error);
+    res.status(500).json({ error: error.message });
+  }
 });
 
 /**
