@@ -18,6 +18,13 @@ import "../styles/HomePage.css";
 function HomePage() {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const navCards = document.querySelectorAll(".nav-card");
+    if (navCards.length % 2 !== 0) {
+      navCards[navCards.length - 1].classList.add("odd-last-child");
+    }
+  }, []);
+
   return (
     <ThemeProvider>
       <Header
