@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import { ThemeProvider } from "../contexts/ThemeContext";
 import Header from "../components/Header/Header";
@@ -7,6 +7,7 @@ import RecentBanners from "../components/HomePage/RecentBanners";
 import { IoStatsChart, IoPeople } from "react-icons/io5";
 import { FaEdit, FaUserShield } from "react-icons/fa";
 import { MdOutlineRadar } from "react-icons/md";
+import { VscCopilot } from "react-icons/vsc";
 import "../styles/HomePage.css";
 
 /**
@@ -80,6 +81,13 @@ function HomePage() {
                 <h2>Admin</h2>
               </div>
               <p>Manage system-wide settings and configurations.</p>
+            </a>
+            <a className="nav-card" href="/copilot">
+              <div className="nav-card-header">
+                <VscCopilot />
+                <h2>CoPilot</h2>
+              </div>
+              <p>Analyse CoPilot usage statistics organisation-wide and by team.</p>
             </a>
           </div>
 
