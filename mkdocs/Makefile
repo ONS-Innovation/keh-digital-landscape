@@ -7,6 +7,10 @@ setup:
 mkdocs:  ## Run mkdocs.
 	PYTHONPATH=.. mkdocs serve
 
+.PHONY: mkdocs-build
+mkdocs-build:  ## Build mkdocs.
+	PYTHONPATH=.. mkdocs build
+
 .PHONY: mkdocs-deploy
 mkdocs-deploy:  ## Deploy mkdocs to GitHub Pages.
 	PYTHONPATH=.. mkdocs gh-deploy
