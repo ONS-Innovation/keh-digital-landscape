@@ -23,6 +23,7 @@ jobs:
       - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
       - name: cd to MkDocs directory
         run: cd ./mkdocs
+      - run: ls
       - uses: actions/cache@v4
         with:
           key: mkdocs-material-${{ env.cache_id }}
