@@ -44,6 +44,8 @@ nav:
   - Testing:
     - Overview: testing/index.md
     - Backend: testing/backend.md
+  - MkDocs:
+    - Documentation: documentation.md
 theme:
   name: material
   language: en

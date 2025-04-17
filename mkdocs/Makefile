@@ -11,6 +11,10 @@ mkdocs:  ## Run mkdocs.
 mkdocs-build:  ## Build mkdocs.
 	PYTHONPATH=.. mkdocs build
 
+.PHONY: mkdocs-deploy
+mkdocs-deploy:  ## Deploy mkdocs to GitHub Pages.
+	PYTHONPATH=.. mkdocs gh-deploy
+
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -r {} +
