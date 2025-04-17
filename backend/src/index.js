@@ -15,6 +15,7 @@ const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const fetch = require("node-fetch");
 const logger = require('./config/logger');
 const { transformProjectToCSVFormat } = require('./utilities/projectDataTransformer');
+const { getAppAndInstallation } = require ("./utilities/getAppAndInstallation.js");
 
 const app = express();
 const port = process.env.PORT || 5001;
@@ -44,31 +45,7 @@ const s3Client = new S3Client({
  */
 app.get("/api/org/live", async (req, res) => {
   try {
-    const { App } = await import("@octokit/app");
-
-    const AWS = require('aws-sdk');
-    const secretsManager = new AWS.SecretsManager({ region: "eu-west-2" });
-
-    const getGithubAppSecrets = async () => {
-      const secret = await secretsManager
-        .getSecretValue({ SecretId: process.env.AWS_SECRET_NAME })
-        .promise();
-    
-      return {
-        privateKey: secret.SecretString
-      };
-    };
-
-    const secrets = await getGithubAppSecrets();
-
-    const app = new App({
-      appId: process.env.DIGITAL_APP_ID,
-      privateKey: secrets.privateKey,
-    });
-
-    const installation = await app.octokit.request(`/orgs/${org}/installation`);
-    const installation_id = installation.data.id;
-    const octokit = await app.getInstallationOctokit(installation_id);
+    const octokit = await getAppAndInstallation()
 
     const response = await octokit.request(`GET /orgs/${org}/copilot/metrics`, {
       headers: {
@@ -90,19 +67,16 @@ app.get("/api/org/live", async (req, res) => {
  * @throws {Error} 500 - If JSON fetching fails
  */
 app.get("/api/seats", async (req, res) => {
-  const token = process.env.GITHUB_TOKEN;
-
   try {
-    const { Octokit } = await import("@octokit/core");
-    const octokit = new Octokit({ auth: token });
+    const octokit = await getAppAndInstallation()
 
     const response = await octokit.request(`GET /orgs/${org}/copilot/billing/seats`, {
-      org: org,
       per_page: 100,
       headers: {
         "X-GitHub-Api-Version": "2022-11-28",
-      }
+      },
     });
+    console.log(response.data)
     //TODO: Iterate through pages
 
     res.json(response.data);
