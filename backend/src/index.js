@@ -76,7 +76,6 @@ app.get("/api/seats", async (req, res) => {
         "X-GitHub-Api-Version": "2022-11-28",
       },
     });
-    console.log(response.data)
     //TODO: Iterate through pages
 
     res.json(response.data);
