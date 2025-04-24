@@ -191,6 +191,7 @@
 .tech-table td.sources-cell {
   max-width: 150px;
   overflow-x: scroll;
+  scrollbar-width: none;
 }
 
 .tech-table td.actions-cell {
@@ -745,4 +746,206 @@
   gap: 2px;
   justify-content: center;
   background-color: transparent !important;
+}
+
+.similar-technologies {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 100%;
+}
+
+.similar-tech-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px;
+  background-color: hsl(var(--muted));
+  border-radius: 4px;
+  font-size: 12px;
+  border-left: 3px solid hsl(var(--border));
+}
+
+.similar-tech-name {
+  margin-right: 5px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100px;
+  cursor: pointer;
+}
+
+.similar-tech-details {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.similar-tech-source {
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 10px;
+  color: hsl(var(--foreground));
+  white-space: nowrap;
+}
+
+.similar-tech-source.tech-in-radar {
+  background-color: #4caf50;
+}
+
+.similar-tech-source.tech-in-array {
+  background-color: #2196f3;
+}
+
+.similar-tech-match {
+  font-size: 10px;
+  color: hsl(var(--muted-foreground));
+  background-color: hsl(var(--muted));
+  padding: 1px 4px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.no-similar {
+  color: hsl(var(--muted-foreground));
+  font-style: italic;
+  font-size: 12px;
+}
+
+.similar-tech-cell {
+  max-width: 220px;
+  min-width: 180px;
+}
+
+.similar-tech-btn {
+  padding: 1px 6px;
+  background-color: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  color: hsl(var(--muted-foreground));
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 10px;
+  margin-left: 4px;
+  transition: all 0.2s;
+}
+
+.similar-tech-btn:hover {
+  background-color: hsl(var(--accent));
+  border-color: hsl(var(--border));
+}
+
+.diff-case {
+  background-color: hsl(var(--muted));
+  padding: 0 1px;
+  border-radius: 2px;
+}
+
+.case-match-badge {
+  background-color: hsl(var(--chart-4));
+  color: hsl(var(--foreground));
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.similar-count-btn {
+  background-color: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  color: hsl(var(--primary));
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  display: inline-block;
+  text-align: center;
+  font-weight: 500;
+}
+
+.similar-count-btn:hover {
+  background-color: hsl(var(--accent));
+  border-color: hsl(var(--accent-foreground) / 0.2);
+}
+
+.similarity-threshold-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 12px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.similarity-threshold-label {
+  font-size: 13px;
+  color: hsl(var(--muted-foreground));
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.similarity-threshold-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  background: hsl(var(--muted));
+  border-radius: 5px;
+  outline: none;
+}
+
+.similarity-threshold-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: hsl(var(--primary));
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.similarity-threshold-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: hsl(var(--primary));
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+
+.similarity-tech-radar-filter {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 10px;
+}
+
+.similarity-threshold-reset {
+  font-size: 11px;
+  border: none;
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.similarity-threshold-reset:hover {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.similarity-stats {
+  font-size: 11px;
+  color: hsl(var(--muted-foreground));
+  margin-top: 4px;
+  text-align: right;
 }

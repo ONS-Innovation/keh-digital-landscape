@@ -22,6 +22,7 @@
     "react-router-dom": "^7.1.1",
     "react-scripts": "^5.0.1",
     "recharts": "^2.15.1",
+    "string-similarity": "^4.0.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

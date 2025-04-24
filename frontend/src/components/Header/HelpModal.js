@@ -320,6 +320,26 @@ function HelpModal({ show, onClose }) {
                 <li>
                   The yellow technology items are the technologies that are in the Technology Reference List but not the Tech Radar.
                 </li>
+                <li>
+                  Here are some general rules for the Technology Management section:
+                  <ul className="help-modal-sublist">
+                    <li>
+                      <strong>Node.js</strong> instead of NodeJS or node.js
+                    </li>
+                    <li>
+                      <strong>AWS</strong> instead of Amazon Web Services or aws
+                    </li>
+                    <li>
+                      <strong>GCP</strong> instead of Google Cloud Platform or gcp
+                    </li>
+                    <li>
+                      <strong>Azure</strong> instead of Microsoft Azure or azure
+                    </li>
+                    <li>
+                      Capitalise and anagram the technology like AWS or CraftCMS unless it is a .js framework.
+                    </li>
+                  </ul>
+                </li>
               </ul>
             </div>
           ),
