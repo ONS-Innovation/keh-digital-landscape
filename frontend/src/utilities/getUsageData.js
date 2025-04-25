@@ -23,12 +23,27 @@ export const fetchLiveUsageData = async () => {
   }
 }
 
-//TODO
+/**
+ * Fetch organisation historic usage data from AWS S3
+ * 
+ * @returns {Promise<Object>} - The historic usage data
+ */
 export const fetchHistoricUsageData = async () => {
-
+  //TODO
 }
 
-//TODO
+/**
+ * Filter usage data based on start and end date
+ * 
+ * @returns {Object} - The filtered usage data
+ */
 export const filterUsageData = (data, startDate, endDate) => {
+  if (!data || !data.length) return [];
+  const start = new Date(startDate);
+  const end = new Date(endDate);
 
+  return data.filter((item) => {
+    const itemDate = new Date(item.date);
+    return itemDate >= start && itemDate <= end;
+  });
 }

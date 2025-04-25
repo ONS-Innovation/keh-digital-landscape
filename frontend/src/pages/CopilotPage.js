@@ -46,6 +46,7 @@ function CopilotDashboard() {
    * Filter live usage data based on start and end date
    */
   useEffect(() => {
+    if (!allLiveUsageData.length || !startDate || !endDate) return;
     const filtered = filterUsageData(allLiveUsageData, startDate, endDate);
     setFilteredLiveUsageData(filtered);
   }, [allLiveUsageData, startDate, endDate]);
