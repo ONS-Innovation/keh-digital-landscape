@@ -284,13 +284,22 @@ const ProjectModal = ({
     "Testing_Frameworks",
     "Containers",
     "Static_Analysis",
+    "Source_Control",
     "Code_Formatter",
     "Monitoring",
     "Datastores",
+    "Database_Technologies",
     "Data_Output_Formats",
     "Integrations_ONS",
     "Integrations_External",
-    "Database_Technologies",
+    "Project_Tools",
+    "Code_Editors",
+    "Communication",
+    "Collaboration",
+    "Incident_Management",
+    "Documentation_Tools",
+    "UI_Tools",
+    "Diagram_Tools",
   ];
 
   const filterItems = (items) => {
