@@ -43,17 +43,17 @@ Your changes will be reflected live locally.
 
 ## Deploying to GitHub Pages
 
-To deploy to GitHub Pages, you need to build the documentation:
+### GitHub Action Deployment
+
+The MkDocs documentation is automatically deployed to the `gh-pages` branch of the repository using a GitHub Action. The action is triggered on every push to the `main` branch. This action is defined within `./.github/workflows/deploy_mkdocs.yml`.
+
+### Manual Deployment
+
+To deploy to GitHub Pages, you can run the following:
+
 ```bash
-make mkdocs-build
+make mkdocs-deploy
 ```
 
-This will create a `site` directory with the built documentation.
-
-You need to move this `site` directory out from the `/docs` directory and into the root directoy, alongside the `frontend`, `backend` etc. directories.
-
-**Important:** Change this `site` directory name from `site` to `mkdocs_deployment`.
-
-Then, through a Pull Request, merge the changes into the `main` branch.
-
-Once merged, the changes will be deployed to GitHub Pages via GitHub actions.
+This will build the documentation and deploy it to the `gh-pages` branch of the repository.
+The GitHub Pages site will then be updated with the latest changes from the `gh-pages` branch.
