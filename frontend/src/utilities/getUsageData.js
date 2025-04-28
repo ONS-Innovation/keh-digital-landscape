@@ -63,18 +63,18 @@ export const processUsageData = (data) => {
     totalAcceptances: 0,
     totalLinesSuggested: 0,
     totalLinesAccepted: 0,
-    perDay: [], //TODO: Only need acceptances, acceptance rate and engaged users
-    engagedUsersByLanguage: {}, //TODO: Skip 'unknown' or 0 engaged
-    engagedUsersByEditor: {}, //TODO: Skip 'unknown' or 0 engaged
-    languageBreakdown: {} //TODO: Add acceptance rate and line acceptance rate
+    perDay: [],
+    engagedUsersByLanguage: {},
+    engagedUsersByEditor: {},
+    languageBreakdown: {}
   };
 
   const chat = {
     totalChats: 0,
     totalInsertions: 0,
     totalCopies: 0,
-    perDay: [], //TODO: Only need engaged users
-    engagedUsersByEditor: {}, //TODO: Skip 'unknown' or 0 engaged
+    perDay: [],
+    engagedUsersByEditor: {},
     editorBreakdown: {}
   };
 
@@ -83,6 +83,7 @@ export const processUsageData = (data) => {
 
     // === COMPLETIONS ===
     const ide = entry.copilot_ide_code_completions;
+    const completionsEngagedUsers = ide.total_engaged_users ?? 0;
     if (ide?.editors) {
       let dailySuggestions = 0;
       let dailyAcceptances = 0;
@@ -91,6 +92,8 @@ export const processUsageData = (data) => {
 
       ide.editors.forEach(editor => {
         const editorName = editor.name;
+        if(editorName === "unknown") return;
+
         completions.engagedUsersByEditor[editorName] =
           (completions.engagedUsersByEditor[editorName] || 0) +
           (editor.total_engaged_users ?? 0);
@@ -103,6 +106,8 @@ export const processUsageData = (data) => {
             const linesSuggested = lang.total_code_lines_suggested ?? 0;
             const linesAccepted = lang.total_code_lines_accepted ?? 0;
             const engagedUsers = lang.total_engaged_users ?? 0;
+
+            if (langName === "unknown" || engagedUsers === 0) return;
 
             dailySuggestions += suggestions;
             dailyAcceptances += acceptances;
@@ -131,12 +136,15 @@ export const processUsageData = (data) => {
         });
       });
 
+      let acceptanceRate = dailySuggestions > 0
+      ? dailySuggestions / dailyAcceptances
+      : 0;
+
       completions.perDay.push({
         date,
         acceptances: dailyAcceptances,
-        suggestions: dailySuggestions,
-        linesAccepted: dailyLinesAccepted,
-        linesSuggested: dailyLinesSuggested
+        acceptanceRate: acceptanceRate,
+        engagedUsers: completionsEngagedUsers,
       });
 
       completions.totalSuggestions += dailySuggestions;
@@ -147,6 +155,7 @@ export const processUsageData = (data) => {
 
     // === CHAT ===
     const ideChat = entry.copilot_ide_chat;
+    const chatEngagedUsers = ideChat.total_engaged_users ?? 0;
     if (ideChat?.editors) {
       let dailyChats = 0;
       let dailyInsertions = 0;
@@ -154,6 +163,8 @@ export const processUsageData = (data) => {
 
       ideChat.editors.forEach(editor => {
         const editorName = editor.name;
+        if(editorName === "unknown") return;
+
         chat.engagedUsersByEditor[editorName] =
           (chat.engagedUsersByEditor[editorName] || 0) +
           (editor.total_engaged_users ?? 0);
@@ -185,9 +196,7 @@ export const processUsageData = (data) => {
 
       chat.perDay.push({
         date,
-        chats: dailyChats,
-        insertions: dailyInsertions,
-        copies: dailyCopies
+        engagedUsers: chatEngagedUsers,
       });
 
       chat.totalChats += dailyChats;
