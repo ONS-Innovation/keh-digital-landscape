@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { ThemeProvider } from "../contexts/ThemeContext";
 import Header from "../components/Header/Header";
 import { fetchSeatData } from "../utilities/getSeatData";
-import { fetchLiveUsageData, filterUsageData } from "../utilities/getUsageData";
+import { fetchLiveUsageData, filterUsageData, processUsageData } from "../utilities/getUsageData";
 
 function CopilotDashboard() {
 
   const [allLiveUsageData, setAllLiveUsageData] = useState([]);
   const [filteredLiveUsageData, setFilteredLiveUsageData] = useState([]);
+  const [processedLiveUsageData,  setProcessedLiveUsageData] = useState([]);
   const [allSeatData, setAllSeatData] = useState([]);
   const [filteredSeatData, setFilteredSeatData] = useState([]);
   const [inactiveDays, setInactiveDays] = useState(28);
@@ -29,6 +30,8 @@ function CopilotDashboard() {
       setFilteredLiveUsageData(liveUsage);
       setFilteredSeatData(seats);
 
+      setProcessedLiveUsageData(processUsageData(liveUsage));
+
       const current = liveUsage.length - 1
       setStartDate(liveUsage[0].date);
       setEndDate(liveUsage[current].date);
@@ -43,16 +46,17 @@ function CopilotDashboard() {
   }, []);
 
   /**
-   * Filter live usage data based on start and end date
+   * Filter and then process live usage data based on start and end date
    */
   useEffect(() => {
     if (!allLiveUsageData.length || !startDate || !endDate) return;
     const filtered = filterUsageData(allLiveUsageData, startDate, endDate);
     setFilteredLiveUsageData(filtered);
+    setProcessedLiveUsageData(processUsageData(filtered));
   }, [allLiveUsageData, startDate, endDate]);
 
   /**
-   * Update inactivity date and engaged users
+   * Update inactivity date and engaged users for seats
    */
   useEffect(() => {
     //TODO
