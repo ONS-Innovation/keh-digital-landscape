@@ -875,17 +875,73 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
-  margin-bottom: 12px;
   width: 100%;
   max-width: 300px;
+}
+
+.similarity-threshold-header {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .similarity-threshold-label {
   font-size: 13px;
   color: hsl(var(--muted-foreground));
   display: flex;
-  justify-content: space-between;
   align-items: center;
+}
+
+.similarity-threshold-edit {
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 2px 24px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  box-shadow: 0 3px 0 hsl(var(--accent));
+}
+
+.similarity-threshold-edit:hover {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  box-shadow: none;
+  transform: translateY(3px);
+}
+
+.similarity-threshold-edit.active {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  box-shadow: none;
+  transform: translateY(3px);
+}
+
+
+.similarity-threshold-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 8px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .similarity-threshold-slider {
@@ -919,6 +975,12 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
+.tech-radar-filter {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 10px;
+}
 
 .similarity-tech-radar-filter {
   display: flex;
@@ -928,7 +990,7 @@
 }
 
 .similarity-threshold-reset {
-  font-size: 11px;
+  font-size: 12px;
   border: none;
   background-color: hsl(var(--accent));
   color: hsl(var(--accent-foreground));
@@ -936,16 +998,17 @@
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s;
+  align-self: flex-end;
 }
 
 .similarity-threshold-reset:hover {
-  background-color: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
+  background-color: hsl(var(--muted));
+  color: hsl(var(--foreground));
 }
 
 .similarity-stats {
-  font-size: 11px;
+  font-size: 12px;
   color: hsl(var(--muted-foreground));
-  margin-top: 4px;
+  margin-top: 1px;
   text-align: right;
 }

@@ -31,6 +31,14 @@ const TechManage = () => {
   // Add new state for the similarity threshold slider
   const [similarityThreshold, setSimilarityThreshold] = useState(SIMILARITY_THRESHOLD);
 
+  // Add a new state for showing/hiding the slider
+  const [showThresholdSlider, setShowThresholdSlider] = useState(false);
+
+  // Toggle function for the slider visibility
+  const toggleThresholdSlider = () => {
+    setShowThresholdSlider(!showThresholdSlider);
+  };
+
   // Technology data management state
   const [arrayData, setArrayData] = useState({});
   const [radarData, setRadarData] = useState({ entries: [], quadrants: [] });
@@ -1436,29 +1444,43 @@ const TechManage = () => {
               </h3>
               <div className="similarity-tech-radar-filter">
                 <div className="similarity-threshold-container">
-                  <label htmlFor="similarity-threshold" className="similarity-threshold-label">
-                    Similarity threshold: {Math.round(similarityThreshold * 100)}%
+                  <div className="similarity-threshold-header">
+                    <div className="similarity-threshold-label">
+                      Similarity threshold: {Math.round(similarityThreshold * 100)}%
+                    </div>
                     <button 
-                      className="similarity-threshold-reset" 
-                      onClick={() => setSimilarityThreshold(SIMILARITY_THRESHOLD)}
-                      title="Reset to default (80%)"
+                      className={`similarity-threshold-edit ${showThresholdSlider ? 'active' : ''}`}
+                      onClick={toggleThresholdSlider}
+                      title={showThresholdSlider ? "Hide controls" : "Edit threshold"}
                     >
-                      Reset
+                      {showThresholdSlider ? "Done" : "Edit"}
                     </button>
-                  </label>
-                  <input
-                    id="similarity-threshold"
-                    type="range"
-                    min="0.5"
-                    max="0.95"
-                    step="0.05"
-                    value={similarityThreshold}
-                    onChange={(e) => setSimilarityThreshold(parseFloat(e.target.value))}
-                    className="similarity-threshold-slider"
-                  />
-                  <div className="similarity-stats">
-                    {countTechnologiesWithSimilarMatches()} of {untrackedTechnologies.size} technologies have potential matches
                   </div>
+                  
+                  {showThresholdSlider && (
+                    <div className="similarity-threshold-controls">
+                      <input
+                        id="similarity-threshold"
+                        type="range"
+                        min="0.5"
+                        max="0.95"
+                        step="0.05"
+                        value={similarityThreshold}
+                        onChange={(e) => setSimilarityThreshold(parseFloat(e.target.value))}
+                        className="similarity-threshold-slider"
+                      />
+                      <div className="similarity-stats">
+                        {countTechnologiesWithSimilarMatches()} of {untrackedTechnologies.size} technologies have potential matches
+                      </div>
+                      <button 
+                        className="similarity-threshold-reset" 
+                        onClick={() => setSimilarityThreshold(SIMILARITY_THRESHOLD)}
+                        title="Reset to default (80%)"
+                      >
+                        Reset to default
+                      </button>
+                    </div>
+                  )}
                 </div>
                 {selectedTechIds.length > 0 && (
                   <div className="batch-actions">
