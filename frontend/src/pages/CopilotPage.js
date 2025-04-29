@@ -1,20 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { ThemeProvider } from "../contexts/ThemeContext";
 import Header from "../components/Header/Header";
+import LiveDashboard from "../components/CoPilot/LiveDashboard";
+import HistoricDashboard from "../components/CoPilot/HistoricDashboard";
 import { fetchSeatData } from "../utilities/getSeatData";
 import { fetchLiveUsageData, filterUsageData, processUsageData } from "../utilities/getUsageData";
 
 function CopilotDashboard() {
 
-  const [allLiveUsageData, setAllLiveUsageData] = useState([]);
-  const [filteredLiveUsageData, setFilteredLiveUsageData] = useState([]);
-  const [processedLiveUsageData,  setProcessedLiveUsageData] = useState([]);
-  const [allSeatData, setAllSeatData] = useState([]);
-  const [filteredSeatData, setFilteredSeatData] = useState([]);
+  const getDashboardData = () => {
+    if (viewMode === "live" && scope === "organisation") return liveOrgData;
+    if (viewMode === "live" && scope === "team") return liveTeamData;
+    if (viewMode === "historic" && scope === "organisation") return historicOrgData;
+    if (viewMode === "historic" && scope === "team") return historicTeamData;
+  };
+
+  const [liveOrgData, setLiveOrgData] = useState({
+    allUsage: [],
+    filteredUsage: [],
+    processedUsage: [],
+    allSeatData: [],
+    filteredSeatData: []
+  });
+  
   const [inactiveDays, setInactiveDays] = useState(28);
   const [inactivityDate, setInactivityDate] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [viewMode, setViewMode] = useState("live");
+  const [scope, setScope] = useState("organisation");
+  const data = getDashboardData();
   
   /**
    * Set states from API data
@@ -23,14 +38,14 @@ function CopilotDashboard() {
     const fetchData = async () => {
       const liveUsage = await fetchLiveUsageData();
       const seats = await fetchSeatData();
-  
-      setAllLiveUsageData(liveUsage);
-      setAllSeatData(seats);
-  
-      setFilteredLiveUsageData(liveUsage);
-      setFilteredSeatData(seats);
 
-      setProcessedLiveUsageData(processUsageData(liveUsage));
+      setLiveOrgData({
+        allUsage: liveUsage,
+        filteredUsage: liveUsage,
+        processedUsage: processUsageData(liveUsage),
+        allSeatData: seats,
+        filteredSeatData: seats,
+      });
 
       const current = liveUsage.length - 1
       setStartDate(liveUsage[0].date);
@@ -49,11 +64,14 @@ function CopilotDashboard() {
    * Filter and then process live usage data based on start and end date
    */
   useEffect(() => {
-    if (!allLiveUsageData.length || !startDate || !endDate) return;
-    const filtered = filterUsageData(allLiveUsageData, startDate, endDate);
-    setFilteredLiveUsageData(filtered);
-    setProcessedLiveUsageData(processUsageData(filtered));
-  }, [allLiveUsageData, startDate, endDate]);
+    if (!liveOrgData.allUsage.length || !startDate || !endDate) return;
+    const filtered = filterUsageData(liveOrgData.allUsage, startDate, endDate);
+    setLiveOrgData(prev => ({
+      ...prev,
+      filteredUsage: filtered,
+      processedUsage: processUsageData(filtered),
+    }));
+  }, [liveOrgData.allUsage, startDate, endDate]);
 
   /**
    * Update inactivity date and engaged users for seats
@@ -62,11 +80,16 @@ function CopilotDashboard() {
     //TODO
   }, [inactiveDays]);
 
-  //TODO: Grouped data
+  //TODO: Add to contexts
 
   return (
     <ThemeProvider>
       <Header hideSearch={true}/>
+      {viewMode === "live" ? (
+          <LiveDashboard scope={scope} data={data} />
+        ) : (
+          <HistoricDashboard scope={scope} data={data} />
+        )}
     </ThemeProvider>
   );
 }
