@@ -188,6 +188,19 @@ Tests validation of banner deletion requests:
 
 ::: testing.backend.test_admin.test_admin_banner_delete_invalid
 
+### Banner Endpoints
+
+Tests the banner message endpoints for retrieving active and all banners:
+
+::: testing.backend.test_main.test_banner_endpoints
+
+The banner endpoint tests verify:
+- Active banners are correctly filtered in the /api/banners endpoint
+- All banners (active and inactive) are returned by /api/banners/all
+- Missing messages.json is handled gracefully
+- Response structure is consistent and valid
+- Error cases are properly handled with appropriate status codes
+
 ## Error Handling Tests
 
 ### Invalid Endpoints

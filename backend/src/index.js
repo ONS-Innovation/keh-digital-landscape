@@ -657,11 +657,10 @@ app.get("/api/repository/project/json", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
 /**
- * Endpoint to fetch banner messages.
+ * Endpoint to fetch active banner messages.
  * @route GET /api/banners
- * @returns {Object} Banner messages data
+ * @returns {Object} Active banner messages data
  * @throws {Error} 500 - If fetching fails
  */
 app.get("/api/banners", async (req, res) => {
@@ -680,7 +679,10 @@ app.get("/api/banners", async (req, res) => {
       });
 
       const { Body } = await s3Client.send(getCommand);
-      messagesData = JSON.parse(await Body.transformToString());
+      const data = JSON.parse(await Body.transformToString());
+      
+      // Filter only active banners
+      messagesData.messages = data.messages.filter(banner => banner.show === true);
     } catch (error) {
       // If file doesn't exist, return empty array
       logger.info("No messages.json file found, returning empty array");
@@ -690,6 +692,45 @@ app.get("/api/banners", async (req, res) => {
     res.json(messagesData);
   } catch (error) {
     logger.error("Error fetching banner messages:", { error: error.message });
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * Endpoint to fetch all banner messages (including inactive ones).
+ * @route GET /api/banners/all
+ * @returns {Object} All banner messages data
+ * @throws {Error} 500 - If fetching fails
+ */
+app.get("/api/banners/all", async (req, res) => {
+  try {
+    const bucketName = process.env.BUCKET_NAME
+      ? process.env.BUCKET_NAME
+      : "sdp-dev-digital-landscape";
+
+    let messagesData = { messages: [] };
+    
+    try {
+      // Try to get existing messages.json file
+      const getCommand = new GetObjectCommand({
+        Bucket: bucketName,
+        Key: "messages.json",
+      });
+
+      const { Body } = await s3Client.send(getCommand);
+      const data = JSON.parse(await Body.transformToString());
+      
+      // Filter only active banners
+      messagesData.messages = data.messages.filter(banner => banner.show === true);
+    } catch (error) {
+      // If file doesn't exist, return empty array
+      logger.info("No messages.json file found, returning empty array");
+      messagesData = { messages: [] };
+    }
+
+    res.json(messagesData);
+  } catch (error) {
+    logger.error("Error fetching all banner messages:", { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });

@@ -18,11 +18,22 @@ test-review: # Run only the review API tests
 ruff:
 	python3 -m ruff check backend/test_*.py
 
+autopep8:
+	python3 -m autopep8 --in-place backend/test_*.py
+
+ruff-fix:
+	python3 -m ruff check --fix backend/test_*.py
+
 pylint:
 	python3 -m pylint backend/test_*.py || true
 
 lint:
 	make ruff
+	make pylint
+
+lint-fix:
+	make ruff-fix
+	make autopep8
 	make pylint
 
 clean:

@@ -346,6 +346,35 @@
   height: max-content;
 }
 
+.draggable-item-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.item-title {
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.project-count-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  border-radius: 10px;
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  font-size: 10px;
+  font-weight: bold;
+  margin-left: 8px;
+  padding: 0 4px;
+  box-sizing: border-box;
+}
+
 @media (max-width: 800px) {
   .draggable-item {
     padding: 4px 12px;
