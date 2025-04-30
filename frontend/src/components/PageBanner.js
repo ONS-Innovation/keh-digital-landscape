@@ -3,18 +3,18 @@ import "../styles/components/PageBanner.css";
 
 function PageBanner({ title, description, tabs, activeTab, onTabChange }) {
     return (
-        <div className="admin-details">
-          <div className="admin-header-left">
-            <div className="admin-review-title">
+        <div className="banner-details">
+          <div className="banner-header-left">
+            <div className="banner-review-title">
               <h1>{title}</h1>
               <span>{description}</span>
             </div>
           </div>
-          <div className="admin-tabs">
+          <div className="banner-tabs">
             {tabs.map((tab) => (
               <div
                 key={tab.id}
-                className={`admin-tab ${activeTab === tab.id ? "active" : ""}`}
+                className={`banner-tab ${activeTab === tab.id ? "active" : ""}`}
                 onClick={() => onTabChange(tab.id)}
               >
                 {tab.label}
