@@ -37,8 +37,23 @@ function HelpModal({ show, onClose }) {
   if (!shouldRender) return null;
 
   const githubPagesLink = () => {
-    return <span> To view more detailed information about the Digital Landscape, view this documentation:<br /> <a href="https://ons-innovation.github.io/keh-digital-landscape/" target="_blank" rel="noopener noreferrer">Digital Landscape Documentation</a>.</span>
-  }
+    return (
+      <span>
+        {" "}
+        To view more detailed information about the Digital Landscape, view this
+        documentation:
+        <br />{" "}
+        <a
+          href="https://ons-innovation.github.io/keh-digital-landscape/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Digital Landscape Documentation
+        </a>
+        .
+      </span>
+    );
+  };
 
   /**
    * getModalContent function returns the content for the help modal based on the current pathname.
@@ -52,7 +67,7 @@ function HelpModal({ show, onClose }) {
           title: "Tech Radar Help",
           content: (
             <div className="help-modal-body">
-                {githubPagesLink()}
+              {githubPagesLink()}
               <h5>Guide</h5>
               <span>
                 The Tech Radar is a visual representation of our technology
@@ -75,7 +90,8 @@ function HelpModal({ show, onClose }) {
                   Use the search bar to find specific technologies on the Radar
                 </li>
                 <li>
-                  Click the quadrant label on the Radar to filter the Radar to that specific quadrant
+                  Click the quadrant label on the Radar to filter the Radar to
+                  that specific quadrant
                 </li>
               </ul>
               <h5>Quadrants and Rings</h5>
@@ -259,6 +275,70 @@ function HelpModal({ show, onClose }) {
                   You can add a technology by entering the new technology in the
                   &quot;Add Technology&quot; box, then selecting the category
                   and pressing &quot;Add Technology&quot;.
+                </li>
+              </ul>
+            </div>
+          ),
+        };
+      case "/admin/dashboard":
+        return {
+          title: "Admin Dashboard",
+          content: (
+            <div className="help-modal-body">
+              {githubPagesLink()}
+              <h5>Banner Management</h5>
+
+              <ul className="help-modal-list">
+                <li>View the Existing banners at the bottom of the page.</li>
+                <li>
+                  To create a new banner, enter the banner title and the banner message. Then choose what type of banner, either Info, Warning or Error.
+                </li>
+                <li>
+                  Select which pages to display the banner on, either Radar, Statistics or Projects.
+                </li>
+                <li>
+                  Click on the &quot;Save Banner&quot; button to create the banner.
+                </li>
+                <li>
+                  Click on the &quot;Delete&quot; button in the Existing banners to delete the banner.
+                </li>
+                <li>
+                  Click on the &quot;Hide&quot; button in the Existing banners to hide the banner.
+                </li>
+                <li>
+                  Click on the &quot;Show&quot; button in the Existing banners to show the banner.
+                </li>
+                
+              </ul>
+              <h5>Technology Management</h5>
+
+              <ul className="help-modal-list">
+                <li>View the Banner and Technology Management sections.</li>
+                <li>
+                  The blue technology items are the technologies that are in the Tech Radar but not the Technology Reference List.
+                </li>
+                <li>
+                  The yellow technology items are the technologies that are in the Technology Reference List but not the Tech Radar.
+                </li>
+                <li>
+                  Here are some general rules for the Technology Management section:
+                  <ul className="help-modal-sublist">
+                    <li>
+                      <strong>Node.js</strong> instead of NodeJS or node.js
+                    </li>
+                    <li>
+                      <strong>AWS</strong> instead of Amazon Web Services or aws
+                    </li>
+                    <li>
+                      <strong>GCP</strong> instead of Google Cloud Platform or gcp
+                    </li>
+                    <li>
+                      <strong>Azure</strong> instead of Microsoft Azure or azure
+                    </li>
+                    <li>
+                      Capitalise and anagram the technology like AWS or CraftCMS unless it is a .js framework.
+                    </li>
+                  </ul>
                 </li>
               </ul>
             </div>
