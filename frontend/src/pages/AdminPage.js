@@ -5,6 +5,7 @@ import BannerManage from "../components/Admin/BannerManage";
 import TechManage from "../components/Admin/TechManage";
 import "../styles/ReviewPage.css";
 import "../styles/AdminPage.css";
+import PageBanner from "../components/PageBanner";
 
 /**
  * Admin page for managing system-wide settings like banners
@@ -21,26 +22,12 @@ const AdminPage = () => {
     <ThemeProvider>
       <Header hideSearch={true} />
       <div className="admin-page">
-        <div className="admin-details">
-          <div className="admin-header-left">
-            <div className="admin-review-title">
-              <h1>Admin Dashboard</h1>
-              <span>Manage system-wide settings and configurations</span>
-            </div>
-          </div>
-          <div className="admin-tabs">
-          {tabs.map((tab) => (
-            <div
-              key={tab.id}
-              className={`admin-tab ${activeTab === tab.id ? "active" : ""}`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              {tab.label}
-                    </div>
-                  ))}
-          </div>
-        </div>
-
+        <PageBanner
+          title="Admin Dashboard"
+          description="Manage system-wide settings and configurations"
+          tabs={tabs}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}/>
         <div className={`admin-content ${activeTab === "banner" ? "active" : ""}`}>
           <BannerManage />
             </div>

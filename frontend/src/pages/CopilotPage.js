@@ -5,14 +5,15 @@ import LiveDashboard from "../components/CoPilot/LiveDashboard";
 import HistoricDashboard from "../components/CoPilot/HistoricDashboard";
 import { fetchSeatData } from "../utilities/getSeatData";
 import { fetchLiveUsageData, filterUsageData, processUsageData } from "../utilities/getUsageData";
+import PageBanner from "../components/PageBanner";
 
 function CopilotDashboard() {
 
   const getDashboardData = () => {
     if (viewMode === "live" && scope === "organisation") return liveOrgData;
-    if (viewMode === "live" && scope === "team") return liveTeamData;
-    if (viewMode === "historic" && scope === "organisation") return historicOrgData;
-    if (viewMode === "historic" && scope === "team") return historicTeamData;
+    if (viewMode === "live" && scope === "team") return null;
+    if (viewMode === "historic" && scope === "organisation") return null;
+    if (viewMode === "historic" && scope === "team") return null;
   };
 
   const [liveOrgData, setLiveOrgData] = useState({
@@ -85,11 +86,23 @@ function CopilotDashboard() {
   return (
     <ThemeProvider>
       <Header hideSearch={true}/>
-      {viewMode === "live" ? (
-          <LiveDashboard scope={scope} data={data} />
-        ) : (
-          <HistoricDashboard scope={scope} data={data} />
-        )}
+      <div className="admin-page">
+        <PageBanner
+          title="CoPilot Usage Dashboard"
+          description="Analyse CoPilot usage statistics organisation-wide and by team"
+          tabs={[
+            { id: "organisation", label: "Organisation Usage" },
+            { id: "team", label: "Team Usage" }
+          ]}
+          activeTab={scope}
+          onTabChange={setScope}
+        />
+        {viewMode === "live" ? (
+            <LiveDashboard scope={scope} data={data} />
+          ) : (
+            <HistoricDashboard scope={scope} data={data} />
+          )}
+      </div>
     </ThemeProvider>
   );
 }
