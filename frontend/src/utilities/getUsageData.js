@@ -3,7 +3,7 @@
  * 
  * @returns {Promise<Object>} - The live usage data
  */
-export const fetchLiveUsageData = async () => {
+export const fetchOrgLiveUsageData = async () => {
   try {
     let response;
     if (process.env.NODE_ENV === "development") {
@@ -28,7 +28,7 @@ export const fetchLiveUsageData = async () => {
  * 
  * @returns {Promise<Object>} - The historic usage data
  */
-export const fetchHistoricUsageData = async () => {
+export const fetchOrgHistoricUsageData = async () => {
   //TODO
 }
 
@@ -77,6 +77,8 @@ export const processUsageData = (data) => {
     engagedUsersByEditor: {},
     editorBreakdown: {}
   };
+
+  if (!data || !data.length) return { completions, chat };
 
   data.forEach((entry) => {
     const date = entry.date;

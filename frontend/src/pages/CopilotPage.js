@@ -4,7 +4,7 @@ import Header from "../components/Header/Header";
 import LiveDashboard from "../components/CoPilot/LiveDashboard";
 import HistoricDashboard from "../components/CoPilot/HistoricDashboard";
 import { fetchSeatData } from "../utilities/getSeatData";
-import { fetchLiveUsageData, filterUsageData, processUsageData } from "../utilities/getUsageData";
+import { fetchOrgLiveUsageData, filterUsageData, processUsageData } from "../utilities/getUsageData";
 import PageBanner from "../components/PageBanner";
 
 function CopilotDashboard() {
@@ -37,7 +37,7 @@ function CopilotDashboard() {
    */
   useEffect(() => {
     const fetchData = async () => {
-      const liveUsage = await fetchLiveUsageData();
+      const liveUsage = await fetchOrgLiveUsageData();
       const seats = await fetchSeatData();
 
       setLiveOrgData({
