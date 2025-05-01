@@ -2,6 +2,7 @@ import React from "react";
 import "../../styles/components/Statistics.css";
 import SkeletonStatCard from "../Statistics/Skeletons/SkeletonStatCard";
 import "../../styles/CoPilotPage.css";
+import { getPercentage } from "../../utilities/getPercentage";
 
 function LiveDashboard({scope, data, isLoading}) {
 
@@ -35,7 +36,7 @@ function LiveDashboard({scope, data, isLoading}) {
                 </div>
                 <div className="stat-card">
                   <h3>Acceptance Rate</h3>
-                  <p>{completions.acceptanceRate}</p>
+                  <p>{getPercentage(completions.acceptanceRate)}</p>
                 </div>
                 <div className="stat-card">
                   <h3>Total Lines of Code Suggested</h3>
@@ -47,7 +48,7 @@ function LiveDashboard({scope, data, isLoading}) {
                 </div>
                 <div className="stat-card">
                   <h3>Line Acceptance Rate</h3>
-                  <p>{completions.lineAcceptanceRate}</p>
+                  <p>{getPercentage(completions.lineAcceptanceRate)}</p>
                 </div>
               </div>
             </div>
