@@ -4,6 +4,7 @@ import SkeletonStatCard from "../Statistics/Skeletons/SkeletonStatCard";
 import "../../styles/CoPilotPage.css";
 import { getPercentage } from "../../utilities/getPercentage";
 import AcceptanceGraph from "./AcceptanceGraph";
+import EngagedUsersGraph from "./EngagedUsersGraph";
 
 function LiveDashboard({scope, data, isLoading}) {
 
@@ -11,7 +12,7 @@ function LiveDashboard({scope, data, isLoading}) {
   if(!isLoading) {
     completions = data.processedUsage.completions;
   }
-
+  
   return (
     <div>
         <h2>IDE Code Completions</h2>
@@ -59,6 +60,12 @@ function LiveDashboard({scope, data, isLoading}) {
             <div>Loading graph...</div>
           ) : (
             <AcceptanceGraph data={completions.perDay}/>
+          )}
+          <h4>Engaged Users By Day</h4>
+          {isLoading ? (
+            <div>Loading graph...</div>
+          ) : (
+            <EngagedUsersGraph data={completions.perDay}/>
           )}
     </div>
   );
