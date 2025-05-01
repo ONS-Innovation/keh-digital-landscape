@@ -36,7 +36,7 @@ const AcceptanceGraph = ({ data }) => {
             radius={[10, 10, 0, 0]}
             dataKey="acceptances"
             barSize={20}
-            fill="#F0F2F8"
+            fill="#70c4e6"
             yAxisId="left"
             legendType="rect"
             name="Acceptances"
