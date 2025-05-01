@@ -3,6 +3,7 @@ import "../../styles/components/Statistics.css";
 import SkeletonStatCard from "../Statistics/Skeletons/SkeletonStatCard";
 import "../../styles/CoPilotPage.css";
 import { getPercentage } from "../../utilities/getPercentage";
+import AcceptanceGraph from "./AcceptanceGraph";
 
 function LiveDashboard({scope, data, isLoading}) {
 
@@ -54,6 +55,11 @@ function LiveDashboard({scope, data, isLoading}) {
             </div>
           )}
           <h4>Acceptances and Acceptance Rate</h4>
+          {isLoading ? (
+            <div>Loading graph...</div>
+          ) : (
+            <AcceptanceGraph data={completions.perDay}/>
+          )}
     </div>
   );
 }
