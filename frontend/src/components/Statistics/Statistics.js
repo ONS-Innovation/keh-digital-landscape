@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useCallback } from "react";
 import "../../styles/components/Statistics.css";
-import { IoSearch } from "react-icons/io5";
 import { subMonths, isValid, parseISO } from "date-fns";
 import SkeletonStatCard from "./Skeletons/SkeletonStatCard";
 import SkeletonLanguageCard from "./Skeletons/SkeletonLanguageCard";
