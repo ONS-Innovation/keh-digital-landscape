@@ -5,6 +5,7 @@ import "../../styles/CoPilotPage.css";
 import { getPercentage } from "../../utilities/getPercentage";
 import AcceptanceGraph from "./AcceptanceGraph";
 import EngagedUsersGraph from "./EngagedUsersGraph";
+import PieChart from "./PieChart";
 
 function LiveDashboard({scope, data, isLoading}) {
 
@@ -55,7 +56,7 @@ function LiveDashboard({scope, data, isLoading}) {
               </div>
             </div>
           )}
-          <h4>Acceptances and Acceptance Rate</h4>
+          <h4>Acceptances and Acceptance Rate By Day</h4>
           {isLoading ? (
             <div>Loading graph...</div>
           ) : (
@@ -66,6 +67,14 @@ function LiveDashboard({scope, data, isLoading}) {
             <div>Loading graph...</div>
           ) : (
             <EngagedUsersGraph data={completions.perDay}/>
+          )}
+          {isLoading ? (
+            <div>Loading pie charts...</div>
+          ) : (
+            <div className="copilot-charts-container">
+              <PieChart engagedUsers={completions.engagedUsersByLanguage} title={"Engaged Users by Language"}/>
+              <PieChart engagedUsers={completions.engagedUsersByEditor} title={"Engaged Users by Editor"}/>
+            </div>
           )}
     </div>
   );

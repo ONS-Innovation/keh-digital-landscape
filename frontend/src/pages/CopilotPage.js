@@ -107,7 +107,8 @@ function CopilotDashboard() {
           onTabChange={setScope}
         />
         <div className='admin-container'>
-          <p>View Data Type</p>
+          {/* Will be introduced in next page PR */}
+          {/* <p>View Data Type</p>  */}
           <div>
 
           </div>
