@@ -85,9 +85,6 @@ const ReviewPage = () => {
         const categorizedEntries = categorizeEntries(radarData.entries);
         setEntries(categorizedEntries);
         setProjectsData(csvData);
-
-        // After loading both data sources, scan for new technologies
-        scanForNewTechnologies(radarData.entries, csvData);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -121,82 +118,6 @@ const ReviewPage = () => {
     });
 
     return categorized;
-  };
-
-  const scanForNewTechnologies = (radarEntries, csvData) => {
-    // Create a set of existing technology titles (case insensitive)
-    const existingTechLowercase = new Set(
-      radarEntries.map((entry) => entry.title.toLowerCase())
-    );
-
-    const newTechnologies = new Map();
-
-    // Process CSV data
-    csvData.forEach((project) => {
-      Object.entries(fieldsToScan).forEach(([field, category]) => {
-        if (project[field]) {
-          // Split by semicolon if multiple values exist
-          const technologies = project[field].split(";");
-
-          technologies.forEach((tech) => {
-            const trimmedTech = tech.trim();
-            const techLowercase = trimmedTech.toLowerCase();
-            
-            if (trimmedTech) {
-              // Only add if it doesn't exist in radar (case-insensitive)
-              // AND hasn't already been added to newTechnologies
-              if (!existingTechLowercase.has(techLowercase) && 
-                  !newTechnologies.has(techLowercase)) {
-                // Brand new technology - add to the map using the case from the CSV
-                newTechnologies.set(techLowercase, {
-                  title: trimmedTech,
-                  category: category
-                });
-              }
-            }
-          });
-        }
-      });
-    });
-
-    // Add new technologies to review
-    if (newTechnologies.size > 0) {
-      const categoryToQuadrant = {
-        Languages: "1",
-        Frameworks: "2",
-        "Supporting Tools": "3",
-        Infrastructure: "4",
-      };
-
-      const newEntries = Array.from(newTechnologies.values()).map(
-        ({ title, category }) => ({
-          id: `tech-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-          title: title,
-          description: category,
-          key: title.toLowerCase().replace(/\s+/g, "-"),
-          url: "#",
-          quadrant: categoryToQuadrant[category],
-          timeline: [
-            {
-              moved: 0,
-              ringId: "review",
-              date: new Date().toISOString().split("T")[0],
-              description: "Added from project data scan",
-            },
-          ],
-          links: [],
-        })
-      );
-
-      setEntries((prev) => ({
-        ...prev,
-        review: [...prev.review, ...newEntries],
-      }));
-
-      toast.success(
-        `Added ${newTechnologies.size} new technologies from project data`
-      );
-    }
   };
 
   // Add this function to calculate ring movement
