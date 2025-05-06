@@ -6,12 +6,13 @@ import HistoricDashboard from "../components/CoPilot/HistoricDashboard";
 import { fetchSeatData } from "../utilities/getSeatData";
 import { fetchOrgLiveUsageData, filterUsageData, processUsageData } from "../utilities/getUsageData";
 import PageBanner from "../components/PageBanner";
+import "../styles/CoPilotPage.css";
 
 function CopilotDashboard() {
 
   const getDashboardData = () => {
     if (viewMode === "live" && scope === "organisation") return liveOrgData;
-    if (viewMode === "live" && scope === "team") return liveOrgData; //Change upon team data
+    if (viewMode === "live" && scope === "team") return liveOrgData; //Will be changed upon team usage PR
     if (viewMode === "historic" && scope === "organisation") return null;
     if (viewMode === "historic" && scope === "team") return null;
   };
@@ -106,9 +107,13 @@ function CopilotDashboard() {
           activeTab={scope}
           onTabChange={setScope}
         />
-        <div className='admin-container'>
+        <div className="admin-container">
+          <div className="dashboard-header">
           {/* Will be introduced in next page PR */}
           {/* <p>View Data Type</p>  */}
+          <p>Filter Live Data Range</p>
+          <p>TODO</p>
+          </div>
           <div>
 
           </div>
