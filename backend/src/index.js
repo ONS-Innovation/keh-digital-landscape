@@ -810,6 +810,12 @@ app.post("/admin/api/array-data/update", async (req, res) => {
       // For all categories update, replace the entire object
       arrayData = items;
     } else {
+      // Validate that the category exists in the current data to prevent category injection
+      if (!Object.keys(arrayData).includes(category)) {
+        logger.error("Invalid category attempted:", { category });
+        return res.status(400).json({ error: "Invalid category. The specified category does not exist." });
+      }
+      
       // For single category update, update just that category
       arrayData[category] = items;
     }
