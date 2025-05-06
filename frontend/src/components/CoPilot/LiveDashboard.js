@@ -16,7 +16,7 @@ function LiveDashboard({scope, data, isLoading}) {
   
   return (
     <div>
-        <h2>IDE Code Completions</h2>
+        <h2 className="title">IDE Code Completions</h2>
           {isLoading ? (
             <div className="copilot-grid">
               <SkeletonStatCard />
@@ -76,6 +76,15 @@ function LiveDashboard({scope, data, isLoading}) {
               <PieChart engagedUsers={completions.engagedUsersByEditor} title={"Engaged Users by Editor"}/>
             </div>
           )}
+          <h4>Language Breakdown</h4>
+          {isLoading ? (
+            <div>Loading table...</div>
+          ) : (
+            <div>TODO</div>
+          )}
+        
+        <h2 className="title">CoPilot Chat</h2>
+
     </div>
   );
 }

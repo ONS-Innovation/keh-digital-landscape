@@ -51,7 +51,7 @@ const PieChart = ({ engagedUsers, title = "User Engagement"}) => {
 
   return (
     <div className="copilot-pie-chart">
-      <h3>{title}</h3>
+      <h4>{title}</h4>
       <ResponsiveContainer>
         <RechartsPieChart>
           <Pie
