@@ -28,9 +28,14 @@ This tool aims to provide a visual representation of the digital landscape at ON
 - On the deployed version, this page is only available to users from the Cognito user pool.
 - Grants a user the ability to move, edit and bring new technology on to the Radar.
 
+**Admin Page**
+- Banner management - create and manage different banners to be displayed on different pages within the Digital Landscape.
+- Technology management - manage new technologies and the autocomplete list to ensure conformity between platforms.
+
 **Homepage:**
 - This is the homepage of the tool.
 - It provides a brief overview of the tool and its purpose.
+- Recent announcements (banners) and recent updates (github release changelog) are shown on the homepage.
 
 ## Getting started
 
