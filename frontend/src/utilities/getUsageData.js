@@ -94,7 +94,6 @@ export const processUsageData = (data) => {
 
       ide.editors.forEach(editor => {
         const editorName = editor.name;
-        if(editorName === "unknown") return;
 
         completions.engagedUsersByEditor[editorName] =
           (completions.engagedUsersByEditor[editorName] || 0) +
@@ -108,8 +107,6 @@ export const processUsageData = (data) => {
             const linesSuggested = lang.total_code_lines_suggested ?? 0;
             const linesAccepted = lang.total_code_lines_accepted ?? 0;
             const engagedUsers = lang.total_engaged_users ?? 0;
-
-            if (langName === "unknown" || engagedUsers === 0) return;
 
             dailySuggestions += suggestions;
             dailyAcceptances += acceptances;
@@ -165,7 +162,6 @@ export const processUsageData = (data) => {
 
       ideChat.editors.forEach(editor => {
         const editorName = editor.name;
-        if(editorName === "unknown") return;
 
         chat.engagedUsersByEditor[editorName] =
           (chat.engagedUsersByEditor[editorName] || 0) +

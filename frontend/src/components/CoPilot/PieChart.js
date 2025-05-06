@@ -23,7 +23,8 @@ const colourPalette = [
 
 const PieChart = ({ engagedUsers, title = "User Engagement"}) => {
   const data = useMemo(() => {
-    const sortedEntries = Object.entries(engagedUsers).sort((a, b) => b[1] - a[1]);
+    const filteredEntries = Object.entries(engagedUsers).filter(([key]) => key.toLowerCase() !== "unknown");
+    const sortedEntries = filteredEntries.sort((a, b) => b[1] - a[1]);
     const topEntries = sortedEntries.slice(0, entries);
     const otherEntries = sortedEntries.slice(entries);
 
