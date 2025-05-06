@@ -4,6 +4,12 @@
     gap: 16px;
   }
 
+  .copilot-chat-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+  }
+
   .copilot-charts-container {
     width: 100%;
     display: flex;

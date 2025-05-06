@@ -10,8 +10,10 @@ import PieChart from "./PieChart";
 function LiveDashboard({scope, data, isLoading}) {
 
   let completions;
+  let chats;
   if(!isLoading) {
     completions = data.processedUsage.completions;
+    chats = data.processedUsage.chat;
   }
   
   return (
@@ -84,7 +86,40 @@ function LiveDashboard({scope, data, isLoading}) {
           )}
         
         <h2 className="title">CoPilot Chat</h2>
-
+        {isLoading ? (
+            <div className="copilot-chat-grid">
+              <SkeletonStatCard />
+              <SkeletonStatCard />
+              <SkeletonStatCard />
+              <SkeletonStatCard />
+              <SkeletonStatCard />
+            </div>
+          ) : (
+            <div>
+              <div className="copilot-chat-grid">
+                <div className="stat-card">
+                  <h3>Total Chats</h3>
+                  <p>{chats.totalChats}</p>
+                </div>
+                <div className="stat-card">
+                  <h3>Total Insertions</h3>
+                  <p>{chats.totalInsertions}</p>
+                </div>
+                <div className="stat-card">
+                  <h3>Insertion Rate</h3>
+                  <p>{getPercentage(chats.insertionRate)}</p>
+                </div>
+                <div className="stat-card">
+                  <h3>Total Copies</h3>
+                  <p>{chats.totalCopies}</p>
+                </div>
+                <div className="stat-card">
+                  <h3>Copy Rate</h3>
+                  <p>{getPercentage(chats.copyRate)}</p>
+                </div>
+              </div>
+            </div>
+          )}
     </div>
   );
 }
