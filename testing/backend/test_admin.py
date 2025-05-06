@@ -3,7 +3,6 @@ This module contains the test cases for the admin API endpoints.
 """
 
 import requests
-import copy
 
 BASE_URL = "http://localhost:5001"
 
@@ -418,9 +417,6 @@ def test_admin_update_array_data_single_category():
     try:
         category_to_update = "test_category_single_update"
         new_items = ["item1", "item2_updated"]
-        
-        # If the category exists, save its original items to verify others are unchanged
-        original_items_for_category = original_data.get(category_to_update, [])
         
         payload = {
             "allCategories": False,
