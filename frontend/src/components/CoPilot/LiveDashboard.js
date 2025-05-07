@@ -6,6 +6,7 @@ import { getPercentage } from "../../utilities/getPercentage";
 import AcceptanceGraph from "./AcceptanceGraph";
 import EngagedUsersGraph from "./EngagedUsersGraph";
 import PieChart from "./PieChart";
+import TableBreakdown from "./TableBreakdown";
 
 function LiveDashboard({scope, data, isLoading}) {
 
@@ -15,7 +16,7 @@ function LiveDashboard({scope, data, isLoading}) {
     completions = data.processedUsage.completions;
     chats = data.processedUsage.chat;
   }
-  
+
   return (
     <div>
         <h2 className="title">IDE Code Completions</h2>
@@ -82,7 +83,7 @@ function LiveDashboard({scope, data, isLoading}) {
           {isLoading ? (
             <div>Loading table...</div>
           ) : (
-            <div>TODO</div>
+            <TableBreakdown data={completions.languageBreakdown}/>
           )}
         
         <h2 className="title">CoPilot Chat</h2>
@@ -137,7 +138,7 @@ function LiveDashboard({scope, data, isLoading}) {
          {isLoading ? (
             <div>Loading table...</div>
           ) : (
-            <div>TODO</div>
+            <TableBreakdown data={chats.editorBreakdown}/>
           )}
         
         <h2 className="title">Seat Information</h2>
