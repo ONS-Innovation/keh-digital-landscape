@@ -28,6 +28,12 @@
     padding-top: 50px;
   }
 
+  .pie-chart-loading {
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+  }
+
   .dashboard-header {
     /* Will be added in later PR */
   }

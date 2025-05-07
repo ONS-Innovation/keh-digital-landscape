@@ -71,7 +71,7 @@ function LiveDashboard({scope, data, isLoading}) {
             <EngagedUsersGraph data={completions.perDay}/>
           )}
           {isLoading ? (
-            <div>Loading pie charts...</div>
+            <div className="pie-chart-loading">Loading pie charts...</div>
           ) : (
             <div className="copilot-charts-container">
               <PieChart engagedUsers={completions.engagedUsersByLanguage} title={"Engaged Users by Language"}/>
@@ -127,11 +127,9 @@ function LiveDashboard({scope, data, isLoading}) {
             <EngagedUsersGraph data={chats.perDay}/>
           )}
           {isLoading ? (
-            <div>Loading pie charts...</div>
+            <div className="pie-chart-loading">Loading pie chart...</div>
           ) : (
             <div className="copilot-charts-container">
-              {/* <PieChart engagedUsers={chats.engagedUsersByLanguage} title={"Engaged Users by Language"}/> */}
-              <p>TODO: Engaged by language</p>
               <PieChart engagedUsers={chats.engagedUsersByEditor} title={"Engaged Users by Editor"}/>
             </div>
           )}
