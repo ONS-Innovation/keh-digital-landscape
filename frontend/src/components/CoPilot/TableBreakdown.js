@@ -35,12 +35,12 @@ function TableBreakdown({ data }) {
         return Object.entries(data).map(([language, stats]) => ({
             language: language || "(unknown)",
             ...stats,
-            acceptanceRate: stats.suggestions
-                ? stats.acceptances / stats.suggestions
-                : 0,
-            lineAcceptanceRate: stats.linesSuggested
-                ? stats.linesAccepted / stats.linesSuggested
-                : 0,
+            ...(stats.suggestions
+                ? { acceptanceRate: stats.acceptances / stats.suggestions }
+                : {}),
+            ...(stats.linesSuggested
+                ? { lineAcceptanceRate: stats.linesAccepted / stats.linesSuggested }
+                : {}),
         }));
     }, [data]);
 

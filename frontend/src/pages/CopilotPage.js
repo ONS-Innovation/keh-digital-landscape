@@ -3,7 +3,7 @@ import { ThemeProvider } from "../contexts/ThemeContext";
 import Header from "../components/Header/Header";
 import LiveDashboard from "../components/CoPilot/LiveDashboard";
 import HistoricDashboard from "../components/CoPilot/HistoricDashboard";
-import { fetchSeatData } from "../utilities/getSeatData";
+import { fetchSeatData, filterInactiveUsers } from "../utilities/getSeatData";
 import { fetchOrgLiveUsageData, filterUsageData, processUsageData } from "../utilities/getUsageData";
 import PageBanner from "../components/PageBanner";
 import "../styles/CoPilotPage.css";
@@ -22,7 +22,7 @@ function CopilotDashboard() {
     filteredUsage: [],
     processedUsage: [],
     allSeatData: [],
-    filteredSeatData: []
+    activeSeatData: []
   });
   
   const [inactiveDays, setInactiveDays] = useState(28);
@@ -43,29 +43,23 @@ function CopilotDashboard() {
       const liveUsage = await fetchOrgLiveUsageData();
       const seats = await fetchSeatData();
 
+      let end = new Date();
+      let start = new Date(end);
+      start.setDate(end.getDate() - 28);
+      end = end.toISOString().slice(0, 10);
+      start = start.toISOString().slice(0, 10);
+    
+      setInactivityDate(start);
+      setStartDate(start);
+      setEndDate(end);
+
       setLiveOrgData({
         allUsage: liveUsage ?? [],
         filteredUsage: liveUsage ?? [],
         processedUsage: liveUsage ? processUsageData(liveUsage) : [],
         allSeatData: seats ?? [],
-        filteredSeatData: seats ?? [],
+        activeSeatData: seats ? filterInactiveUsers(seats, start) : [],
       });
-
-      if(liveUsage) {
-        const current = liveUsage.length - 1
-        setStartDate(liveUsage[0].date);
-        setEndDate(liveUsage[current].date);
-  
-        const end = new Date(liveUsage[current].date);
-        const inactivity = new Date(end);
-        inactivity.setDate(end.getDate() - 28);
-        setInactivityDate(inactivity.toISOString().slice(0, 10));
-      } else {
-        const current = new Date();
-        const inactivity = new Date(current);
-        inactivity.setDate(current.getDate() - 28);
-        setInactivityDate(inactivity.toISOString().slice(0, 10));
-      }
       setIsLoading(false);
     };
     fetchData();
@@ -85,11 +79,16 @@ function CopilotDashboard() {
   }, [liveOrgData.allUsage, startDate, endDate]);
 
   /**
-   * Update inactivity date and engaged users for seats
+   * Update active seats
    */
   useEffect(() => {
-    //TODO
-  }, [inactiveDays]);
+    if (!liveOrgData.allSeatData?.length || !inactivityDate) return;
+    const active = filterInactiveUsers(liveOrgData.allSeatData, inactivityDate);
+    setLiveOrgData(prev => ({
+      ...prev,
+      activeSeatData: active,
+    }));
+  }, [inactiveDays, inactivityDate]);
 
   //TODO: Add to contexts
 
@@ -118,9 +117,17 @@ function CopilotDashboard() {
 
           </div>
           {viewMode === "live" ? (
-              <LiveDashboard scope={scope} data={data} isLoading={isLoading}/>
+              <LiveDashboard 
+              scope={scope} 
+              data={data} 
+              isLoading={isLoading} 
+              inactiveDays={inactiveDays} 
+              inactivityDate={inactivityDate}/>
             ) : (
-              <HistoricDashboard scope={scope} data={data} isLoading={isLoading}/>
+              <HistoricDashboard 
+              scope={scope} 
+              data={data} 
+              isLoading={isLoading}/>
             )}
         </div>
       </div>

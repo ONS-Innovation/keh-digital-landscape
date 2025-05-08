@@ -8,13 +8,13 @@ import EngagedUsersGraph from "./EngagedUsersGraph";
 import PieChart from "./PieChart";
 import TableBreakdown from "./TableBreakdown";
 
-function LiveDashboard({scope, data, isLoading}) {
+function LiveDashboard({scope, data, isLoading, inactiveDays, inactivityDate}) {
 
-  let completions;
-  let chats;
+  let completions, chats, seats;
   if(!isLoading) {
     completions = data.processedUsage.completions;
     chats = data.processedUsage.chat;
+    seats = data.inactiveSeatData;
   }
 
   return (
@@ -142,7 +142,28 @@ function LiveDashboard({scope, data, isLoading}) {
           )}
         
         <h2 className="title">Seat Information</h2>
-        <p>Users are considered inactive after </p>
+        {isLoading ? (
+          <div>Loading seat info...</div>
+          ) : (
+            <div>
+              <p>Users are considered inactive after {inactiveDays} days ({inactivityDate})</p>
+              <div className="copilot-grid">
+                  <div className="stat-card">
+                    <h3>Number of Seats</h3>
+                    <p>{}</p>
+                  </div>
+                  <div className="stat-card">
+                    <h3>Number of Engaged Users</h3>
+                    <p>{}</p>
+                  </div>
+                  <div className="stat-card">
+                    <h3>Number of Inactive Users</h3>
+                    <p>{}</p>
+                  </div>
+                </div>
+            </div>
+          )}
+
     </div>
   );
 }
