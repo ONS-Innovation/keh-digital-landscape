@@ -37,7 +37,7 @@ export const filterInactiveUsers = (seatData, inactivityDate) => {
 
 const filteredData = Object.values(seatData.seats).filter(user => {
   const activityDate = new Date(user.last_activity_at);
-  const thresholdDate = new Date(inactivityDate); // inactivityDate = "YYYY-MM-DD"
+  const thresholdDate = new Date(inactivityDate);
   return activityDate >= thresholdDate;
 });
 

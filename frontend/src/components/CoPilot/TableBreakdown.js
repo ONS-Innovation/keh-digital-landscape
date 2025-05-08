@@ -1,8 +1,6 @@
 import React, { useMemo } from "react";
 import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-quartz.css";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -59,13 +57,13 @@ function TableBreakdown({ data }) {
     }, [rowData]);
 
     return (
-        <div className="ag-theme-quartz" style={{ height: 300 }}>
+        <div style={{ height: 300 }}>
             <AgGridReact
             rowData={rowData} 
             columnDefs={colDefs} 
             defaultColDef={defaultColDef} 
             pagination={true}
-            paginationPageSize={10}/>
+            paginationPageSize={20}/>
         </div>
     );
 }
