@@ -439,6 +439,7 @@
   border: 1px solid transparent;
   outline: none;
   background-color: hsl(var(--muted));
+  color: hsl(var(--foreground));
   font-size: 12px;
   font-family: inherit;
 }
