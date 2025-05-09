@@ -69,16 +69,25 @@ app.get("/api/org/live", async (req, res) => {
 app.get("/api/seats", async (req, res) => {
   try {
     const octokit = await getAppAndInstallation()
+    let allSeats = [];
+    let page = 1;
+    let hasMore = true;
 
-    const response = await octokit.request(`GET /orgs/${org}/copilot/billing/seats`, {
-      per_page: 100,
-      headers: {
-        "X-GitHub-Api-Version": "2022-11-28",
-      },
-    });
-    //TODO: Iterate through pages
+    while (hasMore) {
+      const response = await octokit.request(`GET /orgs/${org}/copilot/billing/seats`, {
+        per_page: 100,
+        page,
+        headers: {
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
+      });
 
-    res.json(response.data);
+      const currentSeats = response.data.seats ?? [];
+      allSeats.push(...currentSeats);
+      currentSeats.length < 100 ? hasMore = false : page += 1;
+    }
+
+    res.json(allSeats);
   } catch (error) {
     console.error("GitHub API error:", error);
     res.status(500).json({ error: error.message });

@@ -14,7 +14,7 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, inactivityDate}) {
   if(!isLoading) {
     completions = data.processedUsage.completions;
     chats = data.processedUsage.chat;
-    seats = data.inactiveSeatData;
+    seats = { allSeatData: data.allSeatData, activeSeatData: data.activeSeatData };
   }
 
   return (
@@ -150,15 +150,15 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, inactivityDate}) {
               <div className="copilot-grid">
                   <div className="stat-card">
                     <h3>Number of Seats</h3>
-                    <p>{}</p>
+                    <p>{seats.allSeatData.length}</p>
                   </div>
                   <div className="stat-card">
                     <h3>Number of Engaged Users</h3>
-                    <p>{}</p>
+                    <p>{seats.activeSeatData.length}</p>
                   </div>
                   <div className="stat-card">
                     <h3>Number of Inactive Users</h3>
-                    <p>{}</p>
+                    <p>{seats.allSeatData.length - seats.activeSeatData.length}</p>
                   </div>
                 </div>
             </div>

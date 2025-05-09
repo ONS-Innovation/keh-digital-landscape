@@ -35,11 +35,12 @@ export const filterInactiveUsers = (seatData, inactivityDate) => {
     return [];
   }
 
-const filteredData = Object.values(seatData.seats).filter(user => {
+const filteredData = seatData.filter(user => {
   const activityDate = new Date(user.last_activity_at);
   const thresholdDate = new Date(inactivityDate);
   return activityDate >= thresholdDate;
 });
 
   return filteredData;
-} 
+}
+
