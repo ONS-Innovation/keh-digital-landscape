@@ -14,6 +14,7 @@ const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const fetch = require("node-fetch");
 const logger = require('./config/logger');
 const { transformProjectToCSVFormat } = require('./utilities/projectDataTransformer');
+const { updateTechnologyInArray } = require('./utilities/updateTechnologyInArray');
 
 const app = express();
 const port = process.env.PORT || 5001;
@@ -899,6 +900,7 @@ app.get("/api/health", (req, res) => {
   res.status(200).json(healthResponse);
 });
 
+
 /**
  * Endpoint for normalizing technology names in project data.
  * @route POST /admin/api/normalise-technology
@@ -937,67 +939,58 @@ app.post("/admin/api/normalise-technology", async (req, res) => {
     let updateCount = 0;
     projectData.projects = projectData.projects.map(project => {
       let updated = false;
-
+      const architecture = project.architecture;
+      
       // Update languages
-      if (project.architecture.languages) {
-        if (project.architecture.languages.main) {
-          const index = project.architecture.languages.main.indexOf(from);
-          if (index !== -1) {
-            project.architecture.languages.main[index] = to;
-            updated = true;
-          }
+      if (architecture.languages) {
+        const mainResult = updateTechnologyInArray(architecture.languages.main, from, to);
+        const othersResult = updateTechnologyInArray(architecture.languages.others, from, to);
+        
+        if (mainResult.updated) {
+          architecture.languages.main = mainResult.array;
+          updated = true;
         }
-        if (project.architecture.languages.others) {
-          const index = project.architecture.languages.others.indexOf(from);
-          if (index !== -1) {
-            project.architecture.languages.others[index] = to;
-            updated = true;
-          }
+        
+        if (othersResult.updated) {
+          architecture.languages.others = othersResult.array;
+          updated = true;
         }
       }
 
       // Update frameworks
-      if (project.architecture.frameworks?.others) {
-        const index = project.architecture.frameworks.others.indexOf(from);
-        if (index !== -1) {
-          project.architecture.frameworks.others[index] = to;
-          updated = true;
-        }
+      const frameworksResult = updateTechnologyInArray(architecture.frameworks?.others, from, to);
+      if (frameworksResult.updated) {
+        architecture.frameworks.others = frameworksResult.array;
+        updated = true;
       }
 
       // Update infrastructure
-      if (project.architecture.infrastructure?.others) {
-        const index = project.architecture.infrastructure.others.indexOf(from);
-        if (index !== -1) {
-          project.architecture.infrastructure.others[index] = to;
-          updated = true;
-        }
+      const infrastructureResult = updateTechnologyInArray(architecture.infrastructure?.others, from, to);
+      if (infrastructureResult.updated) {
+        architecture.infrastructure.others = infrastructureResult.array;
+        updated = true;
       }
 
       // Update CICD
-      if (project.architecture.cicd?.others) {
-        const index = project.architecture.cicd.others.indexOf(from);
-        if (index !== -1) {
-          project.architecture.cicd.others[index] = to;
-          updated = true;
-        }
+      const cicdResult = updateTechnologyInArray(architecture.cicd?.others, from, to);
+      if (cicdResult.updated) {
+        architecture.cicd.others = cicdResult.array;
+        updated = true;
       }
 
       // Update database
-      if (project.architecture.database) {
-        if (project.architecture.database.main) {
-          const index = project.architecture.database.main.indexOf(from);
-          if (index !== -1) {
-            project.architecture.database.main[index] = to;
-            updated = true;
-          }
+      if (architecture.database) {
+        const dbMainResult = updateTechnologyInArray(architecture.database.main, from, to);
+        const dbOthersResult = updateTechnologyInArray(architecture.database.others, from, to);
+        
+        if (dbMainResult.updated) {
+          architecture.database.main = dbMainResult.array;
+          updated = true;
         }
-        if (project.architecture.database.others) {
-          const index = project.architecture.database.others.indexOf(from);
-          if (index !== -1) {
-            project.architecture.database.others[index] = to;
-            updated = true;
-          }
+        
+        if (dbOthersResult.updated) {
+          architecture.database.others = dbOthersResult.array;
+          updated = true;
         }
       }
 
