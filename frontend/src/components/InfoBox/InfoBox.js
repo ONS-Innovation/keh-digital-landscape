@@ -102,6 +102,13 @@ const InfoBox = ({
     }
   }, [selectedItem]);
 
+  // Reset selected timeline item when selected technology changes
+  useEffect(() => {
+    if (setSelectedTimelineItem) {
+      setSelectedTimelineItem(null);
+    }
+  }, [selectedItem, setSelectedTimelineItem]);
+
   const handleEditClick = () => {
     setEditedTitle(selectedItem.title);
     setEditedCategory(selectedItem.description);
