@@ -900,7 +900,6 @@ app.get("/api/health", (req, res) => {
   res.status(200).json(healthResponse);
 });
 
-
 /**
  * Endpoint for normalizing technology names in project data.
  * @route POST /admin/api/normalise-technology
