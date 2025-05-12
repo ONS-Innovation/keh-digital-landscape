@@ -4,68 +4,48 @@ import { AgGridReact } from "ag-grid-react";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-const headerMap = {
-    language: "Language",
-    suggestions: "Suggestions",
-    acceptances: "Acceptances",
-    acceptanceRate: "Acceptance Rate",
-    linesSuggested: "Lines of Code Suggested",
-    linesAccepted: "Lines of Code Accepted",
-    lineAcceptanceRate: "Line Acceptance Rate",
-    chats: "Chats",
-    insertions: "Insertions",
-    copies: "Copies",
-    insertionRate: "Insertion Rate",
-    copyRate: "Copy Rate",
-};
-
-function TableBreakdown({ data }) {
-
-    const defaultColDef = useMemo(() => {
-        return {
-            sortable: true,
-            filter: true,
-            cellStyle: { textAlign: "center" },
-        };
-    }, []);
-
+function TableBreakdown({ data, idField, idHeader, columns, headerMap, computedFields }) {
+    const defaultColDef = useMemo(() => ({
+      sortable: true,
+      filter: true,
+      cellStyle: { textAlign: "center" },
+      flex: 1,
+      maxWidth: 200,
+    }), []);
+  
     const rowData = useMemo(() => {
-        return Object.entries(data).map(([language, stats]) => ({
-            language: language || "(unknown)",
-            ...stats,
-            ...(stats.suggestions
-                ? { acceptanceRate: stats.acceptances / stats.suggestions }
-                : {}),
-            ...(stats.linesSuggested
-                ? { lineAcceptanceRate: stats.linesAccepted / stats.linesSuggested }
-                : {}),
-        }));
-    }, [data]);
-
+      return Object.entries(data).map(([id, stats]) => ({
+        [idField]: id || "(unknown)",
+        ...stats,
+        ...(computedFields ? computedFields(stats) : {}),
+      }));
+    }, [data, idField, computedFields]);
+  
     const colDefs = useMemo(() => {
-        if (!rowData.length) return [];
-
-        const sampleRow = rowData[0];
-        return Object.keys(sampleRow).map((key) => ({
-            field: key,
-            headerName: headerMap[key] || key,
-            valueFormatter: (params) =>
-                key.toLowerCase().includes("rate")
-                    ? `${(params.value * 100).toFixed(1)}%`
-                    : params.value,
-        }));
-    }, [rowData]);
-
+      if (!rowData.length) return [];
+  
+      const keys = [idField, ...columns];
+      return keys.map((key) => ({
+        field: key,
+        headerName: key === idField ? idHeader : headerMap[key] || key,
+        valueFormatter: (params) =>
+          key.toLowerCase().includes("rate")
+            ? `${(params.value * 100).toFixed(1)}%`
+            : params.value,
+      }));
+    }, [rowData, idField, idHeader, columns, headerMap]);
+  
     return (
-        <div style={{ height: 300 }}>
-            <AgGridReact
-            rowData={rowData} 
-            columnDefs={colDefs} 
-            defaultColDef={defaultColDef} 
-            pagination={true}
-            paginationPageSize={20}/>
-        </div>
+      <div style={{ height: 300, minWidth: 750 }}>
+        <AgGridReact
+          rowData={rowData}
+          columnDefs={colDefs}
+          defaultColDef={defaultColDef}
+          pagination={true}
+          paginationPageSize={20}
+        />
+      </div>
     );
-}
+  }  
 
 export default TableBreakdown;

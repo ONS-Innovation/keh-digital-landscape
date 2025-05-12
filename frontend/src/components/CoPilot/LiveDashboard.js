@@ -15,6 +15,14 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, inactivityDate}) {
     completions = data.processedUsage.completions;
     chats = data.processedUsage.chat;
     seats = { allSeatData: data.allSeatData, activeSeatData: data.activeSeatData };
+
+    const activeUsers = new Set(
+      seats.activeSeatData.map(user => user.assignee.id)
+    );
+    
+    const inactiveUsers = seats.allSeatData.filter(
+      user => !activeUsers.has(user.assignee.id)
+    );
   }
 
   return (
@@ -83,7 +91,31 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, inactivityDate}) {
           {isLoading ? (
             <div>Loading table...</div>
           ) : (
-            <TableBreakdown data={completions.languageBreakdown}/>
+            <TableBreakdown
+              data={completions.languageBreakdown}
+              idField="language"
+              idHeader="Language"
+              columns={[
+                "suggestions",
+                "acceptances",
+                "acceptanceRate",
+                "linesSuggested",
+                "linesAccepted",
+                "lineAcceptanceRate"
+              ]}
+              headerMap={{
+                suggestions: "Suggestions",
+                acceptances: "Acceptances",
+                acceptanceRate: "Acceptance Rate",
+                linesSuggested: "Lines of Code Suggested",
+                linesAccepted: "Lines of Code Accepted",
+                lineAcceptanceRate: "Line Acceptance Rate"
+              }}
+              computedFields={(stats) => ({
+                acceptanceRate: stats.suggestions ? stats.acceptances / stats.suggestions : 0,
+                lineAcceptanceRate: stats.linesSuggested ? stats.linesAccepted / stats.linesSuggested : 0
+              })}
+            />
           )}
         
         <h2 className="title">CoPilot Chat</h2>
@@ -138,7 +170,29 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, inactivityDate}) {
          {isLoading ? (
             <div>Loading table...</div>
           ) : (
-            <TableBreakdown data={chats.editorBreakdown}/>
+            <TableBreakdown
+              data={chats.editorBreakdown}
+              idField="editor"
+              idHeader="Editor"
+              columns={[
+                "chats",
+                "insertions",
+                "insertionRate",
+                "copies",
+                "copyRate"
+              ]}
+              headerMap={{
+                chats: "Chats",
+                insertions: "Insertions",
+                insertionRate: "Insertion Rate",
+                copies: "Copies",
+                copyRate: "Copy Rate"
+              }}
+              computedFields={(stats) => ({
+                insertionRate: stats.chats ? stats.insertions / stats.chats : 0,
+                copyRate: stats.chats ? stats.copies / stats.chats : 0
+              })}
+            />
           )}
         
         <h2 className="title">Seat Information</h2>
@@ -161,9 +215,54 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, inactivityDate}) {
                     <p>{seats.allSeatData.length - seats.activeSeatData.length}</p>
                   </div>
                 </div>
+                <div className="seat-breakdown">
+                  <div>
+                    <h4>Engaged Users</h4>
+                    <TableBreakdown
+                      data={seats.activeSeatData.reduce((acc, user, i) => {
+                        acc[i] = {
+                          avatar: user.assignee.avatar_url,
+                          username: user.assignee.login,
+                          github: `https://github.com/${user.assignee.login}`,
+                          lastActivity: user.last_activity_at
+                        };
+                        return acc;
+                      }, {})}
+                      idField="username"
+                      idHeader="Username"
+                      columns={["avatar", "github", "lastActivity"]}
+                      headerMap={{
+                        avatar: "Avatar",
+                        github: "GitHub Profile",
+                        lastActivity: "Last Activity"
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <h4>Inactive Users</h4>
+                    <TableBreakdown
+                      data={seats.activeSeatData.reduce((acc, user, i) => {
+                        acc[i] = {
+                          avatar: user.assignee.avatar_url,
+                          username: user.assignee.login,
+                          github: `https://github.com/${user.assignee.login}`,
+                          lastActivity: user.last_activity_at
+                        };
+                        return acc;
+                      }, {})}
+                      idField="username"
+                      idHeader="Username"
+                      columns={["avatar", "github", "lastActivity"]}
+                      headerMap={{
+                        avatar: "Avatar",
+                        github: "GitHub Profile",
+                        lastActivity: "Last Activity"
+                      }}
+                    />
+                  </div>
+                </div>
             </div>
           )}
-
     </div>
   );
 }
