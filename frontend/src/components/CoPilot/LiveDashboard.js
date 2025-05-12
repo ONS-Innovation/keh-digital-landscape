@@ -8,9 +8,9 @@ import EngagedUsersGraph from "./EngagedUsersGraph";
 import PieChart from "./PieChart";
 import TableBreakdown from "./TableBreakdown";
 
-function LiveDashboard({scope, data, isLoading, inactiveDays, inactivityDate}) {
+function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, inactivityDate}) {
 
-  let completions, chats, seats;
+  let completions, chats, seats, inactiveUsers;
   if(!isLoading) {
     completions = data.processedUsage.completions;
     chats = data.processedUsage.chat;
@@ -20,7 +20,7 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, inactivityDate}) {
       seats.activeSeatData.map(user => user.assignee.id)
     );
     
-    const inactiveUsers = seats.allSeatData.filter(
+    inactiveUsers = seats.allSeatData.filter(
       user => !activeUsers.has(user.assignee.id)
     );
   }
@@ -200,7 +200,11 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, inactivityDate}) {
           <div>Loading seat info...</div>
           ) : (
             <div>
-              <p>Users are considered inactive after {inactiveDays} days ({inactivityDate})</p>
+              <div className="inactivity-info">
+                <p>Users are considered inactive after {inactiveDays} days ({inactivityDate})</p>
+                <div className="inactivity-button" onClick={() => setInactiveDays((prev) => prev + 1)}>+</div>
+                <div className="inactivity-button" onClick={() => setInactiveDays((prev) => (prev > 0 ? prev - 1 : prev))}>-</div>
+              </div>
               <div className="copilot-grid">
                   <div className="stat-card">
                     <h3>Number of Seats</h3>
@@ -241,7 +245,7 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, inactivityDate}) {
                   <div>
                     <h4>Inactive Users</h4>
                     <TableBreakdown
-                      data={seats.activeSeatData.reduce((acc, user, i) => {
+                      data={inactiveUsers.reduce((acc, user, i) => {
                         acc[i] = {
                           avatar: user.assignee.avatar_url,
                           username: user.assignee.login,

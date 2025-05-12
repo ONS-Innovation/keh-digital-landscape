@@ -41,6 +41,20 @@
     align-items: center;
   }
 
+  .inactivity-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .inactivity-button {
+    background-color: #242424;
+    padding: 5px 10px;
+    margin-left: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
   .dashboard-header {
     /* Will be added in later PR */
   }

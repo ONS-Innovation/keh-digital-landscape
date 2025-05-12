@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { ThemeProvider } from "../contexts/ThemeContext";
 import Header from "../components/Header/Header";
 import LiveDashboard from "../components/CoPilot/LiveDashboard";
@@ -26,7 +26,11 @@ function CopilotDashboard() {
   });
   
   const [inactiveDays, setInactiveDays] = useState(28);
-  const [inactivityDate, setInactivityDate] = useState(null);
+  const inactivityDate = useMemo(() => {
+    const date = new Date();
+    date.setDate(date.getDate() - inactiveDays);
+    return date.toISOString().slice(0, 10);
+  }, [inactiveDays]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [viewMode, setViewMode] = useState("live");
@@ -49,7 +53,6 @@ function CopilotDashboard() {
       end = end.toISOString().slice(0, 10);
       start = start.toISOString().slice(0, 10);
     
-      setInactivityDate(start);
       setStartDate(start);
       setEndDate(end);
 
@@ -88,7 +91,7 @@ function CopilotDashboard() {
       ...prev,
       activeSeatData: active,
     }));
-  }, [inactiveDays, inactivityDate]);
+  }, [inactiveDays, inactivityDate, liveOrgData.allSeatData]);
 
   //TODO: Add to contexts
 
@@ -121,7 +124,8 @@ function CopilotDashboard() {
               scope={scope} 
               data={data} 
               isLoading={isLoading} 
-              inactiveDays={inactiveDays} 
+              inactiveDays={inactiveDays}
+              setInactiveDays={setInactiveDays} 
               inactivityDate={inactivityDate}/>
             ) : (
               <HistoricDashboard 
