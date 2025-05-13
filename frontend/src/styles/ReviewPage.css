@@ -82,6 +82,22 @@
     gap: 16px;
   }
 
+  .admin-details {
+    text-align: left;
+    position: sticky;
+    top: calc(var(--header-height) - 1px);
+    background: hsl(var(--background));
+    z-index: 10;
+    padding: 16px 24px;
+    box-sizing: border-box;
+    width: 100%;
+    border-bottom: 1px solid hsl(var(--border));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
   .admin-header-left {
     gap: 16px;
     width: 100%;

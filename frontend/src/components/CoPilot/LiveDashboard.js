@@ -7,6 +7,7 @@ import AcceptanceGraph from "./AcceptanceGraph";
 import EngagedUsersGraph from "./EngagedUsersGraph";
 import PieChart from "./PieChart";
 import TableBreakdown from "./TableBreakdown";
+import { getFormattedTime } from "../../utilities/getFormattedTime";
 
 function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, inactivityDate}) {
 
@@ -228,7 +229,7 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
                           avatar: user.assignee.avatar_url,
                           username: user.assignee.login,
                           github: `https://github.com/${user.assignee.login}`,
-                          lastActivity: user.last_activity_at
+                          lastActivity: getFormattedTime(user.last_activity_at)
                         };
                         return acc;
                       }, {})}
@@ -250,7 +251,7 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
                           avatar: user.assignee.avatar_url,
                           username: user.assignee.login,
                           github: `https://github.com/${user.assignee.login}`,
-                          lastActivity: user.last_activity_at
+                          lastActivity: getFormattedTime(user.last_activity_at)
                         };
                         return acc;
                       }, {})}
