@@ -1,4 +1,4 @@
-.copilot-grid {
+  .copilot-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
@@ -48,10 +48,11 @@
   }
 
   .inactivity-button {
-    background-color: #242424;
+    background: hsl(var(--muted));
+    border: 1px solid hsl(var(--border));
     padding: 5px 10px;
     margin-left: 5px;
-    border-radius: 5px;
+    border-radius: var(--radius);
     cursor: pointer;
   }
 
