@@ -127,23 +127,20 @@ function CopilotDashboard() {
         <div className="admin-container">
           <div className="dashboard-header">
           {/* <p>View Data Type</p>  */} {/* Will be introduced in next page PR */}
-            <div>
-              <p>Filter Live Data Range</p>
+            <div id="slider">
+              <p id="filter-text">Filter Live Data Range</p>
               {isLoading ? (
                 <p>Loading dates...</p>
               ) :  (
               <div>
                 <p>Start: {startDate}</p>
-                <Slider 
+                <Slider
                 range
                 min={1}
                 max={28}
                 value={sliderValues}
                 onChange={handleSliderChange}
                 allowCross={false}
-                trackStyle={[{ backgroundColor: '#ccc' }]}
-                handleStyle={[{ borderColor: '#fff' }, { borderColor: '#fff' }]}
-                railStyle={{ backgroundColor: '#666' }}
                 />
                 <p>End: {endDate}</p>
               </div>
