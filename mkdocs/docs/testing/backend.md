@@ -15,7 +15,6 @@ The backend tests are implemented in the `testing/backend/` directory using the 
 ### Base Configuration
 
 All tests use a common base URL configuration:
-
 ```python
 BASE_URL = "http://localhost:5001"
 ```
@@ -200,6 +199,50 @@ The banner endpoint tests verify:
 - Missing messages.json is handled gracefully
 - Response structure is consistent and valid
 - Error cases are properly handled with appropriate status codes
+
+## Technology Management Endpoints
+
+### Array Data Retrieval
+
+Tests the data can be retrieved:
+
+::: testing.backend.test_admin.test_admin_get_array_data
+
+### Update Single Category in Array Data
+
+Update single category in the array data:
+
+::: testing.backend.test_admin.test_admin_update_array_data_single_category
+
+### Update Multiple Category in Array Data
+
+Update multiple categories in the array data:
+
+::: testing.backend.test_admin.test_admin_update_array_data_all_categories
+
+### Update Array Data with Invalid Payload
+
+Update array data with an invalid payload.
+
+::: testing.backend.test_admin.test_admin_update_array_data_invalid
+
+### Admin Tech Radar Retrieval
+
+Admin get tech radar data:
+
+::: testing.backend.test_admin.test_admin_get_tech_radar
+
+### Update technology (positive)
+
+Admin normalise technology with a positive payload.
+
+::: testing.backend.test_admin.test_admin_normalise_technology_positive
+
+### Update technology (invalid)
+
+Admin normalise technology with an invalid payload.
+
+::: testing.backend.test_admin.test_admin_normalise_technology_invalid
 
 ## Error Handling Tests
 

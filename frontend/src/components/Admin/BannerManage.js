@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import MultiSelect from "../MultiSelect/MultiSelect";
+import {
+  fetchExistingBanners,
+  saveBanner,
+  toggleBanner,
+  deleteBanner
+} from "../../utilities/adminBanner";
 
 const BannerManage = () => {
   // Banner management state
@@ -20,28 +26,16 @@ const BannerManage = () => {
   ];
 
   useEffect(() => {
-    fetchExistingBanners();
+    loadExistingBanners();
   }, []);
 
   /**
    * Fetches existing banners from the backend
    */
-  const fetchExistingBanners = async () => {
+  const loadExistingBanners = async () => {
     try {
-      const baseUrl =
-        process.env.NODE_ENV === "development"
-          ? "http://localhost:5001/admin/api/banners"
-          : "/admin/api/banners";
-
-      const response = await fetch(baseUrl);
-      if (!response.ok) {
-        throw new Error("Failed to fetch banners");
-      }
-
-      const data = await response.json();
-      if (data.messages && Array.isArray(data.messages)) {
-        setExistingBanners(data.messages);
-      }
+      const banners = await fetchExistingBanners();
+      setExistingBanners(banners);
     } catch (error) {
       console.error("Error fetching existing banners:", error);
       toast.error("Failed to load existing banners");
@@ -60,11 +54,6 @@ const BannerManage = () => {
    */
   const handleSaveBannerConfirm = async () => {
     try {
-      const baseUrl =
-        process.env.NODE_ENV === "development"
-          ? "http://localhost:5001/admin/api/banners/update"
-          : "/admin/api/banners/update";
-
       const bannerData = {
         message: bannerMessage,
         title: bannerTitle,
@@ -73,18 +62,8 @@ const BannerManage = () => {
         show: true,
       };
 
-      const response = await fetch(baseUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ banner: bannerData }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to save banner");
-      }
-
+      await saveBanner(bannerData);
+      
       setBannerSaveStatus("success");
       toast.success("Banner saved successfully!");
 
@@ -96,7 +75,7 @@ const BannerManage = () => {
         setSelectedPages([]);
         setShowBannerConfirmModal(false);
         setBannerSaveStatus(null);
-        fetchExistingBanners(); // Refresh the list of banners
+        loadExistingBanners(); // Refresh the list of banners
       }, 2000);
     } catch (error) {
       console.error("Error saving banner:", error);
@@ -118,25 +97,7 @@ const BannerManage = () => {
    */
   const handleToggleBanner = async (index, shouldShow) => {
     try {
-      const baseUrl =
-        process.env.NODE_ENV === "development"
-          ? "http://localhost:5001/admin/api/banners/toggle"
-          : "/admin/api/banners/toggle";
-
-      const response = await fetch(baseUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          index,
-          show: shouldShow,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to toggle banner visibility");
-      }
+      await toggleBanner(index, shouldShow);
 
       // Update local state
       const updatedBanners = [...existingBanners];
@@ -158,22 +119,7 @@ const BannerManage = () => {
    */
   const handleDeleteBanner = async (index) => {
     try {
-      const baseUrl =
-        process.env.NODE_ENV === "development"
-          ? "http://localhost:5001/admin/api/banners/delete"
-          : "/admin/api/banners/delete";
-
-      const response = await fetch(baseUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ index }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete banner");
-      }
+      await deleteBanner(index);
 
       // Update local state
       const updatedBanners = existingBanners.filter((_, i) => i !== index);

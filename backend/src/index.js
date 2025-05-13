@@ -16,6 +16,7 @@ const fetch = require("node-fetch");
 const logger = require('./config/logger');
 const { transformProjectToCSVFormat } = require('./utilities/projectDataTransformer');
 const { getAppAndInstallation } = require ("./utilities/getAppAndInstallation.js");
+const { updateTechnologyInArray } = require('./utilities/updateTechnologyInArray');
 
 const app = express();
 const port = process.env.PORT || 5001;
@@ -870,6 +871,12 @@ app.post("/admin/api/array-data/update", async (req, res) => {
       // For all categories update, replace the entire object
       arrayData = items;
     } else {
+      // Validate that the category exists in the current data to prevent category injection
+      if (!Object.keys(arrayData).includes(category)) {
+        logger.error("Invalid category attempted:", { category });
+        return res.status(400).json({ error: "Invalid category. The specified category does not exist." });
+      }
+      
       // For single category update, update just that category
       arrayData[category] = items;
     }
@@ -991,67 +998,172 @@ app.post("/admin/api/normalise-technology", async (req, res) => {
     let updateCount = 0;
     projectData.projects = projectData.projects.map(project => {
       let updated = false;
-
+      const architecture = project.architecture;
+      
       // Update languages
-      if (project.architecture.languages) {
-        if (project.architecture.languages.main) {
-          const index = project.architecture.languages.main.indexOf(from);
-          if (index !== -1) {
-            project.architecture.languages.main[index] = to;
-            updated = true;
-          }
+      if (architecture.languages) {
+        const mainResult = updateTechnologyInArray(architecture.languages.main, from, to);
+        const othersResult = updateTechnologyInArray(architecture.languages.others, from, to);
+        
+        if (mainResult.updated) {
+          architecture.languages.main = mainResult.array;
+          updated = true;
         }
-        if (project.architecture.languages.others) {
-          const index = project.architecture.languages.others.indexOf(from);
-          if (index !== -1) {
-            project.architecture.languages.others[index] = to;
-            updated = true;
-          }
+        
+        if (othersResult.updated) {
+          architecture.languages.others = othersResult.array;
+          updated = true;
         }
       }
 
       // Update frameworks
-      if (project.architecture.frameworks?.others) {
-        const index = project.architecture.frameworks.others.indexOf(from);
-        if (index !== -1) {
-          project.architecture.frameworks.others[index] = to;
-          updated = true;
-        }
+      const frameworksResult = updateTechnologyInArray(architecture.frameworks?.others, from, to);
+      if (frameworksResult.updated) {
+        architecture.frameworks.others = frameworksResult.array;
+        updated = true;
       }
 
       // Update infrastructure
-      if (project.architecture.infrastructure?.others) {
-        const index = project.architecture.infrastructure.others.indexOf(from);
-        if (index !== -1) {
-          project.architecture.infrastructure.others[index] = to;
-          updated = true;
-        }
+      const infrastructureResult = updateTechnologyInArray(architecture.infrastructure?.others, from, to);
+      if (infrastructureResult.updated) {
+        architecture.infrastructure.others = infrastructureResult.array;
+        updated = true;
       }
 
       // Update CICD
-      if (project.architecture.cicd?.others) {
-        const index = project.architecture.cicd.others.indexOf(from);
-        if (index !== -1) {
-          project.architecture.cicd.others[index] = to;
+      const cicdResult = updateTechnologyInArray(architecture.cicd?.others, from, to);
+      if (cicdResult.updated) {
+        architecture.cicd.others = cicdResult.array;
+        updated = true;
+      }
+
+      // Update database
+      if (architecture.database) {
+        const dbMainResult = updateTechnologyInArray(architecture.database.main, from, to);
+        const dbOthersResult = updateTechnologyInArray(architecture.database.others, from, to);
+        
+        if (dbMainResult.updated) {
+          architecture.database.main = dbMainResult.array;
+          updated = true;
+        }
+        
+        if (dbOthersResult.updated) {
+          architecture.database.others = dbOthersResult.array;
           updated = true;
         }
       }
 
-      // Update database
-      if (project.architecture.database) {
-        if (project.architecture.database.main) {
-          const index = project.architecture.database.main.indexOf(from);
-          if (index !== -1) {
-            project.architecture.database.main[index] = to;
+      // Update supporting tools
+      if (project.supporting_tools) {
+        const supportingTools = project.supporting_tools;
+        
+        // Update code_editors
+        if (supportingTools.code_editors) {
+          const codeEditorsMainResult = updateTechnologyInArray(supportingTools.code_editors.main, from, to);
+          const codeEditorsOthersResult = updateTechnologyInArray(supportingTools.code_editors.others, from, to);
+          
+          if (codeEditorsMainResult.updated) {
+            supportingTools.code_editors.main = codeEditorsMainResult.array;
+            updated = true;
+          }
+          
+          if (codeEditorsOthersResult.updated) {
+            supportingTools.code_editors.others = codeEditorsOthersResult.array;
             updated = true;
           }
         }
-        if (project.architecture.database.others) {
-          const index = project.architecture.database.others.indexOf(from);
-          if (index !== -1) {
-            project.architecture.database.others[index] = to;
+        
+        // Update user_interface
+        if (supportingTools.user_interface) {
+          const uiMainResult = updateTechnologyInArray(supportingTools.user_interface.main, from, to);
+          const uiOthersResult = updateTechnologyInArray(supportingTools.user_interface.others, from, to);
+          
+          if (uiMainResult.updated) {
+            supportingTools.user_interface.main = uiMainResult.array;
             updated = true;
           }
+          
+          if (uiOthersResult.updated) {
+            supportingTools.user_interface.others = uiOthersResult.array;
+            updated = true;
+          }
+        }
+        
+        // Update diagrams
+        if (supportingTools.diagrams) {
+          const diagramsMainResult = updateTechnologyInArray(supportingTools.diagrams.main, from, to);
+          const diagramsOthersResult = updateTechnologyInArray(supportingTools.diagrams.others, from, to);
+          
+          if (diagramsMainResult.updated) {
+            supportingTools.diagrams.main = diagramsMainResult.array;
+            updated = true;
+          }
+          
+          if (diagramsOthersResult.updated) {
+            supportingTools.diagrams.others = diagramsOthersResult.array;
+            updated = true;
+          }
+        }
+        
+        // Update documentation
+        if (supportingTools.documentation) {
+          const docMainResult = updateTechnologyInArray(supportingTools.documentation.main, from, to);
+          const docOthersResult = updateTechnologyInArray(supportingTools.documentation.others, from, to);
+          
+          if (docMainResult.updated) {
+            supportingTools.documentation.main = docMainResult.array;
+            updated = true;
+          }
+          
+          if (docOthersResult.updated) {
+            supportingTools.documentation.others = docOthersResult.array;
+            updated = true;
+          }
+        }
+        
+        // Update communication
+        if (supportingTools.communication) {
+          const commMainResult = updateTechnologyInArray(supportingTools.communication.main, from, to);
+          const commOthersResult = updateTechnologyInArray(supportingTools.communication.others, from, to);
+          
+          if (commMainResult.updated) {
+            supportingTools.communication.main = commMainResult.array;
+            updated = true;
+          }
+          
+          if (commOthersResult.updated) {
+            supportingTools.communication.others = commOthersResult.array;
+            updated = true;
+          }
+        }
+        
+        // Update collaboration
+        if (supportingTools.collaboration) {
+          const collabMainResult = updateTechnologyInArray(supportingTools.collaboration.main, from, to);
+          const collabOthersResult = updateTechnologyInArray(supportingTools.collaboration.others, from, to);
+          
+          if (collabMainResult.updated) {
+            supportingTools.collaboration.main = collabMainResult.array;
+            updated = true;
+          }
+          
+          if (collabOthersResult.updated) {
+            supportingTools.collaboration.others = collabOthersResult.array;
+            updated = true;
+          }
+        }
+        
+        // Update project_tracking and incident_management if they're string values
+        if (typeof supportingTools.project_tracking === 'string' && 
+            supportingTools.project_tracking === from) {
+          supportingTools.project_tracking = to;
+          updated = true;
+        }
+        
+        if (typeof supportingTools.incident_management === 'string' && 
+            supportingTools.incident_management === from) {
+          supportingTools.incident_management = to;
+          updated = true;
         }
       }
 

@@ -204,16 +204,6 @@
   border-color: var(--color-hold);
 }
 
-.review-box {
-  background: var(--color-bg-review);
-  border-color: var(--color-review);
-}
-
-.ignore-box {
-  background: var(--color-bg-ignore);
-  border-color: var(--color-ignore);
-}
-
 .admin-box-add {
   justify-content: space-around;
   padding: 16px;
