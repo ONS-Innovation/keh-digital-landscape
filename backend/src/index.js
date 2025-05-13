@@ -14,6 +14,7 @@ const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const fetch = require("node-fetch");
 const logger = require('./config/logger');
 const { transformProjectToCSVFormat } = require('./utilities/projectDataTransformer');
+const { updateTechnologyInArray } = require('./utilities/updateTechnologyInArray');
 
 const app = express();
 const port = process.env.PORT || 5001;
@@ -736,6 +737,134 @@ app.get("/api/banners/all", async (req, res) => {
 });
 
 /**
+ * Endpoint for fetching array data from the Tech Audit Tool bucket.
+ * @route GET /admin/api/array-data
+ * @returns {Object} Object containing categorized technology arrays
+ * @throws {Error} 500 - If fetching operation fails
+ */
+app.get("/admin/api/array-data", async (req, res) => {
+  try {
+    const command = new GetObjectCommand({
+      Bucket: tatBucketName,
+      Key: "array_data.json",
+    });
+
+    try {
+      const { Body } = await s3Client.send(command);
+      const arrayData = JSON.parse(await Body.transformToString());
+      
+      res.json(arrayData);
+    } catch (error) {
+      logger.error("Error fetching array data:", { error: error.message });
+      res.status(500).json({ error: "Failed to fetch technology data" });
+    }
+  } catch (error) {
+    logger.error("Error in array data endpoint:", { error: error.message });
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * Endpoint for updating array data in the Tech Audit Tool bucket.
+ * @route POST /admin/api/array-data/update
+ * @param {Object} req.body - The updated array data
+ * @param {boolean} [req.body.allCategories] - Whether this is updating all categories at once
+ * @param {string} [req.body.category] - Category to update (for single category updates)
+ * @param {string[]} [req.body.items] - Updated list of items for the category (for single category updates)
+ * @param {Object} [req.body.items] - Complete array data object (for all categories update)
+ * @returns {Object} Success message or error response
+ * @throws {Error} 400 - If data is invalid
+ * @throws {Error} 500 - If update operation fails
+ */
+app.post("/admin/api/array-data/update", async (req, res) => {
+  try {
+    const { allCategories, category, items } = req.body;
+
+    // Validate input
+    if (allCategories) {
+      if (!items || typeof items !== 'object') {
+        return res.status(400).json({ error: "Invalid data format. Complete items object is required for all categories update." });
+      }
+    } else {
+      if (!category || !items || !Array.isArray(items)) {
+        return res.status(400).json({ error: "Invalid data format. Category and items array are required for single category update." });
+      }
+    }
+
+    // Get existing array data
+    const getCommand = new GetObjectCommand({
+      Bucket: tatBucketName,
+      Key: "array_data.json",
+    });
+
+    let arrayData;
+    try {
+      const { Body } = await s3Client.send(getCommand);
+      arrayData = JSON.parse(await Body.transformToString());
+    } catch (error) {
+      logger.error("Error fetching existing array data:", { error: error.message });
+      return res.status(500).json({ error: "Failed to fetch existing data for update" });
+    }
+
+    // Update the data
+    if (allCategories) {
+      // For all categories update, replace the entire object
+      arrayData = items;
+    } else {
+      // Validate that the category exists in the current data to prevent category injection
+      if (!Object.keys(arrayData).includes(category)) {
+        logger.error("Invalid category attempted:", { category });
+        return res.status(400).json({ error: "Invalid category. The specified category does not exist." });
+      }
+      
+      // For single category update, update just that category
+      arrayData[category] = items;
+    }
+
+    // Save the updated data back to S3
+    const putCommand = new PutObjectCommand({
+      Bucket: tatBucketName,
+      Key: "array_data.json",
+      Body: JSON.stringify(arrayData, null, 2),
+      ContentType: "application/json",
+    });
+
+    await s3Client.send(putCommand);
+    res.json({ 
+      message: allCategories 
+        ? "All technology lists updated successfully" 
+        : `Technology list for ${category} updated successfully` 
+    });
+  } catch (error) {
+    logger.error("Error updating array data:", { error: error.message });
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * Endpoint for fetching tech radar data for the admin page.
+ * @route GET /admin/api/tech-radar
+ * @returns {Object} The tech radar configuration data
+ * @throws {Error} 500 - If JSON fetching fails
+ */
+app.get("/admin/api/tech-radar", async (req, res) => {
+  try {
+    const command = new GetObjectCommand({
+      Bucket: bucketName,
+      Key: "onsRadarSkeleton.json",
+    });
+
+    const { Body } = await s3Client.send(command);
+    const radarData = JSON.parse(await Body.transformToString());
+    
+    res.json(radarData);
+  } catch (error) {
+    logger.error("Error fetching tech radar data:", { error: error.message });
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
  * Health check endpoint to verify server status.
  * @route GET /api/health
  * @returns {Object} Health status information
@@ -769,6 +898,125 @@ app.get("/api/health", (req, res) => {
   logger.debug("Health check details", healthResponse);
 
   res.status(200).json(healthResponse);
+});
+
+/**
+ * Endpoint for normalizing technology names in project data.
+ * @route POST /admin/api/normalise-technology
+ * @param {Object} req.body - The normalization data
+ * @param {string} req.body.from - Original technology name
+ * @param {string} req.body.to - New technology name
+ * @returns {Object} Success message or error response
+ * @throws {Error} 400 - If data is invalid
+ * @throws {Error} 500 - If normalization operation fails
+ */
+app.post("/admin/api/normalise-technology", async (req, res) => {
+  try {
+    const { from, to } = req.body;
+
+    // Validate input
+    if (!from || !to) {
+      return res.status(400).json({ error: "Both 'from' and 'to' values are required" });
+    }
+
+    // Get existing project data
+    const command = new GetObjectCommand({
+      Bucket: tatBucketName,
+      Key: "new_project_data.json",
+    });
+
+    let projectData;
+    try {
+      const { Body } = await s3Client.send(command);
+      projectData = JSON.parse(await Body.transformToString());
+    } catch (error) {
+      logger.error("Error fetching project data:", { error: error.message });
+      return res.status(500).json({ error: "Failed to fetch project data" });
+    }
+
+    // Update technology names in project data
+    let updateCount = 0;
+    projectData.projects = projectData.projects.map(project => {
+      let updated = false;
+      const architecture = project.architecture;
+      
+      // Update languages
+      if (architecture.languages) {
+        const mainResult = updateTechnologyInArray(architecture.languages.main, from, to);
+        const othersResult = updateTechnologyInArray(architecture.languages.others, from, to);
+        
+        if (mainResult.updated) {
+          architecture.languages.main = mainResult.array;
+          updated = true;
+        }
+        
+        if (othersResult.updated) {
+          architecture.languages.others = othersResult.array;
+          updated = true;
+        }
+      }
+
+      // Update frameworks
+      const frameworksResult = updateTechnologyInArray(architecture.frameworks?.others, from, to);
+      if (frameworksResult.updated) {
+        architecture.frameworks.others = frameworksResult.array;
+        updated = true;
+      }
+
+      // Update infrastructure
+      const infrastructureResult = updateTechnologyInArray(architecture.infrastructure?.others, from, to);
+      if (infrastructureResult.updated) {
+        architecture.infrastructure.others = infrastructureResult.array;
+        updated = true;
+      }
+
+      // Update CICD
+      const cicdResult = updateTechnologyInArray(architecture.cicd?.others, from, to);
+      if (cicdResult.updated) {
+        architecture.cicd.others = cicdResult.array;
+        updated = true;
+      }
+
+      // Update database
+      if (architecture.database) {
+        const dbMainResult = updateTechnologyInArray(architecture.database.main, from, to);
+        const dbOthersResult = updateTechnologyInArray(architecture.database.others, from, to);
+        
+        if (dbMainResult.updated) {
+          architecture.database.main = dbMainResult.array;
+          updated = true;
+        }
+        
+        if (dbOthersResult.updated) {
+          architecture.database.others = dbOthersResult.array;
+          updated = true;
+        }
+      }
+
+      if (updated) {
+        updateCount++;
+      }
+
+      return project;
+    });
+
+    // Save the updated data back to S3
+    const putCommand = new PutObjectCommand({
+      Bucket: tatBucketName,
+      Key: "new_project_data.json",
+      Body: JSON.stringify(projectData, null, 2),
+      ContentType: "application/json",
+    });
+
+    await s3Client.send(putCommand);
+    res.json({ 
+      message: "Technology names normalised successfully",
+      updatedProjects: updateCount
+    });
+  } catch (error) {
+    logger.error("Error normalizing technology names:", { error: error.message });
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // Add error handling
