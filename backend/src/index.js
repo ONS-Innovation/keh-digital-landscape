@@ -993,6 +993,120 @@ app.post("/admin/api/normalise-technology", async (req, res) => {
         }
       }
 
+      // Update supporting tools
+      if (project.supporting_tools) {
+        const supportingTools = project.supporting_tools;
+        
+        // Update code_editors
+        if (supportingTools.code_editors) {
+          const codeEditorsMainResult = updateTechnologyInArray(supportingTools.code_editors.main, from, to);
+          const codeEditorsOthersResult = updateTechnologyInArray(supportingTools.code_editors.others, from, to);
+          
+          if (codeEditorsMainResult.updated) {
+            supportingTools.code_editors.main = codeEditorsMainResult.array;
+            updated = true;
+          }
+          
+          if (codeEditorsOthersResult.updated) {
+            supportingTools.code_editors.others = codeEditorsOthersResult.array;
+            updated = true;
+          }
+        }
+        
+        // Update user_interface
+        if (supportingTools.user_interface) {
+          const uiMainResult = updateTechnologyInArray(supportingTools.user_interface.main, from, to);
+          const uiOthersResult = updateTechnologyInArray(supportingTools.user_interface.others, from, to);
+          
+          if (uiMainResult.updated) {
+            supportingTools.user_interface.main = uiMainResult.array;
+            updated = true;
+          }
+          
+          if (uiOthersResult.updated) {
+            supportingTools.user_interface.others = uiOthersResult.array;
+            updated = true;
+          }
+        }
+        
+        // Update diagrams
+        if (supportingTools.diagrams) {
+          const diagramsMainResult = updateTechnologyInArray(supportingTools.diagrams.main, from, to);
+          const diagramsOthersResult = updateTechnologyInArray(supportingTools.diagrams.others, from, to);
+          
+          if (diagramsMainResult.updated) {
+            supportingTools.diagrams.main = diagramsMainResult.array;
+            updated = true;
+          }
+          
+          if (diagramsOthersResult.updated) {
+            supportingTools.diagrams.others = diagramsOthersResult.array;
+            updated = true;
+          }
+        }
+        
+        // Update documentation
+        if (supportingTools.documentation) {
+          const docMainResult = updateTechnologyInArray(supportingTools.documentation.main, from, to);
+          const docOthersResult = updateTechnologyInArray(supportingTools.documentation.others, from, to);
+          
+          if (docMainResult.updated) {
+            supportingTools.documentation.main = docMainResult.array;
+            updated = true;
+          }
+          
+          if (docOthersResult.updated) {
+            supportingTools.documentation.others = docOthersResult.array;
+            updated = true;
+          }
+        }
+        
+        // Update communication
+        if (supportingTools.communication) {
+          const commMainResult = updateTechnologyInArray(supportingTools.communication.main, from, to);
+          const commOthersResult = updateTechnologyInArray(supportingTools.communication.others, from, to);
+          
+          if (commMainResult.updated) {
+            supportingTools.communication.main = commMainResult.array;
+            updated = true;
+          }
+          
+          if (commOthersResult.updated) {
+            supportingTools.communication.others = commOthersResult.array;
+            updated = true;
+          }
+        }
+        
+        // Update collaboration
+        if (supportingTools.collaboration) {
+          const collabMainResult = updateTechnologyInArray(supportingTools.collaboration.main, from, to);
+          const collabOthersResult = updateTechnologyInArray(supportingTools.collaboration.others, from, to);
+          
+          if (collabMainResult.updated) {
+            supportingTools.collaboration.main = collabMainResult.array;
+            updated = true;
+          }
+          
+          if (collabOthersResult.updated) {
+            supportingTools.collaboration.others = collabOthersResult.array;
+            updated = true;
+          }
+        }
+        
+        // Update project_tracking and incident_management if they're string values
+        if (typeof supportingTools.project_tracking === 'string' && 
+            supportingTools.project_tracking === from) {
+          supportingTools.project_tracking = to;
+          updated = true;
+        }
+        
+        if (typeof supportingTools.incident_management === 'string' && 
+            supportingTools.incident_management === from) {
+          supportingTools.incident_management = to;
+          updated = true;
+        }
+      }
+
       if (updated) {
         updateCount++;
       }
