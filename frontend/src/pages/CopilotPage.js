@@ -7,6 +7,8 @@ import { fetchSeatData, filterInactiveUsers } from "../utilities/getSeatData";
 import { fetchOrgLiveUsageData, filterUsageData, processUsageData } from "../utilities/getUsageData";
 import PageBanner from "../components/PageBanner";
 import "../styles/CoPilotPage.css";
+import Slider, { Range } from 'rc-slider';
+import "rc-slider/assets/index.css";
 
 function CopilotDashboard() {
 
@@ -25,6 +27,7 @@ function CopilotDashboard() {
     activeSeatData: []
   });
   
+  const [sliderValues, setSliderValues] = useState([1, 28]);
   const [inactiveDays, setInactiveDays] = useState(28);
   const inactivityDate = useMemo(() => {
     const date = new Date();
@@ -37,6 +40,18 @@ function CopilotDashboard() {
   const [scope, setScope] = useState("organisation");
   const data = getDashboardData();
   const [isLoading, setIsLoading] = useState(true);
+
+  const handleSliderChange = (values) => {
+    setSliderValues(values);
+
+    const newStart = new Date();
+    newStart.setDate(newStart.getDate() - values[1]);
+    const newEnd = new Date();
+    newEnd.setDate(newEnd.getDate() - values[0]);
+
+    setStartDate(newStart.toISOString().slice(0, 10));
+    setEndDate(newEnd.toISOString().slice(0, 10));
+  };
   
   /**
    * Set states from API data
@@ -111,10 +126,29 @@ function CopilotDashboard() {
         />
         <div className="admin-container">
           <div className="dashboard-header">
-          {/* Will be introduced in next page PR */}
-          {/* <p>View Data Type</p>  */}
-          <p>Filter Live Data Range</p>
-          <p>TODO</p>
+          {/* <p>View Data Type</p>  */} {/* Will be introduced in next page PR */}
+            <div>
+              <p>Filter Live Data Range</p>
+              {isLoading ? (
+                <p>Loading dates...</p>
+              ) :  (
+              <div>
+                <p>Start: {startDate}</p>
+                <Slider 
+                range
+                min={1}
+                max={28}
+                value={sliderValues}
+                onChange={handleSliderChange}
+                allowCross={false}
+                trackStyle={[{ backgroundColor: '#ccc' }]}
+                handleStyle={[{ borderColor: '#fff' }, { borderColor: '#fff' }]}
+                railStyle={{ backgroundColor: '#666' }}
+                />
+                <p>End: {endDate}</p>
+              </div>
+              )}
+            </div>
           </div>
           <div>
 
