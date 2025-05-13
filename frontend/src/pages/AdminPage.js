@@ -28,23 +28,6 @@ const AdminPage = () => {
           tabs={tabs}
           activeTab={activeTab}
           onTabChange={setActiveTab}/>
-        <div className={`admin-content ${activeTab === "banner" ? "active" : ""}`}>
-          <BannerManage />
-            </div>
-        <div className={`admin-content ${activeTab === "tech" ? "active" : ""}`}>
-          <TechManage />
-          </div>
-          <div className="admin-tabs">
-          {tabs.map((tab) => (
-            <div
-              key={tab.id}
-              className={`admin-tab ${activeTab === tab.id ? "active" : ""}`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              {tab.label}
-                    </div>
-                  ))}
-          </div>
         </div>
 
         <div className={`admin-content ${activeTab === "banner" ? "active" : ""}`}>

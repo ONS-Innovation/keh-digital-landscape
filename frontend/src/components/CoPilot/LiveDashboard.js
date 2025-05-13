@@ -8,6 +8,7 @@ import EngagedUsersGraph from "./EngagedUsersGraph";
 import PieChart from "./PieChart";
 import TableBreakdown from "./TableBreakdown";
 import { getFormattedTime } from "../../utilities/getFormattedTime";
+import { getCellRenderers } from "../../utilities/getCellRenderers";
 
 function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, inactivityDate}) {
 
@@ -241,6 +242,7 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
                         github: "GitHub Profile",
                         lastActivity: "Last Activity"
                       }}
+                      customCellRenderers={getCellRenderers()}
                     />
                   </div>
                   <div>
@@ -263,6 +265,7 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
                         github: "GitHub Profile",
                         lastActivity: "Last Activity"
                       }}
+                      customCellRenderers={getCellRenderers()}
                     />
                   </div>
                 </div>
