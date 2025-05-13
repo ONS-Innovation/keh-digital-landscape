@@ -1,4 +1,7 @@
 export const getFormattedTime = (isoString) => {
+    if(!isoString) {
+      return "No Activity";
+    }
     const date = new Date(isoString);
   
     const options = {
