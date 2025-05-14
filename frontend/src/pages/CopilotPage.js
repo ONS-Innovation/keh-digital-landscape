@@ -7,7 +7,7 @@ import { fetchSeatData, filterInactiveUsers } from "../utilities/getSeatData";
 import { fetchOrgLiveUsageData, filterUsageData, processUsageData } from "../utilities/getUsageData";
 import PageBanner from "../components/PageBanner";
 import "../styles/CoPilotPage.css";
-import Slider, { Range } from 'rc-slider';
+import Slider from 'rc-slider';
 import "rc-slider/assets/index.css";
 
 function CopilotDashboard() {
