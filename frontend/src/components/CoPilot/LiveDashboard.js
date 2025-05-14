@@ -44,27 +44,27 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
               <div className="copilot-grid">
                 <div className="stat-card">
                   <h3>Total Suggestions</h3>
-                  <p>{completions.totalSuggestions}</p>
+                  <p>{completions?.totalSuggestions ?? 0}</p>
                 </div>
                 <div className="stat-card">
                   <h3>Total Acceptances</h3>
-                  <p>{completions.totalAcceptances}</p>
+                  <p>{completions?.totalAcceptances ?? 0}</p>
                 </div>
                 <div className="stat-card">
                   <h3>Acceptance Rate</h3>
-                  <p>{getPercentage(completions.acceptanceRate)}</p>
+                  <p>{getPercentage(completions?.acceptanceRate ?? 0)}</p>
                 </div>
                 <div className="stat-card">
                   <h3>Total Lines of Code Suggested</h3>
-                  <p>{completions.totalLinesSuggested}</p>
+                  <p>{completions?.totalLinesSuggested ?? 0}</p>
                 </div>
                 <div className="stat-card">
                   <h3>Total Lines of Code Accepted</h3>
-                  <p>{completions.totalLinesAccepted}</p>
+                  <p>{completions?.totalLinesAccepted ?? 0}</p>
                 </div>
                 <div className="stat-card">
                   <h3>Line Acceptance Rate</h3>
-                  <p>{getPercentage(completions.lineAcceptanceRate)}</p>
+                  <p>{getPercentage(completions?.lineAcceptanceRate ?? 0)}</p>
                 </div>
               </div>
             </div>
@@ -73,20 +73,20 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
           {isLoading ? (
             <div>Loading graph...</div>
           ) : (
-            <AcceptanceGraph data={completions.perDay}/>
+            <AcceptanceGraph data={completions?.perDay ?? 0}/>
           )}
           <h4>Engaged Users By Day</h4>
           {isLoading ? (
             <div>Loading graph...</div>
           ) : (
-            <EngagedUsersGraph data={completions.perDay}/>
+            <EngagedUsersGraph data={completions?.perDay ?? 0}/>
           )}
           {isLoading ? (
             <div className="pie-chart-loading">Loading pie charts...</div>
           ) : (
             <div className="copilot-charts-container">
-              <PieChart engagedUsers={completions.engagedUsersByLanguage} title={"Engaged Users by Language"}/>
-              <PieChart engagedUsers={completions.engagedUsersByEditor} title={"Engaged Users by Editor"}/>
+              <PieChart engagedUsers={completions?.engagedUsersByLanguage ?? 0} title={"Engaged Users by Language"}/>
+              <PieChart engagedUsers={completions?.engagedUsersByEditor ?? 0} title={"Engaged Users by Editor"}/>
             </div>
           )}
           <h4>Language Breakdown</h4>
@@ -94,7 +94,7 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
             <div>Loading table...</div>
           ) : (
             <TableBreakdown
-              data={completions.languageBreakdown}
+              data={completions?.languageBreakdown ?? 0}
               idField="language"
               idHeader="Language"
               columns={[
@@ -134,23 +134,23 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
               <div className="copilot-chat-grid">
                 <div className="stat-card">
                   <h3>Total Chats</h3>
-                  <p>{chats.totalChats}</p>
+                  <p>{chats?.totalChats ?? 0}</p>
                 </div>
                 <div className="stat-card">
                   <h3>Total Insertions</h3>
-                  <p>{chats.totalInsertions}</p>
+                  <p>{chats?.totalInsertions ?? 0}</p>
                 </div>
                 <div className="stat-card">
                   <h3>Insertion Rate</h3>
-                  <p>{getPercentage(chats.insertionRate)}</p>
+                  <p>{getPercentage(chats?.insertionRate ?? 0)}</p>
                 </div>
                 <div className="stat-card">
                   <h3>Total Copies</h3>
-                  <p>{chats.totalCopies}</p>
+                  <p>{chats?.totalCopies ?? 0}</p>
                 </div>
                 <div className="stat-card">
                   <h3>Copy Rate</h3>
-                  <p>{getPercentage(chats.copyRate)}</p>
+                  <p>{getPercentage(chats?.copyRate ??  0)}</p>
                 </div>
               </div>
             </div>
@@ -159,13 +159,13 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
           {isLoading ? (
             <div>Loading graph...</div>
           ) : (
-            <EngagedUsersGraph data={chats.perDay}/>
+            <EngagedUsersGraph data={chats?.perDay ?? 0}/>
           )}
           {isLoading ? (
             <div className="pie-chart-loading">Loading pie chart...</div>
           ) : (
             <div className="copilot-charts-container">
-              <PieChart engagedUsers={chats.engagedUsersByEditor} title={"Engaged Users by Editor"}/>
+              <PieChart engagedUsers={chats?.engagedUsersByEditor ?? 0} title={"Engaged Users by Editor"}/>
             </div>
           )}
          <h4>Editor Breakdown</h4>
@@ -173,7 +173,7 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
             <div>Loading table...</div>
           ) : (
             <TableBreakdown
-              data={chats.editorBreakdown}
+              data={chats?.editorBreakdown ?? 0}
               idField="editor"
               idHeader="Editor"
               columns={[
