@@ -1,16 +1,15 @@
+const { SecretsManagerClient, GetSecretValueCommand } = require("@aws-sdk/client-secrets-manager");
+
 async function getAppAndInstallation() {
+    const secretsManager = new SecretsManagerClient({ region: "eu-west-2" });
     const { App } = await import("@octokit/app");
 
-    const AWS = require('aws-sdk');
-    const secretsManager = new AWS.SecretsManager({ region: "eu-west-2" });
-
     const getGithubAppSecrets = async () => {
-      const secret = await secretsManager
-        .getSecretValue({ SecretId: process.env.AWS_SECRET_NAME })
-        .promise();
-    
+      const command = new GetSecretValueCommand({ SecretId: process.env.AWS_SECRET_NAME });
+      const response = await secretsManager.send(command);
+
       return {
-        privateKey: secret.SecretString
+        privateKey: response.SecretString,
       };
     };
 
