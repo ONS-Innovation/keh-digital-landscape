@@ -15,6 +15,9 @@ test-admin: # Run only the admin API tests
 test-review: # Run only the review API tests
 	python3 -m pytest backend/test_review.py -v
 
+test-copilot: # Run only the copilot API tests
+	python3 -m pytest backend/test_copilot.py -v
+
 ruff:
 	python3 -m ruff check backend/test_*.py
 
