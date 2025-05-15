@@ -29,7 +29,7 @@ export const fetchOrgLiveUsageData = async () => {
  * @returns {Promise<Object>} - The historic usage data
  */
 export const fetchOrgHistoricUsageData = async () => {
-  //TODO
+  //TODO: Will be added in next PR
 }
 
 /**

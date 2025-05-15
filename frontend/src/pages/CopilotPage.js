@@ -3,12 +3,13 @@ import { ThemeProvider } from "../contexts/ThemeContext";
 import Header from "../components/Header/Header";
 import LiveDashboard from "../components/CoPilot/LiveDashboard";
 import HistoricDashboard from "../components/CoPilot/HistoricDashboard";
-import { fetchSeatData, filterInactiveUsers } from "../utilities/getSeatData";
-import { fetchOrgLiveUsageData, filterUsageData, processUsageData } from "../utilities/getUsageData";
+import { filterInactiveUsers } from "../utilities/getSeatData";
+import { filterUsageData, processUsageData } from "../utilities/getUsageData";
 import PageBanner from "../components/PageBanner";
 import "../styles/CoPilotPage.css";
 import Slider from 'rc-slider';
 import "rc-slider/assets/index.css";
+import { useData } from "../contexts/dataContext";
 
 function CopilotDashboard() {
 
@@ -40,6 +41,7 @@ function CopilotDashboard() {
   const [scope, setScope] = useState("organisation");
   const data = getDashboardData();
   const [isLoading, setIsLoading] = useState(true);
+  const { getLiveUsageData, getSeatsData } = useData();
 
   const handleSliderChange = (values) => {
     setSliderValues(values);
@@ -59,8 +61,11 @@ function CopilotDashboard() {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      const liveUsage = await fetchOrgLiveUsageData();
-      const seats = await fetchSeatData();
+
+      const [liveUsage, seats] = await Promise.all([
+        getLiveUsageData(),
+        getSeatsData()
+      ]);
 
       let end = new Date();
       let start = new Date(end);
@@ -107,8 +112,6 @@ function CopilotDashboard() {
       activeSeatData: active,
     }));
   }, [inactiveDays, inactivityDate, liveOrgData.allSeatData]);
-
-  //TODO: Add to contexts
 
   return (
     <ThemeProvider>
