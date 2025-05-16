@@ -16,7 +16,7 @@ async function getAppAndInstallation() {
     const secrets = await getGithubAppSecrets();
 
     const app = new App({
-      appId: process.env.DIGITAL_APP_ID,
+      appId: process.env.GITHUB_APP_ID,
       privateKey: secrets.privateKey,
     });
 

@@ -76,8 +76,8 @@ nvm use 18.19.0
 export AWS_ACCESS_KEY_ID=<your_access_key>
 export AWS_SECRET_ACCESS_KEY=<your_secret_key>
 export AWS_SECRET_NAME=<your_secret_name>
-export DIGITAL_APP_ID=<your_digital_app>
-export DIGITAL_CLIENT_ID=<your_digital_client>
+export GITHUB_APP_ID=<your_github_app_id>
+export GITHUB_APP_CLIENT_ID=<your_github_app_client_id>
 ```
 ## Running locally
 

@@ -89,12 +89,12 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
           value = var.api_s3_bucket_name
         },
         {
-          name = "DIGITAL_APP_ID",
-          value = var.digital_app_id
+          name = "GITHUB_APP_ID",
+          value = var.github_app_id
         },
         {
-          name = "DIGITAL_CLIENT_ID",
-          value = var.digital_client_id
+          name = "GITHUB_APP_CLIENT_ID",
+          value = var.github_app_client_id
         },
         {
           name = "AWS_SECRET_NAME",

@@ -13,13 +13,13 @@ variable "aws_secret_access_key" {
   type        = string
 }
 
-variable "digital_app_id" {
-  description = "Digital App ID"
+variable "github_app_id" {
+  description = "GitHub App ID"
   type        = string
 }
 
-variable "digital_client_id" {
-  description = "Digital Client ID"
+variable "github_app_client_id" {
+  description = "GitHub App Client ID"
   type        = string
 }
 
