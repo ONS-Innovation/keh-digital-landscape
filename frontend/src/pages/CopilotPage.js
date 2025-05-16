@@ -138,19 +138,12 @@ function CopilotDashboard() {
               <div>
                 <p>Start: {startDate}</p>
                 <Slider
-                  range
-                  min={1}
-                  max={28}
-                  value={sliderValues}
-                  onChange={handleSliderChange}
-                  allowCross={false}
-                  trackStyle={{ height: 10 }}
-                  handleStyle={{ 
-                    height: 20, 
-                    width: 20, 
-                    marginTop: -5 
-                  }}
-                  railStyle={{ height: 10 }}
+                range
+                min={1}
+                max={28}
+                value={sliderValues}
+                onChange={handleSliderChange}
+                allowCross={false}
                 />
                 <p>End: {endDate}</p>
               </div>
