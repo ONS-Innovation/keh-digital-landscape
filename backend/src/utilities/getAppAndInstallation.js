@@ -1,4 +1,5 @@
 const { SecretsManagerClient, GetSecretValueCommand } = require("@aws-sdk/client-secrets-manager");
+const GITHUB_ORG = process.env.GITHUB_ORG || "ONSdigital";
 
 async function getAppAndInstallation() {
     const secretsManager = new SecretsManagerClient({ region: "eu-west-2" });
@@ -20,7 +21,7 @@ async function getAppAndInstallation() {
       privateKey: secrets.privateKey,
     });
 
-    const installation = await app.octokit.request(`/orgs/${process.env.GITHUB_ORG}/installation`);
+    const installation = await app.octokit.request(`/orgs/${GITHUB_ORG}/installation`);
     const installation_id = installation.data.id;
     const octokit = await app.getInstallationOctokit(installation_id);
 
