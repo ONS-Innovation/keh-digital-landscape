@@ -21,6 +21,17 @@ BASE_URL = "http://localhost:5001"
 ```
 
 ### Running Tests
+```bash
+# Navigate to the testing directory
+cd testing
+
+# Create a virtual environment (recommended)
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+make setup
+```
 
 The testing framework provides several commands for running tests:
 
