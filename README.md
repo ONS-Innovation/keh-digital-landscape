@@ -50,7 +50,7 @@ git clone https://github.com/ONS-innovation/keh-digital-landscape.git
 
 Install both backend and frontend dependencies:
 ```bash
-make install
+make install-dev
 ```
 ## How to setup
 
