@@ -12,7 +12,7 @@ import {
 
 const EngagedUsersGraph = ({ data }) => {
   return (
-    <div style={{ width: "calc(90vw - 16px)", height: "calc(50vh - 16px)" }}>
+    <div className="copilot-graph-container">
       <ResponsiveContainer>
         <ComposedChart
           width={400}
