@@ -91,7 +91,7 @@
     0 12px 24px hsl(var(--foreground) / 0.05);
 }
 
-.nav-card:last-child {
+.nav-card.odd-last-child {
   grid-column: span 2;
 }
 

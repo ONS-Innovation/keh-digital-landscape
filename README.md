@@ -6,7 +6,7 @@
 [![LICENSE.](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](https://github.com/ONS-innovation/keh-digital-landscape/blob/main/LICENSE) 
 [![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/ONS-innovation/keh-digital-landscape.svg)](https://github.com/ONS-innovation/keh-digital-landscape/pulls)
 
-This tool aims to provide a visual representation of the digital landscape at ONS. This consists of the following 3 main pages and one homepage:
+This tool aims to provide a visual representation of the digital landscape at ONS. This consists of the following main pages:
 
 **Tech Radar:**
 - Tech Radar is a tool that helps you track the Infrastructure, Languages, Frameworks and Supporting Tools used in ONS repositories and then categorises them into Adopt, Trial, Assess or Hold.
@@ -32,7 +32,11 @@ This tool aims to provide a visual representation of the digital landscape at ON
 - Banner management - create and manage different banners to be displayed on different pages within the Digital Landscape.
 - Technology management - manage new technologies and the autocomplete list to ensure conformity between platforms.
 
-**Homepage:**
+**CoPilot Page**
+- Displays both live and historical statistics on CoPilot usage within ONS.
+- Statistics can be viewed organisation-wide or for a specific team.
+
+**Home Page:**
 - This is the homepage of the tool.
 - It provides a brief overview of the tool and its purpose.
 - Recent announcements (banners) and recent updates (github release changelog) are shown on the homepage.
@@ -46,7 +50,7 @@ git clone https://github.com/ONS-innovation/keh-digital-landscape.git
 
 Install both backend and frontend dependencies:
 ```bash
-make install
+make install-dev
 ```
 ## How to setup
 
@@ -67,10 +71,14 @@ nvm install 18.19.0
 nvm use 18.19.0
 ```
 
-4. Remember to export AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
+4. Remember to export the following:
 ```bash
 export AWS_ACCESS_KEY_ID=<your_access_key>
 export AWS_SECRET_ACCESS_KEY=<your_secret_key>
+export AWS_SECRET_NAME=<your_secret_name>
+export GITHUB_APP_ID=<your_github_app_id>
+export GITHUB_APP_CLIENT_ID=<your_github_app_client_id>
+export GITHUB_ORG=<your_github_organisation>
 ```
 ## Running locally
 

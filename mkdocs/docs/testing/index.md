@@ -16,13 +16,14 @@ The testing framework is built using Python with pytest and follows these key pr
 
 ## Test Structure
 
-The tests are organized into three main files:
+The tests are organized into four main files:
 
 | Test File | Endpoint Group | Description |
 |---|---|---|
 | `test_main.py` | `/api/*` | Core API endpoints (health, CSV, JSON, repository) |
 | `test_admin.py` | `/admin/api/*` | Admin API endpoints for banner management |
 | `test_review.py` | `/review/api/*` | Review API endpoints for tech radar updates |
+| `test_copilot.py` | `/api/*` | CoPilot API endpoints |
 
 ## Test Setup
 
@@ -62,6 +63,9 @@ make test-admin
 
 # Run only review API tests
 make test-review
+
+# Run only CoPilot API tests
+make test-copilot
 
 # Run a specific test
 python3 -m pytest backend/test_main.py::test_name -v

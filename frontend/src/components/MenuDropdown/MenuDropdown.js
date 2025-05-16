@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import "../../styles/components/MenuDropdown.css";
 import { IoHome, IoMenu, IoStatsChart, IoPeople, IoHelp } from 'react-icons/io5'
+import { VscCopilot } from "react-icons/vsc";
 import { FaEdit, FaUserShield } from "react-icons/fa";
 import { MdOutlineRadar } from "react-icons/md";
 
@@ -79,6 +79,10 @@ function MenuDropdown({ setShowHelpModal }) {
               <a href='/admin/dashboard' className={location.pathname === '/admin/dashboard' ? 'active' : ''}>
                 <FaUserShield size={16} />
                 Admin
+              </a>
+              <a href='/copilot' className={location.pathname === '/copilot' ? 'active' : ''}>
+                <VscCopilot size={16} />
+                CoPilot
               </a>
             </div>
             <div className="help-button-container">

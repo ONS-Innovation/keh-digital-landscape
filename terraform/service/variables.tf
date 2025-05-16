@@ -13,6 +13,21 @@ variable "aws_secret_access_key" {
   type        = string
 }
 
+variable "github_app_id" {
+  description = "GitHub App ID"
+  type        = string
+}
+
+variable "github_app_client_id" {
+  description = "GitHub App Client ID"
+  type        = string
+}
+
+variable "aws_secret_name" {
+  description = "AWS Secret Name"
+  type        = string
+}
+
 variable "container_image" {
   description = "Container image"
   type        = string
