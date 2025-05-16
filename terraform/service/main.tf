@@ -87,6 +87,18 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
         {
           name  = "TAT_BUCKET_NAME",
           value = var.api_s3_bucket_name
+        },
+        {
+          name = "DIGITAL_APP_ID",
+          value = var.digital_app_id
+        },
+        {
+          name = "DIGITAL_CLIENT_ID",
+          value = var.digital_client_id
+        },
+        {
+          name = "AWS_SECRET_NAME",
+          value = var.aws_secret_name
         }
       ],
       logConfiguration = {

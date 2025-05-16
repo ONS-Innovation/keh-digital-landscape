@@ -13,6 +13,21 @@ variable "aws_secret_access_key" {
   type        = string
 }
 
+variable "digital_app_id" {
+  description = "Digital App ID"
+  type        = string
+}
+
+variable "digital_client_id" {
+  description = "Digital Client ID"
+  type        = string
+}
+
+variable "aws_secret_name" {
+  description = "AWS Secret Name"
+  type        = string
+}
+
 variable "container_image" {
   description = "Container image"
   type        = string
