@@ -270,26 +270,20 @@ const handleTechRadarUpdate = async (req, res, role) => {
       return res.status(400).json({ error: "Invalid entry structure" });
     }
 
-    // Handle entries update based on count
-    if (entries.length < 30) {
-      // For small updates, merge with existing entries
-      const existingEntriesMap = new Map(
-        existingData.entries.map((entry) => [entry.id, entry])
-      );
+    // Merge with existing entries
+    const existingEntriesMap = new Map(
+      existingData.entries.map((entry) => [entry.id, entry])
+    );
 
-      // Update or add new entries
-      entries.forEach((newEntry) => {
-        existingEntriesMap.set(newEntry.id, {
-          ...(existingEntriesMap.get(newEntry.id) || {}),
-          ...newEntry,
-        });
+    // Update or add new entries
+    entries.forEach((newEntry) => {
+      existingEntriesMap.set(newEntry.id, {
+        ...(existingEntriesMap.get(newEntry.id) || {}),
+        ...newEntry,
       });
+    });
 
-      existingData.entries = Array.from(existingEntriesMap.values());
-    } else {
-      // For large updates, replace all entries
-      existingData.entries = entries;
-    }
+    existingData.entries = Array.from(existingEntriesMap.values());
 
     // Sort entries to maintain consistent order
     existingData.entries.sort((a, b) => {
