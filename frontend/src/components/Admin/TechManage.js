@@ -1001,8 +1001,8 @@ Diagram_Tools: "Supporting Tools",
 
       const baseUrl =
         process.env.NODE_ENV === "development"
-          ? "http://localhost:5001/review/api/tech-radar/update"
-          : "/review/api/tech-radar/update";
+          ? "http://localhost:5001/admin/api/tech-radar/update"
+          : "/admin/api/tech-radar/update";
 
       const response = await fetch(baseUrl, {
         method: "POST",
