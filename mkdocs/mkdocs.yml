@@ -13,6 +13,8 @@ nav:
       - Overview: pages/statistics/index.md
     - Review:
       - Overview: pages/review/index.md
+    - Admin:
+      - Overview: pages/admin/index.md
   - Contexts:
     - Theme: contexts/themeContext.md
     - Data: contexts/dataContext.md
@@ -34,6 +36,9 @@ nav:
     - Skeletons: components/skeletons.md
     - Statistics: components/statistics.md
     - Theme Toggle: components/themeToggle.md
+    - Admin:
+      - Technology Management: components/admin/techManagement.md
+      - Banner Management: components/admin/bannerManagement.md
   - Utilities:
     - Technology Status: utilities/technologyStatus.md
     - Tech Radar Data: utilities/techRadarData.md
