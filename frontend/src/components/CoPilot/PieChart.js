@@ -12,15 +12,13 @@ import {
 const entries = 7;
 
 const colourPalette = [
-    "hsl(var(--chart-1))",
-    "hsl(var(--chart-2))",
-    "hsl(var(--chart-3))",
-    "hsl(var(--chart-4))",
-    "hsl(var(--chart-5))",
-    "var(--color-adopt)",
-    "var(--color-trial)",
-    "var(--color-assess)",
-    "var(--color-hold)",
+    "#2ecc71",
+    "#e74c3c",
+    "#3498db",
+    "#f1c40f",
+    "#9b59b6",
+    "#1abc9c",
+    "#e67e22",
   ];
 
 const PieChart = ({ engagedUsers, title = "User Engagement"}) => {
@@ -71,7 +69,7 @@ const PieChart = ({ engagedUsers, title = "User Engagement"}) => {
             ))}
           </Pie>
           <Tooltip formatter={(value, name) => [`${value}%`, name]} />
-          <Legend iconType="circle" iconSize={12} verticalAlign="bottom" height={36} />
+          <Legend iconType="circle" iconSize={10}/>
         </RechartsPieChart>
       </ResponsiveContainer>
     </div>
