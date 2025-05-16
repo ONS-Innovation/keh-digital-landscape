@@ -10,6 +10,7 @@ function TableBreakdown({ data, idField, idHeader, columns, headerMap, computedF
       filter: true,
       cellStyle: { textAlign: "center" },
       flex: 1,
+      maxWidth: 200,
     }), []);
     
     const rowData = useMemo(() => {
@@ -35,7 +36,7 @@ function TableBreakdown({ data, idField, idHeader, columns, headerMap, computedF
     }, [rowData, idField, idHeader, columns, headerMap, customCellRenderers]);
 
     return (
-      <div style={{ height: 300 }}>
+      <div style={{ height: 300, minWidth: 750 }}>
         <AgGridReact
           rowData={rowData}
           columnDefs={colDefs}
