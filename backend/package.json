@@ -9,7 +9,6 @@
     "@octokit/app": "^15.1.6",
     "@octokit/core": "^6.1.5",
     "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
     "express": "^4.21.2",
     "node-fetch": "^2.6.9",
     "papaparse": "^5.4.1",

@@ -3,7 +3,6 @@
  * @file This is the main file for the backend server.
  * It sets up an Express server, handles CORS, and provides endpoints for fetching CSV/JSON data and checking server health.
  */
-require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
 const {
