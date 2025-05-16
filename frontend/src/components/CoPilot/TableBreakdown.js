@@ -8,7 +8,7 @@ function TableBreakdown({ data, idField, idHeader, columns, headerMap, computedF
     const defaultColDef = useMemo(() => ({
       sortable: true,
       filter: true,
-      cellStyle: { textAlign: "left" },
+      cellStyle: { textAlign: "center" },
       flex: 1,
     }), []);
     
