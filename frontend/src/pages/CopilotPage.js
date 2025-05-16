@@ -5,7 +5,7 @@ import LiveDashboard from "../components/CoPilot/LiveDashboard";
 import HistoricDashboard from "../components/CoPilot/HistoricDashboard";
 import { filterInactiveUsers } from "../utilities/getSeatData";
 import { filterUsageData, processUsageData } from "../utilities/getUsageData";
-import PageBanner from "../components/PageBanner";
+import PageBanner from "../components/PageBanner/PageBanner";
 import "../styles/CoPilotPage.css";
 import Slider from 'rc-slider';
 import "rc-slider/assets/index.css";

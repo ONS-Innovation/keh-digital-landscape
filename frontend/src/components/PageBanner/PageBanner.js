@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/components/PageBanner.css";
+import "../../styles/components/PageBanner.css";
 
 function PageBanner({ title, description, tabs, activeTab, onTabChange }) {
     return (

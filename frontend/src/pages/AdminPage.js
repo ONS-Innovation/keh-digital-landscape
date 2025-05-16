@@ -5,7 +5,7 @@ import BannerManage from "../components/Admin/BannerManage";
 import TechManage from "../components/Admin/TechManage";
 import "../styles/ReviewPage.css";
 import "../styles/AdminPage.css";
-import PageBanner from "../components/PageBanner";
+import PageBanner from "../components/PageBanner/PageBanner";
 
 /**
  * Admin page for managing system-wide settings like banners
