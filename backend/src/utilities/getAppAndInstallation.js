@@ -20,7 +20,7 @@ async function getAppAndInstallation() {
       privateKey: secrets.privateKey,
     });
 
-    const installation = await app.octokit.request(`/orgs/${process.env.ORG}/installation`);
+    const installation = await app.octokit.request(`/orgs/${process.env.GITHUB_ORG}/installation`);
     const installation_id = installation.data.id;
     const octokit = await app.getInstallationOctokit(installation_id);
 

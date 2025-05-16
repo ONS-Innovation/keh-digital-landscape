@@ -22,7 +22,7 @@ const app = express();
 const port = process.env.PORT || 5001;
 const bucketName = process.env.BUCKET_NAME || "sdp-dev-digital-landscape";
 const tatBucketName = process.env.TAT_BUCKET_NAME || "sdp-dev-tech-audit-tool-api";
-const org = process.env.ORG || "ONSdigital";
+const org = process.env.GITHUB_ORG || "ONSdigital";
 
 app.use(
   cors({
