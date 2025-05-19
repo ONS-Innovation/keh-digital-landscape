@@ -130,12 +130,12 @@ function Header({
           >
             Admin
           </a>
-          <a 
-            href="/copilot" 
+          <Link 
+            to="/copilot" 
             className={location.pathname === '/copilot' ? 'active' : ''}
           >
             CoPilot
-          </a>
+          </Link>
           <button onClick={() => handleSetShowHelpModal()}>
             Help
           </button>
