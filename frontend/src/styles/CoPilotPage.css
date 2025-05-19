@@ -37,8 +37,12 @@
   .seat-breakdown {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    gap: 16px;
     align-items: center;
+  }
+
+  .seat-breakdown-item {
+    width: 100%;
   }
 
   .inactivity-info {
@@ -66,4 +70,12 @@
 
   .dashboard-header {
     /* Will be added in later PR */
+  }
+
+  :root {
+    --ag-background-color: hsl(var(--background));
+    --ag-text-color: hsl(var(--foreground));
+  
+    --ag-header-background-color: hsl(var(--muted));
+    --ag-header-text-color: hsl(var(--muted-foreground));
   }

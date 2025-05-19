@@ -222,7 +222,7 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
                   </div>
                 </div>
                 <div className="seat-breakdown">
-                  <div>
+                  <div className="seat-breakdown-item">
                     <h4>Engaged Users</h4>
                     <TableBreakdown
                       data={seats.activeSeatData.reduce((acc, user, i) => {
@@ -245,7 +245,7 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
                       customCellRenderers={getCellRenderers()}
                     />
                   </div>
-                  <div>
+                  <div className="seat-breakdown-item">
                     <h4>Inactive Users</h4>
                     <TableBreakdown
                       data={inactiveUsers.reduce((acc, user, i) => {
