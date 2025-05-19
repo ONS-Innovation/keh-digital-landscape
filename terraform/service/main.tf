@@ -99,6 +99,10 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
         {
           name = "AWS_SECRET_NAME",
           value = var.aws_secret_name
+        },
+        {
+          name = "GITHUB_ORG",
+          value = var.github_org,
         }
       ],
       logConfiguration = {
