@@ -194,21 +194,13 @@ app.get("/api/json", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
 /**
- * Endpoint for updating the tech radar JSON in S3.
- * @route POST /review/api/tech-radar/update
- * @param {Object} req.body - The update data
- * @param {Object[]} [req.body.entries] - Array of entry objects to update
- * @param {string} [req.body.title] - The title of the tech radar (for full updates)
- * @param {Object[]} [req.body.quadrants] - Array of quadrant definitions (for full updates)
- * @param {Object[]} [req.body.rings] - Array of ring definitions (for full updates)
- * @returns {Object} Success message or error response
- * @returns {string} response.message - Success confirmation message
- * @throws {Error} 400 - If entries data is invalid
- * @throws {Error} 500 - If update operation fails
+ * Function to handle tech radar updates for both admin and review endpoints
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {string} role - The role making the request ('admin' or 'review')
  */
-app.post("/review/api/tech-radar/update", async (req, res) => {
+const handleTechRadarUpdate = async (req, res, role) => {
   try {
     const { entries } = req.body;
 
@@ -278,26 +270,20 @@ app.post("/review/api/tech-radar/update", async (req, res) => {
       return res.status(400).json({ error: "Invalid entry structure" });
     }
 
-    // Handle entries update based on count
-    if (entries.length < 30) {
-      // For small updates, merge with existing entries
-      const existingEntriesMap = new Map(
-        existingData.entries.map((entry) => [entry.id, entry])
-      );
+    // Merge with existing entries
+    const existingEntriesMap = new Map(
+      existingData.entries.map((entry) => [entry.id, entry])
+    );
 
-      // Update or add new entries
-      entries.forEach((newEntry) => {
-        existingEntriesMap.set(newEntry.id, {
-          ...(existingEntriesMap.get(newEntry.id) || {}),
-          ...newEntry,
-        });
+    // Update or add new entries
+    entries.forEach((newEntry) => {
+      existingEntriesMap.set(newEntry.id, {
+        ...(existingEntriesMap.get(newEntry.id) || {}),
+        ...newEntry,
       });
+    });
 
-      existingData.entries = Array.from(existingEntriesMap.values());
-    } else {
-      // For large updates, replace all entries
-      existingData.entries = entries;
-    }
+    existingData.entries = Array.from(existingEntriesMap.values());
 
     // Sort entries to maintain consistent order
     existingData.entries.sort((a, b) => {
@@ -320,9 +306,43 @@ app.post("/review/api/tech-radar/update", async (req, res) => {
     await s3Client.send(putCommand);
     res.json({ message: "Tech radar updated successfully" });
   } catch (error) {
-    console.error("Error updating tech radar:", error);
+    logger.error(`Error updating tech radar (${role}):`, { error: error.message });
     res.status(500).json({ error: error.message });
   }
+};
+
+/**
+ * Endpoint for updating the tech radar JSON in S3 from review.
+ * @route POST /review/api/tech-radar/update
+ * @param {Object} req.body - The update data
+ * @param {Object[]} [req.body.entries] - Array of entry objects to update
+ * @param {string} [req.body.title] - The title of the tech radar (for full updates)
+ * @param {Object[]} [req.body.quadrants] - Array of quadrant definitions (for full updates)
+ * @param {Object[]} [req.body.rings] - Array of ring definitions (for full updates)
+ * @returns {Object} Success message or error response
+ * @returns {string} response.message - Success confirmation message
+ * @throws {Error} 400 - If entries data is invalid
+ * @throws {Error} 500 - If update operation fails
+ */
+app.post("/review/api/tech-radar/update", (req, res) => {
+  handleTechRadarUpdate(req, res, 'review');
+});
+
+/**
+ * Endpoint for updating the tech radar JSON in S3 from admin.
+ * @route POST /admin/api/tech-radar/update
+ * @param {Object} req.body - The update data
+ * @param {Object[]} [req.body.entries] - Array of entry objects to update
+ * @param {string} [req.body.title] - The title of the tech radar (for full updates)
+ * @param {Object[]} [req.body.quadrants] - Array of quadrant definitions (for full updates)
+ * @param {Object[]} [req.body.rings] - Array of ring definitions (for full updates)
+ * @returns {Object} Success message or error response
+ * @returns {string} response.message - Success confirmation message
+ * @throws {Error} 400 - If entries data is invalid
+ * @throws {Error} 500 - If update operation fails
+ */
+app.post("/admin/api/tech-radar/update", (req, res) => {
+  handleTechRadarUpdate(req, res, 'admin');
 });
 
 /**
