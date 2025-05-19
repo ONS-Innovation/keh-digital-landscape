@@ -72,6 +72,7 @@ function MenuDropdown({ setShowHelpModal }) {
                 <IoPeople size={16} />
                 Projects
               </button>
+              {/* Keep these as <a> tags */}
               <a href='/review/dashboard' className={location.pathname === '/review/dashboard' ? 'active' : ''}>
                 <FaEdit size={16} />
                 Review
@@ -80,10 +81,10 @@ function MenuDropdown({ setShowHelpModal }) {
                 <FaUserShield size={16} />
                 Admin
               </a>
-              <a href='/copilot' className={location.pathname === '/copilot' ? 'active' : ''}>
+              <button onClick={() => handleNavClick('/copilot')} className={location.pathname === '/copilot' ? 'active' : ''}>
                 <VscCopilot size={16} />
                 CoPilot
-              </a>
+              </button>
             </div>
             <div className="help-button-container">
               <button onClick={handleHelpClick}>

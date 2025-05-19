@@ -117,7 +117,7 @@ function Header({
           >
             Projects
           </Link>
-          {/* Keep this as an <a> tag since we want to force refresh for review and admin to force Cognito login */}
+          {/* Keep these as an <a> tag since we want to force refresh for review and admin to force Cognito login */}
           <a 
             href="/review/dashboard"
             className={location.pathname === '/review/dashboard' ? 'active' : ''}
