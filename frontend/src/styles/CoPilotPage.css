@@ -46,10 +46,11 @@
     width: 100%;
   }
 
-  .inactivity-info {
+  .inactivity-toggle {
     display: flex;
     flex-direction: row;
     align-items: center;
+    padding-bottom: 20px;
   }
 
   .inactivity-button {
