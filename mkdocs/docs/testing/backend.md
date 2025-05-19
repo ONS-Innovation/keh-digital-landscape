@@ -6,7 +6,7 @@ The backend testing suite validates the API endpoints that serve data to the Dig
 
 ## Test Implementation
 
-The backend tests are implemented in the `testing/backend/` directory using the pytest framework and the requests library to make HTTP calls to the API endpoints. The tests are organized into four main files:
+The backend tests are implemented in the `testing/backend/` directory using the pytest framework and the requests library to make HTTP calls to the API endpoints. The tests are organised into four main files:
 
 - `test_main.py` - Tests for core API endpoints
 - `test_admin.py` - Tests for admin API endpoints
@@ -229,49 +229,165 @@ The banner endpoint tests verify:
 - Response structure is consistent and valid
 - Error cases are properly handled with appropriate status codes
 
-## Technology Management Endpoints
+## Admin API Tests
 
-### Array Data Retrieval
+These tests are located in `test_admin.py` and verify the administration API endpoints that manage platform configuration, banners, and technology reference lists.
 
-Tests the data can be retrieved:
+### Banner Management Tests
+
+#### Banner Retrieval
+
+Tests retrieving all banner messages from the admin endpoint:
+
+::: testing.backend.test_admin.test_admin_banner_get
+
+This test validates that:
+- The endpoint correctly returns banner messages from the S3 bucket
+- The response has a valid structure with a "messages" array
+- The response can be successfully parsed by the admin UI
+
+#### Banner Creation
+
+Tests creating a new banner with complete and valid data:
+
+::: testing.backend.test_admin.test_admin_banner_update
+
+This test verifies:
+- Creating a banner with title, message, type, and target pages
+- The appropriate success response is returned
+- The newly created banner can be retrieved in a subsequent GET request
+
+#### Banner Creation Validation
+
+Tests validation of banner creation requests with invalid data:
+
+::: testing.backend.test_admin.test_admin_banner_update_invalid
+
+This test checks error handling for:
+- Missing required message field
+- Empty target pages array
+- Malformed banner structure in the request
+
+#### Banner Visibility Toggle
+
+Tests toggling the visibility status of an existing banner:
+
+::: testing.backend.test_admin.test_admin_banner_toggle
+
+This test ensures:
+- A test banner can be created for toggling
+- The visibility can be toggled from true to false
+- The updated banner visibility is correctly stored
+- The system returns appropriate success messages
+
+#### Banner Visibility Toggle Validation
+
+Tests validation of banner visibility toggle requests with invalid data:
+
+::: testing.backend.test_admin.test_admin_banner_toggle_invalid
+
+This test validates error handling for:
+- Non-numeric index values
+- Missing index parameter
+- Out-of-range index values
+
+#### Banner Deletion
+
+Tests deleting an existing banner:
+
+::: testing.backend.test_admin.test_admin_banner_delete
+
+This test verifies:
+- A test banner can be created for deletion
+- The banner can be successfully deleted
+- The deleted banner is no longer returned in subsequent GET requests
+
+#### Banner Deletion Validation
+
+Tests validation of banner deletion requests with invalid parameters:
+
+::: testing.backend.test_admin.test_admin_banner_delete_invalid
+
+This test checks error handling for:
+- Non-numeric index values
+- Missing index parameter
+- Out-of-range index values
+
+### Technology Management Tests
+
+#### Array Data Retrieval
+
+Tests retrieval of the technology reference lists:
 
 ::: testing.backend.test_admin.test_admin_get_array_data
 
-### Update Single Category in Array Data
+This test verifies:
+- The endpoint returns JSON data with technology references
+- The response has a valid structure as a dictionary
 
-Update single category in the array data:
+#### Single Category Update
+
+Tests updating a single category in the technology reference lists:
 
 ::: testing.backend.test_admin.test_admin_update_array_data_single_category
 
-### Update Multiple Category in Array Data
+This test ensures:
+- A single category can be updated without affecting others
+- The response includes a specific success message for single category update
+- The updated data can be retrieved in a subsequent GET request
 
-Update multiple categories in the array data:
+#### Multiple Category Update
+
+Tests updating all categories in the technology reference lists simultaneously:
 
 ::: testing.backend.test_admin.test_admin_update_array_data_all_categories
 
-### Update Array Data with Invalid Payload
+This test validates:
+- The entire technology reference data structure can be replaced
+- The response includes a specific success message for all categories update
+- The updated data structure can be retrieved in a subsequent GET request
 
-Update array data with an invalid payload.
+#### Array Data Update Validation
+
+Tests validation of technology reference list updates with invalid data:
 
 ::: testing.backend.test_admin.test_admin_update_array_data_invalid
 
-### Admin Tech Radar Retrieval
+This test checks error handling for:
+- Updating all categories with non-object data
+- Single category update without specifying a category
+- Single category update with missing items array
+- Single category update with non-array items
 
-Admin get tech radar data:
+#### Tech Radar Data Retrieval
+
+Tests fetching the Tech Radar data for administrative purposes:
 
 ::: testing.backend.test_admin.test_admin_get_tech_radar
 
-### Update technology (positive)
+This test verifies that the admin endpoint correctly returns the radar configuration data.
 
-Admin normalise technology with a positive payload.
+#### Technology Normalisation
+
+Tests normalising technology names across projects:
 
 ::: testing.backend.test_admin.test_admin_normalise_technology_positive
 
-### Update technology (invalid)
+This test ensures:
+- Technology names can be normalised from one form to another
+- The response includes a count of updated projects
+- The system handles normalisation of non-existent technologies gracefully
 
-Admin normalise technology with an invalid payload.
+#### Technology Normalisation Validation
+
+Tests validation of technology normalisation requests with invalid data:
 
 ::: testing.backend.test_admin.test_admin_normalise_technology_invalid
+
+This test checks error handling for:
+- Missing "from" parameter
+- Missing "to" parameter
+- Missing both parameters
 
 ## Error Handling Tests
 
@@ -304,4 +420,4 @@ These backend tests validate the same endpoints that are used by the frontend ut
 1. **Project Data Utility**: The `test_csv_endpoint()` test validates the endpoint used by `fetchCSVFromS3()`
 2. **Repository Data Utility**: The repository project tests validate the endpoint used by `fetchRepositoryData()`
 3. **Tech Radar Data Utility**: The `test_tech_radar_json_endpoint()` test validates the endpoint used by `fetchTechRadarJSONFromS3()`
-4. **Admin Utilities**: The admin API tests validate the endpoints used by the admin interface for banner management 
+4. **Admin Utilities**: The admin API tests validate the endpoints used by the admin interface for banner management and technology reference list management 
