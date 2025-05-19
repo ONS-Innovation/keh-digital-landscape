@@ -352,7 +352,7 @@ function HelpModal({ show, onClose }) {
               {githubPagesLink()}
               <h5>Guide</h5>
               <span>
-                The CoPilot dashboard visualises CoPilot usage data across ONS Digital. Here&apos;s how to use it:
+                The Copilot dashboard visualises CoPilot usage data across ONS Digital. Here&apos;s how to use it:
               </span>
               <ul className="help-modal-list">
                 <li>
@@ -362,7 +362,7 @@ function HelpModal({ show, onClose }) {
                   Click &quot;Team Usage&quot; to view CoPilot usage for a specific team within ONS Digital. You must have permissions to view this team.
                 </li>
                 <li>
-                  Switch between &quot;live&quot; and &quot;historical&quot; data to view real-time usage or historical trends.
+                  Switch between &quot;live&quot; and &quot;historic&quot; data to view real-time usage or historical trends.
                 </li>
               </ul>
             </div>

@@ -6,8 +6,9 @@
 
   .copilot-chat-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 16px;
+    max-width: 100%;
   }
 
   .copilot-charts-container {
@@ -78,4 +79,16 @@
   
     --ag-header-background-color: hsl(var(--muted));
     --ag-header-text-color: hsl(var(--muted-foreground));
+  }
+
+  .copilot-graph-container {
+    width: calc(100% - 16px);
+    height: calc(50vh - 16px);
+  }
+
+  @media (max-width: 1024px) {
+    .seat-breakdown {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
