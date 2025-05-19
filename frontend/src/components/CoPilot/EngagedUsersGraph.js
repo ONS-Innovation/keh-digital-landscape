@@ -27,7 +27,7 @@ const EngagedUsersGraph = ({ data }) => {
             tickLine={false}
             axisLine={{ stroke: "#f5f5f5" }}
           />
-          <Tooltip />
+          <Tooltip wrapperStyle={{color: "black"}} />
           <Legend verticalAlign="top" align="left" height={36} />
           <Bar
             radius={[10, 10, 0, 0]}

@@ -28,7 +28,7 @@ const AcceptanceGraph = ({ data }) => {
             tickLine={false}
             axisLine={{ stroke: "#f5f5f5" }}
           />
-          <Tooltip formatter={(value, name) =>
+          <Tooltip wrapperStyle={{color: "black"}} formatter={(value, name) =>
             name === "Acceptance Rate" ? `${value.toFixed(2)}%` : value
           } />
           <Legend verticalAlign="top" align="left" height={36} />
