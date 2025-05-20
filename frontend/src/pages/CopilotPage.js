@@ -15,8 +15,8 @@ function CopilotDashboard() {
 
   const getDashboardData = () => {
     if (viewMode === "live" && scope === "organisation") return liveOrgData;
-    if (viewMode === "live" && scope === "team") return liveOrgData; //Will be changed upon team usage PR
-    if (viewMode === "historic" && scope === "organisation") return null;
+    if (viewMode === "live" && scope === "team") return null;
+    if (viewMode === "historic" && scope === "organisation") return historicOrgData;
     if (viewMode === "historic" && scope === "team") return null;
   };
 
@@ -26,6 +26,12 @@ function CopilotDashboard() {
     processedUsage: [],
     allSeatData: [],
     activeSeatData: []
+  });
+
+  const [historicOrgData, setHistoricOrgData] = useState({
+    allUsage: [],
+    groupedUsage: [],
+    processedUsage: [],
   });
   
   const [sliderValues, setSliderValues] = useState([1, 28]);
@@ -41,7 +47,7 @@ function CopilotDashboard() {
   const [scope, setScope] = useState("organisation");
   const data = getDashboardData();
   const [isLoading, setIsLoading] = useState(true);
-  const { getLiveUsageData, getSeatsData } = useData();
+  const { getLiveUsageData, getHistoricUsageData, getSeatsData } = useData();
 
   const handleSliderChange = (values) => {
     setSliderValues(values);
@@ -62,9 +68,10 @@ function CopilotDashboard() {
     const fetchData = async () => {
       setIsLoading(true);
 
-      const [liveUsage, seats] = await Promise.all([
+      const [liveUsage, historicUsage, seats] = await Promise.all([
         getLiveUsageData(),
-        getSeatsData()
+        getHistoricUsageData(),
+        getSeatsData(),
       ]);
 
       let end = new Date();
@@ -82,6 +89,11 @@ function CopilotDashboard() {
         processedUsage: liveUsage ? processUsageData(liveUsage) : [],
         allSeatData: seats ?? [],
         activeSeatData: seats ? filterInactiveUsers(seats, start) : [],
+      });
+      setHistoricOrgData({
+        allUsage: historicUsage ?? [],
+        groupedUsage: historicUsage ?? [],
+        processedUsage: historicUsage ? processUsageData(historicUsage) : [],
       });
       setIsLoading(false);
     };

@@ -29,7 +29,23 @@ export const fetchOrgLiveUsageData = async () => {
  * @returns {Promise<Object>} - The historic usage data
  */
 export const fetchOrgHistoricUsageData = async () => {
-  //TODO: Will be added in next PR
+  try {
+    let response;
+    if (process.env.NODE_ENV === "development") {
+      response = await fetch(`http://localhost:5001/api/org/historic`);
+    } else {
+      response = await fetch("/api/org/historic");
+    }
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching usage data:", error);
+    return null;
+  }
 }
 
 /**
