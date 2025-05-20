@@ -158,12 +158,12 @@
 
 .project-documentation-link{
   font-size: 10px;
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--card-foreground));
   font-weight: 400;
   padding: 1px 12px;
   box-sizing: border-box;
   border-radius: var(--radius);
-  background-color: hsl(var(--muted));
+  background-color: hsl(var(--card));
   border: 1px solid hsl(var(--border));
   border-style: dashed;
   margin-left: 4px;
@@ -206,7 +206,7 @@
   height: 100%;
   transition: all 0.3s ease;
   position: relative;
-  opacity: 0.5;
+  opacity: 0.9;
 }
 
 .distribution-segment:first-child {
@@ -223,11 +223,11 @@
 .distribution-segment:hover .segment-tooltip {
   opacity: 1;
   visibility: visible;
-  transform: translateX(-50%) translateY(-10px);
+  transform: translateX(-50%) translateY(-12px);
 }
 
 .distribution-segment:not(:first-child):last-child:hover .segment-tooltip {
-  transform: translateX(-75%) translateY(-10px);
+  transform: translateX(-75%) translateY(-12px);
 }
 
 .segment-tooltip {
@@ -723,6 +723,7 @@ text-align: left;
   padding: 2px 8px;
   border-radius: var(--radius);
   border: 1px solid hsl(var(--border));
+  text-wrap: nowrap;
 }
 
 .project-badge.active-support{
