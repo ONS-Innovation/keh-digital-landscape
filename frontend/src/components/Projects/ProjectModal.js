@@ -28,7 +28,9 @@ const ProjectModal = ({
   const [isLoading, setIsLoading] = useState(false);
   const [expandedItems, setExpandedItems] = useState({
     projectDetails: true,
+    repositories: true,
   });
+  const [expandedGroups, setExpandedGroups] = useState({});
   const getTechnologyStatus = useTechnologyStatus();
 
   useEffect(() => {
@@ -38,7 +40,9 @@ const ProjectModal = ({
         setIsLoading(true);
 
         // split the Repo string by ; and remove any whitespace
-        const allRepoUrls = project.Repo.split(";").map(url => url.trim()).filter(url => url);
+        const allRepoUrls = project.Repo.split(";")
+          .map((url) => url.trim())
+          .filter((url) => url);
 
         // map the allRepoUrls to the github.com/ONSDigital repos
         const onsDigitalRepos = allRepoUrls
@@ -48,7 +52,7 @@ const ProjectModal = ({
             return match ? match[1] : null;
           })
           .filter(Boolean);
-        
+
         // if there are any onsDigitalRepos, fetch the repository data
         let repoDataResults = [];
         if (onsDigitalRepos.length > 0) {
@@ -62,18 +66,20 @@ const ProjectModal = ({
         }
 
         const fetchedRepoUrls = new Set(
-          repoDataResults.map(repo => repo.url.toLowerCase())
+          repoDataResults.map((repo) => repo.url.toLowerCase())
         );
 
         // other repos are the repos that are not in the onsDigitalRepos
-        const otherRepos = allRepoUrls.filter(url => {
+        const otherRepos = allRepoUrls.filter((url) => {
           const normalizedUrl = url.toLowerCase();
 
-          return !Array.from(fetchedRepoUrls).some(fetchedUrl => 
-            normalizedUrl.includes(fetchedUrl) || fetchedUrl.includes(normalizedUrl)
+          return !Array.from(fetchedRepoUrls).some(
+            (fetchedUrl) =>
+              normalizedUrl.includes(fetchedUrl) ||
+              fetchedUrl.includes(normalizedUrl)
           );
         });
-        
+
         setOtherRepoData(otherRepos);
         setIsLoading(false);
       } else {
@@ -89,13 +95,22 @@ const ProjectModal = ({
 
   const renderRepoInfo = () => {
     if (!project.Repo) return null;
-
     return (
-      <div className="repo-info">
-        <h3 className="group-title">Repositories</h3>
+      <div>
+        <div
+          className="accordion-header"
+          onClick={() => toggleAccordionItem("repositories")}
+        >
+          <h3 className="">Repositories</h3>
+          <span
+            className={`accordion-icon ${expandedItems.repositories ? "expanded" : ""}`}
+          >
+            <IoChevronDown />
+          </span>
+        </div>
         {isLoading ? (
           <SkeletonLanguageCard />
-        ) : project.Repo? (
+        ) : project.Repo && expandedItems.repositories ? (
           <div className="repo-grid">
             {repoData?.map((repo, index) => (
               <div key={index} className="repo-card">
@@ -169,7 +184,7 @@ const ProjectModal = ({
               <>
                 {otherRepoData.map((repoUrl, index) => {
                   let displayName = repoUrl;
-                  
+
                   return (
                     <div key={index} className="repo-card">
                       <div className="repo-stats">
@@ -185,8 +200,11 @@ const ProjectModal = ({
                         </div>
                         <div className="repo-badges">
                           <span className="repo-badge">
-                            {repoUrl.includes('gitlab') ? 'GitLab' : 
-                             repoUrl.includes('github') ? 'GitHub' : 'Repository'}
+                            {repoUrl.includes("gitlab")
+                              ? "GitLab"
+                              : repoUrl.includes("github")
+                                ? "GitHub"
+                                : "Repository"}
                           </span>
                         </div>
                       </div>
@@ -196,7 +214,7 @@ const ProjectModal = ({
                             className={`language-bar`}
                             style={{
                               width: `100%`,
-                              backgroundColor: "#cccccc"
+                              backgroundColor: "#cccccc",
                             }}
                             title={`Unknown`}
                           />
@@ -208,12 +226,12 @@ const ProjectModal = ({
               </>
             )}
           </div>
-        ) : (
+        ) : !project.Repo ? (
           <div className="repo-info-loading">
             No repository information available. The repositories may not have
             been found yet or from another organisation.
           </div>
-        )}
+        ) : null}
       </div>
     );
   };
@@ -313,6 +331,14 @@ const ProjectModal = ({
       );
     });
   };
+
+  const toggleAccordionGroup = (item) => {
+    setExpandedGroups((prev) => ({
+      ...prev,
+      [item]: !prev[item],
+    }));
+  };
+
   const renderGroup = (title, keys) => {
     const filteredKeys = filterItems(keys);
     const validKeys = filteredKeys.filter((key) => {
@@ -324,25 +350,37 @@ const ProjectModal = ({
 
     return (
       <div className="project-group">
-        <h3 className="group-title">{title}</h3>
-        <div className="group-content">
-          {validKeys.map((key) => {
-            const value = project[key];
-            return (
-              <div
-                key={key}
-                className={`detail-item ${title === "Repositories" ? "large-span" : ""}`}
-              >
-                <h3>{fieldLabels[key] || key.replace(/_/g, " ")}:</h3>
-                <p>
-                  {technologyListFields.includes(key)
-                    ? renderTechnologyList(value)
-                    : value.replace(/;/g, "; ")}
-                </p>
-              </div>
-            );
-          })}
+        <div
+          className="accordion-header"
+          onClick={() => toggleAccordionGroup(title)}
+        >
+          <h3>{title}</h3>
+          <span
+            className={`accordion-icon ${expandedGroups[title] ? "expanded" : ""}`}
+          >
+            <IoChevronDown />
+          </span>
         </div>
+        {!expandedGroups[title] && (
+          <div className="group-content">
+            {validKeys.map((key) => {
+              const value = project[key];
+              return (
+                <div
+                  key={key}
+                  className={`detail-item ${title === "Repositories" ? "large-span" : ""}`}
+                >
+                  <h3>{fieldLabels[key] || key.replace(/_/g, " ")}:</h3>
+                  <p>
+                    {technologyListFields.includes(key)
+                      ? renderTechnologyList(value)
+                      : value.replace(/;/g, "; ")}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     );
   };
@@ -414,12 +452,10 @@ const ProjectModal = ({
                   </div>
                 )}
 
-              {project.Technical_Contact && (
+                {project.Technical_Contact && (
                   <div className="detail-section">
                     <h4>Technical Contact</h4>
-                    <p>
-                      {project.Technical_Contact}
-                    </p>
+                    <p>{project.Technical_Contact}</p>
                   </div>
                 )}
 
@@ -428,14 +464,14 @@ const ProjectModal = ({
                     <h4>Delivery Manager</h4>
                     <p>{project.Delivery_Manager}</p>
                   </div>
-                )} 
+                )}
 
                 {project.Developed && (
                   <div className="detail-section">
                     <h4>Developed</h4>
                     <p>{project.Developed}</p>
                   </div>
-                )} 
+                )}
 
                 {project.Documentation && (
                   <div className="detail-section">
@@ -446,12 +482,14 @@ const ProjectModal = ({
                       rel="noopener noreferrer"
                       className="project-link"
                     >
-                      {project.Documentation.length > 64 ? `${project.Documentation.slice(0, 64)}...` : project.Documentation}
+                      {project.Documentation.length > 64
+                        ? `${project.Documentation.slice(0, 64)}...`
+                        : project.Documentation}
                     </a>
                   </div>
                 )}
 
-{project.Description && (
+                {project.Description && (
                   <div className="detail-section">
                     <h4>Description</h4>
                     <p>{project.Description}</p>
