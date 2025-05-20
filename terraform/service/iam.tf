@@ -63,3 +63,23 @@ resource "aws_iam_role_policy" "s3_read_only" {
     ]
   })
 }
+
+# IAM policy to allow ECS task to access the specified Secrets Manager secret
+resource "aws_iam_role_policy" "secretsmanager_access" {
+  name = "${var.domain}-${var.service_subdomain}-secretsmanager-access"
+  role = aws_iam_role.ecs_task_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:DescribeSecret"
+        ]
+        Resource = "arn:aws:secretsmanager:${var.region}:${var.aws_account_id}:secret:${var.aws_secret_name}*"
+      }
+    ]
+  })
+}
