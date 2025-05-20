@@ -47,7 +47,8 @@
 }
 
 .stat-card {
-  background: hsl(var(--muted));
+  background: hsl(var(--card));
+  color: hsl(var(--card-foreground));
   padding: 16px;
   border-radius: var(--radius);
   text-align: center;
@@ -113,11 +114,11 @@
 }
 
 .sort-options button {
-  background: hsl(var(--muted));
+  background: hsl(var(--card));
+  color: hsl(var(--card-foreground));
   padding: 4px;
   border-radius: var(--radius);
   border: 1px solid hsl(var(--border));
-  color: hsl(var(--muted-foreground));
   cursor: pointer;
   font-size: 14px;
   transition: all 0.2s ease;
@@ -130,14 +131,15 @@
 }
 
 .sort-options button:hover {
-  background: hsl(var(--accent));
+  background: hsl(var(--secondary));
   border-color: hsl(var(--border));
   box-shadow: none;
   transform: translateY(2px);
 }
 
 .sort-options button.active {
-  color: hsl(var(--foreground));
+  color: hsl(var(--primary-foreground));
+  background: hsl(var(--primary));
   border-color: hsl(var(--foreground) / 0.4);
   box-shadow: none;
   transform: translateY(2px);
@@ -150,6 +152,27 @@
   overflow-y: auto;
   padding: 0 8px 8px 0;
   min-height: 0;
+  -ms-overflow-style: none;
+  
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-color);
+}
+
+/* For Chrome, Safari, and Opera */
+.language-grid::-webkit-scrollbar {
+  width: 12px;
+}
+
+.language-grid::-webkit-scrollbar-track {
+  background: var(--scrollbar-track-color);
+}
+
+.language-grid::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb-color);
+}
+
+.language-grid::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover-color);
 }
 
 .language-grid::-webkit-scrollbar {
@@ -168,7 +191,8 @@
 }
 
 .language-card {
-  background: hsl(var(--muted));
+  background: hsl(var(--card));
+  color: hsl(var(--card-foreground));
   padding: 16px;
   border-radius: var(--radius);
   border: 1px solid hsl(var(--border));
@@ -291,10 +315,10 @@
   height: 27px;
   font-size: 12px;
   padding: 4px 8px;
-  background: hsl(var(--muted));
+  background: hsl(var(--card));
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
-  color: hsl(var(--foreground));
+  color: hsl(var(--card-foreground));
   font-family: "Inter", sans-serif;
   cursor: pointer;
   outline: none;
@@ -383,10 +407,10 @@
   height: 27px;
   font-size: 12px;
   padding: 4px 8px;
-  background: hsl(var(--muted));
+  background: hsl(var(--card));
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
-  color: hsl(var(--foreground));
+  color: hsl(var(--card-foreground));
   font-family: "Inter", sans-serif;
   cursor: pointer;
   outline: none;

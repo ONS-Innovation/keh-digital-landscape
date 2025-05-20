@@ -248,6 +248,7 @@ function Statistics({
                 value={selectedDate}
                 onChange={(e) => handleDateChange(e.target.value)}
                 disabled={isLoading}
+                aria-label="Select a date range"
               >
                 {dateOptions.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -266,6 +267,7 @@ function Statistics({
             </div>
             <select
               className="archive-toggle"
+              aria-label="Select a repository view"
               value={repoView}
               onChange={(e) => {
                 setRepoView(e.target.value);
