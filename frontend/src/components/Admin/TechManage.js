@@ -1532,6 +1532,7 @@ Diagram_Tools: "Supporting Tools",
                           type="checkbox"
                           checked={selectAll}
                           onChange={handleSelectAll}
+                          aria-label="Select all technologies"
                         />
                       </th>
                       <th
@@ -1593,6 +1594,7 @@ Diagram_Tools: "Supporting Tools",
                             onChange={(e) =>
                               handleSelectTech(tech, e.target.checked)
                             }
+                            aria-label={`Select ${tech}`}
                           />
                         </td>
                         <td className="name-cell">{tech}</td>
@@ -1610,7 +1612,7 @@ Diagram_Tools: "Supporting Tools",
                               : "Ref. List"}
                         </td>
                         <td className="sources-cell">
-                          <div className="tech-item-sources">
+                          <div className="tech-item-sources" tabIndex={0} role="region" aria-label={`Sources for ${tech}`}>
                             {Array.from(info.sources).map((source) => (
                               <span
                                 key={source}
@@ -1668,6 +1670,7 @@ Diagram_Tools: "Supporting Tools",
                         className="sort-select"
                         onChange={(e) => handleSortAllCategories(e.target.value)}
                         defaultValue=""
+                        aria-label="Sort all by..."
                       >
                         <option value="" disabled>Sort all by...</option>
                         <option value="alpha-asc">A to Z</option>
@@ -1755,6 +1758,7 @@ Diagram_Tools: "Supporting Tools",
                   type="checkbox"
                   checked={confirmAddChecked}
                   onChange={(e) => setConfirmAddChecked(e.target.checked)}
+                  aria-label="Confirm adding technologies"
                 />
                 I confirm I want to add these technologies
               </label>

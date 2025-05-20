@@ -843,6 +843,7 @@ const ReviewPage = () => {
                   onChange={handleTechnologyInputChange}
                   placeholder="Enter new technology"
                   className={`technology-input`}
+                  aria-label="Enter Technology Name"
                 />
                 {isDuplicate && (
                   <span className="error-message">

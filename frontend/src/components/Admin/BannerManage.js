@@ -144,6 +144,7 @@ const BannerManage = () => {
               onChange={(e) => setBannerTitle(e.target.value)}
               placeholder="Enter banner title"
               className="technology-input"
+              aria-label="Enter Banner Title"
             />
           </div>
 
@@ -155,6 +156,7 @@ const BannerManage = () => {
               placeholder="Enter banner message"
               className="technology-input"
               rows={4}
+              aria-label="Enter Banner Message"
             />
           </div>
 
