@@ -356,7 +356,7 @@ const ProjectModal = ({
         >
           <h3>{title}</h3>
           <span
-            className={`accordion-icon ${expandedGroups[title] ? "expanded" : ""}`}
+            className={`accordion-icon ${!expandedGroups[title] ? "expanded" : ""}`}
           >
             <IoChevronDown />
           </span>
