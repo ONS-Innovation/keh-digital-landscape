@@ -669,6 +669,9 @@ const ReviewPage = () => {
         <h2>{title.charAt(0).toUpperCase() + title.slice(1)}</h2>
         <div
           className="droppable-area"
+          tabIndex={0}
+          role="region"
+          aria-label={`Drop area for ${title}`}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={(e) => handleDrop(e, id)}

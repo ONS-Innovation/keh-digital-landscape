@@ -320,6 +320,11 @@
   border: 1px dashed hsl(var(--primary));
 }
 
+.droppable-area:focus {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
 .draggable-item {
   font-size: 12px;
   background: hsl(var(--card));

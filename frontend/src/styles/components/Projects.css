@@ -824,6 +824,11 @@ text-align: left;
   background: hsl(var(--background));
 }
 
+.projects-charts-container:focus {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
 .projects-chart {
   flex: 1;
   min-width: 300px;
