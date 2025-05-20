@@ -655,12 +655,11 @@ text {
 .info-box-number {
   font-size: 14px;
   font-weight: bold;
-  color: hsl(var(--muted-foreground));
-  background: hsl(var(--muted));
+  color: hsl(var(--primary-foreground));
+  background: hsl(var(--primary));
   padding: 2px 8px;
   box-sizing: border-box;
   border-radius: 12px;
-  margin-bottom: -2px;
 }
 
 .blip-highlight {
@@ -696,8 +695,8 @@ text {
   font-weight: 500;
   margin: 0;
 
-  color: hsl(var(--muted-foreground));
-  background: hsl(var(--muted));
+  color: hsl(var(--card-foreground));
+  background: hsl(var(--card));
 }
 
 .info-box-close {
@@ -752,6 +751,7 @@ text {
 .quadrant-list ul {
   margin: 0;
   overflow-y: auto;
+  outline: none;
 }
 
 /* Remove the max-height transition from ul */
