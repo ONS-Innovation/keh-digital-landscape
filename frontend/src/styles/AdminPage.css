@@ -31,7 +31,7 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--foreground));
   transition: all 0.2s ease;
 }
 
@@ -228,7 +228,8 @@
 }
 
 .tech-in-radar {
-  background-color: hsl(var(--blue));
+  background-color: var(--color-bg-assess);
+  color: var(--color-assess);
 }
 
 .tech-in-array {
@@ -236,9 +237,8 @@
 }
 
 .tech-not-tracked {
-  background-color: hsl(var(--destructive) / 0.5);
-  color: hsl(var(--foreground));
-  font-weight: 600;
+  background-color: var(--color-bg-hold);
+  color: var(--color-hold);
 }
 
 @layer base {
@@ -301,9 +301,14 @@
 
 .tech-item-sources {
   display: flex;
-  overflow-x: scroll;
-  scrollbar-width: none;
+  overflow-x: auto; /* Use auto to allow keyboard scroll when focused */
+  scrollbar-width: none; /* For Firefox */
   gap: 4px;
+  outline: none; /* Optional: control focus style yourself */
+}
+
+.tech-item-sources:focus {
+  outline: 2px solid #005fcc; /* Add a visible focus outline */
 }
 
 .editor-actions {
@@ -317,8 +322,8 @@
   padding: 0 12px;
   border-radius: var(--radius);
   border: 1px solid hsl(var(--border));
-  background-color: hsl(var(--muted));
-  color: hsl(var(--muted-foreground));
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
   font-size: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -477,7 +482,7 @@
 .tech-count {
   font-size: 14px;
   font-weight: normal;
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--foreground));
   margin-left: 8px;
 }
 
@@ -889,14 +894,14 @@
 
 .similarity-threshold-label {
   font-size: 13px;
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--foreground));
   display: flex;
   align-items: center;
 }
 
 .similarity-threshold-edit {
-  background-color: hsl(var(--muted));
-  color: hsl(var(--muted-foreground));
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
   font-size: 12px;
@@ -908,21 +913,16 @@
   align-items: center;
   justify-content: center;
   white-space: nowrap;
-  box-shadow: 0 3px 0 hsl(var(--accent));
 }
 
 .similarity-threshold-edit:hover {
   background-color: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
-  box-shadow: none;
-  transform: translateY(3px);
 }
 
 .similarity-threshold-edit.active {
   background-color: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
-  box-shadow: none;
-  transform: translateY(3px);
 }
 
 
