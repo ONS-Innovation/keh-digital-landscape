@@ -28,11 +28,6 @@ variable "aws_secret_name" {
   type        = string
 }
 
-variable "github_org" {
-  description = "GitHub Organisation"
-  type        = string
-}
-
 variable "container_image" {
   description = "Container image"
   type        = string
