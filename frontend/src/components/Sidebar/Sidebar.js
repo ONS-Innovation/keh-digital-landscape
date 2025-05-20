@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "../../styles/components/Sidebar.css";
 import HelpModal from "../Header/HelpModal";
@@ -13,7 +13,14 @@ import { TbSmartHome, TbEditCircle, TbUserShield, TbUsers, TbChartBar, TbHelp } 
 const Sidebar = () => {
   const location = useLocation();
   const [showHelpModal, setShowHelpModal] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    const saved = localStorage.getItem('sidebarCollapsed');
+    return saved === 'true' ? true : false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('sidebarCollapsed', isCollapsed);
+  }, [isCollapsed]);
 
   const handleSetShowHelpModal = () => {
     setShowHelpModal(!showHelpModal);
