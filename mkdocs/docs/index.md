@@ -37,6 +37,14 @@ Administrative interface for managing the Tech Radar:
 - Technology management (change ring, name, quadrant)
 - Add new technology
 
+### Admin
+Advanced administrative tools for managing the platform:
+
+- Banner management for site-wide notifications
+- Technology reference list management
+- Technology normalisation and consistency tools
+- Untracked technology detection and auditing
+
 ### Terraform
 
 The terraform code is undocumented within this documentation as it reflects similar infrastructure to applications deployed within the team. It uses a Cognito module, AWS Fargate, AWS ECR and AWS S3. There are no external APIs or services used.
@@ -47,3 +55,4 @@ The terraform code is undocumented within this documentation as it reflects simi
 - [Statistics Documentation](pages/statistics/index.md)
 - [Projects Documentation](pages/projects/index.md)
 - [Review Documentation](pages/review/index.md)
+- [Admin Documentation](pages/admin/index.md)

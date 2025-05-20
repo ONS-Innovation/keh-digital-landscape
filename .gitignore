@@ -74,6 +74,8 @@ terraform/service/highest_alb_listener_priority.txt
 /mkdocs/site
 /testing/venv
 /frontend/src/styles_older
+/node_modules
+array_data.json
 .vscode
 terraform/service/highest_alb_listener_priority.txt
 terraform/service/highest_priority.txt
