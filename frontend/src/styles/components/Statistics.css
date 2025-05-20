@@ -381,13 +381,14 @@
   align-items: center;
   justify-content: center;
   padding: 48px;
-  background: hsl(var(--muted));
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
   border-radius: var(--radius);
   border: 1px solid hsl(var(--border));
 }
 
 .no-data-message p {
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--foreground));
   font-size: 16px;
   margin: 0;
 }
