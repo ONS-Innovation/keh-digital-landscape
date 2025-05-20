@@ -773,6 +773,8 @@ textarea.technology-input {
   font-weight: 400;
   cursor: pointer;
   transition: all 0.2s ease;
+  border: 1px solid transparent;
+  outline: none;
 }
 
 .modal-buttons button:disabled {
@@ -780,36 +782,23 @@ textarea.technology-input {
 }
 
 .modal-buttons button:first-child {
-  background: hsl(var(--primary) / .1);
-  color: hsl(var(--primary));
-  border: 1px solid hsl(var(--primary) / .2);
-  box-shadow: 0 3px 0 hsl(var(--primary) / .2);
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
 }
 
 .modal-buttons button:first-child:hover {
   background: hsl(var(--primary) / 0.9);
   color: hsl(var(--primary-foreground));
-  box-shadow: none;
-  transform: translateY(3px);
-}
-
-.modal-buttons button:first-child:active {
-  border: 1px solid hsl(var(--primary));
 }
 
 .modal-buttons button:last-child {
-  background: hsl(var(--destructive) / .1);
-  color: hsl(var(--destructive));
-  border: 1px solid hsl(var(--destructive) / .2);
-  box-shadow: 0 3px 0 hsl(var(--destructive) / .6);
-
+  background: hsl(var(--destructive));
+  color: hsl(var(--destructive-foreground));
 }
 
 .modal-buttons button:last-child:hover {
-  background: hsl(var(--destructive) / 0.9);
+  background: hsl(var(--destructive) / .9);
   color: hsl(var(--destructive-foreground));
-  box-shadow: none;
-  transform: translateY(3px);
 }
 
 .admin-actions {
@@ -833,8 +822,8 @@ textarea.technology-input {
 }
 
 .admin-button {
-  background-color: hsl(var(--muted));
-  color: hsl(var(--muted-foreground));
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
   font-size: 12px;
@@ -925,8 +914,8 @@ textarea.technology-input {
 }
 
 .error-message {
-  color: hsl(var(--primary));
-  background: hsl(var(--destructive) / 0.3);
+  color: hsl(var(--destructive));
+  background: hsl(var(--destructive-foreground));
   border: 1px solid hsl(var(--destructive));
   padding: 4px 8px;
   border-radius: var(--radius);

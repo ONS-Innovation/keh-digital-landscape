@@ -860,6 +860,7 @@ const ReviewPage = () => {
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
                   className="category-select"
+                  aria-label="Select Category"
                 >
                   <option value="">Select Category</option>
                   <option value="Languages">Languages</option>
