@@ -62,7 +62,7 @@
     cursor: pointer;
   }
 
-  #filter-text {
+  .header-text {
     font-weight: 600;
   }
 
@@ -71,7 +71,9 @@
   }
 
   .dashboard-header {
-    /* Will be added in later PR */
+    display: flex;
+    flex-direction: row;
+    gap: 10%;
   }
 
   :root {

@@ -141,9 +141,27 @@ function CopilotDashboard() {
         />
         <div className="admin-container">
           <div className="dashboard-header">
-          {/* <p>View Data Type</p>  */} {/* Will be introduced in next page PR */}
+          <div>
+            <p className="header-text">View Data Type</p>
+            <div className="banner-type-selector">
+                <div
+                  className={`banner-type-option ${viewMode === "live" ? "selected" : ""}`}
+                  onClick={() => setViewMode("live")}
+                >
+                  <span className="banner-type-indicator info"></span>
+                  Live
+                </div>
+                <div
+                  className={`banner-type-option ${viewMode === "historic" ? "selected" : ""}`}
+                  onClick={() => setViewMode("historic")}
+                >
+                  <span className="banner-type-indicator warning"></span>
+                  Historic
+                </div>
+              </div>
+            </div>
             <div id="slider">
-              <p id="filter-text">Filter Live Data Range</p>
+              <p className="header-text">Filter Live Data Range</p>
               {isLoading ? (
                 <p>Loading dates...</p>
               ) :  (
