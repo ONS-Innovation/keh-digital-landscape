@@ -26,16 +26,16 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --color-adopt: #008a00;
-    --color-trial: #cb00b4;
-    --color-assess: #0069e5;
-    --color-hold: #de001a;
+    --color-adopt: #15803d;
+    --color-trial: #be185d;
+    --color-assess: #1d4ed8;
+    --color-hold: #b91c1c;
     --color-review: #666666;
     --color-ignore: #999999;
-    --color-bg-adopt: #e6ffe6;
-    --color-bg-trial: #ffe6f9;
-    --color-bg-assess: #e6f0ff;
-    --color-bg-hold: #ffe6e8;
+    --color-bg-adopt: #f0fdf4;
+    --color-bg-trial: #fdf2f8;
+    --color-bg-assess: #eff6ff;
+    --color-bg-hold: #fef2f2;
     --color-bg-review: #f5f5f5;
     --color-bg-ignore: #eeeeee;
 
