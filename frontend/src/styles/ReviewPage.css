@@ -1073,8 +1073,8 @@ textarea.technology-input {
 }
 
 .banner-status.hidden {
-  background-color: hsl(0, 0%, 95%);
-  color: hsl(0, 0%, 40%);
+  background-color: hsl(var(--muted));
+  color: hsl(var(--foreground));
 }
 
 .banner-actions {
@@ -1093,17 +1093,17 @@ textarea.technology-input {
 }
 
 .banner-toggle-btn {
-  background-color: hsl(var(--muted));
-  color: hsl(var(--muted-foreground));
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
 }
 
 .banner-toggle-btn:hover {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--primary) / 0.9);
 }
 
 .banner-delete-btn {
-  background-color: hsl(var(--destructive) / 0.1);
-  color: hsl(var(--destructive));
+  background-color: hsl(var(--destructive));
+  color: hsl(var(--destructive-foreground));
 }
 
 .banner-delete-btn:hover {
