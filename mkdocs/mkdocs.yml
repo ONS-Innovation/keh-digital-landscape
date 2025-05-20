@@ -20,9 +20,11 @@ nav:
     - Data: contexts/dataContext.md
     - Banner: contexts/banner.md
   - Components:
+    - Layout: components/layout/index.md
     - Header:
       - Header: components/header/index.md
       - Help Modal: components/header/helpModal.md
+    - Sidebar: components/sidebar/index.md
     - Homepage:
       - Changelog: components/homepage/Changelog.md
       - Recent Banners: components/homepage/RecentBanners.md

@@ -1,6 +1,6 @@
-# HelpModal Component Documentation
+# HelpModal Component
 
-The HelpModal component provides contextual help and guidance for user when viewing each page on the application.
+The HelpModal component provides contextual help and guidance for users when viewing each page of the application. It is now accessed through the Sidebar rather than the Header.
 
 ## Props
 
@@ -16,13 +16,13 @@ The HelpModal component accepts the following props:
 ```jsx
 import HelpModal from '../components/Header/HelpModal';
 
-function App() {
+function SidebarComponent() {
   const [showHelp, setShowHelp] = useState(false);
   
   return (
-    <div className="app">
+    <div className="sidebar">
       <button onClick={() => setShowHelp(true)}>
-        Show Help
+        Help
       </button>
       
       <HelpModal 
@@ -36,7 +36,16 @@ function App() {
 
 ## Context-Specific Content
 
-The HelpModal dynamically renders different content based on the current route
+The HelpModal dynamically renders different content based on the current route:
+
+- **Tech Radar**: Shows information about quadrants, rings, and how to use the radar
+- **Home**: Overview of the Digital Landscape features
+- **Statistics**: Guidance on filtering and interpreting language usage data
+- **Projects**: Instructions for navigating and filtering project information
+- **Review Dashboard**: Help for reviewers managing technologies
+- **Admin Dashboard**: Guidelines for banner and technology management
+
+Each context-specific help section includes links to more detailed documentation when applicable.
 
 ## Animation Implementation
 
@@ -48,4 +57,4 @@ The HelpModal uses a two-phase rendering approach for smooth animations:
 
 ## Styling
 
-The HelpModal uses dedicated CSS defined in `../../styles/components/HelpModal.css`.
+The HelpModal uses dedicated CSS defined in `../../styles/components/HelpModal.css` for consistent styling and smooth transitions.

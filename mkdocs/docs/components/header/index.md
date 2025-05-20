@@ -1,7 +1,6 @@
-# Header Component Documentation
+# Header Component
 
 The Header component serves as the primary navigation interface for the Digital Landscape application. It provides users with essential navigation controls, search functionality, and application settings in a consistent, accessible manner across all pages.
-
 
 ## Props
 
@@ -58,26 +57,36 @@ The Header component provides a context-aware search system that:
 - Displays relevant search results in a dropdown
 - Allows for clearing the search with a single click
 
-## Navigation
+The search shortcut is displayed to users within the search box when empty, automatically adapting to show the appropriate key combination based on the user's operating system.
 
-The Header provides navigation to the main sections of the application:
+## Logo and Navigation
 
-- **Tech Radar**
-- **Statistics**
-- **Projects**
-- **Review**
+The Header provides:
 
-The Header also provides a help system that displays the help modal when the help button is clicked.
+- Organisation logo that serves as a link to the homepage
+- Digital Landscape title that also links to the homepage
 
 ## Mobile Responsiveness
 
-On smaller screens, the Header transforms its navigation into a dropdown menu accessed through the `MenuDropdown` component, ensuring usability across all device sizes.
+On smaller screens, the Header:
+
+- Maintains the logo and app title for branding
+- Preserves the search functionality with full capability
+- Provides access to navigation through the `MenuDropdown` component
+- Includes a compact ThemeToggle for switching between light and dark modes
 
 ## Styling
 
 The Header component uses dedicated CSS defined in `../../styles/components/Header.css` and leverages the application's theme system for consistent visual presentation.
 
+## Keyboard Accessibility
 
-## Integration with Theme
+The Header implements accessibility features including:
+
+- Keyboard shortcut for search focus (⌘+K/CTRL+K)
+- Auto-detection of OS for displaying appropriate shortcut key hints
+- Clear search button for quickly resetting searches
+
+## Theme Integration
 
 The Header integrates with the application's theme system through the [ThemeToggle](/components/themeToggle) component, allowing users to switch between light and dark modes.
