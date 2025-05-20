@@ -51,29 +51,27 @@ nav:
   - Testing:
     - Overview: testing/index.md
     - Backend: testing/backend.md
+    - Accessibility: testing/accessibility.md
   - MkDocs:
     - Documentation: documentation.md
 theme:
   name: material
   language: en
   palette:
-    # toggle for light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: white
-      accent: deep purple
+      accent: white
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
-
-    # toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: white
-      accent: deep purple
+      primary: black
+      accent: black
       toggle:
         icon: material/weather-sunny
-        name: Switch to system preference
+        name: Switch to light mode
 
   features:
     - navigation.tracking
