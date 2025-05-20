@@ -6,11 +6,12 @@ The backend testing suite validates the API endpoints that serve data to the Dig
 
 ## Test Implementation
 
-The backend tests are implemented in the `testing/backend/` directory using the pytest framework and the requests library to make HTTP calls to the API endpoints. The tests are organised into three main files:
+The backend tests are implemented in the `testing/backend/` directory using the pytest framework and the requests library to make HTTP calls to the API endpoints. The tests are organised into four main files:
 
 - `test_main.py` - Tests for core API endpoints
 - `test_admin.py` - Tests for admin API endpoints
 - `test_review.py` - Tests for review API endpoints
+- `test_copilot.py` - Tests for CoPilot API endpoints
 
 ### Base Configuration
 
@@ -20,6 +21,17 @@ BASE_URL = "http://localhost:5001"
 ```
 
 ### Running Tests
+```bash
+# Navigate to the testing directory
+cd testing
+
+# Create a virtual environment (recommended)
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+make setup
+```
 
 The testing framework provides several commands for running tests:
 
@@ -35,6 +47,9 @@ make test-admin
 
 # Run only review API tests
 make test-review
+
+# Run only CoPilot API tests
+make test-copilot
 ```
 
 ### Health Check Tests
@@ -140,6 +155,66 @@ Tests the endpoint's handling of invalid data structures:
 Tests validation of references between entries and quadrants/rings:
 
 ::: testing.backend.test_review.test_tech_radar_update_invalid_references
+
+### Admin API Tests
+
+These tests are located in `test_admin.py` and verify the admin API endpoints.
+
+#### Banner Retrieval
+
+Tests retrieving banner messages:
+
+::: testing.backend.test_admin.test_admin_banner_get
+
+#### Banner Creation
+
+Tests creating new banner messages:
+
+::: testing.backend.test_admin.test_admin_banner_update
+
+#### Banner Creation Validation
+
+Tests validation of banner creation requests:
+
+::: testing.backend.test_admin.test_admin_banner_update_invalid
+
+#### Banner Visibility Toggle
+
+Tests toggling banner visibility:
+
+::: testing.backend.test_admin.test_admin_banner_toggle
+
+#### Banner Visibility Toggle Validation
+
+Tests validation of banner toggle requests:
+
+::: testing.backend.test_admin.test_admin_banner_toggle_invalid
+
+#### Banner Deletion
+
+Tests deleting banner messages:
+
+::: testing.backend.test_admin.test_admin_banner_delete
+
+#### Banner Deletion Validation
+
+Tests validation of banner deletion requests:
+
+::: testing.backend.test_admin.test_admin_banner_delete_invalid
+
+### CoPilot API Tests
+
+These tests are located in `test_copilot.py` and verify the CoPilot API endpoints.
+
+#### Live Organisation Data Retrieval
+Tests retrieving live CoPilot organisation usage data:
+
+::: testing.backend.test_copilot.test_org_live_get
+
+#### Organisation Seat Data Retrieval
+Tests retrieving CoPilot seat data:
+
+::: testing.backend.test_copilot.test_seats_get
 
 ### Banner Endpoints
 

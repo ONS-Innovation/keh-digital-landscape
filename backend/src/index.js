@@ -3,6 +3,7 @@
  * @file This is the main file for the backend server.
  * It sets up an Express server, handles CORS, and provides endpoints for fetching CSV/JSON data and checking server health.
  */
+require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
 const {
@@ -14,12 +15,14 @@ const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const fetch = require("node-fetch");
 const logger = require('./config/logger');
 const { transformProjectToCSVFormat } = require('./utilities/projectDataTransformer');
+const { getAppAndInstallation } = require ("./utilities/getAppAndInstallation.js");
 const { updateTechnologyInArray } = require('./utilities/updateTechnologyInArray');
 
 const app = express();
 const port = process.env.PORT || 5001;
 const bucketName = process.env.BUCKET_NAME || "sdp-dev-digital-landscape";
 const tatBucketName = process.env.TAT_BUCKET_NAME || "sdp-dev-tech-audit-tool-api";
+const org = process.env.GITHUB_ORG || "ONSdigital";
 
 app.use(
   cors({
@@ -33,6 +36,63 @@ app.use(express.json());
 
 const s3Client = new S3Client({
   region: "eu-west-2",
+});
+
+/**
+ * Endpoint for fetching Copilot organisation usage data from the Github API.
+ * @route GET /api/org/live
+ * @returns {Object} Organisation usage JSON data
+ * @throws {Error} 500 - If fetching fails
+ */
+app.get("/api/org/live", async (req, res) => {
+  try {
+    const octokit = await getAppAndInstallation()
+
+    const response = await octokit.request(`GET /orgs/${org}/copilot/metrics`, {
+      headers: {
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("GitHub API error:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * Endpoint for fetching Copilot seat data from the Github API.
+ * @route GET /api/seats
+ * @returns {Object} Copilot seat JSON data
+ * @throws {Error} 500 - If JSON fetching fails
+ */
+app.get("/api/seats", async (req, res) => {
+  try {
+    const octokit = await getAppAndInstallation()
+    let allSeats = [];
+    let page = 1;
+    let hasMore = true;
+
+    while (hasMore) {
+      const response = await octokit.request(`GET /orgs/${org}/copilot/billing/seats`, {
+        per_page: 100,
+        page,
+        headers: {
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
+      });
+
+      const currentSeats = response.data.seats ?? [];
+      allSeats.push(...currentSeats);
+      currentSeats.length < 100 ? hasMore = false : page += 1;
+    }
+
+    res.json(allSeats);
+  } catch (error) {
+    console.error("GitHub API error:", error);
+    res.status(500).json({ error: error.message });
+  }
 });
 
 /**

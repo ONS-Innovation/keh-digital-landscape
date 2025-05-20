@@ -7,6 +7,7 @@ import Projects from "./pages/ProjectsPage";
 import ReviewDashboard from "./pages/ReviewPage";
 import AdminPage from "./pages/AdminPage";
 import Layout from "./components/Layout/Layout";
+import CopilotDashboard from "./pages/CopilotPage";
 
 const App = () => {
   return (
@@ -19,7 +20,8 @@ const App = () => {
         <Route path="*" element={<Navigate to="/" replace />} />
         <Route path="/review/dashboard" element={<ReviewDashboard />} />
         <Route path="/admin/dashboard" element={<AdminPage />} />
-      </Routes>
+        <Route path="/copilot" element={<CopilotDashboard />} />
+    </Routes>
     </Layout>
   );
 };
