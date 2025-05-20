@@ -141,9 +141,9 @@ function CopilotDashboard() {
         />
         <div className="admin-container">
           <div className="dashboard-header">
-          <div>
-            <p className="header-text">View Data Type</p>
-            <div className="banner-type-selector">
+            <div>
+              <p className="header-text">View Data Type</p>
+              <div className="banner-type-selector">
                 <div
                   className={`banner-type-option ${viewMode === "live" ? "selected" : ""}`}
                   onClick={() => setViewMode("live")}
@@ -160,25 +160,27 @@ function CopilotDashboard() {
                 </div>
               </div>
             </div>
-            <div id="slider">
-              <p className="header-text">Filter Live Data Range</p>
-              {isLoading ? (
-                <p>Loading dates...</p>
-              ) :  (
-              <div>
-                <p>Start: {startDate}</p>
-                <Slider
-                range
-                min={1}
-                max={28}
-                value={sliderValues}
-                onChange={handleSliderChange}
-                allowCross={false}
-                />
-                <p>End: {endDate}</p>
+            {viewMode === "live" && (
+              <div id="slider">
+                <p className="header-text">Filter Live Data Range</p>
+                {isLoading ? (
+                  <p>Loading dates...</p>
+                ) : (
+                  <div>
+                    <p>Start: {startDate}</p>
+                    <Slider
+                      range
+                      min={1}
+                      max={28}
+                      value={sliderValues}
+                      onChange={handleSliderChange}
+                      allowCross={false}
+                    />
+                    <p>End: {endDate}</p>
+                  </div>
+                )}
               </div>
-              )}
-            </div>
+            )}
           </div>
           <div>
 
