@@ -4,22 +4,26 @@ import "../../styles/components/Sidebar.css";
 import HelpModal from "../Header/HelpModal";
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import { MdOutlineRadar } from "react-icons/md";
+import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import {
-  IoChevronBack,
-  IoChevronForward,
-} from "react-icons/io5";
-import { TbSmartHome, TbEditCircle, TbUserShield, TbUsers, TbChartBar, TbHelp } from "react-icons/tb";
+  TbSmartHome,
+  TbEditCircle,
+  TbUserShield,
+  TbUsers,
+  TbChartBar,
+  TbHelp,
+} from "react-icons/tb";
 
 const Sidebar = () => {
   const location = useLocation();
   const [showHelpModal, setShowHelpModal] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(() => {
-    const saved = localStorage.getItem('sidebarCollapsed');
-    return saved === 'true' ? true : false;
+    const saved = localStorage.getItem("sidebarCollapsed");
+    return saved === "true" ? true : false;
   });
 
   useEffect(() => {
-    localStorage.setItem('sidebarCollapsed', isCollapsed);
+    localStorage.setItem("sidebarCollapsed", isCollapsed);
   }, [isCollapsed]);
 
   const handleSetShowHelpModal = () => {
@@ -64,6 +68,7 @@ const Sidebar = () => {
               key={item.path}
               to={item.path}
               className={`sidebar-link ${location.pathname === item.path ? "active" : ""}`}
+              aria-label={item.label}
             >
               <span className="sidebar-icon">{item.icon}</span>
               {!isCollapsed && (
@@ -75,6 +80,7 @@ const Sidebar = () => {
               key={item.path}
               href={item.path}
               className={`sidebar-link ${location.pathname === item.path ? "active" : ""}`}
+              aria-label={item.label}
             >
               <span className="sidebar-icon">{item.icon}</span>
               {!isCollapsed && (
@@ -86,22 +92,27 @@ const Sidebar = () => {
       </nav>
       <div className="sidebar-footer">
         <div className="sidebar-footer-buttons">
-          <button onClick={() => handleSetShowHelpModal()} className="sidebar-footer-button">
+          <button
+            onClick={() => handleSetShowHelpModal()}
+            className="sidebar-footer-button"
+            aria-label="Help button to open help modal"
+          >
             <span className="sidebar-icon">
               <TbHelp />
-          </span>
-          {!isCollapsed && <span className="sidebar-label">Help</span>}
+            </span>
+            {!isCollapsed && <span className="sidebar-label">Help</span>}
           </button>
           <ThemeToggle variant={isCollapsed ? "small" : "large"} />
           <button
             className="sidebar-footer-button"
             onClick={() => setIsCollapsed(!isCollapsed)}
-        >
-          {isCollapsed ? <IoChevronForward /> : <IoChevronBack />}
+            aria-label={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+          >
+            {isCollapsed ? <IoChevronForward /> : <IoChevronBack />}
 
-          {!isCollapsed && (
-            <span className="sidebar-label">Collapse Sidebar</span>
-          )}
+            {!isCollapsed && (
+              <span className="sidebar-label">Collapse Sidebar</span>
+            )}
           </button>
         </div>
       </div>
