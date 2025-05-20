@@ -134,7 +134,7 @@ function CopilotDashboard() {
           description="Analyse CoPilot usage statistics organisation-wide and by team"
           tabs={[
             { id: "organisation", label: "Organisation Usage" },
-            { id: "team", label: "Team Usage" }
+            // { id: "team", label: "Team Usage" } // Temporarily removed until team usage is implemented
           ]}
           activeTab={scope}
           onTabChange={setScope}

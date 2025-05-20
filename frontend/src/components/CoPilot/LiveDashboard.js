@@ -202,10 +202,13 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
           <div>Loading seat info...</div>
           ) : (
             <div>
-              <div className="inactivity-info">
+              <div>
                 <p>Users are considered inactive after {inactiveDays} days ({inactivityDate})</p>
-                <div className="inactivity-button" onClick={() => setInactiveDays((prev) => prev + 1)}>+</div>
-                <div className="inactivity-button" onClick={() => setInactiveDays((prev) => (prev > 0 ? prev - 1 : prev))}>-</div>
+                <div className="inactivity-toggle">
+                  <p>Toggle inactivity threshold:</p>
+                  <div className="inactivity-button" onClick={() => setInactiveDays((prev) => (prev > 0 ? prev - 1 : prev))}>-</div>
+                  <div className="inactivity-button" onClick={() => setInactiveDays((prev) => prev + 1)}>+</div>
+                </div>
               </div>
               <div className="copilot-grid">
                   <div className="stat-card">
