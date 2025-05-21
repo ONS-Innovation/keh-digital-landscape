@@ -70,6 +70,10 @@
     width: 50%;
   }
 
+  #slider-end {
+    justify-self: right;
+  }
+
   .dashboard-header {
     /* Will be added in later PR */
   }

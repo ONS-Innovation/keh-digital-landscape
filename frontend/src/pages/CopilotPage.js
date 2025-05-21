@@ -47,9 +47,9 @@ function CopilotDashboard() {
     setSliderValues(values);
 
     const newStart = new Date();
-    newStart.setDate(newStart.getDate() - values[1]);
+    newStart.setDate(newStart.getDate() - 29 + values[0]);
     const newEnd = new Date();
-    newEnd.setDate(newEnd.getDate() - values[0]);
+    newEnd.setDate(newEnd.getDate() - 28 + values[1]);
 
     setStartDate(newStart.toISOString().slice(0, 10));
     setEndDate(newEnd.toISOString().slice(0, 10));
@@ -145,7 +145,7 @@ function CopilotDashboard() {
                 onChange={handleSliderChange}
                 allowCross={false}
                 />
-                <p>End: {endDate}</p>
+                <p id="slider-end">End: {endDate}</p>
               </div>
               )}
             </div>
