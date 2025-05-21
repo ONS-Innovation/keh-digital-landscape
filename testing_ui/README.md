@@ -18,6 +18,8 @@ make setup
 
 ## Running
 
+The tests will run over the pages defined in the `pages` array in `test.js`. If you want to run the tests over a different set of pages, you can do so by changing the `pages` array.
+
 Run the default `wcag2a wcag2aa wcag21a wcag21aa` tests after setting up:
 
 ```bash
