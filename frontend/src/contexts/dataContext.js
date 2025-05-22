@@ -3,7 +3,8 @@ import { fetchCSVFromS3 } from "../utilities/getCSVData";
 import { fetchTechRadarJSONFromS3 } from "../utilities/getTechRadarJson";
 import { fetchRepositoryData, fetchRepositoryStats } from "../utilities/getRepositoryData";
 import { fetchBanners } from "../utilities/getBanner";
-
+import { fetchOrgLiveUsageData } from "../utilities/getUsageData";
+import { fetchSeatData } from "../utilities/getSeatData";
 /**
  * DataContext provides centralized data management and caching for the application.
  * It handles fetching and caching of CSV data, Tech Radar data, repository data,
@@ -24,13 +25,17 @@ export function DataProvider({ children }) {
   const [repositoryData, setRepositoryData] = useState(new Map());
   const [repositoryStats, setRepositoryStats] = useState(new Map());
   const [pageBanners, setPageBanners] = useState(new Map());
+  const [liveUsageData, setLiveUsageData] = useState(null);
+  const [seatsData, setSeatsData] = useState(null);
   
   const pendingRequests = useRef({
     csv: null,
     techRadar: null,
     repository: new Map(),
     repositoryStats: new Map(),
-    banners: new Map()
+    banners: new Map(),
+    usageData: null,
+    seatsData: null
   });
 
   /**
@@ -181,18 +186,73 @@ export function DataProvider({ children }) {
     return promise;
   };
 
+  /**
+   * Fetches and caches live usage data for the organisation.
+   *
+   *
+   * @param {boolean} [forceRefresh=false] - Whether to force a refresh of the cached data
+   * @returns {Promise<Object>} The live usage data
+   */
+  const getLiveUsageData = async (forceRefresh = false) => {
+    if (!forceRefresh && liveUsageData) {
+      return liveUsageData;
+    }
+
+    if (pendingRequests.current.usageData) {
+      return pendingRequests.current.usageData;
+    }
+
+    const promise = fetchOrgLiveUsageData().then(data => {
+      setLiveUsageData(data);
+      pendingRequests.current.usageData = null;
+      return data;
+    });
+
+    pendingRequests.current.usageData = promise;
+    return promise;
+  }
+
+  /**
+   * Fetches and caches seat data for the organisation.
+   *
+   * @param {boolean} [forceRefresh=false] - Whether to force a refresh of the cached data
+   * @returns {Promise<Object>} The seat data
+   */
+  const getSeatsData = async (forceRefresh = false) => {
+    if (!forceRefresh && seatsData) {
+      return seatsData;
+    }
+
+    if (pendingRequests.current.seatsData) {
+      return pendingRequests.current.seatsData;
+    }
+
+    const promise = fetchSeatData().then(data => {
+      setSeatsData(data);
+      pendingRequests.current.seatsData = null;
+      return data;
+    });
+
+    pendingRequests.current.seatsData = promise;
+    return promise;
+  }
+
   const clearCache = () => {
     setCsvData(null);
     setTechRadarData(null);
     setRepositoryData(new Map());
     setRepositoryStats(new Map());
     setPageBanners(new Map());
+    setLiveUsageData(null);
+    setSeatsData(null);
     pendingRequests.current = {
       csv: null,
       techRadar: null,
       repository: new Map(),
       repositoryStats: new Map(),
-      banners: new Map()
+      banners: new Map(),
+      usageData: null,
+      seatsData: null
     };
   };
 
@@ -206,7 +266,9 @@ export function DataProvider({ children }) {
         getRepositoryData,
         getRepositoryStats,
         getPageBanners,
-        clearCache
+        clearCache,
+        getLiveUsageData,
+        getSeatsData,
       }}
     >
       {children}

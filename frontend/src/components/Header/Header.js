@@ -117,7 +117,7 @@ function Header({
           >
             Projects
           </Link>
-          {/* Keep this as an <a> tag since we want to force refresh for review and admin to force Cognito login */}
+          {/* Keep these as an <a> tag since we want to force refresh for review and admin to force Cognito login */}
           <a 
             href="/review/dashboard"
             className={location.pathname === '/review/dashboard' ? 'active' : ''}
@@ -130,6 +130,12 @@ function Header({
           >
             Admin
           </a>
+          <Link 
+            to="/copilot" 
+            className={location.pathname === '/copilot' ? 'active' : ''}
+          >
+            CoPilot
+          </Link>
           <button onClick={() => handleSetShowHelpModal()}>
             Help
           </button>

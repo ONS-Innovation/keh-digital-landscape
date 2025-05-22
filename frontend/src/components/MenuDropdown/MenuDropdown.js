@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import "../../styles/components/MenuDropdown.css";
 import { IoHome, IoMenu, IoStatsChart, IoPeople, IoHelp } from 'react-icons/io5'
+import { VscCopilot } from "react-icons/vsc";
 import { FaEdit, FaUserShield } from "react-icons/fa";
 import { MdOutlineRadar } from "react-icons/md";
 
@@ -72,6 +72,7 @@ function MenuDropdown({ setShowHelpModal }) {
                 <IoPeople size={16} />
                 Projects
               </button>
+              {/* Keep these as <a> tags */}
               <a href='/review/dashboard' className={location.pathname === '/review/dashboard' ? 'active' : ''}>
                 <FaEdit size={16} />
                 Review
@@ -80,6 +81,10 @@ function MenuDropdown({ setShowHelpModal }) {
                 <FaUserShield size={16} />
                 Admin
               </a>
+              <button onClick={() => handleNavClick('/copilot')} className={location.pathname === '/copilot' ? 'active' : ''}>
+                <VscCopilot size={16} />
+                CoPilot
+              </button>
             </div>
             <div className="help-button-container">
               <button onClick={handleHelpClick}>

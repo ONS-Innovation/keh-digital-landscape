@@ -1,0 +1,99 @@
+  .copilot-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .copilot-chat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    max-width: 100%;
+  }
+
+  .copilot-charts-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-bottom: 100px;
+  }
+
+  .copilot-pie-chart {
+    width: 50%;
+    height: 300px;
+    text-align: center;
+  }
+
+  .title {
+    padding-top: 50px;
+  }
+
+  .pie-chart-loading {
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+  }
+
+  .seat-breakdown {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .seat-breakdown-item {
+    width: 100%;
+  }
+
+  .inactivity-toggle {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-bottom: 20px;
+  }
+
+  .inactivity-button {
+    background: hsl(var(--muted));
+    border: 1px solid hsl(var(--border));
+    padding: 5px 10px;
+    margin-left: 5px;
+    border-radius: var(--radius);
+    cursor: pointer;
+  }
+
+  #filter-text {
+    font-weight: 600;
+  }
+
+  #slider {
+    width: 50%;
+  }
+
+  #slider-end {
+    justify-self: right;
+  }
+
+  .dashboard-header {
+    /* Will be added in later PR */
+  }
+
+  :root {
+    --ag-background-color: hsl(var(--background));
+    --ag-text-color: hsl(var(--foreground));
+  
+    --ag-header-background-color: hsl(var(--muted));
+    --ag-header-text-color: hsl(var(--muted-foreground));
+  }
+
+  .copilot-graph-container {
+    width: calc(100% - 16px);
+    height: calc(50vh - 16px);
+  }
+
+  @media (max-width: 1024px) {
+    .seat-breakdown {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
