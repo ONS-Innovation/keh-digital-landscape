@@ -124,6 +124,8 @@ make docker-down
 
 Tests are run with PyTest. To run the tests, refer to the [README.md](/testing/README.md) in the `/testing/` folder.
 
+Accessing the testing is run with Playwright and AxeCore. To run the tests, refer to the [README.md](/testing_ui/README.md) in the `/testing_ui/` folder.
+
 ## Linting 
 
 Linting is run with ESLint. To run the linting, run the following commands:
@@ -148,87 +150,17 @@ Run the linting for the backend:
 make lint-backend
 ```
 
-## How to containerise and deploy to ECR on AWS
+## Terraform
+Follow these instructions in the central documenation to configure the Terraform:
 
-Build the frontend container:
+[Terraform Commands](https://github.com/ONS-Innovation/keh-central-documentation/blob/d42e7b4505c0433bac4fd637a0742b4ba7ee6659/terraform/COMMANDS.md)
 
-```bash
-docker build -t <account_id>.dkr.ecr.<region>.amazonaws.com/<repo>:<version_tag> ./frontend
-```
+When deploying the new service and its resources, deploy in this order:
 
-Push the frontend container to ECR:
-
-```bash
-docker push <account_id>.dkr.ecr.<region>.amazonaws.com/<repo>:<version_tag>
-```
-
-Build the backend container:
-
-```bash
-docker build -t <account_id>.dkr.ecr.<region>.amazonaws.com/<repo>:<version_tag> ./backend
-```
-
-Push the backend container to ECR:
-
-```bash
-docker push <account_id>.dkr.ecr.<region>.amazonaws.com/<repo>:<version_tag>
-```
-
-## How to deploy infrastructure to AWS
-
-Login to AWS via CLI:
-
-```bash
-aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin 999999999999.dkr.ecr.eu-west-2.amazonaws.com
-```
-
-Change directory to the authentication folder:
-
-```bash
-cd terraform/authentication
-```
-
-Set the environment variables. Check the terraform/service/env/dev/example_tfvars.txt file for the correct values.
-
-Run Terraform:
-
-```bash
-terraform init -backend-config="env/dev/backend-dev" -reconfigure
-terraform plan -var-file=env/dev/dev.tfvars
-terraform apply -var-file=env/dev/dev.tfvars
-```
-
-Change directory to the service folder (if in authentication folder):
-
-```bash
-cd ../service
-```
-
-Set the environment variables. Check the `terraform/service/env/dev/example_tfvars.txt` file for the correct values.
-
-Run Terraform:
-
-```bash
-terraform init -backend-config="env/dev/backend-dev" -reconfigure
-terraform plan -var-file=env/dev/dev.tfvars
-terraform apply -var-file=env/dev/dev.tfvars
-```
-
-Change directory to the storage folder (if in service folder):
-
-```bash
-cd ../storage
-```
-
-Set the environment variables. Check the `terraform/storage/env/dev/example_tfvars.txt` file for the correct values.
-
-Run Terraform:
-
-```bash
-terraform init -backend-config="env/dev/backend-dev" -reconfigure
-terraform plan -var-file=env/dev/dev.tfvars
-terraform apply -var-file=env/dev/dev.tfvars
-```
+- storage
+- admin
+- authentication
+- service
 
 ### Makefile
 
