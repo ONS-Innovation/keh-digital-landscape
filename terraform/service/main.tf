@@ -87,6 +87,22 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
         {
           name  = "TAT_BUCKET_NAME",
           value = var.api_s3_bucket_name
+        },
+        {
+          name = "GITHUB_APP_ID",
+          value = var.github_app_id
+        },
+        {
+          name = "GITHUB_APP_CLIENT_ID",
+          value = var.github_app_client_id
+        },
+        {
+          name = "AWS_SECRET_NAME",
+          value = var.aws_secret_name
+        },
+        {
+          name = "GITHUB_ORG",
+          value = var.github_org,
         }
       ],
       logConfiguration = {

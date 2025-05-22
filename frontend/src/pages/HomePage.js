@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import { ThemeProvider } from "../contexts/ThemeContext";
 import Header from "../components/Header/Header";
@@ -6,6 +6,7 @@ import Changelog from "../components/HomePage/Changelog";
 import RecentBanners from "../components/HomePage/RecentBanners";
 import { TbSmartHome, TbEditCircle, TbUserShield, TbUsers, TbChartBar, TbHelp } from "react-icons/tb";
 import { MdOutlineRadar } from "react-icons/md";
+import { VscCopilot } from "react-icons/vsc";
 import "../styles/HomePage.css";
 
 /**
@@ -15,6 +16,13 @@ import "../styles/HomePage.css";
  */
 function HomePage() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const navCards = document.querySelectorAll(".nav-card");
+    if (navCards.length % 2 !== 0) {
+      navCards[navCards.length - 1].classList.add("odd-last-child");
+    }
+  }, []);
 
   return (
     <ThemeProvider>
@@ -79,6 +87,13 @@ function HomePage() {
                 <h2>Admin</h2>
               </div>
               <p>Manage system-wide settings and configurations.</p>
+            </a>
+            <a className="nav-card" href="/copilot">
+              <div className="nav-card-header">
+                <VscCopilot />
+                <h2>CoPilot</h2>
+              </div>
+              <p>Analyse CoPilot usage statistics organisation-wide and by team.</p>
             </a>
           </div>
 
