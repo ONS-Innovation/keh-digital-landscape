@@ -13,6 +13,7 @@ import {
   TbChartBar,
   TbHelp,
 } from "react-icons/tb";
+import { VscCopilot } from "react-icons/vsc";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -55,6 +56,12 @@ const Sidebar = () => {
       path: "/admin/dashboard",
       label: "Admin",
       icon: <TbUserShield />,
+      isLink: false,
+    },
+    {
+      path: "/copilot",
+      label: "Copilot",
+      icon: <VscCopilot />,
       isLink: false,
     },
   ];
