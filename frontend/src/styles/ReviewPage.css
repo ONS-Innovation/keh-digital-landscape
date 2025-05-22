@@ -9,7 +9,6 @@
   justify-content: flex-start;
 
   max-height: calc(100vh - var(--header-height));
-  overflow-y: scroll;
 }
 
 .admin-details {
