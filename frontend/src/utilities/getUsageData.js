@@ -136,13 +136,13 @@ export const processUsageData = (data) => {
       });
 
       let acceptanceRate = dailySuggestions > 0
-      ? dailySuggestions / dailyAcceptances
+      ? dailyAcceptances / dailySuggestions
       : 0;
 
       completions.perDay.push({
         date,
         acceptances: dailyAcceptances,
-        acceptanceRate: acceptanceRate,
+        acceptanceRate: acceptanceRate * 100,
         engagedUsers: completionsEngagedUsers,
       });
 
