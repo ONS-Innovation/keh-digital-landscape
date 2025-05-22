@@ -47,7 +47,7 @@ function CopilotDashboard() {
   const [scope, setScope] = useState("organisation");
   const data = getDashboardData();
   const [isLoading, setIsLoading] = useState(true);
-  const { getLiveUsageData, getSeatsData } = useData();
+  const { getLiveUsageData, getHistoricUsageData, getSeatsData } = useData();
   const [sliderFinished, setSliderFinished] = useState(true);
 
   /**
@@ -187,10 +187,11 @@ function CopilotDashboard() {
                       min={1}
                       max={28}
                       value={sliderValues}
-                      onChange={handleSliderChange}
+                      onChange={updateSlider}
+                      onChangeComplete={handleSliderCompletion}
                       allowCross={false}
                     />
-                    <p>End: {endDate}</p>
+                    <p id="slider-end">End: {endDate}</p>
                   </div>
                 )}
               </div>
