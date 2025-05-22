@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { ThemeProvider } from "../contexts/ThemeContext";
 import Header from "../components/Header/Header";
 import LiveDashboard from "../components/CoPilot/LiveDashboard";
 import HistoricDashboard from "../components/CoPilot/HistoricDashboard";
@@ -128,7 +127,7 @@ function CopilotDashboard() {
   }, [inactiveDays, inactivityDate, liveOrgData.allSeatData]);
 
   return (
-    <ThemeProvider>
+    <>
       <Header hideSearch={true}/>
       <div className="admin-page">
         <PageBanner
@@ -165,9 +164,6 @@ function CopilotDashboard() {
               )}
             </div>
           </div>
-          <div>
-
-          </div>
           {viewMode === "live" ? (
               <LiveDashboard 
               scope={scope} 
@@ -184,7 +180,7 @@ function CopilotDashboard() {
             )}
         </div>
       </div>
-    </ThemeProvider>
+    </>
   );
 }
 

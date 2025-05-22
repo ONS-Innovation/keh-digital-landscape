@@ -1,10 +1,9 @@
 import React, {useEffect} from "react";
 import { useNavigate } from "react-router-dom";
-import { ThemeProvider } from "../contexts/ThemeContext";
 import Header from "../components/Header/Header";
 import Changelog from "../components/HomePage/Changelog";
 import RecentBanners from "../components/HomePage/RecentBanners";
-import { TbSmartHome, TbEditCircle, TbUserShield, TbUsers, TbChartBar, TbHelp } from "react-icons/tb";
+import { TbEditCircle, TbUserShield, TbUsers, TbChartBar, TbHelp } from "react-icons/tb";
 import { MdOutlineRadar } from "react-icons/md";
 import { VscCopilot } from "react-icons/vsc";
 import "../styles/HomePage.css";
@@ -25,7 +24,7 @@ function HomePage() {
   }, []);
 
   return (
-    <ThemeProvider>
+    <>
       <Header
         searchTerm=""
         onSearchChange={() => {}}
@@ -101,7 +100,7 @@ function HomePage() {
           <Changelog />
         </div>
       </div>
-    </ThemeProvider>
+    </>
   );
 }
 

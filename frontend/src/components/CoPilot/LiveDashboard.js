@@ -28,7 +28,7 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
   }
 
   return (
-    <div>
+    <>
         <h2 className="title">IDE Code Completions</h2>
           {isLoading ? (
             <div className="copilot-grid">
@@ -274,7 +274,7 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
                 </div>
             </div>
           )}
-    </div>
+    </>
   );
 }
 

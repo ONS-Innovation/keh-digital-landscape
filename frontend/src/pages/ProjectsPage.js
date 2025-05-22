@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ThemeProvider } from "../contexts/ThemeContext";
 import Header from "../components/Header/Header";
 import Projects from "../components/Projects/Projects";
 import ProjectModal from "../components/Projects/ProjectModal";
@@ -131,7 +130,7 @@ function ProjectsPage() {
   const filteredProjects = getFilteredProjects();
 
   return (
-    <ThemeProvider>
+    <>
       <Header 
         searchTerm={searchTerm}
         onSearchChange={(value) => setSearchTerm(value)}
@@ -161,7 +160,7 @@ function ProjectsPage() {
           />
         )}
       </div>
-    </ThemeProvider>
+    </>
   );
 }
 

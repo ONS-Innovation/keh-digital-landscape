@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import "../styles/App.css";
 import Header from "../components/Header/Header";
-import { ThemeProvider } from "../contexts/ThemeContext";
 import { useData } from "../contexts/dataContext";
 import {
   IoInformationCircle,
@@ -477,14 +476,14 @@ function RadarPage() {
 
   if (!data)
     return (
-      <ThemeProvider>
+      <div>
         <Header
         />
         <div className="loading-container">
           <div className="loading-spinner"></div>
           <p>Loading Radar...</p>
         </div>
-      </ThemeProvider>
+      </div>
     );
 
   const groupedEntries = data.entries.reduce((acc, entry) => {
@@ -620,7 +619,7 @@ function RadarPage() {
   };
 
   return (
-    <ThemeProvider>
+    <>
       <Header
         searchTerm={searchTerm}
         onSearchChange={handleSearch}
@@ -1116,7 +1115,7 @@ function RadarPage() {
           />
         )}
       </div>
-    </ThemeProvider>
+    </>
   );
 }
 
