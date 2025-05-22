@@ -1,12 +1,12 @@
 import React from "react";
-import "../../styles/components/Statistics.css";
-import SkeletonStatCard from "../Statistics/Skeletons/SkeletonStatCard";
-import "../../styles/CoPilotPage.css";
-import { getPercentage } from "../../utilities/getPercentage";
-import AcceptanceGraph from "./AcceptanceGraph";
-import EngagedUsersGraph from "./EngagedUsersGraph";
-import PieChart from "./PieChart";
-import TableBreakdown from "./TableBreakdown";
+import "../../../styles/components/Statistics.css";
+import SkeletonStatCard from "../../Statistics/Skeletons/SkeletonStatCard";
+import "../../../styles/CoPilotPage.css";
+import { getPercentage } from "../../../utilities/getPercentage";
+import AcceptanceGraph from "../Breakdowns/AcceptanceGraph";
+import EngagedUsersGraph from "../Breakdowns/EngagedUsersGraph";
+import PieChart from "../Breakdowns/PieChart";
+import TableBreakdown from "../Breakdowns/TableBreakdown";
 
 function HistoricDashboard({scope, data, isLoading}) {
 
@@ -57,6 +57,8 @@ function HistoricDashboard({scope, data, isLoading}) {
               <p>{getPercentage(completions?.lineAcceptanceRate ?? 0)}</p>
             </div>
           </div>
+          <h3>Averages per (period)</h3>
+          <p>TODO: Stat cards</p>
         </div>
       )}
       <h4>Acceptances and Acceptance Rate By (Period)</h4>
@@ -144,6 +146,7 @@ function HistoricDashboard({scope, data, isLoading}) {
               <p>{getPercentage(chats?.copyRate ??  0)}</p>
             </div>
           </div>
+          <h3>Averages per (period)</h3>
         </div>
       )}
       <h4>Engaged Users By (Period)</h4>

@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { ThemeProvider } from "../contexts/ThemeContext";
 import Header from "../components/Header/Header";
-import LiveDashboard from "../components/CoPilot/LiveDashboard";
-import HistoricDashboard from "../components/CoPilot/HistoricDashboard";
+import LiveDashboard from "../components/CoPilot/Dashboards/LiveDashboard";
+import HistoricDashboard from "../components/CoPilot/Dashboards/HistoricDashboard";
 import { filterInactiveUsers } from "../utilities/getSeatData";
 import { filterUsageData, processUsageData } from "../utilities/getUsageData";
 import PageBanner from "../components/PageBanner/PageBanner";
@@ -162,14 +162,12 @@ function CopilotDashboard() {
                   className={`banner-type-option ${viewMode === "live" ? "selected" : ""}`}
                   onClick={() => setViewMode("live")}
                 >
-                  <span className="banner-type-indicator info"></span>
                   Live
                 </div>
                 <div
                   className={`banner-type-option ${viewMode === "historic" ? "selected" : ""}`}
                   onClick={() => setViewMode("historic")}
                 >
-                  <span className="banner-type-indicator warning"></span>
                   Historic
                 </div>
               </div>

@@ -1,14 +1,14 @@
 import React from "react";
-import "../../styles/components/Statistics.css";
-import SkeletonStatCard from "../Statistics/Skeletons/SkeletonStatCard";
-import "../../styles/CoPilotPage.css";
-import { getPercentage } from "../../utilities/getPercentage";
-import AcceptanceGraph from "./AcceptanceGraph";
-import EngagedUsersGraph from "./EngagedUsersGraph";
-import PieChart from "./PieChart";
-import TableBreakdown from "./TableBreakdown";
-import { getFormattedTime } from "../../utilities/getFormattedTime";
-import { getCellRenderers } from "../../utilities/getCellRenderers";
+import "../../../styles/components/Statistics.css";
+import SkeletonStatCard from "../../Statistics/Skeletons/SkeletonStatCard";
+import "../../../styles/CoPilotPage.css";
+import { getPercentage } from "../../../utilities/getPercentage";
+import AcceptanceGraph from "../Breakdowns/AcceptanceGraph";
+import EngagedUsersGraph from "../Breakdowns/EngagedUsersGraph";
+import PieChart from "../Breakdowns/PieChart";
+import TableBreakdown from "../Breakdowns/TableBreakdown";
+import { getFormattedTime } from "../../../utilities/getFormattedTime";
+import { getCellRenderers } from "../../../utilities/getCellRenderers";
 
 function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, inactivityDate}) {
 
