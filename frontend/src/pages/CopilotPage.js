@@ -42,8 +42,21 @@ function CopilotDashboard() {
   const data = getDashboardData();
   const [isLoading, setIsLoading] = useState(true);
   const { getLiveUsageData, getSeatsData } = useData();
+  const [sliderFinished, setSliderFinished] = useState(true);
 
-  const handleSliderChange = (values) => {
+  /**
+   * Trigger data filter upon slider completion
+   *
+   */
+  const handleSliderCompletion = () => {
+    setSliderFinished(true)
+  };
+
+  /**
+   * Provide visual feedback on slider positions and dates
+   *
+   */
+  const updateSlider = (values) => {
     setSliderValues(values);
 
     const newStart = new Date();
@@ -92,14 +105,15 @@ function CopilotDashboard() {
    * Filter and then process live usage data based on start and end date
    */
   useEffect(() => {
-    if (!liveOrgData.allUsage?.length || !startDate || !endDate) return;
+    if (!liveOrgData.allUsage?.length || !startDate || !endDate || !sliderFinished) return;
     const filtered = filterUsageData(liveOrgData.allUsage, startDate, endDate);
     setLiveOrgData(prev => ({
       ...prev,
       filteredUsage: filtered,
       processedUsage: processUsageData(filtered),
     }));
-  }, [liveOrgData.allUsage, startDate, endDate]);
+    setSliderFinished(false);
+  }, [liveOrgData.allUsage, startDate, endDate, sliderFinished]);
 
   /**
    * Update active seats
@@ -142,7 +156,8 @@ function CopilotDashboard() {
                 min={1}
                 max={28}
                 value={sliderValues}
-                onChange={handleSliderChange}
+                onChange={updateSlider}
+                onChangeComplete={handleSliderCompletion}
                 allowCross={false}
                 />
                 <p id="slider-end">End: {endDate}</p>
