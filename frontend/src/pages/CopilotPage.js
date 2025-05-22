@@ -174,7 +174,7 @@ function CopilotDashboard() {
                 </div>
               </div>
             </div>
-            {viewMode === "live" && (
+            {viewMode === "live" ? (
               <div id="slider">
                 <p className="header-text">Filter Live Data Range</p>
                 {isLoading ? (
@@ -195,6 +195,8 @@ function CopilotDashboard() {
                   </div>
                 )}
               </div>
+            ) : (
+              <p className="header-text">TODO: Data grouping</p>
             )}
           </div>
           <div>

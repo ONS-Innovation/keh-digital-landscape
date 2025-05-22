@@ -70,9 +70,9 @@
     width: 50%;
   }
 
-    #slider-end {
-      justify-self: right;
-    }
+  #slider-end {
+    justify-self: right;
+  }
 
   .dashboard-header {
     display: flex;
