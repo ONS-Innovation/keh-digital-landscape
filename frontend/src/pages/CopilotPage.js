@@ -194,7 +194,9 @@ function CopilotDashboard() {
                 )}
               </div>
             ) : (
-              <p className="header-text">TODO: Data grouping</p>
+              <div>
+                <p className="header-text">View Dates By</p>
+              </div>
             )}
           </div>
           <div>
