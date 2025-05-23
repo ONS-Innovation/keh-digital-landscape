@@ -2,13 +2,14 @@ import React from "react";
 import "../../../styles/components/Statistics.css";
 import SkeletonStatCard from "../../Statistics/Skeletons/SkeletonStatCard";
 import "../../../styles/CoPilotPage.css";
-import { getPercentage } from "../../../utilities/getPercentage";
 import AcceptanceGraph from "../Breakdowns/AcceptanceGraph";
 import EngagedUsersGraph from "../Breakdowns/EngagedUsersGraph";
 import PieChart from "../Breakdowns/PieChart";
 import TableBreakdown from "../Breakdowns/TableBreakdown";
 import { getFormattedTime } from "../../../utilities/getFormattedTime";
 import { getCellRenderers } from "../../../utilities/getCellRenderers";
+import CompletionsCards from "../Breakdowns/CompletionsCards";
+import ChatCards from "../Breakdowns/ChatCards";
 
 function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, inactivityDate}) {
 
@@ -41,32 +42,7 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
             </div>
           ) : (
             <div>
-              <div className="copilot-grid">
-                <div className="stat-card">
-                  <h3>Total Suggestions</h3>
-                  <p>{completions?.totalSuggestions ?? 0}</p>
-                </div>
-                <div className="stat-card">
-                  <h3>Total Acceptances</h3>
-                  <p>{completions?.totalAcceptances ?? 0}</p>
-                </div>
-                <div className="stat-card">
-                  <h3>Acceptance Rate</h3>
-                  <p>{getPercentage(completions?.acceptanceRate ?? 0)}</p>
-                </div>
-                <div className="stat-card">
-                  <h3>Total Lines of Code Suggested</h3>
-                  <p>{completions?.totalLinesSuggested ?? 0}</p>
-                </div>
-                <div className="stat-card">
-                  <h3>Total Lines of Code Accepted</h3>
-                  <p>{completions?.totalLinesAccepted ?? 0}</p>
-                </div>
-                <div className="stat-card">
-                  <h3>Line Acceptance Rate</h3>
-                  <p>{getPercentage(completions?.lineAcceptanceRate ?? 0)}</p>
-                </div>
-              </div>
+              <CompletionsCards completions={completions} prefix={"Total"}/>
             </div>
           )}
           <h4>Acceptances and Acceptance Rate By Day</h4>
@@ -131,28 +107,7 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
             </div>
           ) : (
             <div>
-              <div className="copilot-chat-grid">
-                <div className="stat-card">
-                  <h3>Total Chats</h3>
-                  <p>{chats?.totalChats ?? 0}</p>
-                </div>
-                <div className="stat-card">
-                  <h3>Total Insertions</h3>
-                  <p>{chats?.totalInsertions ?? 0}</p>
-                </div>
-                <div className="stat-card">
-                  <h3>Insertion Rate</h3>
-                  <p>{getPercentage(chats?.insertionRate ?? 0)}</p>
-                </div>
-                <div className="stat-card">
-                  <h3>Total Copies</h3>
-                  <p>{chats?.totalCopies ?? 0}</p>
-                </div>
-                <div className="stat-card">
-                  <h3>Copy Rate</h3>
-                  <p>{getPercentage(chats?.copyRate ??  0)}</p>
-                </div>
-              </div>
+              <ChatCards chats={chats} prefix={"Total"}/>
             </div>
           )}
           <h4>Engaged Users By Day</h4>
