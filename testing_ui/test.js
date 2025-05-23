@@ -10,7 +10,7 @@ const {
 // collect optional axe tags from CLI arguments
 const tags = process.argv.slice(2);
 
-const pages = ['/', '/radar', '/statistics', '/projects', '/review/dashboard', '/admin/dashboard'];
+const pages = ['/', '/radar', '/statistics', '/projects', '/review/dashboard', '/admin/dashboard', '/copilot'];
 const timestamp = new Date().toISOString().replace(/:/g, '-');
 const REPORTS_DIR = path.join(process.cwd(), 'reports', timestamp);
 
