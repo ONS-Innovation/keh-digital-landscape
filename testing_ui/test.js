@@ -33,6 +33,8 @@ fs.mkdirSync(path.join(REPORTS_DIR, 'JSON'), { recursive: true });
     console.log(`Testing ${route}`);
 
     await page.goto(`http://localhost:3000${route}`);
+    await page.waitForLoadState('domcontentloaded');
+    await page.waitForTimeout(1000);
 
     // build axe builder and apply tags if provided
     let builder = new AxeBuilder({ page });
