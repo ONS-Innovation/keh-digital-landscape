@@ -36,23 +36,23 @@ export const ARCHITECTURE_CATEGORIES = ["AWS", "GCP", "Azure", "Other"];
 // Color mappings for different categories
 export const CATEGORY_COLOURS = {
   // Project stages
-  "Active Support": "var(--color-adopt)",
-  "Development": "var(--color-trial)",
-  "Unsupported": "var(--color-hold)",
+  "Active Support": "hsl(var(--chart-1))",
+  "Development": "hsl(var(--chart-2))",
+  "Unsupported": "hsl(var(--chart-3))",
   
   // Development types
-  "I": "var(--color-adopt)",
-  "O": "var(--color-trial)",
-  "P": "var(--color-assess)",
+  "I": "hsl(var(--chart-3))",
+  "O": "hsl(var(--chart-4))",
+  "P": "hsl(var(--chart-5))",
   
   // Hosting types
-  "Cloud": "var(--color-adopt)",
-  "On-premises": "var(--color-trial)",
-  "Hybrid": "var(--color-assess)",
+  "Cloud": "hsl(var(--chart-2))",
+  "On-premises": "hsl(var(--chart-3))",
+  "Hybrid": "hsl(var(--chart-4))",
   
   // Architecture categories
-  "AWS": "var(--color-adopt)",
-  "GCP": "var(--color-trial)",
-  "Azure": "var(--color-hold)",
-  "Other": "var(--color-assess)",
+  "AWS": "hsl(var(--chart-1))",
+  "GCP": "hsl(var(--chart-2))",
+  "Azure": "hsl(var(--chart-3))",
+  "Other": "hsl(var(--chart-4))",
 }; 

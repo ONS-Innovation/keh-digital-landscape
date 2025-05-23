@@ -420,9 +420,10 @@ const ProjectModal = ({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="search-input-projects"
+                aria-label="Search project details"
               />
             </div>
-            <button className="modal-close" onClick={onClose}>
+            <button className="modal-close" onClick={onClose} title="Close modal" aria-label="Close modal">
               <IoClose />
             </button>
           </div>

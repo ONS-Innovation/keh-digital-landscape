@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { ThemeProvider } from "../contexts/ThemeContext";
 import Header from "../components/Header/Header";
 import LiveDashboard from "../components/CoPilot/LiveDashboard";
 import HistoricDashboard from "../components/CoPilot/HistoricDashboard";
@@ -128,7 +127,7 @@ function CopilotDashboard() {
   }, [inactiveDays, inactivityDate, liveOrgData.allSeatData]);
 
   return (
-    <ThemeProvider>
+    <>
       <Header hideSearch={true}/>
       <div className="admin-page">
         <PageBanner
@@ -141,7 +140,7 @@ function CopilotDashboard() {
           activeTab={scope}
           onTabChange={setScope}
         />
-        <div className="admin-container">
+        <div className="admin-container" tabIndex="0">
           <div className="dashboard-header">
           {/* <p>View Data Type</p>  */} {/* Will be introduced in next page PR */}
             <div id="slider">
@@ -159,14 +158,13 @@ function CopilotDashboard() {
                 onChange={updateSlider}
                 onChangeComplete={handleSliderCompletion}
                 allowCross={false}
+                aria-label="Filter Live Data Range"
+                ariaLabelForHandle={['Start date filter', 'End date filter']}
                 />
                 <p id="slider-end">End: {endDate}</p>
               </div>
               )}
             </div>
-          </div>
-          <div>
-
           </div>
           {viewMode === "live" ? (
               <LiveDashboard 
@@ -184,7 +182,7 @@ function CopilotDashboard() {
             )}
         </div>
       </div>
-    </ThemeProvider>
+    </>
   );
 }
 

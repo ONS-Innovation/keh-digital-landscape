@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import MenuDropdown from "../MenuDropdown/MenuDropdown";
 import HelpModal from "./HelpModal";
+import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import "../../styles/components/Header.css";
 import Logo from "../../assets/logo.png";
 import { IoClose, IoSearch } from "react-icons/io5";
-import ThemeToggle from '../ThemeToggle/ThemeToggle';
 
 /**
  * Header component for the Tech Radar application.
@@ -31,32 +31,32 @@ function Header({
   onSearchResultClick = () => {},
   onOpenProjects = () => {},
   onStatsTechClick = () => {},
-  hideSearch = false
+  hideSearch = false,
 }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [showHelpModal, setShowHelpModal] = useState(false);
   const searchInputRef = useRef(null);
-  const [shortcutKey, setShortcutKey] = useState('⌘');
+  const [shortcutKey, setShortcutKey] = useState("⌘");
 
   useEffect(() => {
     // More reliable OS detection
     const userAgent = navigator.userAgent.toLowerCase();
     const isMac = /macintosh|macintel|macppc|mac68k|darwin/i.test(userAgent);
-    setShortcutKey(isMac ? '⌘' : 'CTRL');
+    setShortcutKey(isMac ? "⌘" : "CTRL");
   }, []);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
       // Check for Cmd+K (Mac) or Ctrl+K (Windows/Linux)
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         searchInputRef.current?.focus();
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   /**
@@ -67,79 +67,43 @@ function Header({
   };
 
   const handleSetShowHelpModal = () => {
-    setShowHelpModal(!showHelpModal)
-  }
+    setShowHelpModal(!showHelpModal);
+  };
 
   // Get search placeholder based on current route
   const getSearchPlaceholder = () => {
     switch (location.pathname) {
-      case '/projects':
-        return 'Search projects...';
-      case '/statistics':
-        return 'Search languages...';
+      case "/projects":
+        return "Search projects...";
+      case "/statistics":
+        return "Search languages...";
       default:
-        return 'Search technologies...';
+        return "Search technologies...";
     }
-  }
+  };
 
   // Only show search results dropdown on radar page
   const shouldShowSearchResults = () => {
-    return location.pathname === '/radar' && searchResults && searchResults.length > 0;
-  }
+    return (
+      location.pathname === "/radar" &&
+      searchResults &&
+      searchResults.length > 0
+    );
+  };
 
   return (
     <header className="radar-header">
       <div className="header-left">
-        <img 
-          src={Logo} 
-          alt="Logo" 
-          className="logo" 
-          onClick={() => navigate('/')}
-          style={{ cursor: 'pointer' }}
+        <img
+          src={Logo}
+          alt="Logo"
+          className="logo"
+          onClick={() => navigate("/")}
+          style={{ cursor: "pointer" }}
         />
-        <h1 onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>Digital Landscape</h1>
-        <nav className="desktop-nav">
-          <Link 
-            to="/radar" 
-            className={location.pathname === '/radar' ? 'active' : ''}
-          >
-            Tech Radar
-          </Link>
-          <Link 
-            to="/statistics" 
-            className={location.pathname === '/statistics' ? 'active' : ''}
-          >
-            Statistics
-          </Link>
-          <Link 
-            to="/projects" 
-            className={location.pathname === '/projects' ? 'active' : ''}
-          >
-            Projects
-          </Link>
-          {/* Keep these as an <a> tag since we want to force refresh for review and admin to force Cognito login */}
-          <a 
-            href="/review/dashboard"
-            className={location.pathname === '/review/dashboard' ? 'active' : ''}
-          >
-            Review
-          </a>
-          <a 
-            href="/admin/dashboard" 
-            className={location.pathname === '/admin/dashboard' ? 'active' : ''}
-          >
-            Admin
-          </a>
-          <Link 
-            to="/copilot" 
-            className={location.pathname === '/copilot' ? 'active' : ''}
-          >
-            CoPilot
-          </Link>
-          <button onClick={() => handleSetShowHelpModal()}>
-            Help
-          </button>
-        </nav>
+        <h1 onClick={() => navigate("/")} style={{ cursor: "pointer" }}>
+          Digital Landscape
+        </h1>
       </div>
       <div className="header-right">
         {!hideSearch && (
@@ -154,10 +118,7 @@ function Header({
               className="search-input"
             />
             {searchTerm ? (
-              <button
-                className="search-clear"
-                onClick={clearSearch}
-              >
+              <button className="search-clear" onClick={clearSearch}>
                 <IoClose />
               </button>
             ) : (
@@ -188,14 +149,17 @@ function Header({
           </div>
         )}
         <div className="mobile-menu">
-          <MenuDropdown 
-            onOpenProjects={onOpenProjects} 
+          <MenuDropdown
+            onOpenProjects={onOpenProjects}
             onStatsTechClick={onStatsTechClick}
             setShowHelpModal={handleSetShowHelpModal}
           />
+          <ThemeToggle variant="small" />
         </div>
-        <ThemeToggle />
-        <HelpModal show={showHelpModal} onClose={() => handleSetShowHelpModal()} />
+        <HelpModal
+          show={showHelpModal}
+          onClose={() => handleSetShowHelpModal()}
+        />
       </div>
     </header>
   );

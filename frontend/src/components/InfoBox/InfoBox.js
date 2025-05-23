@@ -218,7 +218,7 @@ const InfoBox = ({
           </>
         ) : (
           <>
-            <h3>{localTitle}</h3>
+            <h2>{localTitle}</h2>
             {isAdmin && (
               <button className="edit-button" onClick={handleEditClick}>
                 <FaEdit size={12} />
@@ -240,7 +240,7 @@ const InfoBox = ({
 
       <div className="timeline-header">
         <div className="timeline-header-title">
-          <h4>Timeline</h4>
+          <h3>Timeline</h3>
           <button
             className="timeline-sort-button"
             onClick={() => setTimelineAscending(!timelineAscending)}

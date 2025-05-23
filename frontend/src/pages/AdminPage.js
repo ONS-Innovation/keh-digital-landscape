@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { ThemeProvider } from "../contexts/ThemeContext";
 import Header from "../components/Header/Header";
 import BannerManage from "../components/Admin/BannerManage";
 import TechManage from "../components/Admin/TechManage";
@@ -19,7 +18,7 @@ const AdminPage = () => {
   ];
 
   return (
-    <ThemeProvider>
+    <>
       <Header hideSearch={true} />
       <div className="admin-page">
         <PageBanner
@@ -36,7 +35,7 @@ const AdminPage = () => {
         <div className={`admin-content ${activeTab === "tech" ? "active" : ""}`}>
           <TechManage />
         </div>
-    </ThemeProvider>
+    </>
   );
 };
 

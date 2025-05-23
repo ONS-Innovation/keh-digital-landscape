@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Statistics from "../components/Statistics/Statistics";
 import Header from "../components/Header/Header";
-import { ThemeProvider } from "../contexts/ThemeContext";
 import { toast } from "react-hot-toast";
-import '../styles/StatisticsPage.css';
 import { useData } from "../contexts/dataContext";
 import { BannerContainer } from "../components/Banner";
 
@@ -223,7 +221,7 @@ function StatisticsPage() {
   const filteredLanguages = getFilteredLanguages();
 
   return (
-    <ThemeProvider>
+    <>
       <Header
         searchTerm={searchTerm}
         onSearchChange={(value) => setSearchTerm(value)}
@@ -243,7 +241,7 @@ function StatisticsPage() {
           setSearchTerm={setSearchTerm}
         />
       </div>
-    </ThemeProvider>
+    </>
   );
 }
 
