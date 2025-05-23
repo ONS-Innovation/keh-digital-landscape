@@ -576,7 +576,7 @@
   margin-bottom: 20px;
 }
 
-.affected-projects h4 {
+.affected-projects h2 {
   margin: 0 0 12px 0;
   font-size: 14px;
   font-weight: 500;
@@ -642,7 +642,7 @@
   gap: 8px;
 }
 
-.category-header h4 {
+.category-header h2 {
   margin: 0;
   font-size: 14px;
   font-weight: 500;

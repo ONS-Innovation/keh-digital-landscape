@@ -213,7 +213,7 @@ const BannerManage = () => {
 
         {/* Existing Banners */}
         <div className="admin-modal-field">
-          <h3 className="existing-banners-title">Existing Banners</h3>
+          <h1 className="existing-banners-title">Existing Banners</h1>
           {existingBanners.length === 0 ? (
             <p>No banners have been created yet.</p>
           ) : (
@@ -221,7 +221,7 @@ const BannerManage = () => {
               {existingBanners.map((banner, index) => (
                 <div className="banner-item" key={index}>
                   <div className="banner-content">
-                    <h4>{banner.title || banner.message}</h4>
+                    <h2>{banner.title || banner.message}</h2>
                     <p>{banner.message}</p>
                     <div className="banner-actions">
                       <div className="banner-meta">
@@ -248,12 +248,16 @@ const BannerManage = () => {
                           onClick={() =>
                             handleToggleBanner(index, !banner.show)
                           }
+                          title={banner.show ? "Hide" : "Show"}
+                          aria-label={banner.show ? "Hide" : "Show"}
                         >
                           {banner.show ? "Hide" : "Show"}
                         </button>
                         <button
                           className="banner-delete-btn"
                           onClick={() => handleDeleteBanner(index)}
+                          title="Delete banner"
+                          aria-label="Delete banner"
                         >
                           Delete
                         </button>
@@ -271,7 +275,7 @@ const BannerManage = () => {
       {showBannerConfirmModal && (
         <div className="modal-overlay">
           <div className="admin-modal">
-            <h3>Confirm Banner Changes</h3>
+            <h1>Confirm Banner Changes</h1>
             <p>Are you sure you want to save these changes?</p>
             <div className="modal-buttons">
               <button onClick={handleSaveBannerConfirm}>Yes</button>

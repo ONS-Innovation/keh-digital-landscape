@@ -771,7 +771,7 @@ const ReviewPage = () => {
             <div className="admin-filter-search-flex">
               <div className="admin-filter-section-container">
                 <div className="admin-filter-section">
-                  <h4>Filter by Category</h4>
+                  <h2>Filter by Category</h2>
                   <MultiSelect
                     options={categoryOptions}
                     value={selectedCategories}
@@ -782,19 +782,23 @@ const ReviewPage = () => {
               </div>
               <div className="admin-actions">
                 <div>
-                  <h4> Reviewer Actions</h4>
+                  <h2> Reviewer Actions</h2>
                 </div>
                 <div className="buttons">
                   <button
                     className="admin-button"
                     onClick={() => setShowAddTechnologyModal(true)}
                     disabled={isLoading}
+                    title="Add Technology"
+                    aria-label="Add Technology"
                   >
                     Add Technology
                   </button>
                   <button
                     className="admin-button"
                     onClick={toggleProjectCount}
+                    title="Toggle Project Count"
+                    aria-label="Toggle Project Count"
                   >
                     {showProjectCount ? 'Hide Project Count' : 'Show Project Count'}
                   </button>
@@ -802,6 +806,8 @@ const ReviewPage = () => {
                     className="admin-button"
                     onClick={handleSaveClick}
                     disabled={isLoading}
+                    title="Save Changes"
+                    aria-label="Save Changes"
                   >
                     Save Changes
                   </button>
@@ -879,10 +885,16 @@ const ReviewPage = () => {
                 disabled={
                   !newTechnology.trim() || !selectedCategory || isDuplicate
                 }
+                title="Add Technology"
+                aria-label="Add Technology"
               >
                 Add
               </button>
-              <button onClick={() => setShowAddTechnologyModal(false)}>
+              <button
+                onClick={() => setShowAddTechnologyModal(false)}
+                title="Cancel"
+                aria-label="Cancel"
+              >
                 Cancel
               </button>
             </div>
@@ -901,8 +913,20 @@ const ReviewPage = () => {
               To: {editedTitle} ({editedCategory})
             </p>
             <div className="modal-buttons">
-              <button onClick={handleConfirmModalYes}>Yes</button>
-              <button onClick={handleConfirmModalNo}>No</button>
+              <button
+                onClick={handleConfirmModalYes}
+                title="Confirm"
+                aria-label="Confirm"
+              >
+                Yes
+              </button>
+              <button
+                onClick={handleConfirmModalNo}
+                title="No"
+                aria-label="No"
+              >
+                No
+              </button>
             </div>
           </div>
         </div>
@@ -914,7 +938,13 @@ const ReviewPage = () => {
             <p>Are you sure you want to save all changes to the Tech Radar?</p>
             <p>This action cannot be undone.</p>
             <div className="modal-buttons">
-              <button onClick={handleSaveConfirmModalYes}>Yes</button>
+              <button
+                onClick={handleSaveConfirmModalYes}
+                title="Yes"
+                aria-label="Yes"
+              >
+                Yes
+              </button>
               <button onClick={handleSaveConfirmModalNo}>No</button>
             </div>
           </div>
@@ -940,8 +970,20 @@ const ReviewPage = () => {
               <p>{pendingNewTechnology.description}</p>
             </div>
             <div className="modal-buttons">
-              <button onClick={handleAddConfirmModalYes}>Yes</button>
-              <button onClick={handleAddConfirmModalNo}>No</button>
+              <button
+                onClick={handleAddConfirmModalYes}
+                title="Yes"
+                aria-label="Yes"
+              >
+                Yes
+              </button>
+              <button
+                onClick={handleAddConfirmModalNo}
+                title="No"
+                aria-label="No"
+                >
+                No
+              </button>
             </div>
           </div>
         </div>
@@ -977,10 +1019,16 @@ const ReviewPage = () => {
               <button
                 onClick={handleMoveConfirm}
                 disabled={moveDescription.length < 1}
+                title="Confirm"
+                aria-label="Confirm"
               >
                 Confirm
               </button>
-              <button onClick={handleMoveCancel}>Cancel</button>
+              <button
+                onClick={handleMoveCancel}
+                title="Cancel"
+                aria-label="Cancel"
+              >Cancel</button>
             </div>
           </div>
         </div>

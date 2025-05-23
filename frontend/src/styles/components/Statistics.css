@@ -25,7 +25,7 @@
   margin-bottom: 12px;
 }
 
-.statistics-header h3 {
+.statistics-header h2 {
   margin: 0;
   font-size: 24px;
   font-weight: bold;
@@ -63,7 +63,7 @@
   gap: 4px;
 }
 
-.stat-card h3 {
+.stat-card h2 {
   font-size: 12px;
   margin: 0;
   color: hsl(var(--muted-foreground));
@@ -100,7 +100,7 @@
   gap: 16px;
 }
 
-.language-header h3 {
+.language-header h2 {
   margin: 0;
   font-size: 24px;
   font-weight: bold;
@@ -156,6 +156,16 @@
   
   scrollbar-width: thin;
   scrollbar-color: var(--scrollbar-color);
+}
+
+.language-grid:focus {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: -2px;
+}
+
+.language-grid:focus-within {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: -2px;
 }
 
 /* For Chrome, Safari, and Opera */
@@ -251,7 +261,7 @@
   border-color: var(--color-hold);
 }
 
-.language-card h4 {
+.language-card h2 {
   margin: 0;
   font-size: 16px;
   text-align: left;

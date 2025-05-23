@@ -693,7 +693,6 @@ Diagram_Tools: "Supporting Tools",
           <thead>
             <tr>
               <th>Technology ({technologies.length})</th>
-              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -1263,7 +1262,7 @@ Diagram_Tools: "Supporting Tools",
           <div key={category} className="category-section">
             <div className="category-header">
               <div className="category-header-left">
-                <h4>{category}</h4>
+                <h2>{category}</h2>
                 <span className="tech-count">({filteredTechs.length})</span>
               </div>
             </div>
@@ -1449,7 +1448,7 @@ Diagram_Tools: "Supporting Tools",
         <div className="tech-management-grid">
           <div className="tech-radar-status-column">
             <div className="technology-editor-header">
-              <h3 className="existing-banners-title">
+              <h1 className="existing-banners-title">
                 Untracked Technologies
                 {selectedTechIds.length > 0 && (
                   <span className="selection-info">
@@ -1457,7 +1456,7 @@ Diagram_Tools: "Supporting Tools",
                     - {selectedTechIds.length} selected
                   </span>
                 )}
-              </h3>
+              </h1>
               <div className="similarity-tech-radar-filter">
                 <div className="similarity-threshold-container">
                   <div className="similarity-threshold-header">
@@ -1581,7 +1580,7 @@ Diagram_Tools: "Supporting Tools",
                       </th>
                       <th>Source Question</th>
                       <th>Potential Matches</th>
-                      <th></th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1657,7 +1656,7 @@ Diagram_Tools: "Supporting Tools",
           <div className="technology-editor-column">
             <div className="technology-editor-container">
               <div className="technology-editor-header">
-                <h3 className="existing-banners-title">Reference List</h3>
+                <h1 className="existing-banners-title">Reference List</h1>
                 <div className="editor-actions">
                     <>
                       <MultiSelect
@@ -1701,7 +1700,7 @@ Diagram_Tools: "Supporting Tools",
       {showAddModal && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h3>Add Selected Technologies</h3>
+            <h1>Add Selected Technologies</h1>
             <div className="modal-options">
               <div className="radio-options">
                 <label>
@@ -1805,7 +1804,7 @@ Diagram_Tools: "Supporting Tools",
       {showNormaliseModal && (
         <div className="modal-overlay">
           <div className="modal-content admin-dash-modal">
-            <h3>Normalise Technology Name</h3>
+            <h1>Normalise Technology Name</h1>
             <div className="normalise-form">
               <div className="form-group">
                 <label>From:</label>
@@ -1829,7 +1828,7 @@ Diagram_Tools: "Supporting Tools",
             </div>
 
             <div className="affected-projects">
-              <h4>This will update {affectedProjects.length} projects:</h4>
+              <h2>This will update {affectedProjects.length} projects:</h2>
               <div className="affected-list">
                 {affectedProjects.map((project, index) => (
                   <div key={index} className="affected-item">

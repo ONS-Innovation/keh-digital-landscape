@@ -527,7 +527,7 @@ text {
 
 /* Ensure content area is scrollable */
 
-.info-box h3 {
+.info-box h2 {
   margin: 0;
   color: hsl(var(--foreground));
   font-size: 18px;
@@ -770,6 +770,21 @@ text {
   margin: 0;
   overflow-y: auto;
   outline: none;
+}
+
+.quadrant-list ul:focus,
+.quadrant-list ul:focus-within {
+  outline: 1px solid hsl(var(--primary));
+}
+
+/* Ensure column headers have visual distinction */
+.quadrant-list ul:focus .quadrant-header {
+  font-weight: bold;
+}
+
+/* High contrast for focused grid elements */
+.quadrant-list ul:focus-within {
+  box-shadow: 0 0 0 2px hsl(var(--primary), 0.3);
 }
 
 /* Remove the max-height transition from ul */
@@ -1201,7 +1216,7 @@ text {
 
 .timeline-node.review {
   background: hsl(var(--muted));
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--foreground));
 }
 
 .timeline-node.ignore {
@@ -1216,7 +1231,7 @@ text {
   border-top: 1px solid hsl(var(--border));
 }
 
-.timeline-header h4 {
+.timeline-header h3 {
   margin: 0;
   font-size: 14px;
   font-weight: 500;

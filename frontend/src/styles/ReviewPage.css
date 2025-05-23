@@ -83,7 +83,7 @@
   gap: 8px;
 }
 
-.admin-filter-section h4 {
+.admin-filter-section h2 {
   margin: 0;
   font-size: 14px;
   font-weight: 500;
@@ -792,7 +792,7 @@ textarea.technology-input {
   color: hsl(var(--primary-foreground));
 }
 
-.modal-buttons button:first-child:hover {
+.modal-buttons button:first-child:not(:disabled):hover {
   background: hsl(var(--primary) / 0.9);
   color: hsl(var(--primary-foreground));
 }
@@ -813,7 +813,7 @@ textarea.technology-input {
   gap: 8px;
 }
 
-.admin-actions h4 {
+.admin-actions h2 {
   margin: 0;
   font-size: 14px;
   font-weight: 500;
@@ -845,10 +845,8 @@ textarea.technology-input {
   box-shadow: 0 3px 0 hsl(var(--accent));
 }
 
-.admin-button:hover {
+.admin-button:not(:disabled):hover {
   background-color: hsl(var(--muted) / 0.75);
-  transform: translateY(3px);
-  box-shadow: none;
 }
 
 .admin-button:active {
@@ -945,6 +943,13 @@ textarea.technology-input {
   width: 100%;
   max-height: 100vh;
   overflow-y: auto;
+  outline: none;
+}
+
+/* Style for when the container is focused */
+.admin-container:focus {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: -2px;
 }
 
 @media screen and (max-width: 1200px) {
@@ -952,13 +957,6 @@ textarea.technology-input {
     padding: 16px;
   }
 }
-
-.admin-container h2 {
-  margin: 0 0 16px 0;
-  font-size: 20px;
-  font-weight: 600;
-}
-
 
 .existing-banners-title {
   margin: 0;
@@ -1032,7 +1030,7 @@ textarea.technology-input {
   flex: 1;
 }
 
-.banner-content h4 {
+.banner-content h2 {
   margin: 0 0 8px 0;
   font-size: 16px;
   font-weight: 600;

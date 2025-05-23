@@ -140,7 +140,7 @@ function CopilotDashboard() {
           activeTab={scope}
           onTabChange={setScope}
         />
-        <div className="admin-container">
+        <div className="admin-container" tabIndex="0">
           <div className="dashboard-header">
           {/* <p>View Data Type</p>  */} {/* Will be introduced in next page PR */}
             <div id="slider">
@@ -158,6 +158,8 @@ function CopilotDashboard() {
                 onChange={updateSlider}
                 onChangeComplete={handleSliderCompletion}
                 allowCross={false}
+                aria-label="Filter Live Data Range"
+                ariaLabelForHandle={['Start date filter', 'End date filter']}
                 />
                 <p id="slider-end">End: {endDate}</p>
               </div>

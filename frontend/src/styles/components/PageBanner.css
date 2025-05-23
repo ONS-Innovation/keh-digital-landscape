@@ -52,7 +52,7 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--foreground));
   transition: all 0.2s ease;
   text-wrap: nowrap;
 }

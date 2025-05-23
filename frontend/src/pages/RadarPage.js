@@ -697,7 +697,7 @@ function RadarPage() {
               </div>
             </div>
             {expandedQuadrants["4"] && (
-              <ul>
+              <ul tabIndex="0">
                 {numberedEntries["4"]?.map((entry) => (
                   <li
                     key={entry.id}
@@ -767,7 +767,7 @@ function RadarPage() {
                 </span>
               </div>
             </div>
-            <ul>
+            <ul tabIndex="0">
               {numberedEntries["1"]?.map((entry) => (
                 <li
                   key={entry.id}
@@ -1015,7 +1015,7 @@ function RadarPage() {
                 </span>
               </div>
             </div>
-            <ul>
+            <ul tabIndex="0">
               {numberedEntries["3"]?.map((entry) => (
                 <li
                   key={entry.id}
@@ -1084,7 +1084,7 @@ function RadarPage() {
                 </span>
               </div>
             </div>
-            <ul>
+            <ul tabIndex="0">
               {numberedEntries["2"]?.map((entry) => (
                 <li
                   key={entry.id}

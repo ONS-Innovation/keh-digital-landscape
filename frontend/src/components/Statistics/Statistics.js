@@ -240,7 +240,7 @@ function Statistics({
     <div className="statistics-content">
       <div className="statistics-header">
         <div className="statistics-header-left">
-          <h3>Repository Statistics</h3>
+          <h2>Repository Statistics</h2>
           <div className="header-controls">
             <div className="date-selector">
               <select
@@ -324,10 +324,10 @@ function Statistics({
           <div className="language-section">
             <div className="language-header">
               <div className="language-header-left">
-                <h3>Language Statistics</h3>
+                <h2>Language Statistics</h2>
               </div>
             </div>
-            <div className="language-grid">
+            <div className="language-grid" tabIndex="0">
               <SkeletonLanguageCard />
               <SkeletonLanguageCard />
               <SkeletonLanguageCard />
@@ -347,22 +347,22 @@ function Statistics({
         <>
           <div className="stats-grid">
             <div className="stat-card">
-              <h3>Total Repositories</h3>
+              <h2>Total Repositories</h2>
               <p>{hoveredLanguage && languageStats ? 
                   getRepoCountDisplay(languageStats[hoveredLanguage]?.repo_count) :
                   stats.total || 0}
               </p>
             </div>
             <div className="stat-card">
-              <h3>Public Repos</h3>
+              <h2>Public Repos</h2>
               <p>{stats.public || 0}</p>
             </div>
             <div className="stat-card">
-              <h3>Private Repos</h3>
+              <h2>Private Repos</h2>
               <p>{stats.private || 0}</p>
             </div>
             <div className="stat-card">
-              <h3>Internal Repos</h3>
+              <h2>Internal Repos</h2>
               <p>{stats.internal || 0}</p>
             </div>
           </div>
@@ -370,7 +370,7 @@ function Statistics({
           <div className="language-section">
             <div className="language-header">
               <div className="language-header-left">
-                <h3>Language Statistics</h3>
+                <h2>Language Statistics</h2>
               </div>
             </div>
 
@@ -429,7 +429,7 @@ function Statistics({
               </button>
             </div>
 
-            <div className="language-grid">
+            <div className="language-grid" tabIndex="0">
               {sortedAndFilteredLanguages.map(([language, stats]) => {
                 const status = getTechnologyStatus(language);
                 return (
@@ -440,7 +440,7 @@ function Statistics({
                     onMouseEnter={() => setHoveredLanguage(language)}
                     onMouseLeave={() => setHoveredLanguage(null)}
                   >
-                    <h4>{language}</h4>
+                    <h2>{language}</h2>
                     <div className="language-stats">
                       <p>
                         <strong>{stats.repo_count}</strong> repos
