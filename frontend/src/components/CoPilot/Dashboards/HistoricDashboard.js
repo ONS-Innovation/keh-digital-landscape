@@ -9,7 +9,7 @@ import TableBreakdown from "../Breakdowns/TableBreakdown";
 import CompletionsCards from "../Breakdowns/CompletionsCards";
 import ChatCards from "../Breakdowns/ChatCards";
 
-function HistoricDashboard({scope, data, isLoading}) {
+function HistoricDashboard({scope, data, isLoading, viewDatesBy}) {
 
   let completions, chats;
   if(!isLoading) {
@@ -32,17 +32,17 @@ function HistoricDashboard({scope, data, isLoading}) {
       ) : (
         <div>
           <CompletionsCards completions={completions} prefix={"Total"}/>
-          <h3>Averages per (period)</h3>
+          <h3>Averages per {viewDatesBy}</h3>
           <CompletionsCards completions={completions} prefix={"Average"}/>
         </div>
       )}
-      <h4>Acceptances and Acceptance Rate By (Period)</h4>
+      <h4>Acceptances and Acceptance Rate By {viewDatesBy}</h4>
       {isLoading ? (
         <div>Loading graph...</div>
       ) : (
         <AcceptanceGraph data={completions?.perDay ?? 0}/>
       )}
-      <h4>Engaged Users By (Period)</h4>
+      <h4>Engaged Users By {viewDatesBy}</h4>
       {isLoading ? (
         <div>Loading graph...</div>
       ) : (
@@ -99,11 +99,11 @@ function HistoricDashboard({scope, data, isLoading}) {
       ) : (
         <div>
           <ChatCards chats={chats} prefix={"Total"}/>
-          <h3>Averages per (period)</h3>
+          <h3>Averages per {viewDatesBy}</h3>
           <ChatCards chats={chats} prefix={"Average"}/>
         </div>
       )}
-      <h4>Engaged Users By (Period)</h4>
+      <h4>Engaged Users By {viewDatesBy}</h4>
       {isLoading ? (
         <div>Loading graph...</div>
       ) : (

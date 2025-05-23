@@ -49,6 +49,7 @@ function CopilotDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const { getLiveUsageData, getHistoricUsageData, getSeatsData } = useData();
   const [sliderFinished, setSliderFinished] = useState(true);
+  const [viewDatesBy, setViewDatesBy] = useState("Day");
 
   /**
    * Trigger data filter upon slider completion
@@ -214,7 +215,9 @@ function CopilotDashboard() {
               <HistoricDashboard 
               scope={scope} 
               data={data} 
-              isLoading={isLoading}/>
+              isLoading={isLoading}
+              viewDatesBy={viewDatesBy}
+              />
             )}
         </div>
       </div>
