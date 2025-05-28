@@ -33,6 +33,13 @@ function CopilotDashboard() {
     groupedUsage: [],
     processedUsage: [],
   });
+
+  const dateOptions = [
+    { value: "Day", label: "Day" },
+    { value: "Week", label: "Week" },
+    { value: "Month", label: "Month" },
+    { value: "Year", label: "Year" },
+  ];
   
   const [sliderValues, setSliderValues] = useState([1, 28]);
   const [inactiveDays, setInactiveDays] = useState(28);
@@ -197,6 +204,19 @@ function CopilotDashboard() {
             ) : (
               <div>
                 <p className="header-text">View Dates By</p>
+                <div className="date-selector">
+                  <select
+                    value={viewDatesBy}
+                    onChange={(e) => setViewDatesBy(e.target.value)}
+                    disabled={isLoading}
+                  >
+                    {dateOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+              </div>
               </div>
             )}
           </div>
