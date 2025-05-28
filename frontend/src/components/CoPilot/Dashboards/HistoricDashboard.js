@@ -9,12 +9,15 @@ import TableBreakdown from "../Breakdowns/TableBreakdown";
 import CompletionsCards from "../Breakdowns/CompletionsCards";
 import ChatCards from "../Breakdowns/ChatCards";
 
-function HistoricDashboard({scope, data, isLoading, viewDatesBy}) {
+function HistoricDashboard({scope, allData, groupedData, isLoading, viewDatesBy}) {
 
-  let completions, chats;
+  let allCompletions, allChats;
+  let groupedCompletions, groupedChats;
   if(!isLoading) {
-    completions = data.processedUsage.completions;
-    chats = data.processedUsage.chat;
+    allCompletions = allData.completions;
+    allChats = allData.chat;
+    groupedCompletions = groupedData.completions;
+    groupedChats = groupedData.chat;
   }
 
   return (
@@ -31,29 +34,29 @@ function HistoricDashboard({scope, data, isLoading, viewDatesBy}) {
         </div>
       ) : (
         <div>
-          <CompletionsCards completions={completions} prefix={"Total"}/>
+          <CompletionsCards completions={allCompletions} prefix={"Total"}/>
           <h3>Averages per {viewDatesBy}</h3>
-          <CompletionsCards completions={completions} prefix={"Average"}/>
+          <CompletionsCards completions={groupedCompletions} prefix={"Average"}/>
         </div>
       )}
       <h4>Acceptances and Acceptance Rate By {viewDatesBy}</h4>
       {isLoading ? (
         <div>Loading graph...</div>
       ) : (
-        <AcceptanceGraph data={completions?.perDay ?? 0}/>
+        <AcceptanceGraph data={groupedCompletions?.perDay ?? 0}/>
       )}
       <h4>Engaged Users By {viewDatesBy}</h4>
       {isLoading ? (
         <div>Loading graph...</div>
       ) : (
-        <EngagedUsersGraph data={completions?.perDay ?? 0}/>
+        <EngagedUsersGraph data={groupedCompletions?.perDay ?? 0}/>
       )}
       {isLoading ? (
         <div className="pie-chart-loading">Loading pie charts...</div>
       ) : (
         <div className="copilot-charts-container">
-          <PieChart engagedUsers={completions?.engagedUsersByLanguage ?? 0} title={"Engaged Users by Language"}/>
-          <PieChart engagedUsers={completions?.engagedUsersByEditor ?? 0} title={"Engaged Users by Editor"}/>
+          <PieChart engagedUsers={allCompletions?.engagedUsersByLanguage ?? 0} title={"Engaged Users by Language"}/>
+          <PieChart engagedUsers={allCompletions?.engagedUsersByEditor ?? 0} title={"Engaged Users by Editor"}/>
         </div>
       )}
       <h4>Language Breakdown</h4>
@@ -61,7 +64,7 @@ function HistoricDashboard({scope, data, isLoading, viewDatesBy}) {
         <div>Loading table...</div>
       ) : (
         <TableBreakdown
-          data={completions?.languageBreakdown ?? 0}
+          data={allCompletions?.languageBreakdown ?? 0}
           idField="language"
           idHeader="Language"
           columns={[
@@ -98,22 +101,22 @@ function HistoricDashboard({scope, data, isLoading, viewDatesBy}) {
         </div>
       ) : (
         <div>
-          <ChatCards chats={chats} prefix={"Total"}/>
+          <ChatCards chats={allChats} prefix={"Total"}/>
           <h3>Averages per {viewDatesBy}</h3>
-          <ChatCards chats={chats} prefix={"Average"}/>
+          <ChatCards chats={groupedChats} prefix={"Average"}/>
         </div>
       )}
       <h4>Engaged Users By {viewDatesBy}</h4>
       {isLoading ? (
         <div>Loading graph...</div>
       ) : (
-        <EngagedUsersGraph data={chats?.perDay ?? 0}/>
+        <EngagedUsersGraph data={groupedChats?.perDay ?? 0}/>
       )}
       {isLoading ? (
         <div className="pie-chart-loading">Loading pie chart...</div>
       ) : (
         <div className="copilot-charts-container">
-          <PieChart engagedUsers={chats?.engagedUsersByEditor ?? 0} title={"Engaged Users by Editor"}/>
+          <PieChart engagedUsers={allChats?.engagedUsersByEditor ?? 0} title={"Engaged Users by Editor"}/>
         </div>
       )}
      <h4>Editor Breakdown</h4>
@@ -121,7 +124,7 @@ function HistoricDashboard({scope, data, isLoading, viewDatesBy}) {
         <div>Loading table...</div>
       ) : (
         <TableBreakdown
-          data={chats?.editorBreakdown ?? 0}
+          data={allChats?.editorBreakdown ?? 0}
           idField="editor"
           idHeader="Editor"
           columns={[

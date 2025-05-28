@@ -20,6 +20,13 @@ function CopilotDashboard() {
     if (viewMode === "historic" && scope === "team") return null;
   };
 
+  const getGroupedData = () => {
+    if(viewDatesBy === "Day") return historicOrgData.allUsage;
+    if(viewDatesBy === "Week") return historicOrgData.weekUsage;
+    if(viewDatesBy === "Month") return historicOrgData.monthUsage;
+    if(viewDatesBy === "Year") return historicOrgData.yearUsage;
+  }
+
   const [liveOrgData, setLiveOrgData] = useState({
     allUsage: [],
     filteredUsage: [],
@@ -29,9 +36,10 @@ function CopilotDashboard() {
   });
 
   const [historicOrgData, setHistoricOrgData] = useState({
-    allUsage: [],
-    groupedUsage: [],
-    processedUsage: [],
+    allUsage: [], // Equivalent of day usage
+    weekUsage: [],
+    monthUsage: [],
+    yearUsage: [],
   });
 
   const dateOptions = [
@@ -112,9 +120,10 @@ function CopilotDashboard() {
         activeSeatData: seats ? filterInactiveUsers(seats, start) : [],
       });
       setHistoricOrgData({
-        allUsage: historicUsage ?? [],
-        groupedUsage: historicUsage ?? [],
-        processedUsage: historicUsage ? processUsageData(historicUsage) : [],
+        allUsage: historicUsage ? processUsageData(historicUsage) : [],
+        weekUsage: historicUsage ?? [], //TODO: Group and process
+        monthUsage: historicUsage ?? [],
+        yearUsage: historicUsage ?? [],
       });
       setIsLoading(false);
     };
@@ -234,7 +243,8 @@ function CopilotDashboard() {
             ) : (
               <HistoricDashboard 
               scope={scope} 
-              data={data} 
+              allData={historicOrgData.allUsage} 
+              groupedData={getGroupedData()}
               isLoading={isLoading}
               viewDatesBy={viewDatesBy}
               />
