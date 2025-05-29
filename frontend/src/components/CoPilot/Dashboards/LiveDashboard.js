@@ -49,13 +49,13 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
           {isLoading ? (
             <div>Loading graph...</div>
           ) : (
-            <AcceptanceGraph data={completions?.perDay ?? 0}/>
+            <AcceptanceGraph data={completions?.perGroupedPeriod ?? 0}/>
           )}
           <h4>Engaged Users By Day</h4>
           {isLoading ? (
             <div>Loading graph...</div>
           ) : (
-            <EngagedUsersGraph data={completions?.perDay ?? 0}/>
+            <EngagedUsersGraph data={completions?.perGroupedPeriod ?? 0}/>
           )}
           {isLoading ? (
             <div className="pie-chart-loading">Loading pie charts...</div>
@@ -114,7 +114,7 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
           {isLoading ? (
             <div>Loading graph...</div>
           ) : (
-            <EngagedUsersGraph data={chats?.perDay ?? 0}/>
+            <EngagedUsersGraph data={chats?.perGroupedPeriod ?? 0}/>
           )}
           {isLoading ? (
             <div className="pie-chart-loading">Loading pie chart...</div>

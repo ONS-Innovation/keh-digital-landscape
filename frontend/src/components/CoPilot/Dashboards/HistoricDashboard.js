@@ -47,13 +47,13 @@ function HistoricDashboard({scope, allData, groupedData, isLoading, viewDatesBy}
       {isLoading ? (
         <div>Loading graph...</div>
       ) : (
-        <AcceptanceGraph data={groupedCompletions?.perDay ?? 0}/>
+        <AcceptanceGraph data={groupedCompletions?.perGroupedPeriod ?? 0}/>
       )}
       <h4>Engaged Users By {viewDatesBy}</h4>
       {isLoading ? (
         <div>Loading graph...</div>
       ) : (
-        <EngagedUsersGraph data={groupedCompletions?.perDay ?? 0}/>
+        <EngagedUsersGraph data={groupedCompletions?.perGroupedPeriod ?? 0}/>
       )}
       {isLoading ? (
         <div className="pie-chart-loading">Loading pie charts...</div>
@@ -118,7 +118,7 @@ function HistoricDashboard({scope, allData, groupedData, isLoading, viewDatesBy}
       {isLoading ? (
         <div>Loading graph...</div>
       ) : (
-        <EngagedUsersGraph data={groupedChats?.perDay ?? 0}/>
+        <EngagedUsersGraph data={groupedChats?.perGroupedPeriod ?? 0}/>
       )}
       {isLoading ? (
         <div className="pie-chart-loading">Loading pie chart...</div>

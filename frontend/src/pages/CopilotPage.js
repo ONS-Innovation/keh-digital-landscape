@@ -121,9 +121,9 @@ function CopilotDashboard() {
       });
       setHistoricOrgData({
         allUsage: historicUsage ? processUsageData(historicUsage) : [],
-        weekUsage: historicUsage ?? [], //TODO: Group and process
-        monthUsage: historicUsage ?? [],
-        yearUsage: historicUsage ?? [],
+        weekUsage: historicUsage ? processUsageData(historicUsage, 'week') : [],
+        monthUsage: historicUsage ? processUsageData(historicUsage, 'month') : [],
+        yearUsage: historicUsage ? processUsageData(historicUsage, 'year') : [],
       });
       setIsLoading(false);
     };
