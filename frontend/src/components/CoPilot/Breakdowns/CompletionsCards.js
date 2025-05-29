@@ -5,7 +5,7 @@ function CompletionsCards({completions, prefix, divider = 1}) {
 
     return (
         <div>
-            <div className="copilot-grid">
+            <div className={`copilot-grid${prefix === 'Average' ? '-average' : ''}`}>
             <div className="stat-card">
                 <h3>{prefix} Suggestions</h3>
                 <p>{Math.round((completions?.totalSuggestions ?? 0) / divider)}</p>

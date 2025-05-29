@@ -243,8 +243,7 @@ function CopilotDashboard() {
             ) : (
               <HistoricDashboard 
               scope={scope} 
-              allData={historicOrgData.allUsage} 
-              groupedData={getGroupedData()}
+              data={getGroupedData()} 
               isLoading={isLoading}
               viewDatesBy={viewDatesBy}
               />
