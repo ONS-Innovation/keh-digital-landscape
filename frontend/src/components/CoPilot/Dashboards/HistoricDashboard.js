@@ -9,15 +9,12 @@ import TableBreakdown from "../Breakdowns/TableBreakdown";
 import CompletionsCards from "../Breakdowns/CompletionsCards";
 import ChatCards from "../Breakdowns/ChatCards";
 
-function HistoricDashboard({scope, allData, groupedData, isLoading, viewDatesBy}) {
+function HistoricDashboard({scope, data, isLoading, viewDatesBy}) {
 
-  let allCompletions, allChats;
-  let groupedCompletions, groupedChats;
+  let completions, chats;
   if(!isLoading) {
-    allCompletions = allData.completions;
-    allChats = allData.chat;
-    groupedCompletions = groupedData.completions;
-    groupedChats = groupedData.chat;
+    completions = data.completions;
+    chats = data.chat;
   }
 
   return (
@@ -34,11 +31,11 @@ function HistoricDashboard({scope, allData, groupedData, isLoading, viewDatesBy}
         </div>
       ) : (
         <div>
-          <CompletionsCards completions={allCompletions} prefix={"Total"}/>
+          <CompletionsCards completions={completions} prefix={"Total"}/>
           {viewDatesBy !== "Day" && (
           <div>
             <h3>Averages per {viewDatesBy}</h3>
-            <CompletionsCards completions={groupedCompletions} prefix={"Average"}/>
+            <CompletionsCards completions={completions} prefix={"Average"} divider={completions.perGroupedPeriod.length}/>
           </div>
           )}
         </div>
@@ -47,20 +44,20 @@ function HistoricDashboard({scope, allData, groupedData, isLoading, viewDatesBy}
       {isLoading ? (
         <div>Loading graph...</div>
       ) : (
-        <AcceptanceGraph data={groupedCompletions?.perGroupedPeriod ?? 0}/>
+        <AcceptanceGraph data={completions?.perGroupedPeriod ?? 0}/>
       )}
       <h4>Engaged Users By {viewDatesBy}</h4>
       {isLoading ? (
         <div>Loading graph...</div>
       ) : (
-        <EngagedUsersGraph data={groupedCompletions?.perGroupedPeriod ?? 0}/>
+        <EngagedUsersGraph data={completions?.perGroupedPeriod ?? 0}/>
       )}
       {isLoading ? (
         <div className="pie-chart-loading">Loading pie charts...</div>
       ) : (
         <div className="copilot-charts-container">
-          <PieChart engagedUsers={allCompletions?.engagedUsersByLanguage ?? 0} title={"Engaged Users by Language"}/>
-          <PieChart engagedUsers={allCompletions?.engagedUsersByEditor ?? 0} title={"Engaged Users by Editor"}/>
+          <PieChart engagedUsers={completions?.engagedUsersByLanguage ?? 0} title={"Engaged Users by Language"}/>
+          <PieChart engagedUsers={completions?.engagedUsersByEditor ?? 0} title={"Engaged Users by Editor"}/>
         </div>
       )}
       <h4>Language Breakdown</h4>
@@ -68,7 +65,7 @@ function HistoricDashboard({scope, allData, groupedData, isLoading, viewDatesBy}
         <div>Loading table...</div>
       ) : (
         <TableBreakdown
-          data={allCompletions?.languageBreakdown ?? 0}
+          data={completions?.languageBreakdown ?? 0}
           idField="language"
           idHeader="Language"
           columns={[
@@ -105,11 +102,11 @@ function HistoricDashboard({scope, allData, groupedData, isLoading, viewDatesBy}
         </div>
       ) : (
         <div>
-          <ChatCards chats={allChats} prefix={"Total"}/>
+          <ChatCards chats={chats} prefix={"Total"}/>
           {viewDatesBy !== "Day" && (
           <div>
             <h3>Averages per {viewDatesBy}</h3>
-            <ChatCards chats={groupedChats} prefix={"Average"}/>
+            <ChatCards chats={chats} prefix={"Average"} divider={chats.perGroupedPeriod.length}/>
           </div>
           )}
         </div>
@@ -118,13 +115,13 @@ function HistoricDashboard({scope, allData, groupedData, isLoading, viewDatesBy}
       {isLoading ? (
         <div>Loading graph...</div>
       ) : (
-        <EngagedUsersGraph data={groupedChats?.perGroupedPeriod ?? 0}/>
+        <EngagedUsersGraph data={chats?.perGroupedPeriod ?? 0}/>
       )}
       {isLoading ? (
         <div className="pie-chart-loading">Loading pie chart...</div>
       ) : (
         <div className="copilot-charts-container">
-          <PieChart engagedUsers={allChats?.engagedUsersByEditor ?? 0} title={"Engaged Users by Editor"}/>
+          <PieChart engagedUsers={chats?.engagedUsersByEditor ?? 0} title={"Engaged Users by Editor"}/>
         </div>
       )}
      <h4>Editor Breakdown</h4>
@@ -132,7 +129,7 @@ function HistoricDashboard({scope, allData, groupedData, isLoading, viewDatesBy}
         <div>Loading table...</div>
       ) : (
         <TableBreakdown
-          data={allChats?.editorBreakdown ?? 0}
+          data={chats?.editorBreakdown ?? 0}
           idField="editor"
           idHeader="Editor"
           columns={[
