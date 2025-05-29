@@ -1,6 +1,13 @@
 import React from "react";
 import { getPercentage } from "../../../utilities/getPercentage";
 
+/**
+ * ChatCards component displays statistics related to copilot chats data
+ * @param {Object} chats - The chats data
+ * @param {string} prefix - A prefix for the card titles (e.g., "Total", "Average")
+ * @param {number} [divider=1] - A value to divide the statistics by for calculating averages
+ * @returns {JSX.Element} The rendered ChatCards component
+ */
 function ChatCards({chats, prefix, divider = 1}) {
     return (
         <div className="copilot-chat-grid">

@@ -1,8 +1,14 @@
 import React from "react";
 import { getPercentage } from "../../../utilities/getPercentage";
 
+/**
+ * CompletionsCards component displays statistics related to copilot completions data
+ * @param {Object} completions - The completions data
+ * @param {string} prefix - A prefix for the card titles (e.g., "Total", "Average")
+ * @param {number} [divider=1] - A value to divide the statistics by for calculating averages
+ * @returns {JSX.Element} The rendered CompletionsCards component
+ */
 function CompletionsCards({completions, prefix, divider = 1}) {
-
     return (
         <div>
             <div className={`copilot-grid${prefix === 'Average' ? '-average' : ''}`}>
