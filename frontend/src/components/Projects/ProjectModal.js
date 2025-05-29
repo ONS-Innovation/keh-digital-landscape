@@ -264,6 +264,7 @@ const ProjectModal = ({
       "Datasets_Used",
       "Code_Editors",
       "Communication",
+      "Miscellaneous",
       "Collaboration",
       "Incident_Management",
       "Documentation_Tools",
@@ -289,6 +290,7 @@ const ProjectModal = ({
     Data_Output_Formats: "Data Output Formats",
     Integrations_ONS: "ONS Integrations",
     Integrations_External: "External Integrations",
+    Miscellaneous: "Miscellaneous Tools",
   };
 
   const technologyListFields = [
@@ -314,6 +316,7 @@ const ProjectModal = ({
     "Code_Editors",
     "Communication",
     "Collaboration",
+    "Miscellaneous",
     "Incident_Management",
     "Documentation_Tools",
     "UI_Tools",
