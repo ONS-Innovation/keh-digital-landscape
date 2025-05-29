@@ -62,7 +62,7 @@ const Sidebar = () => {
       path: "/copilot",
       label: "Copilot",
       icon: <VscCopilot />,
-      isLink: false,
+      isLink: true,
     },
   ];
 
