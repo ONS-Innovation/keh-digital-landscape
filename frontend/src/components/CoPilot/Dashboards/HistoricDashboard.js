@@ -35,8 +35,12 @@ function HistoricDashboard({scope, allData, groupedData, isLoading, viewDatesBy}
       ) : (
         <div>
           <CompletionsCards completions={allCompletions} prefix={"Total"}/>
-          <h3>Averages per {viewDatesBy}</h3>
-          <CompletionsCards completions={groupedCompletions} prefix={"Average"}/>
+          {viewDatesBy !== "Day" && (
+          <div>
+            <h3>Averages per {viewDatesBy}</h3>
+            <CompletionsCards completions={groupedCompletions} prefix={"Average"}/>
+          </div>
+          )}
         </div>
       )}
       <h4>Acceptances and Acceptance Rate By {viewDatesBy}</h4>
@@ -102,8 +106,12 @@ function HistoricDashboard({scope, allData, groupedData, isLoading, viewDatesBy}
       ) : (
         <div>
           <ChatCards chats={allChats} prefix={"Total"}/>
-          <h3>Averages per {viewDatesBy}</h3>
-          <ChatCards chats={groupedChats} prefix={"Average"}/>
+          {viewDatesBy !== "Day" && (
+          <div>
+            <h3>Averages per {viewDatesBy}</h3>
+            <ChatCards chats={groupedChats} prefix={"Average"}/>
+          </div>
+          )}
         </div>
       )}
       <h4>Engaged Users By {viewDatesBy}</h4>
