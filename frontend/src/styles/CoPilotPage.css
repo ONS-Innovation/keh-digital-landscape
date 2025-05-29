@@ -17,6 +17,11 @@
     max-width: 100%;
   }
 
+  .disclaimer {
+    padding-top: 20px;
+    font-size: 15px;
+  }
+
   .copilot-charts-container {
     width: 100%;
     display: flex;
