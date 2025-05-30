@@ -369,6 +369,7 @@ const ProjectModal = ({
                 <div
                   key={key}
                   className={`detail-item ${title === "Repositories" ? "large-span" : ""}`}
+                  tabIndex={0}
                 >
                   <h3>{fieldLabels[key] || key.replace(/_/g, " ")}:</h3>
                   <p>

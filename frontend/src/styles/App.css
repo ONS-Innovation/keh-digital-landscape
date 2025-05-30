@@ -199,9 +199,6 @@ line {
 }
 
 .quadrant-list ul {
-  padding: 0;
-  margin: 0;
-  overflow-y: auto;
   flex-grow: 1;
   scrollbar-width: thin;
   scrollbar-color: hsl(var(--muted)) transparent;
@@ -769,16 +766,30 @@ text {
 .quadrant-list ul {
   margin: 0;
   overflow-y: auto;
-  outline: none;
+  outline: none; /* Remove default outline */
 }
 
-.quadrant-list ul:focus,
+
+.quadrant-list ul:focus {
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: 1px; /* Add a small offset */
+}
+
+/* Apply outline when any element inside the ul is focused */
 .quadrant-list ul:focus-within {
   outline: 1px solid hsl(var(--primary));
+  outline-offset: 1px; /* Add a small offset */
 }
 
+
 /* Ensure column headers have visual distinction */
-.quadrant-list ul:focus .quadrant-header {
+/* This style is applied when the ul itself is focused */
+.quadrant-list ul:focus + .quadrant-header {
+  font-weight: bold;
+}
+
+/* Also apply when an element inside the ul is focused */
+.quadrant-list ul:focus-within + .quadrant-header {
   font-weight: bold;
 }
 
@@ -1123,6 +1134,10 @@ text {
   max-height: 65px;
 }
 
+.timeline-container:focus-within {
+  outline: 1px solid hsl(var(--primary));
+}
+
 .timeline-container::-webkit-scrollbar {
   height: 1px;
 }
@@ -1161,6 +1176,7 @@ text {
   overflow-y: auto;
   text-wrap: nowrap;
 }
+
 
 .timeline-node.active {
   border: 1px solid hsl(var(--primary));
@@ -1221,7 +1237,7 @@ text {
 
 .timeline-node.ignore {
   background: var(--color-bg-ignore);
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--foreground));
 }
 
 .timeline-header {

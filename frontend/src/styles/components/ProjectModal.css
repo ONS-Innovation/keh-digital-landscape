@@ -216,6 +216,10 @@
   text-align: left;
 }
 
+.detail-item:focus-within {
+  outline: 1px solid hsl(var(--primary));
+}
+
 .large-span {
   grid-column: span 2;
 }
@@ -223,7 +227,7 @@
 .detail-item h3 {
   margin: 0;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 400;
   color: hsl(var(--foreground));
 }
 
@@ -510,8 +514,8 @@
 .detail-section h4 {
   margin: 0;
   font-size: 12px;
-  font-weight: 500;
-  color: hsl(var(--muted-foreground));
+  font-weight: 300;
+  color: hsl(var(--foreground));
 }
 
 .project-link {

@@ -1703,7 +1703,7 @@ Diagram_Tools: "Supporting Tools",
             <h1>Add Selected Technologies</h1>
             <div className="modal-options">
               <div className="radio-options">
-                <label>
+                <label tabIndex={0}>
                   <input
                     type="radio"
                     name="addOption"
@@ -1718,12 +1718,12 @@ Diagram_Tools: "Supporting Tools",
                     type="radio"
                     name="addOption"
                     value="refList"
-                    checked={selectedAddOption === "refList"}
+                    checked={ selectedAddOption === "refList"}
                     onChange={(e) => setSelectedAddOption(e.target.value)}
                   />
                   Add to Ref. List
                 </label>
-                <label>
+                <label tabIndex={0}>
                   <input
                     type="radio"
                     name="addOption"
@@ -1807,29 +1807,35 @@ Diagram_Tools: "Supporting Tools",
             <h1>Normalise Technology Name</h1>
             <div className="normalise-form">
               <div className="form-group">
-                <label>From:</label>
+                <label htmlFor="normaliseFromInput" aria-label="From:">From:</label>
                 <input
+                  id="normaliseFromInput"
                   type="text"
                   value={normaliseFrom}
                   readOnly
                   className="normalise-input"
+                  title="This is the original name"
+                  aria-labelledby="From:"
                 />
               </div>
               <div className="form-group">
-                <label>To:</label>
+                <label htmlFor="normaliseToInput" aria-label="To:">To:</label>
                 <input
+                  id="normaliseToInput"
                   type="text"
                   value={normaliseTo}
                   onChange={(e) => setNormaliseTo(e.target.value)}
                   className="normalise-input"
                   placeholder="Enter normalised name..."
+                  title="This is the normalised name"
+                  aria-labelledby="To:"
                 />
               </div>
             </div>
 
             <div className="affected-projects">
               <h2>This will update {affectedProjects.length} projects:</h2>
-              <div className="affected-list">
+              <div className="affected-list" tabIndex={0}>
                 {affectedProjects.map((project, index) => (
                   <div key={index} className="affected-item">
                     <span className="affected-name">{project.Project}</span>

@@ -589,6 +589,10 @@
   font-size: 13px;
 }
 
+.affected-list:focus-within {
+  outline: 1px solid hsl(var(--primary));
+}
+
 .affected-item {
   padding: 6px 0;
   border-bottom: 1px solid hsl(var(--border));
@@ -599,12 +603,13 @@
 }
 
 .affected-name {
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .affected-programme {
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--foreground));
   margin-left: 8px;
+  font-weight: 300;
 }
 
 /* All categories view */
