@@ -4,11 +4,22 @@
     gap: 16px;
   }
 
+  .copilot-grid-average {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
   .copilot-chat-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 16px;
     max-width: 100%;
+  }
+
+  .disclaimer {
+    padding-top: 20px;
+    font-size: 15px;
   }
 
   .copilot-charts-container {
@@ -62,7 +73,7 @@
     cursor: pointer;
   }
 
-  #filter-text {
+  .header-text {
     font-weight: 600;
   }
 
@@ -75,7 +86,9 @@
   }
 
   .dashboard-header {
-    /* Will be added in later PR */
+    display: flex;
+    flex-direction: row;
+    gap: 10%;
   }
 
   :root {

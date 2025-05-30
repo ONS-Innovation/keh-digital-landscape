@@ -22,6 +22,7 @@ const app = express();
 const port = process.env.PORT || 5001;
 const bucketName = process.env.BUCKET_NAME || "sdp-dev-digital-landscape";
 const tatBucketName = process.env.TAT_BUCKET_NAME || "sdp-dev-tech-audit-tool-api";
+const copilotBucketName = process.env.COPILOT_BUCKET_NAME || "sdp-dev-copilot-usage-dashboard";
 const org = process.env.GITHUB_ORG || "ONSdigital";
 
 app.use(
@@ -57,6 +58,32 @@ app.get("/api/org/live", async (req, res) => {
     res.json(response.data);
   } catch (error) {
     console.error("GitHub API error:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * Endpoint for fetching Copilot organisation historic usage data from S3.
+ * @route GET /api/org/historic
+ * @returns {Object} Organisation usage JSON data
+ * @throws {Error} 500 - If fetching fails
+ */
+app.get("/api/org/historic", async (req, res) => {
+  try {
+    const command = new GetObjectCommand({
+      Bucket: copilotBucketName,
+      Key: "historic_usage_data.json",
+    });
+
+    const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 300 });
+
+    // Fetch the JSON data using the signed URL
+    const response = await fetch(signedUrl);
+    const jsonData = await response.json();
+
+    res.json(jsonData);
+  } catch (error) {
+    console.error("Error fetching JSON:", error);
     res.status(500).json({ error: error.message });
   }
 });

@@ -29,7 +29,23 @@ export const fetchOrgLiveUsageData = async () => {
  * @returns {Promise<Object>} - The historic usage data
  */
 export const fetchOrgHistoricUsageData = async () => {
-  //TODO: Will be added in next PR
+  try {
+    let response;
+    if (process.env.NODE_ENV === "development") {
+      response = await fetch(`http://localhost:5001/api/org/historic`);
+    } else {
+      response = await fetch("/api/org/historic");
+    }
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching usage data:", error);
+    return null;
+  }
 }
 
 /**
@@ -52,18 +68,40 @@ export const filterUsageData = (data, startDate, endDate) => {
 }
 
 /**
+ * Normalise date based on grouping level
+ * @param {string} dateStr - ISO date string
+ * @param {string} groupBy - Grouping by day, week, month or year
+ * @returns {string} - Normalised date string
+ */
+const getGroupedDate = (dateStr, groupBy) => {
+  const date = new Date(dateStr);
+  if (groupBy === 'week') {
+    const firstDayOfWeek = new Date(date);
+    firstDayOfWeek.setDate(date.getDate() - date.getDay());
+    return firstDayOfWeek.toISOString().split('T')[0];
+  } else if (groupBy === 'month') {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+  } else if (groupBy === 'year') {
+    return `${date.getFullYear()}`;
+  } else {
+    return date.toISOString().split('T')[0];
+  }
+};
+
+/**
  * Process usage data in a format suitable for dashboard display
  * 
- * @param {Object} data  - Filtered usage data
+ * @param {Object[]} data  - Filtered usage data
+ * @param {string} groupBy - Grouping by day, week, month or year
  * @returns {Object} - The processed usage data
  */
-export const processUsageData = (data) => {
+export const processUsageData = (data, groupBy = 'day') => {
   const completions = {
     totalSuggestions: 0,
     totalAcceptances: 0,
     totalLinesSuggested: 0,
     totalLinesAccepted: 0,
-    perDay: [],
+    perGroupedPeriod: [],
     engagedUsersByLanguage: {},
     engagedUsersByEditor: {},
     languageBreakdown: {}
@@ -73,15 +111,19 @@ export const processUsageData = (data) => {
     totalChats: 0,
     totalInsertions: 0,
     totalCopies: 0,
-    perDay: [],
+    perGroupedPeriod: [],
     engagedUsersByEditor: {},
     editorBreakdown: {}
   };
 
   if (!data || !data.length) return { completions, chat };
 
+  const completionsPerDate = {};
+  const chatPerDate = {};
+
   data.forEach((entry) => {
-    const date = entry.date;
+    const rawDate = entry.date;
+    const groupDate = getGroupedDate(rawDate, groupBy);
 
     // === COMPLETIONS ===
     const ide = entry.copilot_ide_code_completions;
@@ -113,7 +155,6 @@ export const processUsageData = (data) => {
             dailyLinesSuggested += linesSuggested;
             dailyLinesAccepted += linesAccepted;
 
-            // per language breakdown
             if (!completions.languageBreakdown[langName]) {
               completions.languageBreakdown[langName] = {
                 suggestions: 0,
@@ -129,22 +170,22 @@ export const processUsageData = (data) => {
             completions.languageBreakdown[langName].linesAccepted += linesAccepted;
 
             completions.engagedUsersByLanguage[langName] =
-              (completions.engagedUsersByLanguage[langName] || 0) +
-              engagedUsers;
+              (completions.engagedUsersByLanguage[langName] || 0) + engagedUsers;
           });
         });
       });
 
-      let acceptanceRate = dailySuggestions > 0
-      ? dailyAcceptances / dailySuggestions
-      : 0;
-
-      completions.perDay.push({
-        date,
-        acceptances: dailyAcceptances,
-        acceptanceRate: acceptanceRate * 100,
-        engagedUsers: completionsEngagedUsers,
-      });
+      if (!completionsPerDate[groupDate]) {
+        completionsPerDate[groupDate] = {
+          date: groupDate,
+          acceptances: 0,
+          suggestions: 0,
+          engagedUsers: 0
+        };
+      }
+      completionsPerDate[groupDate].acceptances += dailyAcceptances;
+      completionsPerDate[groupDate].suggestions += dailySuggestions;
+      completionsPerDate[groupDate].engagedUsers += completionsEngagedUsers;
 
       completions.totalSuggestions += dailySuggestions;
       completions.totalAcceptances += dailyAcceptances;
@@ -192,10 +233,13 @@ export const processUsageData = (data) => {
         });
       });
 
-      chat.perDay.push({
-        date,
-        engagedUsers: chatEngagedUsers,
-      });
+      if (!chatPerDate[groupDate]) {
+        chatPerDate[groupDate] = {
+          date: groupDate,
+          engagedUsers: 0
+        };
+      }
+      chatPerDate[groupDate].engagedUsers += chatEngagedUsers;
 
       chat.totalChats += dailyChats;
       chat.totalInsertions += dailyInsertions;
@@ -203,8 +247,17 @@ export const processUsageData = (data) => {
     }
   });
 
-  // === FINAL CALCULATIONS ===
+  // Finalise per grouped period arrays
+  completions.perGroupedPeriod = Object.values(completionsPerDate).map(day => ({
+    date: day.date,
+    acceptances: day.acceptances,
+    engagedUsers: day.engagedUsers,
+    acceptanceRate: day.suggestions > 0 ? (day.acceptances / day.suggestions) * 100 : 0
+  }));
 
+  chat.perGroupedPeriod = Object.values(chatPerDate);
+
+  // Final calculations
   completions.acceptanceRate = completions.totalSuggestions > 0
     ? completions.totalAcceptances / completions.totalSuggestions
     : 0;

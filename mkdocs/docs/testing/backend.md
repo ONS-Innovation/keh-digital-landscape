@@ -211,6 +211,11 @@ Tests retrieving live CoPilot organisation usage data:
 
 ::: testing.backend.test_copilot.test_org_live_get
 
+#### Historic Organisation Data Retrieval
+Tests retrieving historic CoPilot organisation usage data:
+
+::: testing.backend.test_copilot.test_org_historic_get
+
 #### Organisation Seat Data Retrieval
 Tests retrieving CoPilot seat data:
 
