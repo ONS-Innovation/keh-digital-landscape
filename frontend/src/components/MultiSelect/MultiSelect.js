@@ -57,7 +57,7 @@ const MultiSelect = ({
   );
 
   return (
-    <div className={`multi-select`} ref={containerRef}>
+    <div className={`multi-select`} ref={containerRef} aria-label={placeholder}>
       <div className={`multi-select-control ${isOpen ? "active" : ""}`} onClick={handleInputClick}>
         <div className="multi-select-values">
           {value.map((v) => (

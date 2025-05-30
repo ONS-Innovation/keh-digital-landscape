@@ -26,6 +26,13 @@
   max-height: 90vh;
 }
 
+.modal-content h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  text-align: left;
+}
+
 .modal-content h2 {
   margin: 0;
   font-weight: 600;
@@ -209,6 +216,10 @@
   text-align: left;
 }
 
+.detail-item:focus-within {
+  outline: 1px solid hsl(var(--primary));
+}
+
 .large-span {
   grid-column: span 2;
 }
@@ -216,8 +227,8 @@
 .detail-item h3 {
   margin: 0;
   font-size: 12px;
-  font-weight: 500;
-  color: hsl(var(--muted-foreground));
+  font-weight: 400;
+  color: hsl(var(--foreground));
 }
 
 .detail-item p {
@@ -418,7 +429,7 @@
   font-size: 12px;
   padding: 4px 6px;
   border-radius: 4px;
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--foreground));
   border: 1px solid hsl(var(--border));
   cursor: default;
   transition: all 0.2s ease;
@@ -503,8 +514,8 @@
 .detail-section h4 {
   margin: 0;
   font-size: 12px;
-  font-weight: 500;
-  color: hsl(var(--muted-foreground));
+  font-weight: 300;
+  color: hsl(var(--foreground));
 }
 
 .project-link {

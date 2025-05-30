@@ -1,68 +1,69 @@
 .banner-details {
-    text-align: left;
-    position: sticky;
-    top: calc(var(--header-height) - 1px);
-    background: hsl(var(--background));
-    z-index: 10;
-    padding: 16px 24px;
-    box-sizing: border-box;
-    width: 100%;
-    border-bottom: 1px solid hsl(var(--border));
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-  }
+  text-align: left;
+  position: sticky;
+  top: 0;
+  background: hsl(var(--background));
+  z-index: 10;
+  padding: 16px 24px;
+  box-sizing: border-box;
+  width: 100%;
+  border-bottom: 1px solid hsl(var(--border));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
 
-  .banner-header-left {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
+.banner-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 
-  .banner-review-title {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  
-  .banner-review-title h1 {
-    font-size: 24px;
-    font-weight: 600;
-    color: hsl(var(--foreground));
-    margin: 0;
-  }
-  
-  .banner-review-title span {
-    font-size: 14px;
-    color: hsl(var(--muted-foreground));
-  }
+.banner-review-title {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 
-  .banner-tabs {
-    display: flex;
-    gap: 1px;
-    background-color: hsl(var(--secondary));
-    padding: 4px;
-    border-radius: var(--radius);
-  }
+.banner-review-title h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin: 0;
+}
 
-  .banner-tab {
-    padding: 8px 16px;
-    border-radius: calc(var(--radius) - 2px);
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    color: hsl(var(--muted-foreground));
-    transition: all 0.2s ease;
-  }
-  
-  .banner-tab:hover {
-    color: hsl(var(--foreground));
-    background-color: hsl(var(--accent));
-  }
-  
-  .banner-tab.active {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
-  }
+.banner-review-title span {
+  font-size: 14px;
+  color: hsl(var(--muted-foreground));
+}
+
+.banner-tabs {
+  display: flex;
+  gap: 1px;
+  background-color: hsl(var(--secondary));
+  padding: 4px;
+  border-radius: var(--radius);
+}
+
+.banner-tab {
+  padding: 8px 16px;
+  border-radius: calc(var(--radius) - 2px);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: hsl(var(--foreground));
+  transition: all 0.2s ease;
+  text-wrap: nowrap;
+}
+
+.banner-tab:hover {
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--accent));
+}
+
+.banner-tab.active {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}

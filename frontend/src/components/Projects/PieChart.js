@@ -41,13 +41,11 @@ const PieChart = ({
 }) => {
   // Generate colour palette for dynamic categories
   const defaultColourPalette = [
-    "var(--color-adopt)",
-    "var(--color-trial)",
-    "var(--color-assess)",
-    "var(--color-hold)",
-    "#3498db",
-    "#e74c3c",
-    "#9b59b6",
+    "hsl(var(--chart-1))",
+    "hsl(var(--chart-2))",
+    "hsl(var(--chart-3))",
+    "hsl(var(--chart-4))",
+    "hsl(var(--chart-5))",
     "#2ecc71",
     "#f39c12",
     "#1abc9c",
@@ -401,12 +399,19 @@ const PieChart = ({
               fill="#8884d8"
               dataKey="value"
               opacity={0.5}
+              isAnimationActive={false}
+              nameKey="name"
+              role="presentation"
             >
               {pieData.map((entry, index) => (
                 <Cell 
                   key={`cell-${index}`} 
-                  fill={getColourForCategory(entry.category, index)} 
-                />
+                  fill={getColourForCategory(entry.category, index)}
+                  role="img"
+                  aria-label={`${entry.name}: ${entry.value}%, ${entry.count} ${splitSemicolon ? 'instances' : 'projects'}`}
+                >
+                  <title>{`${entry.name}: ${entry.value}%, ${entry.count} ${splitSemicolon ? 'instances' : 'projects'}`}</title>
+                </Cell>
               ))}
             </Pie>
             <Tooltip content={<CustomTooltip />} />
@@ -417,7 +422,7 @@ const PieChart = ({
                 value: entry.name,
                 type: 'circle',
                 id: entry.category,
-                color: getColourForCategory(entry.category, index)
+                color: getColourForCategory(entry.category, index),
               }))}
             />
           </RechartsPieChart>

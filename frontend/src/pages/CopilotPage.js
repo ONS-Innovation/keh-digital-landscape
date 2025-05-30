@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { ThemeProvider } from "../contexts/ThemeContext";
 import Header from "../components/Header/Header";
 import LiveDashboard from "../components/CoPilot/Dashboards/LiveDashboard";
 import HistoricDashboard from "../components/CoPilot/Dashboards/HistoricDashboard";
@@ -157,7 +156,7 @@ function CopilotDashboard() {
   }, [inactiveDays, inactivityDate, liveOrgData.allSeatData]);
 
   return (
-    <ThemeProvider>
+    <>
       <Header hideSearch={true}/>
       <div className="admin-page">
         <PageBanner
@@ -170,7 +169,7 @@ function CopilotDashboard() {
           activeTab={scope}
           onTabChange={setScope}
         />
-        <div className="admin-container">
+        <div className="admin-container" tabIndex="0">
           <div className="dashboard-header">
             <div>
               <p className="header-text">View Data Type</p>
@@ -250,7 +249,7 @@ function CopilotDashboard() {
             )}
         </div>
       </div>
-    </ThemeProvider>
+    </>
   );
 }
 
