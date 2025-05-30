@@ -7,10 +7,13 @@ const {
   generateCombinedMarkdownReport 
 } = require('./generate');
 
+// Load test configuration
+const configPath = path.join(__dirname, 'test-config.json');
+const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+
 // collect optional axe tags from CLI arguments
 const tags = process.argv.slice(2);
 
-const pages = ['/', '/radar', '/statistics', '/projects', '/review/dashboard', '/admin/dashboard', '/copilot'];
 const timestamp = new Date().toISOString().replace(/:/g, '-');
 const REPORTS_DIR = path.join(process.cwd(), 'reports', timestamp);
 
@@ -18,23 +21,57 @@ const REPORTS_DIR = path.join(process.cwd(), 'reports', timestamp);
 fs.mkdirSync(REPORTS_DIR, { recursive: true });
 fs.mkdirSync(path.join(REPORTS_DIR, 'JSON'), { recursive: true });
 
+/**
+ * Performs interactive testing by clicking specified elements
+ * @param {Object} page - Playwright page object
+ * @param {Array} testingElements - Array of selectors to click
+ * @param {Object} settings - Global settings for wait times
+ */
+async function performInteractiveTesting(page, testingElements, settings) {
+  for (const selector of testingElements) {
+    try {
+      console.log(`  - Clicking element: ${selector}`);
+      
+      // Wait for element to be visible and clickable
+      await page.waitForSelector(selector, { timeout: 5000 });
+      await page.click(selector);
+      
+      // Wait after click to allow any dynamic content to load
+      await page.waitForTimeout(settings.wait_after_click);
+      
+      // Wait for any potential DOM changes
+      await page.waitForLoadState('domcontentloaded');
+      
+    } catch (error) {
+      console.warn(`  - Warning: Could not click element ${selector}: ${error.message}`);
+    }
+  }
+}
+
 (async () => {
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({ headless: config.global_settings.headless });
   const context = await browser.newContext();
   const page = await context.newPage();
 
   // Accumulate results for combined report
   const routeResults = [];
 
-  for (const route of pages) {
-    // sanitise route name to avoid nested paths in filenames
-    const rawName = route === '/' ? 'home' : route.slice(1);
-    const routeName = rawName.replace(/\//g, '-');
-    console.log(`Testing ${route}`);
+  const pages = Object.values(config.pages);
+  const settings = config.global_settings;
 
-    await page.goto(`http://localhost:3000${route}`);
+  for (const pageConfig of pages) {
+    const { name, url, testing } = pageConfig;
+    console.log(`Testing ${url}`);
+
+    await page.goto(`${settings.base_url}${url}`);
     await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(settings.wait_after_load);
+
+    // Perform interactive testing if elements are specified
+    if (testing && testing.length > 0) {
+      console.log(`  Performing interactive testing for ${testing.length} elements`);
+      await performInteractiveTesting(page, testing, settings);
+    }
 
     // build axe builder and apply tags if provided
     let builder = new AxeBuilder({ page });
@@ -45,14 +82,14 @@ fs.mkdirSync(path.join(REPORTS_DIR, 'JSON'), { recursive: true });
     
 
     // write JSON report
-    const jsonFilename = `report-${routeName}.json`;
+    const jsonFilename = `report-${name}.json`;
     const jsonPath = path.join(REPORTS_DIR, 'JSON', jsonFilename);
     fs.writeFileSync(jsonPath, JSON.stringify(accessibilityScanResults, null, 2));
 
     // Accumulate for combined HTML report
-    routeResults.push({ route, results: accessibilityScanResults });
+    routeResults.push({ route: url, results: accessibilityScanResults });
 
-    console.log(`Accessibility test completed for ${route}`);
+    console.log(`Accessibility test completed for ${url}`);
     console.log(`Violations found: ${accessibilityScanResults.violations.length}`);
     console.log(`Full report saved.`);
 
