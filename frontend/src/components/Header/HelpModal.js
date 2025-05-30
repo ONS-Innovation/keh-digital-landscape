@@ -68,7 +68,7 @@ function HelpModal({ show, onClose }) {
           content: (
             <div className="help-modal-body">
               {githubPagesLink()}
-              <h5>Guide</h5>
+              <h1>Guide</h1>
               <span>
                 The Tech Radar is a visual representation of our technology
                 landscape. Here&apos;s how to use it:
@@ -94,7 +94,7 @@ function HelpModal({ show, onClose }) {
                   that specific quadrant
                 </li>
               </ul>
-              <h5>Quadrants and Rings</h5>
+              <h1>Quadrants and Rings</h1>
               <ul className="help-modal-list">
                 <li>
                   The 4 quadrants are:
@@ -146,7 +146,7 @@ function HelpModal({ show, onClose }) {
           content: (
             <div className="help-modal-body">
               {githubPagesLink()}
-              <h5>Overview</h5>
+              <h1>Overview</h1>
               <span>
                 Welcome to the Digital Landscape - your overview of our digital
                 technology ecosystem.
@@ -165,7 +165,7 @@ function HelpModal({ show, onClose }) {
           content: (
             <div className="help-modal-body">
               {githubPagesLink()}
-              <h5>Guide</h5>
+              <h1>Guide</h1>
               <span>
                 The Statistics page is a visual representation of the languages
                 used in the ONSDigital GitHub Organisation. Here&apos;s how to
@@ -207,7 +207,7 @@ function HelpModal({ show, onClose }) {
           content: (
             <div className="help-modal-body">
               {githubPagesLink()}
-              <h5>Guide</h5>
+              <h1>Guide</h1>
               <span>
                 The Projects page is a visual representation of the projects in
                 ONS. Here&apos;s how to use it:
@@ -241,7 +241,7 @@ function HelpModal({ show, onClose }) {
           content: (
             <div className="help-modal-body">
               {githubPagesLink()}
-              <h5>Guide</h5>
+              <h1>Guide</h1>
               <span>
                 This page should only be used by reviewers. Here is how to use
                 it:{" "}
@@ -286,7 +286,7 @@ function HelpModal({ show, onClose }) {
           content: (
             <div className="help-modal-body">
               {githubPagesLink()}
-              <h5>Banner Management</h5>
+              <h1>Banner Management</h1>
 
               <ul className="help-modal-list">
                 <li>View the Existing banners at the bottom of the page.</li>
@@ -310,7 +310,7 @@ function HelpModal({ show, onClose }) {
                 </li>
                 
               </ul>
-              <h5>Technology Management</h5>
+              <h1>Technology Management</h1>
 
               <ul className="help-modal-list">
                 <li>View the Banner and Technology Management sections.</li>
@@ -350,7 +350,7 @@ function HelpModal({ show, onClose }) {
           content: (
             <div className="help-modal-body">
               {githubPagesLink()}
-              <h5>Guide</h5>
+              <h1>Guide</h1>
               <span>
                 The Copilot dashboard visualises CoPilot usage data across ONS Digital. Here&apos;s how to use it:
               </span>
@@ -394,7 +394,7 @@ function HelpModal({ show, onClose }) {
       <div className="help-modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="help-modal-header">
           <h2 className="help-modal-title">{modalContent.title}</h2>
-          <button className="help-modal-close" onClick={onClose}>
+          <button className="help-modal-close" onClick={onClose} aria-label="Close modal">
             <IoClose size={20} />
           </button>
         </div>

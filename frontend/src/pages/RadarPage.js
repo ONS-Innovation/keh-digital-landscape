@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import "../styles/App.css";
 import Header from "../components/Header/Header";
-import { ThemeProvider } from "../contexts/ThemeContext";
 import { useData } from "../contexts/dataContext";
 import {
   IoInformationCircle,
@@ -28,7 +27,7 @@ function RadarPage() {
   const [searchResults, setSearchResults] = useState([]);
   const [isInfoBoxVisible, setIsInfoBoxVisible] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
-  const [dragPosition, setDragPosition] = useState({ x: 24, y: 80 });
+  const [dragPosition, setDragPosition] = useState({ x: 148, y: 80 });
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [expandedQuadrants, setExpandedQuadrants] = useState({
     1: true,
@@ -477,14 +476,14 @@ function RadarPage() {
 
   if (!data)
     return (
-      <ThemeProvider>
+      <div>
         <Header
         />
         <div className="loading-container">
           <div className="loading-spinner"></div>
           <p>Loading Radar...</p>
         </div>
-      </ThemeProvider>
+      </div>
     );
 
   const groupedEntries = data.entries.reduce((acc, entry) => {
@@ -620,7 +619,7 @@ function RadarPage() {
   };
 
   return (
-    <ThemeProvider>
+    <>
       <Header
         searchTerm={searchTerm}
         onSearchChange={handleSearch}
@@ -635,7 +634,7 @@ function RadarPage() {
           <InfoBox
             isAdmin={false}
             selectedItem={selectedBlip || lockedBlip}
-            initialPosition={{ x: 24, y: 80 }}
+            initialPosition={{ x: 272, y: 80 }}
             onClose={() => setIsInfoBoxVisible(false)}
             timelineAscending={timelineAscending}
             setTimelineAscending={setTimelineAscending}
@@ -698,7 +697,7 @@ function RadarPage() {
               </div>
             </div>
             {expandedQuadrants["4"] && (
-              <ul>
+              <ul tabIndex="0">
                 {numberedEntries["4"]?.map((entry) => (
                   <li
                     key={entry.id}
@@ -768,7 +767,7 @@ function RadarPage() {
                 </span>
               </div>
             </div>
-            <ul>
+            <ul tabIndex="0">
               {numberedEntries["1"]?.map((entry) => (
                 <li
                   key={entry.id}
@@ -1016,7 +1015,7 @@ function RadarPage() {
                 </span>
               </div>
             </div>
-            <ul>
+            <ul tabIndex="0">
               {numberedEntries["3"]?.map((entry) => (
                 <li
                   key={entry.id}
@@ -1085,7 +1084,7 @@ function RadarPage() {
                 </span>
               </div>
             </div>
-            <ul>
+            <ul tabIndex="0">
               {numberedEntries["2"]?.map((entry) => (
                 <li
                   key={entry.id}
@@ -1116,7 +1115,7 @@ function RadarPage() {
           />
         )}
       </div>
-    </ThemeProvider>
+    </>
   );
 }
 

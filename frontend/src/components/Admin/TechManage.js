@@ -693,7 +693,6 @@ Diagram_Tools: "Supporting Tools",
           <thead>
             <tr>
               <th>Technology ({technologies.length})</th>
-              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -1263,7 +1262,7 @@ Diagram_Tools: "Supporting Tools",
           <div key={category} className="category-section">
             <div className="category-header">
               <div className="category-header-left">
-                <h4>{category}</h4>
+                <h2>{category}</h2>
                 <span className="tech-count">({filteredTechs.length})</span>
               </div>
             </div>
@@ -1449,7 +1448,7 @@ Diagram_Tools: "Supporting Tools",
         <div className="tech-management-grid">
           <div className="tech-radar-status-column">
             <div className="technology-editor-header">
-              <h3 className="existing-banners-title">
+              <h1 className="existing-banners-title">
                 Untracked Technologies
                 {selectedTechIds.length > 0 && (
                   <span className="selection-info">
@@ -1457,7 +1456,7 @@ Diagram_Tools: "Supporting Tools",
                     - {selectedTechIds.length} selected
                   </span>
                 )}
-              </h3>
+              </h1>
               <div className="similarity-tech-radar-filter">
                 <div className="similarity-threshold-container">
                   <div className="similarity-threshold-header">
@@ -1532,6 +1531,7 @@ Diagram_Tools: "Supporting Tools",
                           type="checkbox"
                           checked={selectAll}
                           onChange={handleSelectAll}
+                          aria-label="Select all technologies"
                         />
                       </th>
                       <th
@@ -1580,7 +1580,7 @@ Diagram_Tools: "Supporting Tools",
                       </th>
                       <th>Source Question</th>
                       <th>Potential Matches</th>
-                      <th></th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1593,6 +1593,7 @@ Diagram_Tools: "Supporting Tools",
                             onChange={(e) =>
                               handleSelectTech(tech, e.target.checked)
                             }
+                            aria-label={`Select ${tech}`}
                           />
                         </td>
                         <td className="name-cell">{tech}</td>
@@ -1610,7 +1611,7 @@ Diagram_Tools: "Supporting Tools",
                               : "Ref. List"}
                         </td>
                         <td className="sources-cell">
-                          <div className="tech-item-sources">
+                          <div className="tech-item-sources" tabIndex={0} role="region" aria-label={`Sources for ${tech}`}>
                             {Array.from(info.sources).map((source) => (
                               <span
                                 key={source}
@@ -1655,7 +1656,7 @@ Diagram_Tools: "Supporting Tools",
           <div className="technology-editor-column">
             <div className="technology-editor-container">
               <div className="technology-editor-header">
-                <h3 className="existing-banners-title">Reference List</h3>
+                <h1 className="existing-banners-title">Reference List</h1>
                 <div className="editor-actions">
                     <>
                       <MultiSelect
@@ -1668,6 +1669,7 @@ Diagram_Tools: "Supporting Tools",
                         className="sort-select"
                         onChange={(e) => handleSortAllCategories(e.target.value)}
                         defaultValue=""
+                        aria-label="Sort all by..."
                       >
                         <option value="" disabled>Sort all by...</option>
                         <option value="alpha-asc">A to Z</option>
@@ -1698,10 +1700,10 @@ Diagram_Tools: "Supporting Tools",
       {showAddModal && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h3>Add Selected Technologies</h3>
+            <h1>Add Selected Technologies</h1>
             <div className="modal-options">
               <div className="radio-options">
-                <label>
+                <label tabIndex={0}>
                   <input
                     type="radio"
                     name="addOption"
@@ -1716,12 +1718,12 @@ Diagram_Tools: "Supporting Tools",
                     type="radio"
                     name="addOption"
                     value="refList"
-                    checked={selectedAddOption === "refList"}
+                    checked={ selectedAddOption === "refList"}
                     onChange={(e) => setSelectedAddOption(e.target.value)}
                   />
                   Add to Ref. List
                 </label>
-                <label>
+                <label tabIndex={0}>
                   <input
                     type="radio"
                     name="addOption"
@@ -1755,6 +1757,7 @@ Diagram_Tools: "Supporting Tools",
                   type="checkbox"
                   checked={confirmAddChecked}
                   onChange={(e) => setConfirmAddChecked(e.target.checked)}
+                  aria-label="Confirm adding technologies"
                 />
                 I confirm I want to add these technologies
               </label>
@@ -1801,32 +1804,38 @@ Diagram_Tools: "Supporting Tools",
       {showNormaliseModal && (
         <div className="modal-overlay">
           <div className="modal-content admin-dash-modal">
-            <h3>Normalise Technology Name</h3>
+            <h1>Normalise Technology Name</h1>
             <div className="normalise-form">
               <div className="form-group">
-                <label>From:</label>
+                <label htmlFor="normaliseFromInput" aria-label="From:">From:</label>
                 <input
+                  id="normaliseFromInput"
                   type="text"
                   value={normaliseFrom}
                   readOnly
                   className="normalise-input"
+                  title="This is the original name"
+                  aria-labelledby="From:"
                 />
               </div>
               <div className="form-group">
-                <label>To:</label>
+                <label htmlFor="normaliseToInput" aria-label="To:">To:</label>
                 <input
+                  id="normaliseToInput"
                   type="text"
                   value={normaliseTo}
                   onChange={(e) => setNormaliseTo(e.target.value)}
                   className="normalise-input"
                   placeholder="Enter normalised name..."
+                  title="This is the normalised name"
+                  aria-labelledby="To:"
                 />
               </div>
             </div>
 
             <div className="affected-projects">
-              <h4>This will update {affectedProjects.length} projects:</h4>
-              <div className="affected-list">
+              <h2>This will update {affectedProjects.length} projects:</h2>
+              <div className="affected-list" tabIndex={0}>
                 {affectedProjects.map((project, index) => (
                   <div key={index} className="affected-item">
                     <span className="affected-name">{project.Project}</span>
