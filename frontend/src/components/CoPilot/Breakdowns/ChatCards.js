@@ -1,5 +1,6 @@
 import React from "react";
 import { getPercentage } from "../../../utilities/getPercentage";
+import { formatNumberWithCommas } from "../../../utilities/getCommaSeparated";
 
 /**
  * ChatCards component displays statistics related to copilot chats data
@@ -13,11 +14,11 @@ function ChatCards({chats, prefix, divider = 1}) {
         <div className="copilot-chat-grid">
             <div className="stat-card">
                 <h3>{prefix} Chats</h3>
-                <p>{Math.round((chats?.totalChats ?? 0) / divider)}</p>
+                <p>{formatNumberWithCommas(Math.round((chats?.totalChats ?? 0) / divider))}</p>
             </div>
             <div className="stat-card">
                 <h3>{prefix} Insertions</h3>
-                <p>{Math.round((chats?.totalInsertions ?? 0) / divider)}</p>
+                <p>{formatNumberWithCommas(Math.round((chats?.totalInsertions ?? 0) / divider))}</p>
             </div>
             {prefix !== "Average" && (
             <div className="stat-card">
@@ -27,7 +28,7 @@ function ChatCards({chats, prefix, divider = 1}) {
             )}
             <div className="stat-card">
                 <h3>{prefix} Copies</h3>
-                <p>{Math.round((chats?.totalCopies ?? 0) / divider)}</p>
+                <p>{formatNumberWithCommas(Math.round((chats?.totalCopies ?? 0) / divider))}</p>
             </div>
             {prefix !== "Average" && (
             <div className="stat-card">

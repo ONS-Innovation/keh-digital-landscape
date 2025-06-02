@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend
 } from "recharts";
+import { formatNumberWithCommas } from "../../../utilities/getCommaSeparated";
 
 const EngagedUsersGraph = ({ data }) => {
   return (
@@ -27,7 +28,10 @@ const EngagedUsersGraph = ({ data }) => {
             tickLine={false}
             axisLine={{ stroke: "#f5f5f5" }}
           />
-          <Tooltip wrapperStyle={{color: "black"}} />
+          <Tooltip
+            wrapperStyle={{ color: "black" }}
+            formatter={(value) => formatNumberWithCommas(value)}
+          />
           <Legend verticalAlign="top" align="left" height={36} />
           <Bar
             radius={[10, 10, 0, 0]}
@@ -44,6 +48,7 @@ const EngagedUsersGraph = ({ data }) => {
             axisLine={{ stroke: "#f5f5f5" }}
             domain={[0, "dataMax + 5"]}
             tickCount={5}
+            tickFormatter={(value) => formatNumberWithCommas(value)}
           />
         </ComposedChart>
       </ResponsiveContainer>

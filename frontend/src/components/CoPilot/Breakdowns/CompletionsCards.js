@@ -1,5 +1,6 @@
 import React from "react";
 import { getPercentage } from "../../../utilities/getPercentage";
+import { formatNumberWithCommas } from "../../../utilities/getCommaSeparated";
 
 /**
  * CompletionsCards component displays statistics related to copilot completions data
@@ -14,11 +15,11 @@ function CompletionsCards({completions, prefix, divider = 1}) {
             <div className={`copilot-grid${prefix === 'Average' ? '-average' : ''}`}>
             <div className="stat-card">
                 <h3>{prefix} Suggestions</h3>
-                <p>{Math.round((completions?.totalSuggestions ?? 0) / divider)}</p>
+                <p>{formatNumberWithCommas(Math.round((completions?.totalSuggestions ?? 0) / divider))}</p>
             </div>
             <div className="stat-card">
                 <h3>{prefix} Acceptances</h3>
-                <p>{Math.round((completions?.totalAcceptances ?? 0) / divider)}</p>
+                <p>{formatNumberWithCommas(Math.round((completions?.totalAcceptances ?? 0) / divider))}</p>
             </div>
             {prefix !== "Average" && (
             <div className="stat-card">
@@ -28,11 +29,11 @@ function CompletionsCards({completions, prefix, divider = 1}) {
             )}
             <div className="stat-card">
                 <h3>{prefix} Lines of Code Suggested</h3>
-                <p>{Math.round((completions?.totalLinesSuggested ?? 0) / divider)}</p>
+                <p>{formatNumberWithCommas(Math.round((completions?.totalLinesSuggested ?? 0) / divider))}</p>
             </div>
             <div className="stat-card">
                 <h3>{prefix} Lines of Code Accepted</h3>
-                <p>{Math.round((completions?.totalLinesAccepted ?? 0) / divider)}</p>
+                <p>{formatNumberWithCommas(Math.round((completions?.totalLinesAccepted ?? 0) / divider))}</p>
             </div>
             {prefix !== "Average" && (
             <div className="stat-card">

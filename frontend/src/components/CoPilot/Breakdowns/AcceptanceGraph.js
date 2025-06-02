@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend
 } from "recharts";
+import { formatNumberWithCommas } from "../../../utilities/getCommaSeparated";
 
 const AcceptanceGraph = ({ data }) => {
   return (
@@ -28,9 +29,14 @@ const AcceptanceGraph = ({ data }) => {
             tickLine={false}
             axisLine={{ stroke: "#f5f5f5" }}
           />
-          <Tooltip wrapperStyle={{color: "black"}} formatter={(value, name) =>
-            name === "Acceptance Rate" ? `${value.toFixed(2)}%` : value
-          } />
+          <Tooltip
+            wrapperStyle={{ color: "black" }}
+            formatter={(value, name) =>
+              name === "Acceptance Rate"
+                ? `${value.toFixed(2)}%`
+                : formatNumberWithCommas(value)
+            }
+          />
           <Legend verticalAlign="top" align="left" height={36} />
           <Bar
             radius={[10, 10, 0, 0]}
@@ -58,6 +64,7 @@ const AcceptanceGraph = ({ data }) => {
             axisLine={{ stroke: "#f5f5f5" }}
             domain={[0, "dataMax + 5"]}
             tickCount={5}
+            tickFormatter={(value) => formatNumberWithCommas(value)}
           />
           <YAxis
             tickLine={false}
