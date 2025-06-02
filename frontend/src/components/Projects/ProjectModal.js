@@ -264,12 +264,12 @@ const ProjectModal = ({
       "Datasets_Used",
       "Code_Editors",
       "Communication",
-      "Miscellaneous",
       "Collaboration",
       "Incident_Management",
       "Documentation_Tools",
       "UI_Tools",
       "Diagram_Tools",
+      "Miscellaneous",
     ],
     repos: ["Repo"],
   };
@@ -316,11 +316,11 @@ const ProjectModal = ({
     "Code_Editors",
     "Communication",
     "Collaboration",
-    "Miscellaneous",
     "Incident_Management",
     "Documentation_Tools",
     "UI_Tools",
     "Diagram_Tools",
+    "Miscellaneous",
   ];
 
   const filterItems = (items) => {
