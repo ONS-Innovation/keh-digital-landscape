@@ -61,7 +61,10 @@ function CopilotDashboard() {
   const [viewMode, setViewMode] = useState("live");
   const [scope, setScope] = useState("organisation");
   const data = getDashboardData();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLiveLoading, setIsLiveLoading] = useState(true);
+  const [isSeatsLoading, setIsSeatsLoading] = useState(true);
+  const [isHistoricLoading, setIsHistoricLoading] = useState(false);
+  const [hasFetchedHistoric, setHasFetchedHistoric] = useState(false);
   const { getLiveUsageData, getHistoricUsageData, getSeatsData } = useData();
   const [sliderFinished, setSliderFinished] = useState(true);
   const [viewDatesBy, setViewDatesBy] = useState("Day");
@@ -94,12 +97,12 @@ function CopilotDashboard() {
    * Set states from API data
    */
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
+    const fetchLiveAndSeatsData = async () => {
+      setIsLiveLoading(true);
+      setIsSeatsLoading(true);
 
-      const [liveUsage, historicUsage, seats] = await Promise.all([
+      const [liveUsage, seats] = await Promise.all([
         getLiveUsageData(),
-        getHistoricUsageData(),
         getSeatsData(),
       ]);
 
@@ -108,7 +111,7 @@ function CopilotDashboard() {
       start.setDate(end.getDate() - 28);
       end = end.toISOString().slice(0, 10);
       start = start.toISOString().slice(0, 10);
-    
+
       setStartDate(start);
       setEndDate(end);
 
@@ -119,16 +122,30 @@ function CopilotDashboard() {
         allSeatData: seats ?? [],
         activeSeatData: seats ? filterInactiveUsers(seats, start) : [],
       });
-      setHistoricOrgData({
-        allUsage: historicUsage ? processUsageData(historicUsage) : [],
-        weekUsage: historicUsage ? processUsageData(historicUsage, 'week') : [],
-        monthUsage: historicUsage ? processUsageData(historicUsage, 'month') : [],
-        yearUsage: historicUsage ? processUsageData(historicUsage, 'year') : [],
-      });
-      setIsLoading(false);
+
+      setIsLiveLoading(false);
+      setIsSeatsLoading(false);
     };
-    fetchData();
+    fetchLiveAndSeatsData();
   }, []);
+
+  useEffect(() => {
+    const fetchHistoricData = async () => {
+      if (!hasFetchedHistoric && viewMode === "historic") {
+        setIsHistoricLoading(true);
+        const historicUsage = await getHistoricUsageData();
+        setHistoricOrgData({
+          allUsage: historicUsage ? processUsageData(historicUsage) : [],
+          weekUsage: historicUsage ? processUsageData(historicUsage, 'week') : [],
+          monthUsage: historicUsage ? processUsageData(historicUsage, 'month') : [],
+          yearUsage: historicUsage ? processUsageData(historicUsage, 'year') : [],
+        });
+        setIsHistoricLoading(false);
+        setHasFetchedHistoric(true);
+      }
+    };
+    fetchHistoricData();
+  }, [viewMode, hasFetchedHistoric]);
 
   /**
    * Filter and then process live usage data based on start and end date
@@ -192,7 +209,7 @@ function CopilotDashboard() {
             {viewMode === "live" ? (
               <div id="slider">
                 <p className="header-text">Filter Live Data Range</p>
-                {isLoading ? (
+                {isLiveLoading ? (
                   <p>Loading dates...</p>
                 ) : (
                   <div>
@@ -217,7 +234,7 @@ function CopilotDashboard() {
                   <select
                     value={viewDatesBy}
                     onChange={(e) => setViewDatesBy(e.target.value)}
-                    disabled={isLoading}
+                    disabled={isHistoricLoading}
                   >
                     {dateOptions.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -236,7 +253,8 @@ function CopilotDashboard() {
               <LiveDashboard 
               scope={scope} 
               data={data} 
-              isLoading={isLoading} 
+              isLiveLoading={isLiveLoading}
+              isSeatsLoading={isSeatsLoading} 
               inactiveDays={inactiveDays}
               setInactiveDays={setInactiveDays} 
               inactivityDate={inactivityDate}/>
@@ -244,7 +262,7 @@ function CopilotDashboard() {
               <HistoricDashboard 
               scope={scope} 
               data={getGroupedData()} 
-              isLoading={isLoading}
+              isLoading={isHistoricLoading}
               viewDatesBy={viewDatesBy}
               />
             )}

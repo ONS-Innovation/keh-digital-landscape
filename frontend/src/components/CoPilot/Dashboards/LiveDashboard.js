@@ -11,12 +11,15 @@ import { getCellRenderers } from "../../../utilities/getCellRenderers";
 import CompletionsCards from "../Breakdowns/CompletionsCards";
 import ChatCards from "../Breakdowns/ChatCards";
 
-function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, inactivityDate}) {
+function LiveDashboard({scope, data, isLiveLoading, isSeatsLoading, inactiveDays, setInactiveDays, inactivityDate}) {
 
   let completions, chats, seats, inactiveUsers;
-  if(!isLoading) {
+  if(!isLiveLoading) {
     completions = data.processedUsage.completions;
     chats = data.processedUsage.chat;
+  }
+
+  if(!isSeatsLoading) {
     seats = { allSeatData: data.allSeatData, activeSeatData: data.activeSeatData };
 
     const activeUsers = new Set(
@@ -31,7 +34,7 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
   return (
     <div>
         <h2 className="title">IDE Code Completions</h2>
-          {isLoading ? (
+          {isLiveLoading ? (
             <div className="copilot-grid">
               <SkeletonStatCard />
               <SkeletonStatCard />
@@ -46,18 +49,18 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
             </div>
           )}
           <h4>Acceptances and Acceptance Rate By Day</h4>
-          {isLoading ? (
+          {isLiveLoading ? (
             <div>Loading graph...</div>
           ) : (
             <AcceptanceGraph data={completions?.perGroupedPeriod ?? 0}/>
           )}
           <h4>Engaged Users By Day</h4>
-          {isLoading ? (
+          {isLiveLoading ? (
             <div>Loading graph...</div>
           ) : (
             <EngagedUsersGraph data={completions?.perGroupedPeriod ?? 0}/>
           )}
-          {isLoading ? (
+          {isLiveLoading ? (
             <div className="pie-chart-loading">Loading pie charts...</div>
           ) : (
             <div className="copilot-charts-container">
@@ -66,7 +69,7 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
             </div>
           )}
           <h4>Language Breakdown</h4>
-          {isLoading ? (
+          {isLiveLoading ? (
             <div>Loading table...</div>
           ) : (
             <TableBreakdown
@@ -97,7 +100,7 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
           )}
         
         <h2 className="title">CoPilot Chat</h2>
-        {isLoading ? (
+        {isLiveLoading ? (
             <div className="copilot-chat-grid">
               <SkeletonStatCard />
               <SkeletonStatCard />
@@ -111,12 +114,12 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
             </div>
           )}
           <h4>Engaged Users By Day</h4>
-          {isLoading ? (
+          {isLiveLoading ? (
             <div>Loading graph...</div>
           ) : (
             <EngagedUsersGraph data={chats?.perGroupedPeriod ?? 0}/>
           )}
-          {isLoading ? (
+          {isLiveLoading ? (
             <div className="pie-chart-loading">Loading pie chart...</div>
           ) : (
             <div className="copilot-charts-container">
@@ -124,7 +127,7 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
             </div>
           )}
          <h4>Editor Breakdown</h4>
-         {isLoading ? (
+         {isLiveLoading ? (
             <div>Loading table...</div>
           ) : (
             <TableBreakdown
@@ -153,7 +156,7 @@ function LiveDashboard({scope, data, isLoading, inactiveDays, setInactiveDays, i
           )}
         
         <h2 className="title">Seat Information</h2>
-        {isLoading ? (
+        {isSeatsLoading ? (
           <div>Loading seat info...</div>
           ) : (
             <div>
