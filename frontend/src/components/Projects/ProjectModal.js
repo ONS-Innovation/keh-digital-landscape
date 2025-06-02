@@ -374,10 +374,10 @@ const ProjectModal = ({
                   className={`detail-item ${title === "Repositories" ? "large-span" : ""}`}
                 >
                   <h3>{fieldLabels[key] || key.replace(/_/g, " ")}:</h3>
-                  <p>
+                  <p style={{ whiteSpace: 'pre-wrap' }}>
                     {technologyListFields.includes(key)
-                      ? renderTechnologyList(value)
-                      : value.replace(/;/g, "; ")}
+                    ? renderTechnologyList(value)
+                    : value.replace(/;/g, "; ")}
                   </p>
                 </div>
               );
