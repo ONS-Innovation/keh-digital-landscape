@@ -54,33 +54,33 @@ function HistoricDashboard({scope, data, isLoading, viewDatesBy}) {
           <div className="copilot-charts-container">
             <PieChart engagedUsers={completions?.engagedUsersByLanguage ?? 0} title={"Engaged Users by Language"}/>
             <PieChart engagedUsers={completions?.engagedUsersByEditor ?? 0} title={"Engaged Users by Editor"}/>
-        </div>
-        <h4>Language Breakdown</h4>
-        <TableBreakdown
-          data={completions?.languageBreakdown ?? 0}
-          idField="language"
-          idHeader="Language"
-          columns={[
-            "suggestions",
-            "acceptances",
-            "acceptanceRate",
-            "linesSuggested",
-            "linesAccepted",
-            "lineAcceptanceRate"
-          ]}
-          headerMap={{
-            suggestions: "Suggestions",
-            acceptances: "Acceptances",
-            acceptanceRate: "Acceptance Rate",
-            linesSuggested: "Lines of Code Suggested",
-            linesAccepted: "Lines of Code Accepted",
-            lineAcceptanceRate: "Line Acceptance Rate"
-          }}
-          computedFields={(stats) => ({
-            acceptanceRate: stats.suggestions ? stats.acceptances / stats.suggestions : 0,
-            lineAcceptanceRate: stats.linesSuggested ? stats.linesAccepted / stats.linesSuggested : 0
-          })}
-        />
+          </div>
+          <h4>Language Breakdown</h4>
+          <TableBreakdown
+            data={completions?.languageBreakdown ?? 0}
+            idField="language"
+            idHeader="Language"
+            columns={[
+              "suggestions",
+              "acceptances",
+              "acceptanceRate",
+              "linesSuggested",
+              "linesAccepted",
+              "lineAcceptanceRate"
+            ]}
+            headerMap={{
+              suggestions: "Suggestions",
+              acceptances: "Acceptances",
+              acceptanceRate: "Acceptance Rate",
+              linesSuggested: "Lines of Code Suggested",
+              linesAccepted: "Lines of Code Accepted",
+              lineAcceptanceRate: "Line Acceptance Rate"
+            }}
+            computedFields={(stats) => ({
+              acceptanceRate: stats.suggestions ? stats.acceptances / stats.suggestions : 0,
+              lineAcceptanceRate: stats.linesSuggested ? stats.linesAccepted / stats.linesSuggested : 0
+            })}
+          />
         </div>
       )}
     
