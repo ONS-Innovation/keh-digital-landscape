@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
+import { formatNumberWithCommas } from "../../../utilities/getCommaSeparated";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -27,10 +28,15 @@ function TableBreakdown({ data, idField, idHeader, columns, headerMap, computedF
       return keys.map((key) => ({
         field: key,
         headerName: key === idField ? idHeader : headerMap[key] || key,
-        valueFormatter: !customCellRenderers[key] && key.toLowerCase().includes("rate")
-        ? (params) => `${(params.value * 100).toFixed(1)}%`
-        : undefined,
-      cellRenderer: customCellRenderers[key] || undefined,
+        valueFormatter: !customCellRenderers[key]
+          ? key.toLowerCase().includes("rate")
+            ? (params) => `${(params.value * 100).toFixed(1)}%`
+            : (params) =>
+                typeof params.value === "number"
+                  ? formatNumberWithCommas(params.value)
+                  : params.value
+          : undefined,
+        cellRenderer: customCellRenderers[key] || undefined,
       }));
     }, [rowData, idField, idHeader, columns, headerMap, customCellRenderers]);
 

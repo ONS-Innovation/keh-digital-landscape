@@ -3,7 +3,7 @@ import { fetchCSVFromS3 } from "../utilities/getCSVData";
 import { fetchTechRadarJSONFromS3 } from "../utilities/getTechRadarJson";
 import { fetchRepositoryData, fetchRepositoryStats } from "../utilities/getRepositoryData";
 import { fetchBanners } from "../utilities/getBanner";
-import { fetchOrgLiveUsageData } from "../utilities/getUsageData";
+import { fetchOrgLiveUsageData, fetchOrgHistoricUsageData } from "../utilities/getUsageData";
 import { fetchSeatData } from "../utilities/getSeatData";
 /**
  * DataContext provides centralized data management and caching for the application.
@@ -26,6 +26,7 @@ export function DataProvider({ children }) {
   const [repositoryStats, setRepositoryStats] = useState(new Map());
   const [pageBanners, setPageBanners] = useState(new Map());
   const [liveUsageData, setLiveUsageData] = useState(null);
+  const [historicUsageData, setHistoricUsageData] = useState(null);
   const [seatsData, setSeatsData] = useState(null);
   
   const pendingRequests = useRef({
@@ -34,7 +35,8 @@ export function DataProvider({ children }) {
     repository: new Map(),
     repositoryStats: new Map(),
     banners: new Map(),
-    usageData: null,
+    liveUsageData: null,
+    historicUsageData: null,
     seatsData: null
   });
 
@@ -213,6 +215,31 @@ export function DataProvider({ children }) {
   }
 
   /**
+   * Fetches and caches historic usage data for the organisation.
+   *
+   * @param {boolean} [forceRefresh=false] - Whether to force a refresh of the cached data
+   * @returns {Promise<Object>} The historic usage data
+   */
+  const getHistoricUsageData = async (forceRefresh = false) => {
+    if (!forceRefresh && historicUsageData) {
+      return historicUsageData;
+    }
+
+    if (pendingRequests.current.historicUsageData) {
+      return pendingRequests.current.historicUsageData;
+    }
+
+    const promise = fetchOrgHistoricUsageData().then(data => {
+      setHistoricUsageData(data);
+      pendingRequests.current.historicUsageData = null;
+      return data;
+    });
+
+    pendingRequests.current.historicUsageData = promise;
+    return promise;
+  }
+
+  /**
    * Fetches and caches seat data for the organisation.
    *
    * @param {boolean} [forceRefresh=false] - Whether to force a refresh of the cached data
@@ -244,6 +271,7 @@ export function DataProvider({ children }) {
     setRepositoryStats(new Map());
     setPageBanners(new Map());
     setLiveUsageData(null);
+    setHistoricUsageData(null);
     setSeatsData(null);
     pendingRequests.current = {
       csv: null,
@@ -251,7 +279,8 @@ export function DataProvider({ children }) {
       repository: new Map(),
       repositoryStats: new Map(),
       banners: new Map(),
-      usageData: null,
+      liveUsageData: null,
+      historicUsageData: null,
       seatsData: null
     };
   };
@@ -268,6 +297,7 @@ export function DataProvider({ children }) {
         getPageBanners,
         clearCache,
         getLiveUsageData,
+        getHistoricUsageData,
         getSeatsData,
       }}
     >
