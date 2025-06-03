@@ -1213,6 +1213,29 @@ app.post("/admin/api/normalise-technology", async (req, res) => {
   }
 });
 
+app.get("/admin/api/protected-endpoint", async (req, res) => {
+  try {
+    const encoded_jwt = req.headers["x-amzn-oidc-data"];
+
+    // Decode JWT parts
+    const parts = encoded_jwt.split(".");
+    if (parts.length !== 3) {
+      throw new Error("Invalid JWT format");
+    }
+
+    const payloadDecoded = Buffer.from(parts[1], "base64").toString("utf-8");
+
+    const payloadObj = JSON.parse(payloadDecoded);
+
+    console.log("Returning email from validated ALB token:", payloadObj.email);
+    return res.json({ email: payloadObj.email });
+  } catch (err) {
+    console.error("JWT verification error:", err.message);
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+});
+
+
 // Add error handling
 process.on("uncaughtException", (error) => {
   logger.error("Uncaught Exception:", { error });
