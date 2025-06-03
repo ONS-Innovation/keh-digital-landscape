@@ -103,6 +103,18 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
         {
           name = "GITHUB_ORG",
           value = var.github_org,
+        },
+        {
+          name = "ALB_ARN",
+          value = data.terraform_remote_state.ecs_infrastructure.outputs.application_lb_arn
+        },
+        {
+          name = "COGNITO_USER_POOL_ID",
+          value = data.terraform_remote_state.ecs_admin_auth.outputs.cognito_admin_user_pool_id
+        },
+        {
+          name = "COGNITO_USER_POOL_CLIENT_ID",
+          value = data.terraform_remote_state.ecs_admin_auth.outputs.cognito_admin_user_pool_client_id
         }
       ],
       logConfiguration = {
