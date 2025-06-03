@@ -825,7 +825,7 @@ text-align: left;
 }
 
 .projects-charts-container:focus {
-  outline: 2px solid hsl(var(--primary));
+  outline: 1px solid hsl(var(--primary));
   outline-offset: 2px;
 }
 

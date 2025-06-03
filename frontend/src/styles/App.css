@@ -35,6 +35,11 @@ body {
   overflow: hidden;
 }
 
+.radar-container:focus {
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: -2px;
+}
+
 .radar-container svg {
   min-width: 800px;
   min-height: 800px;
@@ -199,23 +204,54 @@ line {
 }
 
 .quadrant-list ul {
+  margin: 0;
+  overflow-y: auto;
+  outline: none; /* Remove default outline */
   flex-grow: 1;
   scrollbar-width: thin;
   scrollbar-color: hsl(var(--muted)) transparent;
+  padding-left: 0;
+}
+
+/* Enhanced keyboard accessibility for scrollable lists */
+.quadrant-list ul[tabindex="0"] {
+  position: relative;
+}
+
+.quadrant-list ul:focus {
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: -2px;
+}
+
+/* Apply outline when any element inside the ul is focused */
+.quadrant-list ul:focus-within {
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: -2px;
+}
+
+/* Make list items focusable for keyboard navigation */
+.quadrant-list ul li {
+  padding: 8px 16px;
+  border-bottom: 1px solid hsl(var(--border));
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  outline: none;
+}
+
+.quadrant-list ul li:focus {
+  background-color: hsl(var(--muted));
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: -2px;
+}
+
+.quadrant-list ul li:hover {
+  background-color: hsl(var(--muted) / 0.8);
 }
 
 @media (max-width: 1400px) {
   .quadrant-list ul {
     max-height: calc(50vh - var(--header-height));
   }
-}
-
-.quadrant-list ul li {
-  padding: 8px 16px;
-}
-
-.quadrant-list ul li:hover {
-  background-color: hsl(var(--muted) / 0.8);
 }
 
 .quadrant-list ul::-webkit-scrollbar {
@@ -296,13 +332,13 @@ line {
 .blip {
   fill: currentColor;
   cursor: pointer;
-  opacity: 0.8;
+  opacity: 0.9;
   z-index: -1;
-  r: 10;
+  r: 12;
 }
 
 .blip-number {
-  fill: white;
+  fill: hsl(var(--background));
   font-size: 10px;
   pointer-events: none;
   font-weight: bold;
@@ -1155,7 +1191,6 @@ text {
   display: flex;
   align-items: center;
   position: relative;
-  padding-top: 4px;
 }
 .timeline-node {
   padding: 2px 12px;

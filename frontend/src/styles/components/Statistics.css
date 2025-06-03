@@ -156,15 +156,16 @@
   
   scrollbar-width: thin;
   scrollbar-color: var(--scrollbar-color);
+  border-radius: var(--radius);
 }
 
 .language-grid:focus {
-  outline: 2px solid hsl(var(--primary));
+  outline: 1px solid hsl(var(--primary));
   outline-offset: -2px;
 }
 
 .language-grid:focus-within {
-  outline: 2px solid hsl(var(--primary));
+  outline: 1px solid hsl(var(--primary));
   outline-offset: -2px;
 }
 

@@ -38,15 +38,20 @@
         "testing": [".banner-tab:has-text('Technology Management')", ".normalise-btn:first-child"]
       },
     "/copilot": {
-      "name": "copilot",
+      "name": "copilot-live",
       "url": "/copilot",
       "testing": []
+    },
+    "/copilot?": {
+      "name": "copilot-historic",
+      "url": "/copilot",
+      "testing": [".banner-type-option:has-text('Historic')"]
     }
   },
   "global_settings": {
     "base_url": "http://localhost:3000",
     "wait_after_load": 1000,
     "wait_after_click": 2000,
-    "headless": false
+    "headless": true
   }
 } 

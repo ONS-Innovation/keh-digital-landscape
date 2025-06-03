@@ -47,7 +47,7 @@ function MenuDropdown({ setShowHelpModal }) {
 
   return (
     <div className="menu-dropdown" ref={dropdownRef}>
-      <button className="menu-button" onClick={() => setIsOpen(!isOpen)}>
+      <button className="menu-button" onClick={() => setIsOpen(!isOpen)} aria-label="Open menu">
         <IoMenu size={16} />
       </button>
 

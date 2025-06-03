@@ -335,7 +335,7 @@
 
 .sort-select:focus {
   outline: none;
-  ring: 2px solid hsl(var(--ring));
+  outline: 1px solid hsl(var(--primary));
 }
 
 .technology-editor-header {
@@ -566,7 +566,7 @@
 .normalise-input:focus {
   outline: none;
   border-color: hsl(var(--ring));
-  ring: 2px solid hsl(var(--ring));
+  outline: 1px solid hsl(var(--primary));
 }
 
 .affected-projects {

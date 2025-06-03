@@ -322,7 +322,7 @@
 }
 
 .droppable-area:focus {
-  outline: 2px solid hsl(var(--primary));
+  outline: 1px solid hsl(var(--primary));
   outline-offset: 2px;
 }
 
@@ -939,7 +939,6 @@ textarea.technology-input {
   padding: 24px;  
   box-sizing: border-box;
   background: hsl(var(--card));
-  border-radius: var(--radius);
   width: 100%;
   max-height: 100vh;
   overflow-y: auto;
@@ -948,7 +947,7 @@ textarea.technology-input {
 
 /* Style for when the container is focused */
 .admin-container:focus {
-  outline: 2px solid hsl(var(--primary));
+  outline: 1px solid hsl(var(--primary));
   outline-offset: -2px;
 }
 

@@ -221,6 +221,12 @@ function CopilotDashboard() {
                       onChange={updateSlider}
                       onChangeComplete={handleSliderCompletion}
                       allowCross={false}
+                      ariaLabelForHandle={['Start date selector', 'End date selector']}
+                      ariaValueTextFormatterForHandle={(value, index) => {
+                        const date = new Date();
+                        date.setDate(date.getDate() - 29 + value);
+                        return `${index === 0 ? 'Start' : 'End'} date: ${date.toISOString().slice(0, 10)}`;
+                      }}
                     />
                     <p id="slider-end">End: {endDate}</p>
                   </div>
@@ -234,6 +240,7 @@ function CopilotDashboard() {
                     value={viewDatesBy}
                     onChange={(e) => setViewDatesBy(e.target.value)}
                     disabled={isHistoricLoading}
+                    aria-label="View Dates By"
                   >
                     {dateOptions.map((option) => (
                       <option key={option.value} value={option.value}>
