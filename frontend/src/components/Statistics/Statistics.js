@@ -5,6 +5,7 @@ import SkeletonStatCard from "./Skeletons/SkeletonStatCard";
 import SkeletonLanguageCard from "./Skeletons/SkeletonLanguageCard";
 import MultiSelect from "../MultiSelect/MultiSelect";
 import { useTechnologyStatus } from "../../utilities/getTechnologyStatus";
+import { formatNumberWithCommas } from "../../utilities/getCommaSeparated";
 
 /**
  * Statistics component for displaying repository statistics.
@@ -211,12 +212,13 @@ function Statistics({
     const stats = getCurrentStats();
     if (hoveredLanguage && stats?.total) {
       const percentage = ((repoCount / stats.total) * 100).toFixed(1);
-      return `${repoCount} / ${stats.total} (${percentage}%)`;
+      return `${formatNumberWithCommas(repoCount)} / ${formatNumberWithCommas(
+        stats.total
+      )} (${percentage}%)`;
     }
-    return repoCount;
+    return formatNumberWithCommas(repoCount);
   };
 
-  // Filter projects to only those with repositories that include github.com/onsdigital lowercase
   const projectOptions = useMemo(() => {
     if (!projectsData) return [];
     return projectsData
@@ -350,20 +352,20 @@ function Statistics({
               <h2>Total Repositories</h2>
               <p>{hoveredLanguage && languageStats ? 
                   getRepoCountDisplay(languageStats[hoveredLanguage]?.repo_count) :
-                  stats.total || 0}
+                  formatNumberWithCommas(stats.total || 0)}
               </p>
             </div>
             <div className="stat-card">
               <h2>Public Repos</h2>
-              <p>{stats.public || 0}</p>
+              <p>{formatNumberWithCommas(stats.public || 0)}</p>
             </div>
             <div className="stat-card">
               <h2>Private Repos</h2>
-              <p>{stats.private || 0}</p>
+              <p>{formatNumberWithCommas(stats.private || 0)}</p>
             </div>
             <div className="stat-card">
               <h2>Internal Repos</h2>
-              <p>{stats.internal || 0}</p>
+              <p>{formatNumberWithCommas(stats.internal || 0)}</p>
             </div>
           </div>
 
@@ -443,7 +445,7 @@ function Statistics({
                     <h2>{language}</h2>
                     <div className="language-stats">
                       <p>
-                        <strong>{stats.repo_count}</strong> repos
+                        <strong>{formatNumberWithCommas(stats.repo_count)}</strong> repos
                       </p>
                       <p>
                         <strong>{stats.average_percentage.toFixed(1)}%</strong> avg usage
@@ -454,7 +456,7 @@ function Statistics({
                           const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
                           if (bytes === 0) return '0 B';
                           const i = Math.floor(Math.log(bytes) / Math.log(1024));
-                          return `${(bytes / Math.pow(1024, i)).toFixed(1)} ${sizes[i]}`;
+                          return `${formatNumberWithCommas((bytes / Math.pow(1024, i)).toFixed(1))} ${sizes[i]}`;
                         })()}</strong> {showTotalSize ? 'total' : 'avg'} size
                       </p>
                     </div>

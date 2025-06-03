@@ -37,9 +37,9 @@ resource "aws_iam_role_policy" "task_logs_policy" {
   })
 }
 
-# Custom policy for S3 read-only access to specific bucket
+# Custom policy for S3 read and write access to specific bucket
 resource "aws_iam_role_policy" "s3_read_only" {
-  name = "${var.domain}-${var.service_subdomain}-s3-read-only"
+  name = "${var.domain}-${var.service_subdomain}-s3-read-write"
   role = aws_iam_role.ecs_task_role.id
 
   policy = jsonencode({
@@ -58,6 +58,30 @@ resource "aws_iam_role_policy" "s3_read_only" {
           "arn:aws:s3:::${var.s3_bucket_name}/*",
           "arn:aws:s3:::${var.api_s3_bucket_name}",
           "arn:aws:s3:::${var.api_s3_bucket_name}/*"
+        ]
+      }
+    ]
+  })
+}
+
+# Policy for S3 read access to copilot historic bucket
+resource "aws_iam_role_policy" "s3_copilot_read_only" {
+  name = "${var.domain}-${var.service_subdomain}-s3-copilot-read-only"
+  role = aws_iam_role.ecs_task_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject",
+          "s3:ListBucket",
+          "s3:GetObjectVersion"
+        ]
+        Resource = [
+          "arn:aws:s3:::${var.copilot_bucket_name}",
+          "arn:aws:s3:::${var.copilot_bucket_name}/*"
         ]
       }
     ]

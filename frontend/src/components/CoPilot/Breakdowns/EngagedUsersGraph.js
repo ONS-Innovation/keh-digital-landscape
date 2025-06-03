@@ -2,7 +2,6 @@ import React from "react";
 import {
   ResponsiveContainer,
   ComposedChart,
-  Line,
   Bar,
   XAxis,
   YAxis,
@@ -10,8 +9,9 @@ import {
   Tooltip,
   Legend
 } from "recharts";
+import { formatNumberWithCommas } from "../../../utilities/getCommaSeparated";
 
-const AcceptanceGraph = ({ data }) => {
+const EngagedUsersGraph = ({ data }) => {
   return (
     <div className="copilot-graph-container">
       <ResponsiveContainer>
@@ -28,29 +28,19 @@ const AcceptanceGraph = ({ data }) => {
             tickLine={false}
             axisLine={{ stroke: "#f5f5f5" }}
           />
-          <Tooltip wrapperStyle={{color: "black"}} formatter={(value, name) =>
-            name === "Acceptance Rate" ? `${value.toFixed(2)}%` : value
-          } />
+          <Tooltip
+            wrapperStyle={{ color: "black" }}
+            formatter={(value) => formatNumberWithCommas(value)}
+          />
           <Legend verticalAlign="top" align="left" height={36} />
           <Bar
             radius={[10, 10, 0, 0]}
-            dataKey="acceptances"
+            dataKey="engagedUsers"
             barSize={20}
-            fill="#70c4e6"
+            fill="#3B7AD9"
             yAxisId="left"
             legendType="rect"
-            name="Acceptances"
-          />
-          <Line
-            dot={false}
-            strokeWidth={2}
-            strokeLinecap="round"
-            type="monotone"
-            dataKey="acceptanceRate"
-            stroke="#3B7AD9"
-            yAxisId="right"
-            legendType="rect"
-            name="Acceptance Rate"
+            name="Engaged Users"
           />
           <YAxis
             tickLine={false}
@@ -58,16 +48,7 @@ const AcceptanceGraph = ({ data }) => {
             axisLine={{ stroke: "#f5f5f5" }}
             domain={[0, "dataMax + 5"]}
             tickCount={5}
-          />
-          <YAxis
-            tickLine={false}
-            yAxisId="right"
-            orientation="right"
-            stroke="#3B7AD9"
-            axisLine={{ stroke: "#f5f5f5" }}
-            domain={[0, (dataMax) => Math.ceil(dataMax / 10) * 10]}
-            tickFormatter={(value) => `${value.toFixed(0)}%`}
-            tickCount={5}
+            tickFormatter={(value) => formatNumberWithCommas(value)}
           />
         </ComposedChart>
       </ResponsiveContainer>
@@ -75,4 +56,4 @@ const AcceptanceGraph = ({ data }) => {
   );
 };
 
-export default AcceptanceGraph;
+export default EngagedUsersGraph;

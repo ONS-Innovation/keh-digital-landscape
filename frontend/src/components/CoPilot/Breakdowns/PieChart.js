@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
-import "../../styles/CoPilotPage.css";
-import "../../styles/LangColours.css";
+import "../../../styles/CoPilotPage.css";
 import {
   PieChart as RechartsPieChart,
   Pie,
@@ -13,13 +12,13 @@ import {
 const entries = 7;
 
 const colourPalette = [
-    "hsl(var(--chart-1))",
-    "hsl(var(--chart-2))",
-    "hsl(var(--chart-3))",
-    "hsl(var(--chart-4))",
-    "hsl(var(--chart-5))",
-    "hsl(var(--chart-6))",
-    "hsl(var(--chart-7))",
+    "#2ecc71",
+    "#e74c3c",
+    "#3498db",
+    "#f1c40f",
+    "#9b59b6",
+    "#1abc9c",
+    "#e67e22",
   ];
 
 const PieChart = ({ engagedUsers, title = "User Engagement"}) => {
@@ -56,8 +55,6 @@ const PieChart = ({ engagedUsers, title = "User Engagement"}) => {
       <h4>{title}</h4>
       <ResponsiveContainer>
         <RechartsPieChart>
-          <title>{title}</title>
-          <desc>Pie chart showing {title} distribution by percentage.</desc>
           <Pie
             data={data}
             dataKey="value"
@@ -66,18 +63,13 @@ const PieChart = ({ engagedUsers, title = "User Engagement"}) => {
             cy="50%"
             outerRadius={100}
             labelLine={false}
-            isAnimationActive={true}
           >
             {data.map((entry, index) => (
-              <Cell 
-                key={`cell-${index}`} 
-                fill={entry.color} 
-                aria-label={`${entry.name}: ${entry.value}% with ${entry.count} entries`}
-              />
+              <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
           </Pie>
           <Tooltip formatter={(value, name) => [`${value}%`, name]} />
-          <Legend iconType="circle" iconSize={10} />
+          <Legend iconType="circle" iconSize={10}/>
         </RechartsPieChart>
       </ResponsiveContainer>
     </div>

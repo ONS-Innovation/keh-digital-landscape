@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import Header from "../components/Header/Header";
-import LiveDashboard from "../components/CoPilot/LiveDashboard";
-import HistoricDashboard from "../components/CoPilot/HistoricDashboard";
+import LiveDashboard from "../components/CoPilot/Dashboards/LiveDashboard";
+import HistoricDashboard from "../components/CoPilot/Dashboards/HistoricDashboard";
 import { filterInactiveUsers } from "../utilities/getSeatData";
 import { filterUsageData, processUsageData } from "../utilities/getUsageData";
 import PageBanner from "../components/PageBanner/PageBanner";
@@ -14,10 +14,17 @@ function CopilotDashboard() {
 
   const getDashboardData = () => {
     if (viewMode === "live" && scope === "organisation") return liveOrgData;
-    if (viewMode === "live" && scope === "team") return liveOrgData; //Will be changed upon team usage PR
-    if (viewMode === "historic" && scope === "organisation") return null;
+    if (viewMode === "live" && scope === "team") return null;
+    if (viewMode === "historic" && scope === "organisation") return historicOrgData;
     if (viewMode === "historic" && scope === "team") return null;
   };
+
+  const getGroupedData = () => {
+    if(viewDatesBy === "Day") return historicOrgData.allUsage;
+    if(viewDatesBy === "Week") return historicOrgData.weekUsage;
+    if(viewDatesBy === "Month") return historicOrgData.monthUsage;
+    if(viewDatesBy === "Year") return historicOrgData.yearUsage;
+  }
 
   const [liveOrgData, setLiveOrgData] = useState({
     allUsage: [],
@@ -26,6 +33,20 @@ function CopilotDashboard() {
     allSeatData: [],
     activeSeatData: []
   });
+
+  const [historicOrgData, setHistoricOrgData] = useState({
+    allUsage: [], // Equivalent of day usage
+    weekUsage: [],
+    monthUsage: [],
+    yearUsage: [],
+  });
+
+  const dateOptions = [
+    { value: "Day", label: "Day" },
+    { value: "Week", label: "Week" },
+    { value: "Month", label: "Month" },
+    { value: "Year", label: "Year" },
+  ];
   
   const [sliderValues, setSliderValues] = useState([1, 28]);
   const [inactiveDays, setInactiveDays] = useState(28);
@@ -39,9 +60,13 @@ function CopilotDashboard() {
   const [viewMode, setViewMode] = useState("live");
   const [scope, setScope] = useState("organisation");
   const data = getDashboardData();
-  const [isLoading, setIsLoading] = useState(true);
-  const { getLiveUsageData, getSeatsData } = useData();
+  const [isLiveLoading, setIsLiveLoading] = useState(true);
+  const [isSeatsLoading, setIsSeatsLoading] = useState(true);
+  const [isHistoricLoading, setIsHistoricLoading] = useState(false);
+  const [hasFetchedHistoric, setHasFetchedHistoric] = useState(false);
+  const { getLiveUsageData, getHistoricUsageData, getSeatsData } = useData();
   const [sliderFinished, setSliderFinished] = useState(true);
+  const [viewDatesBy, setViewDatesBy] = useState("Day");
 
   /**
    * Trigger data filter upon slider completion
@@ -71,12 +96,13 @@ function CopilotDashboard() {
    * Set states from API data
    */
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
+    const fetchLiveAndSeatsData = async () => {
+      setIsLiveLoading(true);
+      setIsSeatsLoading(true);
 
       const [liveUsage, seats] = await Promise.all([
         getLiveUsageData(),
-        getSeatsData()
+        getSeatsData(),
       ]);
 
       let end = new Date();
@@ -84,7 +110,7 @@ function CopilotDashboard() {
       start.setDate(end.getDate() - 28);
       end = end.toISOString().slice(0, 10);
       start = start.toISOString().slice(0, 10);
-    
+
       setStartDate(start);
       setEndDate(end);
 
@@ -95,10 +121,30 @@ function CopilotDashboard() {
         allSeatData: seats ?? [],
         activeSeatData: seats ? filterInactiveUsers(seats, start) : [],
       });
-      setIsLoading(false);
+
+      setIsLiveLoading(false);
+      setIsSeatsLoading(false);
     };
-    fetchData();
+    fetchLiveAndSeatsData();
   }, []);
+
+  useEffect(() => {
+    const fetchHistoricData = async () => {
+      if (!hasFetchedHistoric && viewMode === "historic") {
+        setIsHistoricLoading(true);
+        const historicUsage = await getHistoricUsageData();
+        setHistoricOrgData({
+          allUsage: historicUsage ? processUsageData(historicUsage) : [],
+          weekUsage: historicUsage ? processUsageData(historicUsage, 'week') : [],
+          monthUsage: historicUsage ? processUsageData(historicUsage, 'month') : [],
+          yearUsage: historicUsage ? processUsageData(historicUsage, 'year') : [],
+        });
+        setIsHistoricLoading(false);
+        setHasFetchedHistoric(true);
+      }
+    };
+    fetchHistoricData();
+  }, [viewMode, hasFetchedHistoric]);
 
   /**
    * Filter and then process live usage data based on start and end date
@@ -142,43 +188,82 @@ function CopilotDashboard() {
         />
         <div className="admin-container" tabIndex="0">
           <div className="dashboard-header">
-          {/* <p>View Data Type</p>  */} {/* Will be introduced in next page PR */}
-            <div id="slider">
-              <p id="filter-text">Filter Live Data Range</p>
-              {isLoading ? (
-                <p>Loading dates...</p>
-              ) :  (
-              <div>
-                <p>Start: {startDate}</p>
-                <Slider
-                range
-                min={1}
-                max={28}
-                value={sliderValues}
-                onChange={updateSlider}
-                onChangeComplete={handleSliderCompletion}
-                allowCross={false}
-                aria-label="Filter Live Data Range"
-                ariaLabelForHandle={['Start date filter', 'End date filter']}
-                />
-                <p id="slider-end">End: {endDate}</p>
+            <div>
+              <p className="header-text">View Data Type</p>
+              <div className="banner-type-selector">
+                <div
+                  className={`banner-type-option ${viewMode === "live" ? "selected" : ""}`}
+                  onClick={() => setViewMode("live")}
+                >
+                  Live
+                </div>
+                <div
+                  className={`banner-type-option ${viewMode === "historic" ? "selected" : ""}`}
+                  onClick={() => setViewMode("historic")}
+                >
+                  Historic
+                </div>
               </div>
-              )}
             </div>
+            {viewMode === "live" ? (
+              <div id="slider">
+                <p className="header-text">Filter Live Data Range</p>
+                {isLiveLoading ? (
+                  <p>Loading dates...</p>
+                ) : (
+                  <div>
+                    <p>Start: {startDate}</p>
+                    <Slider
+                      range
+                      min={1}
+                      max={28}
+                      value={sliderValues}
+                      onChange={updateSlider}
+                      onChangeComplete={handleSliderCompletion}
+                      allowCross={false}
+                    />
+                    <p id="slider-end">End: {endDate}</p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div>
+                <p className="header-text">View Dates By</p>
+                <div className="date-selector">
+                  <select
+                    value={viewDatesBy}
+                    onChange={(e) => setViewDatesBy(e.target.value)}
+                    disabled={isHistoricLoading}
+                  >
+                    {dateOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+              </div>
+              </div>
+            )}
+          </div>
+          <div>
+
           </div>
           {viewMode === "live" ? (
               <LiveDashboard 
               scope={scope} 
               data={data} 
-              isLoading={isLoading} 
+              isLiveLoading={isLiveLoading}
+              isSeatsLoading={isSeatsLoading} 
               inactiveDays={inactiveDays}
               setInactiveDays={setInactiveDays} 
               inactivityDate={inactivityDate}/>
             ) : (
               <HistoricDashboard 
               scope={scope} 
-              data={data} 
-              isLoading={isLoading}/>
+              data={getGroupedData()} 
+              isLoading={isHistoricLoading}
+              viewDatesBy={viewDatesBy}
+              />
             )}
         </div>
       </div>
