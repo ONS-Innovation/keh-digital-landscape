@@ -43,30 +43,19 @@ function HistoricDashboard({scope, data, isLoading, viewDatesBy}) {
           )}
         </div>
       )}
-      <h4>Acceptances and Acceptance Rate By {viewDatesBy}</h4>
       {isLoading ? (
-        <div>Loading graph...</div>
+        <h4>Loading historic data...</h4>
       ) : (
-        <AcceptanceGraph data={completions?.perGroupedPeriod ?? 0}/>
-      )}
-      <h4>Engaged Users By {viewDatesBy}</h4>
-      {isLoading ? (
-        <div>Loading graph...</div>
-      ) : (
-        <EngagedUsersGraph data={completions?.perGroupedPeriod ?? 0}/>
-      )}
-      {isLoading ? (
-        <div className="pie-chart-loading">Loading pie charts...</div>
-      ) : (
-        <div className="copilot-charts-container">
-          <PieChart engagedUsers={completions?.engagedUsersByLanguage ?? 0} title={"Engaged Users by Language"}/>
-          <PieChart engagedUsers={completions?.engagedUsersByEditor ?? 0} title={"Engaged Users by Editor"}/>
+        <div>
+          <h4>Acceptances and Acceptance Rate By {viewDatesBy}</h4>
+          <AcceptanceGraph data={completions?.perGroupedPeriod ?? 0}/>
+          <h4>Engaged Users By {viewDatesBy}</h4>
+          <EngagedUsersGraph data={completions?.perGroupedPeriod ?? 0}/>
+          <div className="copilot-charts-container">
+            <PieChart engagedUsers={completions?.engagedUsersByLanguage ?? 0} title={"Engaged Users by Language"}/>
+            <PieChart engagedUsers={completions?.engagedUsersByEditor ?? 0} title={"Engaged Users by Editor"}/>
         </div>
-      )}
-      <h4>Language Breakdown</h4>
-      {isLoading ? (
-        <div>Loading table...</div>
-      ) : (
+        <h4>Language Breakdown</h4>
         <TableBreakdown
           data={completions?.languageBreakdown ?? 0}
           idField="language"
@@ -92,6 +81,7 @@ function HistoricDashboard({scope, data, isLoading, viewDatesBy}) {
             lineAcceptanceRate: stats.linesSuggested ? stats.linesAccepted / stats.linesSuggested : 0
           })}
         />
+        </div>
       )}
     
     <h2 className="title">CoPilot Chat</h2>
@@ -114,24 +104,17 @@ function HistoricDashboard({scope, data, isLoading, viewDatesBy}) {
           )}
         </div>
       )}
-      <h4>Engaged Users By {viewDatesBy}</h4>
       {isLoading ? (
-        <div>Loading graph...</div>
+        <h4>Loading historic data...</h4>
       ) : (
-        <EngagedUsersGraph data={chats?.perGroupedPeriod ?? 0}/>
-      )}
-      {isLoading ? (
-        <div className="pie-chart-loading">Loading pie chart...</div>
-      ) : (
-        <div className="copilot-charts-container">
-          <PieChart engagedUsers={chats?.engagedUsersByEditor ?? 0} title={"Engaged Users by Editor"}/>
-        </div>
-      )}
-     <h4>Editor Breakdown</h4>
-     {isLoading ? (
-        <div>Loading table...</div>
-      ) : (
-        <TableBreakdown
+        <div>
+          <h4>Engaged Users By {viewDatesBy}</h4>
+          <EngagedUsersGraph data={chats?.perGroupedPeriod ?? 0}/>
+          <div className="copilot-charts-container">
+            <PieChart engagedUsers={chats?.engagedUsersByEditor ?? 0} title={"Engaged Users by Editor"}/>
+          </div>
+          <h4>Editor Breakdown</h4>
+          <TableBreakdown
           data={chats?.editorBreakdown ?? 0}
           idField="editor"
           idHeader="Editor"
@@ -154,6 +137,7 @@ function HistoricDashboard({scope, data, isLoading, viewDatesBy}) {
             copyRate: stats.chats ? stats.copies / stats.chats : 0
           })}
         />
+        </div>
       )}
 </div>
   );

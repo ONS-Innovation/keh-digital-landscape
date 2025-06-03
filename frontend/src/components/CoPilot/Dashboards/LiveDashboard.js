@@ -48,30 +48,19 @@ function LiveDashboard({scope, data, isLiveLoading, isSeatsLoading, inactiveDays
               <CompletionsCards completions={completions} prefix={"Total"}/>
             </div>
           )}
-          <h4>Acceptances and Acceptance Rate By Day</h4>
           {isLiveLoading ? (
-            <div>Loading graph...</div>
+            <h4>Loading live data...</h4>
           ) : (
-            <AcceptanceGraph data={completions?.perGroupedPeriod ?? 0}/>
-          )}
-          <h4>Engaged Users By Day</h4>
-          {isLiveLoading ? (
-            <div>Loading graph...</div>
-          ) : (
-            <EngagedUsersGraph data={completions?.perGroupedPeriod ?? 0}/>
-          )}
-          {isLiveLoading ? (
-            <div className="pie-chart-loading">Loading pie charts...</div>
-          ) : (
-            <div className="copilot-charts-container">
-              <PieChart engagedUsers={completions?.engagedUsersByLanguage ?? 0} title={"Engaged Users by Language"}/>
-              <PieChart engagedUsers={completions?.engagedUsersByEditor ?? 0} title={"Engaged Users by Editor"}/>
+            <div>
+              <h4>Acceptances and Acceptance Rate By Day</h4>
+              <AcceptanceGraph data={completions?.perGroupedPeriod ?? 0}/>
+              <h4>Engaged Users By Day</h4>
+              <EngagedUsersGraph data={completions?.perGroupedPeriod ?? 0}/>
+              <div className="copilot-charts-container">
+                <PieChart engagedUsers={completions?.engagedUsersByLanguage ?? 0} title={"Engaged Users by Language"}/>
+                <PieChart engagedUsers={completions?.engagedUsersByEditor ?? 0} title={"Engaged Users by Editor"}/>
             </div>
-          )}
-          <h4>Language Breakdown</h4>
-          {isLiveLoading ? (
-            <div>Loading table...</div>
-          ) : (
+            <h4>Language Breakdown</h4>
             <TableBreakdown
               data={completions?.languageBreakdown ?? 0}
               idField="language"
@@ -97,6 +86,7 @@ function LiveDashboard({scope, data, isLiveLoading, isSeatsLoading, inactiveDays
                 lineAcceptanceRate: stats.linesSuggested ? stats.linesAccepted / stats.linesSuggested : 0
               })}
             />
+            </div>
           )}
         
         <h2 className="title">CoPilot Chat</h2>
@@ -113,24 +103,17 @@ function LiveDashboard({scope, data, isLiveLoading, isSeatsLoading, inactiveDays
               <ChatCards chats={chats} prefix={"Total"}/>
             </div>
           )}
-          <h4>Engaged Users By Day</h4>
           {isLiveLoading ? (
-            <div>Loading graph...</div>
+            <h4>Loading live data...</h4>
           ) : (
-            <EngagedUsersGraph data={chats?.perGroupedPeriod ?? 0}/>
-          )}
-          {isLiveLoading ? (
-            <div className="pie-chart-loading">Loading pie chart...</div>
-          ) : (
-            <div className="copilot-charts-container">
-              <PieChart engagedUsers={chats?.engagedUsersByEditor ?? 0} title={"Engaged Users by Editor"}/>
-            </div>
-          )}
-         <h4>Editor Breakdown</h4>
-         {isLiveLoading ? (
-            <div>Loading table...</div>
-          ) : (
-            <TableBreakdown
+            <div>
+              <h4>Engaged Users By Day</h4>
+              <EngagedUsersGraph data={chats?.perGroupedPeriod ?? 0}/>
+              <div className="copilot-charts-container">
+                <PieChart engagedUsers={chats?.engagedUsersByEditor ?? 0} title={"Engaged Users by Editor"}/>
+              </div>
+              <h4>Editor Breakdown</h4>
+              <TableBreakdown
               data={chats?.editorBreakdown ?? 0}
               idField="editor"
               idHeader="Editor"
@@ -153,11 +136,12 @@ function LiveDashboard({scope, data, isLiveLoading, isSeatsLoading, inactiveDays
                 copyRate: stats.chats ? stats.copies / stats.chats : 0
               })}
             />
+            </div>
           )}
         
         <h2 className="title">Seat Information</h2>
         {isSeatsLoading ? (
-          <div>Loading seat info...</div>
+          <h4>Loading seat data...</h4>
           ) : (
             <div>
               <div>
