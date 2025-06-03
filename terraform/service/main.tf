@@ -103,6 +103,10 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
         {
           name = "GITHUB_ORG",
           value = var.github_org,
+        },
+        {
+          name = "COPILOT_BUCKET_NAME",
+          value = var.copilot_bucket_name
         }
       ],
       logConfiguration = {
