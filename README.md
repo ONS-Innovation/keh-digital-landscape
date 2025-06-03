@@ -157,10 +157,10 @@ Follow these instructions in the central documenation to configure the Terraform
 
 When deploying the new service and its resources, deploy in this order:
 
-- storage
-- admin
-- authentication
-- service
+1. storage
+2. admin
+3. authentication
+4. service
 
 ### Makefile
 
