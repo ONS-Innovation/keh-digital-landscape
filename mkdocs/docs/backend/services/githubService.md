@@ -25,25 +25,9 @@ Retrieves comprehensive GitHub Copilot metrics for the organisation.
 
 **Returns:** Promise resolving to Copilot metrics object
 
-**Response Structure:**
-```javascript
-{
-  seat_breakdown: {
-    total: number,
-    added_this_cycle: number,
-    pending_cancellation: number,
-    pending_invitation: number,
-    active_this_cycle: number,
-    inactive_this_cycle: number
-  },
-  seat_management_setting: string,
-  public_code_suggestions: string,
-  ide_chat: string,
-  platform_chat: string,
-  cli: string,
-  platform_ide: string
-}
-```
+**GitHub API Response:**
+
+More information on the response structure can be found [here](https://docs.github.com/en/rest/copilot/copilot-metrics?apiVersion=2022-11-28#get-copilot-metrics-for-an-organization).
 
 **Example:**
 ```javascript
@@ -63,7 +47,10 @@ Retrieves detailed information about all GitHub Copilot seats in the organisatio
 
 **Returns:** Promise resolving to array of seat objects
 
-**Response Structure:**
+**GitHub API Response:**
+
+More information on the response structure can be found [here](https://docs.github.com/en/rest/copilot/copilot-user-management?apiVersion=2022-11-28#list-all-copilot-seat-assignments-for-an-organization).
+
 ```javascript
 [
   {
