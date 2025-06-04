@@ -7,9 +7,9 @@ export const fetchOrgLiveUsageData = async () => {
   try {
     let response;
     if (process.env.NODE_ENV === "development") {
-      response = await fetch(`http://localhost:5001/api/org/live`);
+      response = await fetch(`http://localhost:5001/copilot/api/org/live`);
     } else {
-      response = await fetch("/api/org/live");
+      response = await fetch("/copilot/api/org/live");
     }
     if (!response.ok) {
       return null;
@@ -32,9 +32,9 @@ export const fetchOrgHistoricUsageData = async () => {
   try {
     let response;
     if (process.env.NODE_ENV === "development") {
-      response = await fetch(`http://localhost:5001/api/org/historic`);
+      response = await fetch(`http://localhost:5001/copilot/api/org/historic`);
     } else {
-      response = await fetch("/api/org/historic");
+      response = await fetch("/copilot/api/org/historic");
     }
     if (!response.ok) {
       return null;
