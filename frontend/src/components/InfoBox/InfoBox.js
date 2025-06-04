@@ -208,19 +208,21 @@ const InfoBox = ({
               <button
                 className="edit-confirm-button"
                 onClick={handleConfirmEdit}
+                tabIndex={0}
+                title="Save changes"
               >
                 <FaCheck size={12} />
               </button>
-              <button className="edit-cancel-button" onClick={handleCancelEdit}>
+              <button className="edit-cancel-button" onClick={handleCancelEdit} tabIndex={0} title="Cancel changes">
                 <FaTimes size={12} />
               </button>
             </div>
           </>
         ) : (
           <>
-            <h3>{localTitle}</h3>
+            <h2>{localTitle}</h2>
             {isAdmin && (
-              <button className="edit-button" onClick={handleEditClick}>
+              <button className="edit-button" onClick={handleEditClick} tabIndex={0} title="Edit technology">
                 <FaEdit size={12} />
               </button>
             )}
@@ -240,7 +242,7 @@ const InfoBox = ({
 
       <div className="timeline-header">
         <div className="timeline-header-title">
-          <h4>Timeline</h4>
+          <h3>Timeline</h3>
           <button
             className="timeline-sort-button"
             onClick={() => setTimelineAscending(!timelineAscending)}
@@ -256,7 +258,7 @@ const InfoBox = ({
         <p>Click a box to show the description of the event</p>
       </div>
 
-      <div className="timeline-container">
+      <div className="timeline-container" tabIndex={0}>
         {[...selectedItem.timeline]
           .reverse()
           .slice()

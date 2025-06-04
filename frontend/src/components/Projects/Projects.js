@@ -629,7 +629,7 @@ const Projects = ({
             </div>
           </div>
         </div>
-        <div className="projects-charts-container">
+        <div className="projects-charts-container" tabIndex={0} role="region" aria-label="Projects Charts">
           <PieChart
             projectsData={filteredAndSortedProjects}
             title="Project Stages"

@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { ThemeProvider } from "../contexts/ThemeContext";
 import Header from "../components/Header/Header";
 import LiveDashboard from "../components/CoPilot/Dashboards/LiveDashboard";
 import HistoricDashboard from "../components/CoPilot/Dashboards/HistoricDashboard";
@@ -174,7 +173,7 @@ function CopilotDashboard() {
   }, [inactiveDays, inactivityDate, liveOrgData.allSeatData]);
 
   return (
-    <ThemeProvider>
+    <>
       <Header hideSearch={true}/>
       <div className="admin-page">
         <PageBanner
@@ -187,7 +186,7 @@ function CopilotDashboard() {
           activeTab={scope}
           onTabChange={setScope}
         />
-        <div className="admin-container">
+        <div className="admin-container" tabIndex="0">
           <div className="dashboard-header">
             <div>
               <p className="header-text">View Data Type</p>
@@ -222,6 +221,12 @@ function CopilotDashboard() {
                       onChange={updateSlider}
                       onChangeComplete={handleSliderCompletion}
                       allowCross={false}
+                      ariaLabelForHandle={['Start date selector', 'End date selector']}
+                      ariaValueTextFormatterForHandle={(value, index) => {
+                        const date = new Date();
+                        date.setDate(date.getDate() - 29 + value);
+                        return `${index === 0 ? 'Start' : 'End'} date: ${date.toISOString().slice(0, 10)}`;
+                      }}
                     />
                     <p id="slider-end">End: {endDate}</p>
                   </div>
@@ -235,6 +240,7 @@ function CopilotDashboard() {
                     value={viewDatesBy}
                     onChange={(e) => setViewDatesBy(e.target.value)}
                     disabled={isHistoricLoading}
+                    aria-label="View Dates By"
                   >
                     {dateOptions.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -268,7 +274,7 @@ function CopilotDashboard() {
             )}
         </div>
       </div>
-    </ThemeProvider>
+    </>
   );
 }
 

@@ -1,20 +1,20 @@
 .admin-page {
   padding: 0;
-  padding-top: 0px;
-  margin-top: var(--header-height);
   box-sizing: border-box;
-  max-height: calc(100vh - var(--header-height));
+
   display: flex;
   flex-direction: column;
 
   align-items: flex-start;
   justify-content: flex-start;
+
+  max-height: calc(100vh - var(--header-height));
 }
 
 .admin-details {
   text-align: left;
   position: sticky;
-  top: calc(var(--header-height) - 1px);
+  top: 0;
   background: hsl(var(--background));
   z-index: 10;
   padding: 16px 24px;
@@ -83,7 +83,7 @@
   gap: 8px;
 }
 
-.admin-filter-section h4 {
+.admin-filter-section h2 {
   margin: 0;
   font-size: 14px;
   font-weight: 500;
@@ -319,6 +319,11 @@
 .droppable-area.drag-over {
   background-color: hsl(var(--card));
   border: 1px dashed hsl(var(--primary));
+}
+
+.droppable-area:focus {
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: 2px;
 }
 
 .draggable-item {
@@ -774,6 +779,8 @@ textarea.technology-input {
   font-weight: 400;
   cursor: pointer;
   transition: all 0.2s ease;
+  border: 1px solid transparent;
+  outline: none;
 }
 
 .modal-buttons button:disabled {
@@ -781,36 +788,23 @@ textarea.technology-input {
 }
 
 .modal-buttons button:first-child {
-  background: hsl(var(--primary) / .1);
-  color: hsl(var(--primary));
-  border: 1px solid hsl(var(--primary) / .2);
-  box-shadow: 0 3px 0 hsl(var(--primary) / .2);
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
 }
 
-.modal-buttons button:first-child:hover {
+.modal-buttons button:first-child:not(:disabled):hover {
   background: hsl(var(--primary) / 0.9);
   color: hsl(var(--primary-foreground));
-  box-shadow: none;
-  transform: translateY(3px);
-}
-
-.modal-buttons button:first-child:active {
-  border: 1px solid hsl(var(--primary));
 }
 
 .modal-buttons button:last-child {
-  background: hsl(var(--destructive) / .1);
-  color: hsl(var(--destructive));
-  border: 1px solid hsl(var(--destructive) / .2);
-  box-shadow: 0 3px 0 hsl(var(--destructive) / .6);
-
+  background: hsl(var(--destructive));
+  color: hsl(var(--destructive-foreground));
 }
 
 .modal-buttons button:last-child:hover {
-  background: hsl(var(--destructive) / 0.9);
+  background: hsl(var(--destructive) / .9);
   color: hsl(var(--destructive-foreground));
-  box-shadow: none;
-  transform: translateY(3px);
 }
 
 .admin-actions {
@@ -819,7 +813,7 @@ textarea.technology-input {
   gap: 8px;
 }
 
-.admin-actions h4 {
+.admin-actions h2 {
   margin: 0;
   font-size: 14px;
   font-weight: 500;
@@ -834,8 +828,8 @@ textarea.technology-input {
 }
 
 .admin-button {
-  background-color: hsl(var(--muted));
-  color: hsl(var(--muted-foreground));
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
   font-size: 12px;
@@ -851,10 +845,8 @@ textarea.technology-input {
   box-shadow: 0 3px 0 hsl(var(--accent));
 }
 
-.admin-button:hover {
+.admin-button:not(:disabled):hover {
   background-color: hsl(var(--muted) / 0.75);
-  transform: translateY(3px);
-  box-shadow: none;
 }
 
 .admin-button:active {
@@ -926,8 +918,8 @@ textarea.technology-input {
 }
 
 .error-message {
-  color: hsl(var(--primary));
-  background: hsl(var(--destructive) / 0.3);
+  color: hsl(var(--destructive));
+  background: hsl(var(--destructive-foreground));
   border: 1px solid hsl(var(--destructive));
   padding: 4px 8px;
   border-radius: var(--radius);
@@ -947,9 +939,16 @@ textarea.technology-input {
   padding: 24px;  
   box-sizing: border-box;
   background: hsl(var(--card));
-  border-radius: var(--radius);
   width: 100%;
-  max-height: 100%;
+  max-height: 100vh;
+  overflow-y: auto;
+  outline: none;
+}
+
+/* Style for when the container is focused */
+.admin-container:focus {
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: -2px;
 }
 
 @media screen and (max-width: 1200px) {
@@ -957,13 +956,6 @@ textarea.technology-input {
     padding: 16px;
   }
 }
-
-.admin-container h2 {
-  margin: 0 0 16px 0;
-  font-size: 20px;
-  font-weight: 600;
-}
-
 
 .existing-banners-title {
   margin: 0;
@@ -1037,7 +1029,7 @@ textarea.technology-input {
   flex: 1;
 }
 
-.banner-content h4 {
+.banner-content h2 {
   margin: 0 0 8px 0;
   font-size: 16px;
   font-weight: 600;
@@ -1085,8 +1077,8 @@ textarea.technology-input {
 }
 
 .banner-status.hidden {
-  background-color: hsl(0, 0%, 95%);
-  color: hsl(0, 0%, 40%);
+  background-color: hsl(var(--muted));
+  color: hsl(var(--foreground));
 }
 
 .banner-actions {
@@ -1105,17 +1097,17 @@ textarea.technology-input {
 }
 
 .banner-toggle-btn {
-  background-color: hsl(var(--muted));
-  color: hsl(var(--muted-foreground));
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
 }
 
 .banner-toggle-btn:hover {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--primary) / 0.9);
 }
 
 .banner-delete-btn {
-  background-color: hsl(var(--destructive) / 0.1);
-  color: hsl(var(--destructive));
+  background-color: hsl(var(--destructive));
+  color: hsl(var(--destructive-foreground));
 }
 
 .banner-delete-btn:hover {

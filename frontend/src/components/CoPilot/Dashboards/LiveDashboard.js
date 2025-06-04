@@ -31,9 +31,24 @@ function LiveDashboard({scope, data, isLiveLoading, isSeatsLoading, inactiveDays
     );
   }
 
+  const handleInactivityDecrease = () => {
+    setInactiveDays((prev) => (prev > 0 ? prev - 1 : prev));
+  };
+
+  const handleInactivityIncrease = () => {
+    setInactiveDays((prev) => prev + 1);
+  };
+
+  const handleKeyDown = (event, action) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      action();
+    }
+  };
+
   return (
-    <div>
-        <h2 className="title">IDE Code Completions</h2>
+    <div className="copilot-dashboard">
+        <h1 className="title">IDE Code Completions</h1>
           {isLiveLoading ? (
             <div className="copilot-grid">
               <SkeletonStatCard />
@@ -49,22 +64,23 @@ function LiveDashboard({scope, data, isLiveLoading, isSeatsLoading, inactiveDays
             </div>
           )}
           {isLiveLoading ? (
-            <h4>Loading live data...</h4>
+            <h3>Loading live data...</h3>
           ) : (
             <div>
-              <h4>Acceptances and Acceptance Rate By Day</h4>
+              <h3>Acceptances and Acceptance Rate By Day</h3>
               <AcceptanceGraph data={completions?.perGroupedPeriod ?? 0}/>
-              <h4>Engaged Users By Day</h4>
+              <h3>Engaged Users By Day</h3>
               <EngagedUsersGraph data={completions?.perGroupedPeriod ?? 0}/>
               <div className="copilot-charts-container">
                 <PieChart engagedUsers={completions?.engagedUsersByLanguage ?? 0} title={"Engaged Users by Language"}/>
                 <PieChart engagedUsers={completions?.engagedUsersByEditor ?? 0} title={"Engaged Users by Editor"}/>
             </div>
-            <h4>Language Breakdown</h4>
+            <h3>Language Breakdown</h3>
             <TableBreakdown
               data={completions?.languageBreakdown ?? 0}
               idField="language"
               idHeader="Language"
+              tableContext="IDE Code Completions Language Breakdown"
               columns={[
                 "suggestions",
                 "acceptances",
@@ -89,7 +105,7 @@ function LiveDashboard({scope, data, isLiveLoading, isSeatsLoading, inactiveDays
             </div>
           )}
         
-        <h2 className="title">CoPilot Chat</h2>
+        <h1 className="title">CoPilot Chat</h1>
         {isLiveLoading ? (
             <div className="copilot-chat-grid">
               <SkeletonStatCard />
@@ -104,19 +120,20 @@ function LiveDashboard({scope, data, isLiveLoading, isSeatsLoading, inactiveDays
             </div>
           )}
           {isLiveLoading ? (
-            <h4>Loading live data...</h4>
+            <h3>Loading live data...</h3>
           ) : (
-            <div>
-              <h4>Engaged Users By Day</h4>
+            <div className="copilot-chat-container">
+              <h3>Engaged Users By Day</h3>
               <EngagedUsersGraph data={chats?.perGroupedPeriod ?? 0}/>
               <div className="copilot-charts-container">
                 <PieChart engagedUsers={chats?.engagedUsersByEditor ?? 0} title={"Engaged Users by Editor"}/>
               </div>
-              <h4>Editor Breakdown</h4>
+              <h3>Editor Breakdown</h3>
               <TableBreakdown
               data={chats?.editorBreakdown ?? 0}
               idField="editor"
               idHeader="Editor"
+              tableContext="CoPilot Chat Editor Breakdown"
               columns={[
                 "chats",
                 "insertions",
@@ -139,36 +156,50 @@ function LiveDashboard({scope, data, isLiveLoading, isSeatsLoading, inactiveDays
             </div>
           )}
         
-        <h2 className="title">Seat Information</h2>
+        <h1 className="title">Seat Information</h1>
         {isSeatsLoading ? (
-          <h4>Loading seat data...</h4>
+          <h3>Loading seat data...</h3>
           ) : (
             <div>
               <div>
                 <p>Users are considered inactive after {inactiveDays} days ({inactivityDate})</p>
                 <div className="inactivity-toggle">
                   <p>Toggle inactivity threshold:</p>
-                  <div className="inactivity-button" onClick={() => setInactiveDays((prev) => (prev > 0 ? prev - 1 : prev))}>-</div>
-                  <div className="inactivity-button" onClick={() => setInactiveDays((prev) => prev + 1)}>+</div>
+                  <button 
+                    className="inactivity-button" 
+                    onClick={handleInactivityDecrease}
+                    onKeyDown={(e) => handleKeyDown(e, handleInactivityDecrease)}
+                    aria-label="Decrease inactivity threshold by one day"
+                  >
+                    -
+                  </button>
+                  <button 
+                    className="inactivity-button" 
+                    onClick={handleInactivityIncrease}
+                    onKeyDown={(e) => handleKeyDown(e, handleInactivityIncrease)}
+                    aria-label="Increase inactivity threshold by one day"
+                  >
+                    +
+                  </button>
                 </div>
               </div>
               <div className="copilot-grid">
                   <div className="stat-card">
-                    <h3>Number of Seats</h3>
+                    <h2>Number of Seats</h2>
                     <p>{seats.allSeatData.length}</p>
                   </div>
                   <div className="stat-card">
-                    <h3>Number of Engaged Users</h3>
+                    <h2>Number of Engaged Users</h2>
                     <p>{seats.activeSeatData.length}</p>
                   </div>
                   <div className="stat-card">
-                    <h3>Number of Inactive Users</h3>
+                    <h2>Number of Inactive Users</h2>
                     <p>{seats.allSeatData.length - seats.activeSeatData.length}</p>
                   </div>
                 </div>
                 <div className="seat-breakdown">
                   <div className="seat-breakdown-item">
-                    <h4>Engaged Users</h4>
+                    <h3>Engaged Users</h3>
                     <TableBreakdown
                       data={seats.activeSeatData.reduce((acc, user, i) => {
                         acc[i] = {
@@ -181,6 +212,7 @@ function LiveDashboard({scope, data, isLiveLoading, isSeatsLoading, inactiveDays
                       }, {})}
                       idField="username"
                       idHeader="Username"
+                      tableContext="Engaged Users List"
                       columns={["avatar", "github", "lastActivity"]}
                       headerMap={{
                         avatar: "Avatar",
@@ -191,7 +223,7 @@ function LiveDashboard({scope, data, isLiveLoading, isSeatsLoading, inactiveDays
                     />
                   </div>
                   <div className="seat-breakdown-item">
-                    <h4>Inactive Users</h4>
+                    <h3>Inactive Users</h3>
                     <TableBreakdown
                       data={inactiveUsers.reduce((acc, user, i) => {
                         acc[i] = {
@@ -204,6 +236,7 @@ function LiveDashboard({scope, data, isLiveLoading, isSeatsLoading, inactiveDays
                       }, {})}
                       idField="username"
                       idHeader="Username"
+                      tableContext="Inactive Users List"
                       columns={["avatar", "github", "lastActivity"]}
                       headerMap={{
                         avatar: "Avatar",

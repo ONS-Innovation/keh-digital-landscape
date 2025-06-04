@@ -35,6 +35,11 @@ body {
   overflow: hidden;
 }
 
+.radar-container:focus {
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: -2px;
+}
+
 .radar-container svg {
   min-width: 800px;
   min-height: 800px;
@@ -199,26 +204,54 @@ line {
 }
 
 .quadrant-list ul {
-  padding: 0;
   margin: 0;
   overflow-y: auto;
+  outline: none; /* Remove default outline */
   flex-grow: 1;
   scrollbar-width: thin;
   scrollbar-color: hsl(var(--muted)) transparent;
+  padding-left: 0;
+}
+
+/* Enhanced keyboard accessibility for scrollable lists */
+.quadrant-list ul[tabindex="0"] {
+  position: relative;
+}
+
+.quadrant-list ul:focus {
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: -2px;
+}
+
+/* Apply outline when any element inside the ul is focused */
+.quadrant-list ul:focus-within {
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: -2px;
+}
+
+/* Make list items focusable for keyboard navigation */
+.quadrant-list ul li {
+  padding: 8px 16px;
+  border-bottom: 1px solid hsl(var(--border));
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  outline: none;
+}
+
+.quadrant-list ul li:focus {
+  background-color: hsl(var(--muted));
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: -2px;
+}
+
+.quadrant-list ul li:hover {
+  background-color: hsl(var(--muted) / 0.8);
 }
 
 @media (max-width: 1400px) {
   .quadrant-list ul {
     max-height: calc(50vh - var(--header-height));
   }
-}
-
-.quadrant-list ul li {
-  padding: 8px 16px;
-}
-
-.quadrant-list ul li:hover {
-  background-color: hsl(var(--muted) / 0.8);
 }
 
 .quadrant-list ul::-webkit-scrollbar {
@@ -299,13 +332,13 @@ line {
 .blip {
   fill: currentColor;
   cursor: pointer;
-  opacity: 0.8;
+  opacity: 0.9;
   z-index: -1;
-  r: 10;
+  r: 12;
 }
 
 .blip-number {
-  fill: white;
+  fill: hsl(var(--background));
   font-size: 10px;
   pointer-events: none;
   font-weight: bold;
@@ -527,7 +560,7 @@ text {
 
 /* Ensure content area is scrollable */
 
-.info-box h3 {
+.info-box h2 {
   margin: 0;
   color: hsl(var(--foreground));
   font-size: 18px;
@@ -673,12 +706,11 @@ text {
 .info-box-number {
   font-size: 14px;
   font-weight: bold;
-  color: hsl(var(--muted-foreground));
-  background: hsl(var(--muted));
+  color: hsl(var(--primary-foreground));
+  background: hsl(var(--primary));
   padding: 2px 8px;
   box-sizing: border-box;
   border-radius: 12px;
-  margin-bottom: -2px;
 }
 
 .blip-highlight {
@@ -714,13 +746,8 @@ text {
   font-weight: 500;
   margin: 0;
 
-  color: hsl(var(--muted-foreground));
-  background: hsl(var(--muted));
-}
-
-.radar-page {
-  padding-top: 80px; 
-  height: calc(100vh - var(--header-height));
+  color: hsl(var(--card-foreground));
+  background: hsl(var(--card));
 }
 
 .info-box-close {
@@ -775,6 +802,36 @@ text {
 .quadrant-list ul {
   margin: 0;
   overflow-y: auto;
+  outline: none; /* Remove default outline */
+}
+
+
+.quadrant-list ul:focus {
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: 1px; /* Add a small offset */
+}
+
+/* Apply outline when any element inside the ul is focused */
+.quadrant-list ul:focus-within {
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: 1px; /* Add a small offset */
+}
+
+
+/* Ensure column headers have visual distinction */
+/* This style is applied when the ul itself is focused */
+.quadrant-list ul:focus + .quadrant-header {
+  font-weight: bold;
+}
+
+/* Also apply when an element inside the ul is focused */
+.quadrant-list ul:focus-within + .quadrant-header {
+  font-weight: bold;
+}
+
+/* High contrast for focused grid elements */
+.quadrant-list ul:focus-within {
+  box-shadow: 0 0 0 2px hsl(var(--primary), 0.3);
 }
 
 /* Remove the max-height transition from ul */
@@ -1113,6 +1170,10 @@ text {
   max-height: 65px;
 }
 
+.timeline-container:focus-within {
+  outline: 1px solid hsl(var(--primary));
+}
+
 .timeline-container::-webkit-scrollbar {
   height: 1px;
 }
@@ -1130,7 +1191,6 @@ text {
   display: flex;
   align-items: center;
   position: relative;
-  padding-top: 4px;
 }
 .timeline-node {
   padding: 2px 12px;
@@ -1151,6 +1211,7 @@ text {
   overflow-y: auto;
   text-wrap: nowrap;
 }
+
 
 .timeline-node.active {
   border: 1px solid hsl(var(--primary));
@@ -1206,12 +1267,12 @@ text {
 
 .timeline-node.review {
   background: hsl(var(--muted));
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--foreground));
 }
 
 .timeline-node.ignore {
   background: var(--color-bg-ignore);
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--foreground));
 }
 
 .timeline-header {
@@ -1221,7 +1282,7 @@ text {
   border-top: 1px solid hsl(var(--border));
 }
 
-.timeline-header h4 {
+.timeline-header h3 {
   margin: 0;
   font-size: 14px;
   font-weight: 500;

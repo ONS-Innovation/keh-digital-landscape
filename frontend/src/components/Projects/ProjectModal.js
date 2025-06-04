@@ -369,6 +369,7 @@ const ProjectModal = ({
                 <div
                   key={key}
                   className={`detail-item ${title === "Repositories" ? "large-span" : ""}`}
+                  tabIndex={0}
                 >
                   <h3>{fieldLabels[key] || key.replace(/_/g, " ")}:</h3>
                   <p>
@@ -420,9 +421,10 @@ const ProjectModal = ({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="search-input-projects"
+                aria-label="Search project details"
               />
             </div>
-            <button className="modal-close" onClick={onClose}>
+            <button className="modal-close" onClick={onClose} title="Close modal" aria-label="Close modal">
               <IoClose />
             </button>
           </div>

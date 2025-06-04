@@ -76,14 +76,14 @@
   text-decoration: underline;
 }
 
-.help-modal-body h5 {
+.help-modal-body h1 {
   font-size: 18px;
   font-weight: 600;
   margin: 12px 0;
   color: hsl(var(--foreground));
 }
 
-.help-modal-body h5:first-child {
+.help-modal-body h1:first-child {
   margin-top: 0;
 }
 
@@ -141,7 +141,7 @@
     font-size: 20px;
   }
 
-  .help-modal-body h5 {
+  .help-modal-body h1 {
     font-size: 16px;
   }
 }

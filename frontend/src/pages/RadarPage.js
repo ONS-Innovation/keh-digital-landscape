@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import "../styles/App.css";
 import Header from "../components/Header/Header";
-import { ThemeProvider } from "../contexts/ThemeContext";
 import { useData } from "../contexts/dataContext";
 import {
   IoInformationCircle,
@@ -28,7 +27,7 @@ function RadarPage() {
   const [searchResults, setSearchResults] = useState([]);
   const [isInfoBoxVisible, setIsInfoBoxVisible] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
-  const [dragPosition, setDragPosition] = useState({ x: 24, y: 80 });
+  const [dragPosition, setDragPosition] = useState({ x: 148, y: 80 });
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [expandedQuadrants, setExpandedQuadrants] = useState({
     1: true,
@@ -477,14 +476,14 @@ function RadarPage() {
 
   if (!data)
     return (
-      <ThemeProvider>
+      <div>
         <Header
         />
         <div className="loading-container">
           <div className="loading-spinner"></div>
           <p>Loading Radar...</p>
         </div>
-      </ThemeProvider>
+      </div>
     );
 
   const groupedEntries = data.entries.reduce((acc, entry) => {
@@ -620,7 +619,7 @@ function RadarPage() {
   };
 
   return (
-    <ThemeProvider>
+    <>
       <Header
         searchTerm={searchTerm}
         onSearchChange={handleSearch}
@@ -635,7 +634,7 @@ function RadarPage() {
           <InfoBox
             isAdmin={false}
             selectedItem={selectedBlip || lockedBlip}
-            initialPosition={{ x: 24, y: 80 }}
+            initialPosition={{ x: 272, y: 80 }}
             onClose={() => setIsInfoBoxVisible(false)}
             timelineAscending={timelineAscending}
             setTimelineAscending={setTimelineAscending}
@@ -698,11 +697,32 @@ function RadarPage() {
               </div>
             </div>
             {expandedQuadrants["4"] && (
-              <ul>
-                {numberedEntries["4"]?.map((entry) => (
+              <ul tabIndex="0" role="list" aria-label="Infrastructure technologies">
+                {numberedEntries["4"]?.map((entry, index) => (
                   <li
                     key={entry.id}
                     onClick={() => handleBlipClick(entry)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        handleBlipClick(entry);
+                        e.preventDefault();
+                      } else if (e.key === 'ArrowDown') {
+                        const nextItem = e.target.nextElementSibling;
+                        if (nextItem) {
+                          nextItem.focus();
+                        }
+                        e.preventDefault();
+                      } else if (e.key === 'ArrowUp') {
+                        const prevItem = e.target.previousElementSibling;
+                        if (prevItem) {
+                          prevItem.focus();
+                        }
+                        e.preventDefault();
+                      }
+                    }}
+                    tabIndex="0"
+                    role="listitem"
+                    aria-label={`${entry.title}, ${entry.timeline[entry.timeline.length - 1].ringId} ring`}
                     style={{ cursor: "pointer" }}
                   >
                     <span className="entry-number">{entry.number}.</span>
@@ -768,11 +788,32 @@ function RadarPage() {
                 </span>
               </div>
             </div>
-            <ul>
-              {numberedEntries["1"]?.map((entry) => (
+            <ul tabIndex="0" role="list" aria-label="Languages technologies">
+              {numberedEntries["1"]?.map((entry, index) => (
                 <li
                   key={entry.id}
                   onClick={() => handleBlipClick(entry)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      handleBlipClick(entry);
+                      e.preventDefault();
+                    } else if (e.key === 'ArrowDown') {
+                      const nextItem = e.target.nextElementSibling;
+                      if (nextItem) {
+                        nextItem.focus();
+                      }
+                      e.preventDefault();
+                    } else if (e.key === 'ArrowUp') {
+                      const prevItem = e.target.previousElementSibling;
+                      if (prevItem) {
+                        prevItem.focus();
+                      }
+                      e.preventDefault();
+                    }
+                  }}
+                  tabIndex="0"
+                  role="listitem"
+                  aria-label={`${entry.title}, ${entry.timeline[entry.timeline.length - 1].ringId} ring`}
                   style={{ cursor: "pointer" }}
                 >
                   <span className="entry-number">{entry.number}.</span>
@@ -787,7 +828,7 @@ function RadarPage() {
             </ul>
           </div>
 
-          <div className="radar-container">
+          <div className="radar-container" tabIndex={0}>
             <svg width="1000" height="1000" viewBox="-500 -500 1000 1000">
               {/* Rings */}
               {Object.entries(ringRadii).map(([ring, [_, radius]]) => (
@@ -1016,11 +1057,32 @@ function RadarPage() {
                 </span>
               </div>
             </div>
-            <ul>
-              {numberedEntries["3"]?.map((entry) => (
+            <ul tabIndex="0" role="list" aria-label="Supporting Tools technologies">
+              {numberedEntries["3"]?.map((entry, index) => (
                 <li
                   key={entry.id}
                   onClick={() => handleBlipClick(entry)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      handleBlipClick(entry);
+                      e.preventDefault();
+                    } else if (e.key === 'ArrowDown') {
+                      const nextItem = e.target.nextElementSibling;
+                      if (nextItem) {
+                        nextItem.focus();
+                      }
+                      e.preventDefault();
+                    } else if (e.key === 'ArrowUp') {
+                      const prevItem = e.target.previousElementSibling;
+                      if (prevItem) {
+                        prevItem.focus();
+                      }
+                      e.preventDefault();
+                    }
+                  }}
+                  tabIndex="0"
+                  role="listitem"
+                  aria-label={`${entry.title}, ${entry.timeline[entry.timeline.length - 1].ringId} ring`}
                   style={{ cursor: "pointer" }}
                 >
                   <span className="entry-number">{entry.number}.</span>
@@ -1085,7 +1147,7 @@ function RadarPage() {
                 </span>
               </div>
             </div>
-            <ul>
+            <ul tabIndex="0">
               {numberedEntries["2"]?.map((entry) => (
                 <li
                   key={entry.id}
@@ -1116,7 +1178,7 @@ function RadarPage() {
           />
         )}
       </div>
-    </ThemeProvider>
+    </>
   );
 }
 

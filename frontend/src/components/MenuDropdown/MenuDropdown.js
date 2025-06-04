@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../../styles/components/MenuDropdown.css";
-import { IoHome, IoMenu, IoStatsChart, IoPeople, IoHelp } from 'react-icons/io5'
+import { TbSmartHome, TbEditCircle, TbUserShield, TbUsers, TbChartBar, TbHelp } from "react-icons/tb";
 import { VscCopilot } from "react-icons/vsc";
-import { FaEdit, FaUserShield } from "react-icons/fa";
+import { IoMenu } from "react-icons/io5";
 import { MdOutlineRadar } from "react-icons/md";
 
 /**
@@ -47,7 +47,7 @@ function MenuDropdown({ setShowHelpModal }) {
 
   return (
     <div className="menu-dropdown" ref={dropdownRef}>
-      <button className="menu-button" onClick={() => setIsOpen(!isOpen)}>
+      <button className="menu-button" onClick={() => setIsOpen(!isOpen)} aria-label="Open menu">
         <IoMenu size={16} />
       </button>
 
@@ -55,7 +55,7 @@ function MenuDropdown({ setShowHelpModal }) {
         <div className="dropdown-content">
             <div className="home-button-container">
               <button onClick={() => handleNavClick('/')} className={location.pathname === '/' ? 'active' : ''}>
-                <IoHome size={16} />
+                <TbSmartHome size={16} />
                 Home
               </button>
             </div>
@@ -65,20 +65,20 @@ function MenuDropdown({ setShowHelpModal }) {
                 Tech Radar
               </button>
               <button onClick={() => handleNavClick('/statistics')} className={location.pathname === '/statistics' ? 'active' : ''}>
-                <IoStatsChart size={16} />
+                <TbChartBar size={16} />
                 Statistics
               </button>
               <button onClick={() => handleNavClick('/projects')} className={location.pathname === '/projects' ? 'active' : ''}>
-                <IoPeople size={16} />
+                <TbUsers size={16} />
                 Projects
               </button>
               {/* Keep these as <a> tags */}
               <a href='/review/dashboard' className={location.pathname === '/review/dashboard' ? 'active' : ''}>
-                <FaEdit size={16} />
+                <TbEditCircle size={16} />
                 Review
               </a>
               <a href='/admin/dashboard' className={location.pathname === '/admin/dashboard' ? 'active' : ''}>
-                <FaUserShield size={16} />
+                <TbUserShield size={16} />
                 Admin
               </a>
               <button onClick={() => handleNavClick('/copilot')} className={location.pathname === '/copilot' ? 'active' : ''}>
@@ -88,7 +88,7 @@ function MenuDropdown({ setShowHelpModal }) {
             </div>
             <div className="help-button-container">
               <button onClick={handleHelpClick}>
-                <IoHelp size={16} />
+                <TbHelp size={16} />
                 Help
               </button>
             </div>

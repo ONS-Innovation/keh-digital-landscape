@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ThemeProvider } from "../contexts/ThemeContext";
 import Header from "../components/Header/Header";
 import Projects from "../components/Projects/Projects";
 import ProjectModal from "../components/Projects/ProjectModal";
 import { useData } from "../contexts/dataContext";
 import toast from "react-hot-toast";
-import "../styles/ProjectsPage.css";
 import { useTechnologyStatus } from "../utilities/getTechnologyStatus";
 import { BannerContainer } from "../components/Banner";
 /**
@@ -132,7 +130,7 @@ function ProjectsPage() {
   const filteredProjects = getFilteredProjects();
 
   return (
-    <ThemeProvider>
+    <>
       <Header 
         searchTerm={searchTerm}
         onSearchChange={(value) => setSearchTerm(value)}
@@ -162,7 +160,7 @@ function ProjectsPage() {
           />
         )}
       </div>
-    </ThemeProvider>
+    </>
   );
 }
 
