@@ -25,10 +25,10 @@ The main application file sets up:
 The application mounts four main route groups:
 
 ```javascript
-app.use('/api', apiRoutes);           // Default API routes
-app.use('/admin/api', adminRoutes);   // Admin functionality
-app.use('/review/api', reviewRoutes); // Review functionality  
-app.use('/copilot/api', copilotRoutes); // GitHub Copilot metrics
+app.use('/api', default);           // Default API routes that points to /routes/default.js
+app.use('/admin/api', admin);       // Admin functionality that points to /routes/admin.js
+app.use('/review/api', review);     // Review functionality that points to /routes/review.js
+app.use('/copilot/api', copilot);   // GitHub Copilot metrics that points to /routes/copilot.js
 ```
 
 ## Route Modules
@@ -36,32 +36,40 @@ app.use('/copilot/api', copilotRoutes); // GitHub Copilot metrics
 ### Default Routes (`/api`)
 Located in `routes/default.js`, these provide core application functionality:
 
-- **GET `/csv-data`** - Retrieve project data in CSV format
-- **GET `/json-data`** - Retrieve project data in JSON format
-- **GET `/tech-radar-data`** - Fetch technology radar data
-- **GET `/repo-stats`** - Get repository statistics
-- **GET `/banners`** - Retrieve application banners
+- **GET `/csv`** - Retrieve project data in CSV format
+- **GET `/json`** - Retrieve project data in JSON format
+- **GET `/tech-radar/json`** - Fetch technology radar data
+- **GET `/repository/project/json`** - Get repository statistics
+- **GET `/banners`** - Retrieve active banner messages
+- **GET `/banners/all`** - Retrieve all banner messages (includes inactive banners)
 - **GET `/health`** - Health check endpoint
+
+
 
 ### Admin Routes (`/admin/api`)
 Located in `routes/admin.js`, these provide administrative functionality:
 
-- **POST `/update-tech-radar`** - Update technology radar entries
-- **POST `/banner-management`** - Manage application banners
-- **POST `/update-array-data`** - Update technology arrays
-- **POST `/normalise-technology`** - Normalise technology names across projects
+- **POST `/banners`** - Update the banner messages in S3 from admin
+- **POST `/banners/update`** - Update banner message
+- **POST `/banners/toggle`** - Toggle the visibility of a banner message
+- **POST `/banners/delete`** - Delete a banner message
+- **GET `/array-data`** - Get array data from the Tech Audit Tool bucket
+- **POST `/array-data/update`** - Update the array data in the Tech Audit Tool bucket
+- **GET `/tech-radar`** - Get the tech radar JSON from S3
+- **POST `/tech-radar/update`** - Update the tech radar JSON in S3 from admin
+- **POST `/normalise/technology`** - Normalise the technology names across projects in S3 from admin
 
 ### Review Routes (`/review/api`)
 Located in `routes/review.js`, these provide review functionality:
 
-- **POST `/update-tech-radar`** - Update technology radar (review role)
+- **POST `/tech-radar/update`** - Update the tech radar JSON in S3
 
 ### Copilot Routes (`/copilot/api`)
 Located in `routes/copilot.js`, these provide GitHub Copilot metrics:
 
-- **GET `/metrics`** - Get Copilot organisation metrics
-- **GET `/historic-data`** - Get historic Copilot data
-- **GET `/seat-info`** - Get Copilot seat information
+- **GET `/org/live`** - Get Copilot organisation live usage data
+- **GET `/org/historic`** - Get Copilot organisation historic usage data
+- **GET `/seats`** - Get Copilot seat information
 
 ## Services
 
