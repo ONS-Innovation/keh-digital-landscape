@@ -6,7 +6,7 @@ const router = express.Router();
 
 /**
  * Endpoint for fetching Copilot organisation usage data from the Github API.
- * @route GET /api/org/live
+ * @route GET /copilot/api/org/live
  * @returns {Object} Organisation usage JSON data
  * @throws {Error} 500 - If fetching fails
  */
@@ -22,7 +22,7 @@ router.get("/org/live", async (req, res) => {
 
 /**
  * Endpoint for fetching Copilot organisation historic usage data from S3.
- * @route GET /api/org/historic
+ * @route GET /copilot/api/org/historic
  * @returns {Object} Organisation usage JSON data
  * @throws {Error} 500 - If fetching fails
  */
@@ -38,7 +38,7 @@ router.get("/org/historic", async (req, res) => {
 
 /**
  * Endpoint for fetching Copilot seat data from the Github API.
- * @route GET /api/seats
+ * @route GET /copilot/api/seats
  * @returns {Object} Copilot seat JSON data
  * @throws {Error} 500 - If JSON fetching fails
  */
