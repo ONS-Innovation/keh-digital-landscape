@@ -31,7 +31,6 @@ const ProjectModal = ({
     repositories: true,
   });
   const [expandedGroups, setExpandedGroups] = useState({
-    "General Information": true,
   });
   const getTechnologyStatus = useTechnologyStatus();
 
@@ -366,7 +365,7 @@ const ProjectModal = ({
             <IoChevronDown />
           </span>
         </div>
-        {expandedGroups[title] && (
+        {!expandedGroups[title] && (
           <div className="group-content">
             {validKeys.map((key) => {
               const value = project[key];
@@ -405,11 +404,11 @@ const ProjectModal = ({
                   className={`detail-item ${title === "Repositories" ? "large-span" : ""}`}
                 >
                   <h3>{fieldLabels[key] || key.replace(/_/g, " ")}:</h3>
-                  {technologyListFields.includes(key) ? (
-                    <p style={{ whiteSpace: 'pre-wrap' }}>{renderTechnologyList(value)}</p>
-                  ) : (
-                    <p style={{ whiteSpace: 'pre-wrap' }}>{value.replace(/;/g, "; ")}</p>
-                  )}
+                  <p style={{ whiteSpace: 'pre-wrap' }}>
+                    {technologyListFields.includes(key)
+                    ? renderTechnologyList(value)
+                    : value.replace(/;/g, "; ")}
+                  </p>
                 </div>
               );
             })}
