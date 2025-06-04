@@ -15,6 +15,13 @@ nav:
       - Overview: pages/review/index.md
     - Admin:
       - Overview: pages/admin/index.md
+  - Backend:
+    - Overview: backend/index.md
+    - Services:
+      - S3 Service: backend/services/s3Service.md
+      - GitHub Service: backend/services/githubService.md
+      - Tech Radar Service: backend/services/techRadarService.md
+    - Utilities: backend/utilities.md
   - Contexts:
     - Theme: contexts/themeContext.md
     - Data: contexts/dataContext.md
