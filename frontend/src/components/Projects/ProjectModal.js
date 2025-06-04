@@ -30,7 +30,9 @@ const ProjectModal = ({
     projectDetails: true,
     repositories: true,
   });
-  const [expandedGroups, setExpandedGroups] = useState({});
+  const [expandedGroups, setExpandedGroups] = useState({
+    "General Information": true,
+  });
   const getTechnologyStatus = useTechnologyStatus();
 
   useEffect(() => {
@@ -364,21 +366,50 @@ const ProjectModal = ({
             <IoChevronDown />
           </span>
         </div>
-        {!expandedGroups[title] && (
+        {expandedGroups[title] && (
           <div className="group-content">
             {validKeys.map((key) => {
               const value = project[key];
+              if (key.toLowerCase() === "miscellaneous") {
+                return (
+                  <div
+                    key={key}
+                    className={`detail-item ${title === "Repositories" ? "large-span" : ""}`}
+                  >
+                    <h3>{fieldLabels[key] || key.replace(/_/g, " ")}:</h3>
+                    <div className="miscellaneous-block">
+                      {value.split(";").map((item, idx) => {
+                        const colonIndex = item.indexOf(":");
+                        let label = item;
+                        let description = "";
+                        if (colonIndex !== -1) {
+                          label = item.slice(0, colonIndex);
+                          description = item.slice(colonIndex + 1).trim();
+                        }
+                        return (
+                          <div key={idx} className="misc-item">
+                            <div>{label.trim()}:</div>
+                            {description && (
+                              <div className="misc-desc">{description}</div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              }
               return (
                 <div
                   key={key}
                   className={`detail-item ${title === "Repositories" ? "large-span" : ""}`}
                 >
                   <h3>{fieldLabels[key] || key.replace(/_/g, " ")}:</h3>
-                  <p style={{ whiteSpace: 'pre-wrap' }}>
-                    {technologyListFields.includes(key)
-                    ? renderTechnologyList(value)
-                    : value.replace(/;/g, "; ")}
-                  </p>
+                  {technologyListFields.includes(key) ? (
+                    <p style={{ whiteSpace: 'pre-wrap' }}>{renderTechnologyList(value)}</p>
+                  ) : (
+                    <p style={{ whiteSpace: 'pre-wrap' }}>{value.replace(/;/g, "; ")}</p>
+                  )}
                 </div>
               );
             })}

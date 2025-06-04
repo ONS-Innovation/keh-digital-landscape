@@ -67,17 +67,10 @@ function transformProjectToCSVFormat(project) {
     Documentation_Tools: project.supporting_tools.documentation.others ? project.supporting_tools.documentation.others.join("; ") : "",
     UI_Tools: project.supporting_tools.user_interface.others ? project.supporting_tools.user_interface.others.join("; ") : "",
     Diagram_Tools: project.supporting_tools.diagrams.others ? project.supporting_tools.diagrams.others.join("; ") : "",
-    Miscellaneous: project.supporting_tools.miscellaneous
-    ? project.supporting_tools.miscellaneous
-        .map(item => {
-          // Optional: break description into max 80-character lines
-          const wrappedDesc = item.description.match(/.{1,80}(?:\s|$)/g)?.join("\n    ") || item.description;
-          return `${item.name}:\n    ${wrappedDesc}`;
-        })
-        .join("\n\n")
-    : ""
+    Miscellaneous: project.supporting_tools.miscellaneous? project.supporting_tools.miscellaneous.map(item => `${item.name}: ${item.description}`).join("; ") : ""
   };
 }
+
 module.exports = {
   transformProjectToCSVFormat
 }; 

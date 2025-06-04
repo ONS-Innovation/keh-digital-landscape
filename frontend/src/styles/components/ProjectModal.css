@@ -519,3 +519,19 @@
   color: hsl(var(--muted-foreground));
 
 }
+
+.miscellaneous-block {
+  margin-top: 0.5rem;
+}
+
+.misc-desc {
+  display: block;
+  margin-left: 1rem;
+  white-space: pre-wrap; /* This makes multiline text work */
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+.misc-item {
+  margin-bottom: 0.75rem;
+}
