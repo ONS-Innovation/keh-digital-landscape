@@ -66,7 +66,8 @@ function transformProjectToCSVFormat(project) {
     Incident_Management: project.supporting_tools.incident_management || "",
     Documentation_Tools: project.supporting_tools.documentation.others ? project.supporting_tools.documentation.others.join("; ") : "",
     UI_Tools: project.supporting_tools.user_interface.others ? project.supporting_tools.user_interface.others.join("; ") : "",
-    Diagram_Tools: project.supporting_tools.diagrams.others ? project.supporting_tools.diagrams.others.join("; ") : ""
+    Diagram_Tools: project.supporting_tools.diagrams.others ? project.supporting_tools.diagrams.others.join("; ") : "",
+    Miscellaneous: project.supporting_tools.miscellaneous? project.supporting_tools.miscellaneous.map(item => `${item.name}: ${item.description}`).join("; ") : ""
   };
 }
 

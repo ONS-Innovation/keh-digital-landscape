@@ -365,6 +365,7 @@ function RadarPage() {
         "Documentation_Tools",
         "UI_Tools",
         "Diagram_Tools",
+        "Miscellaneous",
       ];
 
       return allTechColumns.some((column) => {

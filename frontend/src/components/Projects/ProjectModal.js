@@ -30,7 +30,8 @@ const ProjectModal = ({
     projectDetails: true,
     repositories: true,
   });
-  const [expandedGroups, setExpandedGroups] = useState({});
+  const [expandedGroups, setExpandedGroups] = useState({
+  });
   const getTechnologyStatus = useTechnologyStatus();
 
   useEffect(() => {
@@ -269,6 +270,7 @@ const ProjectModal = ({
       "Documentation_Tools",
       "UI_Tools",
       "Diagram_Tools",
+      "Miscellaneous",
     ],
     repos: ["Repo"],
   };
@@ -289,6 +291,7 @@ const ProjectModal = ({
     Data_Output_Formats: "Data Output Formats",
     Integrations_ONS: "ONS Integrations",
     Integrations_External: "External Integrations",
+    Miscellaneous: "Miscellaneous Tools",
   };
 
   const technologyListFields = [
@@ -318,6 +321,7 @@ const ProjectModal = ({
     "Documentation_Tools",
     "UI_Tools",
     "Diagram_Tools",
+    "Miscellaneous",
   ];
 
   const filterItems = (items) => {
@@ -365,6 +369,35 @@ const ProjectModal = ({
           <div className="group-content">
             {validKeys.map((key) => {
               const value = project[key];
+              if (key.toLowerCase() === "miscellaneous") {
+                return (
+                  <div
+                    key={key}
+                    className={`detail-item ${title === "Repositories" ? "large-span" : ""}`}
+                  >
+                    <h3>{fieldLabels[key] || key.replace(/_/g, " ")}:</h3>
+                    <div className="miscellaneous-block">
+                      {value.split(";").map((item, idx) => {
+                        const colonIndex = item.indexOf(":");
+                        let label = item;
+                        let description = "";
+                        if (colonIndex !== -1) {
+                          label = item.slice(0, colonIndex);
+                          description = item.slice(colonIndex + 1).trim();
+                        }
+                        return (
+                          <div key={idx} className="misc-item">
+                            <div>{label.trim()}:</div>
+                            {description && (
+                              <div className="misc-desc">{description}</div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              }
               return (
                 <div
                   key={key}
@@ -372,10 +405,10 @@ const ProjectModal = ({
                   tabIndex={0}
                 >
                   <h3>{fieldLabels[key] || key.replace(/_/g, " ")}:</h3>
-                  <p>
+                  <p style={{ whiteSpace: 'pre-wrap' }}>
                     {technologyListFields.includes(key)
-                      ? renderTechnologyList(value)
-                      : value.replace(/;/g, "; ")}
+                    ? renderTechnologyList(value)
+                    : value.replace(/;/g, "; ")}
                   </p>
                 </div>
               );
