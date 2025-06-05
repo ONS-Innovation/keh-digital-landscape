@@ -61,6 +61,29 @@ class GitHubService {
       throw error;
     }
   }
+
+  /**
+   * Get all teams in the organisation visible to the authenticated user
+   * @returns {Promise<Array>} Array of teams
+   */
+  async getUserTeams(userToken) {
+    const { Octokit } = await import("@octokit/rest");
+
+    try {
+      const octokit = new Octokit({ auth: userToken });
+      const response = await octokit.request(`GET /orgs/${this.org}/teams`, {
+        headers: {
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      logger.error("GitHub API error while fetching Copilot teams:", { error: error.message });
+      throw error;
+    }
+  }
+
 }
 
 // Export a singleton instance
