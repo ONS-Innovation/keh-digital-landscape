@@ -90,7 +90,7 @@
 .help-modal-body span {
   font-size: 14px;
   line-height: 1.6;
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--foreground));
 }
 
 .help-modal-list {
@@ -101,6 +101,7 @@
 
 .help-modal-list > li {
   font-size: 14px;
+  font-weight: 500;
   margin: 4px 0;
   color: hsl(var(--foreground));
 }
@@ -114,13 +115,14 @@
 .help-modal-sublist li {
   font-size: 14px;
   margin: 6px 0;
-  color: hsl(var(--muted-foreground));
+  font-weight: 400;
+  color: hsl(var(--foreground));
   position: relative;
 }
 
 .help-modal-sublist strong {
   color: hsl(var(--foreground));
-  font-weight: 600;
+  font-weight: 700;
   margin-right: 4px;
 }
 

@@ -118,21 +118,36 @@ function HelpModal({ show, onClose }) {
                   </ul>
                 </li>
                 <li>
-                  The 4 rings show what ONS wants to do with that technology:
+                  What do the 4 rings mean?
                   <ul className="help-modal-sublist">
                     <li>
-                      <strong>Adopt:</strong> aim to widely adopt and mature
+                      <strong>Adopt:</strong> technologies that are mature, widely adopted and recommended for use in production environments.
                     </li>
                     <li>
-                      <strong>Trial:</strong> aim to try out and evaluate
+                      <strong>Trial:</strong> technologies that are gaining traction, have significant potential and warrant further investigation or experimentation.
                     </li>
                     <li>
-                      <strong>Assess:</strong> aim to assess for potential
-                      adoption
+                      <strong>Assess:</strong> technologies that are emerging, have some promise, but require further testing and refinement. These technologies have moved beyond the initial curiosity phase. They&apos;ve shown some success in limited use cases and are ready for more structured testing.
                     </li>
                     <li>
-                      <strong>Hold:</strong> not recommended for new deployment
-                      without approval
+                      <strong>Hold:</strong> technologies that are either outdated, have signigicant limitations or do not align with the organisation&apos;s strategic direction.
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  When should you use the technology in the 4 rings?
+                  <ul className="help-modal-sublist">
+                    <li>
+                      <strong>Adopt:</strong> use these technologies as the foundation for core applications and infrastructure.
+                    </li>
+                    <li>
+                      <strong>Trial:</strong> conduct pilot projects, proof-of-concepts, or small-scale deployments with a low risk to evaluate their suitability before adopting them widely.
+                    </li>
+                    <li>
+                      <strong>Assess:</strong> experiment with these technologies in non-critical environments, such as research projects, internal tools or sandbox deployments.
+                    </li>
+                    <li>
+                      <strong>Hold:</strong> avoid using these technologies unless they are required for supporting legacy systems that cannot be easily migrated.
                     </li>
                   </ul>
                 </li>
