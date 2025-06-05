@@ -7,9 +7,9 @@ export const fetchSeatData = async () => {
   try {
     let response;
     if (process.env.NODE_ENV === "development") {
-      response = await fetch(`http://localhost:5001/api/seats`);
+      response = await fetch(`http://localhost:5001/copilot/api/seats`);
     } else {
-      response = await fetch("/api/seats");
+      response = await fetch("/copilot/api/seats");
     }
     if (!response.ok) {
       return null;
