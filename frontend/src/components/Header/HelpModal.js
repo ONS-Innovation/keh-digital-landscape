@@ -124,7 +124,7 @@ function HelpModal({ show, onClose }) {
                       <strong>Adopt:</strong> technologies that are mature, widely adopted and recommended for use in production environments.
                     </li>
                     <li>
-                      <strong>Trial:</strong> technologies that are gaining traction, have significant potential and warran further investigation or experimentation.
+                      <strong>Trial:</strong> technologies that are gaining traction, have significant potential and warrant further investigation or experimentation.
                     </li>
                     <li>
                       <strong>Assess:</strong> technologies that are emerging, have some promise, but require further testing and refinement. These technologies have moved beyond the initial curiosity phase. They&apos;ve shown some success in limited use cases and are ready for more structured testing.
