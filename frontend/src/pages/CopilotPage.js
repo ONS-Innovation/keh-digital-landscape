@@ -14,16 +14,23 @@ function CopilotDashboard() {
 
   const getDashboardData = () => {
     if (viewMode === "live" && scope === "organisation") return liveOrgData;
-    if (viewMode === "live" && scope === "team") return null;
+    if (viewMode === "live" && scope === "team") return liveOrgData; //TODO: Temporary
     if (viewMode === "historic" && scope === "organisation") return historicOrgData;
-    if (viewMode === "historic" && scope === "team") return null;
+    if (viewMode === "historic" && scope === "team") return historicOrgData; //TODO: Temporary
   };
 
   const getGroupedData = () => {
-    if(viewDatesBy === "Day") return historicOrgData.allUsage;
-    if(viewDatesBy === "Week") return historicOrgData.weekUsage;
-    if(viewDatesBy === "Month") return historicOrgData.monthUsage;
-    if(viewDatesBy === "Year") return historicOrgData.yearUsage;
+    if (scope === "team") {
+      if(viewDatesBy === "Day") return historicOrgData.allUsage; //TODO: Temporary
+      if(viewDatesBy === "Week") return historicOrgData.weekUsage; //TODO: Temporary
+      if(viewDatesBy === "Month") return historicOrgData.monthUsage; //TODO: Temporary
+      if(viewDatesBy === "Year") return historicOrgData.yearUsage; //TODO: Temporary
+    } else {
+      if(viewDatesBy === "Day") return historicOrgData.allUsage;
+      if(viewDatesBy === "Week") return historicOrgData.weekUsage;
+      if(viewDatesBy === "Month") return historicOrgData.monthUsage;
+      if(viewDatesBy === "Year") return historicOrgData.yearUsage;
+    }
   }
 
   const [liveOrgData, setLiveOrgData] = useState({
@@ -67,6 +74,7 @@ function CopilotDashboard() {
   const { getLiveUsageData, getHistoricUsageData, getSeatsData } = useData();
   const [sliderFinished, setSliderFinished] = useState(true);
   const [viewDatesBy, setViewDatesBy] = useState("Day");
+  const [isSelectingTeam, setIsSelectingTeam] = useState(false);
 
   /**
    * Trigger data filter upon slider completion
@@ -172,6 +180,17 @@ function CopilotDashboard() {
     }));
   }, [inactiveDays, inactivityDate, liveOrgData.allSeatData]);
 
+  /**
+   * Display team selection UI to choose a team to fetch data for
+   */
+  useEffect(() => {
+    if (scope === "organisation") {
+      setIsSelectingTeam(false);
+    } else if (scope === "team") {
+      setIsSelectingTeam(true);
+    }
+  }, [scope]);
+
   return (
     <>
       <Header hideSearch={true}/>
@@ -181,12 +200,13 @@ function CopilotDashboard() {
           description="Analyse CoPilot usage statistics organisation-wide and by team"
           tabs={[
             { id: "organisation", label: "Organisation Usage" },
-            // { id: "team", label: "Team Usage" } // Temporarily removed until team usage is implemented
+            { id: "team", label: "Team Usage" }
           ]}
           activeTab={scope}
-          onTabChange={setScope}
+          onTabChange={() => setScope(scope => scope === "organisation" ? "team" : "organisation")}
         />
         <div className="admin-container" tabIndex="0">
+          { !isSelectingTeam && (
           <div className="dashboard-header">
             <div>
               <p className="header-text">View Data Type</p>
@@ -252,26 +272,32 @@ function CopilotDashboard() {
               </div>
             )}
           </div>
+          )}
           <div>
-
           </div>
-          {viewMode === "live" ? (
+          {isSelectingTeam && scope === "team" ? (
+            <div>
+              <p>TODO: Display login and team selection</p>
+            </div>
+          ) : (
+            viewMode === "live" ? (
               <LiveDashboard 
-              scope={scope} 
-              data={data} 
-              isLiveLoading={isLiveLoading}
-              isSeatsLoading={isSeatsLoading} 
-              inactiveDays={inactiveDays}
-              setInactiveDays={setInactiveDays} 
-              inactivityDate={inactivityDate}/>
+                scope={scope} 
+                data={data} 
+                isLiveLoading={isLiveLoading}
+                isSeatsLoading={isSeatsLoading} 
+                inactiveDays={inactiveDays}
+                setInactiveDays={setInactiveDays} 
+                inactivityDate={inactivityDate}/>
             ) : (
               <HistoricDashboard 
-              scope={scope} 
-              data={getGroupedData()} 
-              isLoading={isHistoricLoading}
-              viewDatesBy={viewDatesBy}
+                scope={scope} 
+                data={getGroupedData()} 
+                isLoading={isHistoricLoading}
+                viewDatesBy={viewDatesBy}
               />
-            )}
+            )
+          )}
         </div>
       </div>
     </>
