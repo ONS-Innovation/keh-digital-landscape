@@ -82,11 +82,6 @@ export GITHUB_ORG=<your_github_organisation>
 ```
 ## Running locally
 
-Make dev.sh executable:
-```bash
-chmod +x dev.sh
-```
-
 To run the project locally (frontend and backend together):
 ```bash
 make dev
