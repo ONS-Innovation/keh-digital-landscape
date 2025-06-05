@@ -13,10 +13,10 @@ The Tech Radar provides a visual representation of technologies categorised into
 
 Each technology is placed in one of four rings:
 
-- **Adopt**: aim to widely adopt and mature
-- **Trial**: aim to try out and evaluate
-- **Assess**: aim to assess for potential adoption
-- **Hold**: not recommended for new deployment without approval
+- **Adopt**: technologies that are mature, widely adopted and recommended for use in production environments
+- **Trial**: technologies that are gaining traction, have significant potential and warrant further investigation or experimentation
+- **Assess**: technologies that are emerging, have some promise, but require further testing and refinement. These technologies have moved beyond the initial curiosity phase. They've shown some success in limited use cases and are ready for more structured testing
+- **Hold**: technologies that are either outdated, have significant limitations or do not align with the organisation's strategic direction
 
 ## Features
 
