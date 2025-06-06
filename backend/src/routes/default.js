@@ -36,7 +36,7 @@ router.get("/tech-radar/json", async (req, res) => {
     const jsonData = await s3Service.getObjectViaSignedUrl('main', 'onsRadarSkeleton.json');
     res.json(jsonData);
   } catch (error) {
-    console.error("Error fetching JSON:", error);
+    logger.error("Error fetching JSON:", { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });
@@ -131,7 +131,7 @@ router.get("/json", async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error fetching JSON:", error);
+    logger.error("Error fetching JSON:", { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });
@@ -242,7 +242,7 @@ router.get("/repository/project/json", async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error fetching repository data:", error);
+    logger.error("Error fetching repository data:", { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });
