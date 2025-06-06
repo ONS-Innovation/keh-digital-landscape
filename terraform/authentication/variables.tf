@@ -61,9 +61,12 @@ variable "domain_extension" {
 }
 
 variable "user_groups" {
-  description = "User groups"
-  type        = list(string)
-  default     = ["admin", "reviewer"]
+  description = "Map of user groups to create in the user pool, where key is group name and value is description"
+  type        = map(string)
+  default     = {
+    "admin" = "The admin users for the Digital Landscape"
+    "reviewer" = "The reviewer users for the Digital Landscape"
+  }
 }
 
 locals {
