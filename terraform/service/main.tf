@@ -175,10 +175,8 @@ resource "aws_ecs_service" "application" {
 
   # Add dependencies to ensure target groups are created first
   depends_on = [
-    aws_lb_listener_rule.tech_radar_reviewer_frontend_rule,
-    aws_lb_listener_rule.tech_radar_reviewer_backend_rule,
-    aws_lb_listener_rule.tech_radar_admin_frontend_rule,
-    aws_lb_listener_rule.tech_radar_admin_backend_rule,
+    aws_lb_listener_rule.tech_radar_authenticated_frontend_rule,
+    aws_lb_listener_rule.tech_radar_authenticated_backend_rule,
     aws_lb_listener_rule.digital_landscape_copilot_api_rule,
     aws_lb_listener_rule.digital_landscape_api_rule,
     aws_lb_listener_rule.digital_landscape_frontend_rule

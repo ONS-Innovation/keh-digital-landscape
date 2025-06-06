@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../../styles/components/MenuDropdown.css";
+import UserProfile from "../UserProfile/UserProfile";
 import { TbSmartHome, TbEditCircle, TbUserShield, TbUsers, TbChartBar, TbHelp } from "react-icons/tb";
 import { VscCopilot } from "react-icons/vsc";
 import { IoMenu } from "react-icons/io5";
@@ -92,6 +93,7 @@ function MenuDropdown({ setShowHelpModal }) {
                 Help
               </button>
             </div>
+            <UserProfile variant="dropdown" />
         </div>
       )}
     </div>

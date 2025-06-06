@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import "../../styles/components/Sidebar.css";
 import HelpModal from "../Header/HelpModal";
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
+import UserProfile from "../UserProfile/UserProfile";
 import { MdOutlineRadar } from "react-icons/md";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import {
@@ -122,6 +123,7 @@ const Sidebar = () => {
             )}
           </button>
         </div>
+        <UserProfile variant="sidebar" isCollapsed={isCollapsed} />
       </div>
       <HelpModal
         show={showHelpModal}

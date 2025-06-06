@@ -1,7 +1,12 @@
 const express = require("express");
 const techRadarService = require('../services/techRadarService');
+const { verifyJwt, requireReviewer } = require('../services/cognitoService');
 
 const router = express.Router();
+
+// Apply authentication middleware to all review routes
+router.use(verifyJwt);
+router.use(requireReviewer);
 
 /**
  * Endpoint for updating the tech radar JSON in S3 from review.

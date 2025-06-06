@@ -3,8 +3,13 @@ const s3Service = require('../services/s3Service');
 const techRadarService = require('../services/techRadarService');
 const logger = require('../config/logger');
 const { updateTechnologyInArray } = require('../utilities/updateTechnologyInArray');
+const { verifyJwt, requireAdmin } = require('../services/cognitoService');
 
 const router = express.Router();
+
+// Apply authentication middleware to all admin routes
+router.use(verifyJwt);
+router.use(requireAdmin);
 
 /**
  * Endpoint for updating the tech radar JSON in S3 from admin.
