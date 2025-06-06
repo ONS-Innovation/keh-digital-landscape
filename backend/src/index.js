@@ -6,6 +6,7 @@ require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
 const logger = require('./config/logger');
+const { verifyJwt } = require('./services/cognitoService');
 
 // Import route modules
 const apiRoutes = require('./routes/default');
@@ -31,6 +32,10 @@ app.use('/api', apiRoutes);
 app.use('/admin/api', adminRoutes);
 app.use('/review/api', reviewRoutes);
 app.use('/copilot/api', copilotRoutes);
+
+app.get('/review/api/protected-endpoint', async (req, res) => {
+  await verifyJwt(req, res);
+});
 
 // Add error handling
 process.on("uncaughtException", (error) => {

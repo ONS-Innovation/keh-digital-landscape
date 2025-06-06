@@ -60,6 +60,12 @@ variable "domain_extension" {
   default     = "aws.onsdigital.uk"
 }
 
+variable "user_groups" {
+  description = "User groups"
+  type        = list(string)
+  default     = ["admin", "reviewer"]
+}
+
 locals {
   url         = "${var.domain}.${var.domain_extension}"
   service_url = "${var.service_subdomain}.${local.url}"
