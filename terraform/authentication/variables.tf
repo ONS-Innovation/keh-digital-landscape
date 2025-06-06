@@ -60,6 +60,20 @@ variable "domain_extension" {
   default     = "aws.onsdigital.uk"
 }
 
+variable "token_validity_values" {
+  description = "Token validity duration values"
+  type = object({
+    refresh_token = number
+    access_token  = number
+    id_token      = number
+  })
+  default = {
+    refresh_token = 30  # 30 days
+    access_token  = 3   # 3 hours
+    id_token      = 3   # 3 hours
+  }
+}
+
 locals {
   url         = "${var.domain}.${var.domain_extension}"
   service_url = "${var.service_subdomain}.${local.url}"
