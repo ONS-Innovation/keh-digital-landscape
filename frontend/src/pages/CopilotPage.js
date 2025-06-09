@@ -75,6 +75,7 @@ function CopilotDashboard() {
   const [sliderFinished, setSliderFinished] = useState(true);
   const [viewDatesBy, setViewDatesBy] = useState("Day");
   const [isSelectingTeam, setIsSelectingTeam] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false); //TODO: useData context
 
   /**
    * Trigger data filter upon slider completion
@@ -276,9 +277,21 @@ function CopilotDashboard() {
           <div>
           </div>
           {isSelectingTeam && scope === "team" ? (
+            isAuthenticated ? (
             <div>
-              <p>TODO: Display login and team selection</p>
+              <div className="header-text">
+                <p>Select Team to View</p>
+              </div>
+              <p>TODO: Display team selection UI</p>
             </div>
+            ) : (
+            <div>
+              <div className="header-text">
+                <p>Please log in to view teams to select from</p>
+              </div>
+              <p>TODO: Display login UI</p>
+            </div>
+            )
           ) : (
             viewMode === "live" ? (
               <LiveDashboard 
