@@ -508,6 +508,13 @@ const ProjectModal = ({
                   </div>
                 )}
 
+                {project.Stage && (
+                  <div className="detail-section">
+                    <h4>Stage</h4>
+                    <p>{project.Stage}</p>
+                  </div>
+                )}
+
                 {project.Documentation && (
                   <div className="detail-section">
                     <h4>Documentation</h4>
