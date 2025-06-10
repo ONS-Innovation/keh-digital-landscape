@@ -1,5 +1,6 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
+import { useData } from "../contexts/dataContext";
 import Header from "../components/Header/Header";
 import Changelog from "../components/HomePage/Changelog";
 import RecentBanners from "../components/HomePage/RecentBanners";
@@ -15,13 +16,43 @@ import "../styles/HomePage.css";
  */
 function HomePage() {
   const navigate = useNavigate();
+  const { getUserData } = useData();
+  const [userPermissions, setUserPermissions] = useState({
+    canAccessReview: false,
+    canAccessAdmin: false,
+    isLoading: true
+  });
+
+  useEffect(() => {
+    const checkPermissions = async () => {
+      try {
+        const userData = await getUserData();
+        const groups = userData?.user?.groups || [];
+        
+        setUserPermissions({
+          canAccessReview: groups.includes('reviewer') || groups.includes('admin'),
+          canAccessAdmin: groups.includes('admin'),
+          isLoading: false
+        });
+      } catch (error) {
+        console.error("Failed to check user permissions:", error);
+        setUserPermissions({
+          canAccessReview: false,
+          canAccessAdmin: false,
+          isLoading: false
+        });
+      }
+    };
+
+    checkPermissions();
+  }, [getUserData]);
 
   useEffect(() => {
     const navCards = document.querySelectorAll(".nav-card");
     if (navCards.length % 2 !== 0) {
       navCards[navCards.length - 1].classList.add("odd-last-child");
     }
-  }, []);
+  }, [userPermissions.isLoading]); // Re-run when loading changes
 
   return (
     <>
@@ -73,20 +104,24 @@ function HomePage() {
               </p>
             </div>
 
-            <a className="nav-card" href="/review/dashboard">
-              <div className="nav-card-header">
-                <TbEditCircle />
-                <h2>Review</h2>
-              </div>
-              <p>Authorised users can update the data on the Tech Radar.</p>
-            </a>
-            <a className="nav-card" href="/admin/dashboard">
-              <div className="nav-card-header">
-                <TbUserShield />
-                <h2>Admin</h2>
-              </div>
-              <p>Manage system-wide settings and configurations.</p>
-            </a>
+            {userPermissions.canAccessReview && (
+              <a className="nav-card" href="/review/dashboard">
+                <div className="nav-card-header">
+                  <TbEditCircle />
+                  <h2>Review</h2>
+                </div>
+                <p>Authorised users can update the data on the Tech Radar.</p>
+              </a>
+            )}
+            {userPermissions.canAccessAdmin && (
+              <a className="nav-card" href="/admin/dashboard">
+                <div className="nav-card-header">
+                  <TbUserShield />
+                  <h2>Admin</h2>
+                </div>
+                <p>Manage system-wide settings and configurations.</p>
+              </a>
+            )}
             <a className="nav-card" href="/copilot">
               <div className="nav-card-header">
                 <VscCopilot />
