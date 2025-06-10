@@ -38,6 +38,11 @@ export const fetchUserTeams = async (token) => {
   }
 }
 
+/**
+ * Exchange GitHub OAuth code for access token
+ * @param {string} code - The OAuth code received from GitHub
+ * @returns {Promise<string|null>} Access token or null if failed
+ */
 export const exchangeCodeForToken = async (code) => {
   try {
     let response;

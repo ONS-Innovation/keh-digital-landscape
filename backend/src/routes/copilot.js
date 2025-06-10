@@ -90,7 +90,7 @@ router.post("/github/oauth/token", async (req, res) => {
       client_id: process.env.GITHUB_APP_CLIENT_ID,
       client_secret: process.env.GITHUB_APP_CLIENT_SECRET,
       code,
-      redirect_uri: "http://localhost:3000/copilot?fromTab=team",
+      redirect_uri: "http://localhost:3000/copilot?fromTab=team", //todo: pass dev/prod NODE.ENV
       scope: "user:email read:org",
     });
 

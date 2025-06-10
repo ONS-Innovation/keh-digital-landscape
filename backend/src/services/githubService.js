@@ -71,13 +71,26 @@ class GitHubService {
 
     try {
       const octokit = new Octokit({ auth: userToken });
-      const response = await octokit.request(`GET /orgs/${this.org}/teams`, {
-        headers: {
-          "X-GitHub-Api-Version": "2022-11-28",
-        },
-      });
+      let allTeams = [];
+      let page = 1;
+      let hasMore = true;
 
-      return response.data;
+      while (hasMore) {
+        const response = await octokit.request(`GET /orgs/${this.org}/teams`, {
+          headers: {
+            "X-GitHub-Api-Version": "2022-11-28",
+          },
+          per_page: 100,
+          page,
+        });
+
+        const currentTeams = response.data ?? [];
+        allTeams.push(...currentTeams);
+        hasMore = currentTeams.length === 100;
+        page += 1;
+      }
+
+      return allTeams;
     } catch (error) {
       logger.error("GitHub API error while fetching available teams:", { error: error.message });
       throw error;

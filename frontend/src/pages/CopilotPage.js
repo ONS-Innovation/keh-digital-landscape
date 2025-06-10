@@ -11,6 +11,7 @@ import "rc-slider/assets/index.css";
 import { useData } from "../contexts/dataContext";
 import { exchangeCodeForToken, fetchUserTeams } from "../utilities/getTeams"; //TODO: cache
 
+//todo: move to backend
 const loginUrl = `https://github.com/login/oauth/authorize?` + 
   new URLSearchParams({
     client_id: process.env.REACT_APP_GITHUB_CLIENT_ID,
