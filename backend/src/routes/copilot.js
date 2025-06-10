@@ -97,7 +97,7 @@ router.post("/github/oauth/token", async (req, res) => {
     const tokenResponse = await fetch("https://github.com/login/oauth/access_token", {
       method: "POST",
       headers: { 
-        "Content-Type": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
         Accept: "application/json"
        },
       body: params,
