@@ -9,7 +9,7 @@ import "../styles/CoPilotPage.css";
 import Slider from 'rc-slider';
 import "rc-slider/assets/index.css";
 import { useData } from "../contexts/dataContext";
-import { fetchUserTeams } from "../utilities/getTeams"; //TODO: cache
+import { exchangeCodeForToken, fetchUserTeams } from "../utilities/getTeams"; //TODO: cache
 
 const loginUrl = `https://github.com/login/oauth/authorize?` + 
   new URLSearchParams({
@@ -149,6 +149,39 @@ function CopilotDashboard() {
       setIsSeatsLoading(false);
     };
     fetchLiveAndSeatsData();
+  }, []);
+
+  /**
+   * Handle OAuth login flow
+   * If the user is not authenticated, redirect to GitHub login
+   * If the user is authenticated, fetch their token and set it in localStorage
+   */
+  useEffect(() => {
+    const code = new URLSearchParams(window.location.search).get("code");
+  
+    if (code && !localStorage.getItem("userToken")) {
+      (async () => {
+        try {
+          const token = await exchangeCodeForToken(code);
+          if (!token) {
+            console.error("Failed to exchange code for token");
+            return;
+          }
+  
+          localStorage.setItem("userToken", token);
+          setIsAuthenticated(true);
+  
+          // Remove code from URL after use
+          const url = new URL(window.location);
+          url.searchParams.delete("code");
+          window.history.replaceState({}, "", url);
+        } catch (err) {
+          console.error("OAuth token exchange failed", err);
+        }
+      })();
+    } else if (localStorage.getItem("userToken")) {
+      setIsAuthenticated(true);
+    }
   }, []);
 
   useEffect(() => {

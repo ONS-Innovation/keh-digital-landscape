@@ -75,4 +75,45 @@ router.get("/teams", async (req, res) => {
   }
 });
 
+/**
+ * Endpoint for exchanging GitHub OAuth code for access token.
+ * @route POST /copilot/api/github/oauth/token
+ * @returns {Object} Access token JSON data
+ * @throws {Error} 400 - If code is missing or exchange fails
+ */
+router.post("/github/oauth/token", async (req, res) => {
+  const { code } = req.body;
+  if (!code) return res.status(400).json({ error: "Missing code" });
+
+  try {
+    const params = new URLSearchParams({
+      client_id: process.env.GITHUB_APP_CLIENT_ID,
+      client_secret: process.env.GITHUB_APP_CLIENT_SECRET,
+      code,
+      redirect_uri: "http://localhost:3000/copilot?fromTab=team",
+      scope: "user:email read:org",
+    });
+
+    const tokenResponse = await fetch("https://github.com/login/oauth/access_token", {
+      method: "POST",
+      headers: { 
+        "Content-Type": "application/json",
+        Accept: "application/json"
+       },
+      body: params,
+    });
+
+    const tokenData = await tokenResponse.json();
+    if (tokenData.error) {
+      return res.status(400).json({ error: tokenData.error_description || tokenData.error });
+    }
+
+    // Return the access token to frontend
+    res.json({ access_token: tokenData.access_token });
+  } catch (error) {
+    console.error("Error exchanging code for token:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 module.exports = router; 
