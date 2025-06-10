@@ -415,7 +415,7 @@ def test_admin_update_array_data_single_category():
     original_data = _get_initial_array_data(BASE_URL)
     
     try:
-        category_to_update = "test_category_single_update"
+        category_to_update = "languages"
         new_items = ["item1", "item2_updated"]
         
         payload = {
