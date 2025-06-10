@@ -43,14 +43,6 @@ const ProtectedRoute = ({ children, requiredRoles, pageName }) => {
     checkAccess();
   }, [getUserData, requiredRoles]);
 
-  if (isLoading) {
-    return (
-      <div className="loading-container">
-        <div className="loading-spinner">Loading...</div>
-      </div>
-    );
-  }
-
   if (!hasAccess) {
     return (
       <>
@@ -61,13 +53,19 @@ const ProtectedRoute = ({ children, requiredRoles, pageName }) => {
           onSearchResultClick={() => {}}
           hideSearch={true}
         />
-        <AccessDenied
-          pageName={pageName}
-          userEmail={user?.user?.email}
-          userGroups={user?.user?.groups || []}
-          requiredRoles={requiredRoles}
-          isDevelopmentMode={user?.development_mode}
-        />
+        {isLoading ? (
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+          </div>
+        ) : (
+          <AccessDenied
+            pageName={pageName}
+            userEmail={user?.user?.email}
+            userGroups={user?.user?.groups || []}
+            requiredRoles={requiredRoles}
+            isDevelopmentMode={user?.development_mode}
+          />
+        )}
       </>
     );
   }

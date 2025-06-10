@@ -49,7 +49,7 @@
   align-items: center;
   gap: 12px;
   margin-bottom: 12px;
-  font-size: 14px;
+  font-size: 12px;
   text-align: left;
 }
 
@@ -154,8 +154,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 60vh;
-  padding: 20px;
 }
 
 .loading-spinner {

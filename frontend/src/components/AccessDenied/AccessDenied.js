@@ -59,16 +59,6 @@ const AccessDenied = ({
                 )}
               </span>
             </div>
-
-            <div className="info-item">
-              <TbLock size={20} />
-              <span>
-                Required roles:{" "}
-                <span className="required-roles">
-                  {requiredRoles.join(" or ")}
-                </span>
-              </span>
-            </div>
           </div>
 
           {isDevelopmentMode && (
