@@ -67,7 +67,7 @@ router.get("/teams", async (req, res) => {
   }
   
   try {
-    const teams = await githubService.getCopilotTeams(userToken);
+    const teams = await githubService.getUserTeams(userToken);
     res.json(teams);
   } catch (error) {
     console.error("GitHub API error:", error);

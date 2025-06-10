@@ -79,7 +79,7 @@ class GitHubService {
 
       return response.data;
     } catch (error) {
-      logger.error("GitHub API error while fetching Copilot teams:", { error: error.message });
+      logger.error("GitHub API error while fetching available teams:", { error: error.message });
       throw error;
     }
   }

@@ -9,6 +9,14 @@ import "../styles/CoPilotPage.css";
 import Slider from 'rc-slider';
 import "rc-slider/assets/index.css";
 import { useData } from "../contexts/dataContext";
+import { fetchUserTeams } from "../utilities/getTeams"; //TODO: cache
+
+const loginUrl = `https://github.com/login/oauth/authorize?` + 
+  new URLSearchParams({
+    client_id: process.env.REACT_APP_GITHUB_CLIENT_ID,
+    redirect_uri: `${process.env.APP_URL}/copilot`, //TODO: redirect directly to team usage tab
+    scope: "user:email read:org",
+  }).toString();
 
 function CopilotDashboard() {
 
@@ -276,22 +284,21 @@ function CopilotDashboard() {
           )}
           <div>
           </div>
-          {isSelectingTeam && scope === "team" ? (
-            isAuthenticated ? (
-            <div>
+          {scope === "team" && isSelectingTeam ? (
+            <>
               <div className="header-text">
                 <p>Select Team to View</p>
               </div>
-              <p>TODO: Display team selection UI</p>
-            </div>
-            ) : (
-            <div>
-              <div className="header-text">
-                <p>Please log in to view teams to select from</p>
-              </div>
-              <p>TODO: Display login UI</p>
-            </div>
-            )
+              {isAuthenticated ? (
+                <div>
+                  <p>TODO: Display team selection UI</p>
+                </div>
+              ) : (
+                <div>
+                  <a href={loginUrl} target="_self"><button>Login with GitHub</button></a>
+                </div>
+              )}
+            </>
           ) : (
             viewMode === "live" ? (
               <LiveDashboard 
