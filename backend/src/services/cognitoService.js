@@ -94,8 +94,8 @@ const createRoleMiddleware = (roleName, checkFunction) => (req, res, next) => {
 const requireAdmin = createRoleMiddleware("Admin", (groups) => groups.includes('admin'));
 
 // Middleware to check if user has reviewer access
-const requireReviewer = createRoleMiddleware("Reviewer or admin", (groups) => 
-  groups.includes('reviewer') || groups.includes('admin')
+const requireReviewer = createRoleMiddleware("Reviewer", (groups) => 
+  groups.includes('reviewer')
 );
 
 // Function for the /user/api/info endpoint
