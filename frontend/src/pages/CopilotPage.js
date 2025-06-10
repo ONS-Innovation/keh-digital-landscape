@@ -14,7 +14,7 @@ import { fetchUserTeams } from "../utilities/getTeams"; //TODO: cache
 const loginUrl = `https://github.com/login/oauth/authorize?` + 
   new URLSearchParams({
     client_id: process.env.REACT_APP_GITHUB_CLIENT_ID,
-    redirect_uri: `${process.env.APP_URL}/copilot`, //TODO: redirect directly to team usage tab
+    redirect_uri: `${process.env.REACT_APP_URL}/copilot?fromTab=team`,
     scope: "user:email read:org",
   }).toString();
 
@@ -113,6 +113,12 @@ function CopilotDashboard() {
    * Set states from API data
    */
   useEffect(() => {
+    //Handle GitHub login redirect
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get("fromTab");
+    if (tab === "team") {
+      setScope("team");
+    }
     const fetchLiveAndSeatsData = async () => {
       setIsLiveLoading(true);
       setIsSeatsLoading(true);
