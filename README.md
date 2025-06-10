@@ -78,6 +78,7 @@ export AWS_SECRET_ACCESS_KEY=<your_secret_key>
 export AWS_SECRET_NAME=<your_secret_name>
 export GITHUB_APP_ID=<your_github_app_id>
 export GITHUB_APP_CLIENT_ID=<your_github_app_client_id>
+export GITHUB_APP_CLIENT_SECRET=<your_github_app_client_secret>
 export GITHUB_ORG=<your_github_organisation>
 ```
 ## Running locally
