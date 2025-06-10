@@ -11,7 +11,7 @@ terraform {
 }
 
 module "cognito" {
-  source = "git::https://github.com/ONS-Innovation/keh-cognito-auth-tf-module.git?ref=user-group-v1.0.3"
+  source = "git::https://github.com/ONS-Innovation/keh-cognito-auth-tf-module.git?ref=v1.2"
 
   domain             = var.domain
   service_subdomain  = var.service_subdomain
