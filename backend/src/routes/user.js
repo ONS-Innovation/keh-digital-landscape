@@ -1,5 +1,5 @@
 const express = require("express");
-const { verifyJwt, getUserInfo } = require('../services/cognitoService');
+const { verifyJwt, getUserInfo } = require("../services/cognitoService");
 
 const router = express.Router();
 
@@ -12,6 +12,6 @@ router.use(verifyJwt);
  * @returns {Object} User info including email, groups, and development mode status
  * @throws {Error} 401 - If user is not authenticated
  */
-router.get('/info', getUserInfo);
+router.get("/info", getUserInfo);
 
-module.exports = router; 
+module.exports = router;

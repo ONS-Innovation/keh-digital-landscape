@@ -1,4 +1,4 @@
-const logger = require('../config/logger');
+const logger = require("../config/logger");
 const { AlbJwtVerifier, CognitoJwtVerifier } = require("aws-jwt-verify");
 
 const verifier = AlbJwtVerifier.create({
@@ -14,18 +14,18 @@ const cognitoVerifier = CognitoJwtVerifier.create({
 });
 
 // Check if authentication should be disabled (for local development)
-const isAuthDisabled = () => process.env.NODE_ENV === 'development';
+const isAuthDisabled = () => process.env.NODE_ENV === "development";
 
 // Helper function to extract groups from Cognito access token
 const extractGroups = (cognitoGroups) => {
   if (!cognitoGroups) return [];
-  
+
   if (Array.isArray(cognitoGroups)) {
     return cognitoGroups;
-  } else if (typeof cognitoGroups === 'string') {
-    return cognitoGroups.split(',').map(group => group.trim());
+  } else if (typeof cognitoGroups === "string") {
+    return cognitoGroups.split(",").map((group) => group.trim());
   }
-  
+
   return [];
 };
 
@@ -36,7 +36,8 @@ const createUserObject = (email, groups) => ({
 });
 
 // Helper function to get dev user
-const getDevUser = () => createUserObject("dev@ons.gov.uk", ["admin", "reviewer"]);
+const getDevUser = () =>
+  createUserObject("dev@ons.gov.uk", ["admin", "reviewer"]);
 
 // Helper function to verify tokens and extract user data
 const verifyTokensAndExtractUser = async (req) => {
@@ -68,7 +69,9 @@ async function verifyJwt(req, res, next) {
     next();
   } catch (error) {
     logger.error("JWT verification error:", { error: error.message });
-    return res.status(401).json({ message: "Unauthorized", error: error.message });
+    return res
+      .status(401)
+      .json({ message: "Unauthorized", error: error.message });
   }
 }
 
@@ -91,11 +94,13 @@ const createRoleMiddleware = (roleName, checkFunction) => (req, res, next) => {
 };
 
 // Middleware to check if user has admin access
-const requireAdmin = createRoleMiddleware("Admin", (groups) => groups.includes('admin'));
+const requireAdmin = createRoleMiddleware("Admin", (groups) =>
+  groups.includes("admin")
+);
 
 // Middleware to check if user has reviewer access
-const requireReviewer = createRoleMiddleware("Reviewer", (groups) => 
-  groups.includes('reviewer')
+const requireReviewer = createRoleMiddleware("Reviewer", (groups) =>
+  groups.includes("reviewer")
 );
 
 // Function for the /user/api/info endpoint

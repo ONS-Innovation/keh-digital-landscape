@@ -1,7 +1,9 @@
 const express = require("express");
-const s3Service = require('../services/s3Service');
-const logger = require('../config/logger');
-const { transformProjectToCSVFormat } = require('../utilities/projectDataTransformer');
+const s3Service = require("../services/s3Service");
+const logger = require("../config/logger");
+const {
+  transformProjectToCSVFormat,
+} = require("../utilities/projectDataTransformer");
 
 const router = express.Router();
 
@@ -13,14 +15,19 @@ const router = express.Router();
  */
 router.get("/csv", async (req, res) => {
   try {
-    const jsonData = await s3Service.getObjectViaSignedUrl('tat', 'new_project_data.json');
+    const jsonData = await s3Service.getObjectViaSignedUrl(
+      "tat",
+      "new_project_data.json"
+    );
 
     // Transform JSON data to CSV format using the utility function
     const transformedData = jsonData.projects.map(transformProjectToCSVFormat);
 
     res.json(transformedData);
   } catch (error) {
-    logger.error("Error fetching and transforming project data:", { error: error.message });
+    logger.error("Error fetching and transforming project data:", {
+      error: error.message,
+    });
     res.status(500).json({ error: error.message });
   }
 });
@@ -33,7 +40,10 @@ router.get("/csv", async (req, res) => {
  */
 router.get("/tech-radar/json", async (req, res) => {
   try {
-    const jsonData = await s3Service.getObjectViaSignedUrl('main', 'onsRadarSkeleton.json');
+    const jsonData = await s3Service.getObjectViaSignedUrl(
+      "main",
+      "onsRadarSkeleton.json"
+    );
     res.json(jsonData);
   } catch (error) {
     logger.error("Error fetching JSON:", { error: error.message });
@@ -55,7 +65,10 @@ router.get("/tech-radar/json", async (req, res) => {
 router.get("/json", async (req, res) => {
   try {
     const { datetime, archived } = req.query;
-    const jsonData = await s3Service.getObjectViaSignedUrl('main', 'repositories.json');
+    const jsonData = await s3Service.getObjectViaSignedUrl(
+      "main",
+      "repositories.json"
+    );
 
     // First filter by date if provided
     let filteredRepos = jsonData.repositories;
@@ -161,7 +174,10 @@ router.get("/repository/project/json", async (req, res) => {
       .split(",")
       .map((repo) => repo.toLowerCase().trim());
 
-    const jsonData = await s3Service.getObjectViaSignedUrl('main', 'repositories.json');
+    const jsonData = await s3Service.getObjectViaSignedUrl(
+      "main",
+      "repositories.json"
+    );
 
     // Filter repositories based on provided names
     let filteredRepos = jsonData.repositories.filter((repo) =>
@@ -256,13 +272,15 @@ router.get("/repository/project/json", async (req, res) => {
 router.get("/banners", async (req, res) => {
   try {
     let messagesData = { messages: [] };
-    
+
     try {
       // Try to get existing messages.json file
-      const data = await s3Service.getObject('main', 'messages.json');
-      
+      const data = await s3Service.getObject("main", "messages.json");
+
       // Filter only active banners
-      messagesData.messages = data.messages.filter(banner => banner.show === true);
+      messagesData.messages = data.messages.filter(
+        (banner) => banner.show === true
+      );
     } catch (error) {
       // If file doesn't exist, return empty array
       logger.info("No messages.json file found, returning empty array");
@@ -285,13 +303,15 @@ router.get("/banners", async (req, res) => {
 router.get("/banners/all", async (req, res) => {
   try {
     let messagesData = { messages: [] };
-    
+
     try {
       // Try to get existing messages.json file
-      const data = await s3Service.getObject('main', 'messages.json');
-      
+      const data = await s3Service.getObject("main", "messages.json");
+
       // Filter only active banners
-      messagesData.messages = data.messages.filter(banner => banner.show === true);
+      messagesData.messages = data.messages.filter(
+        (banner) => banner.show === true
+      );
     } catch (error) {
       // If file doesn't exist, return empty array
       logger.info("No messages.json file found, returning empty array");
@@ -300,7 +320,9 @@ router.get("/banners/all", async (req, res) => {
 
     res.json(messagesData);
   } catch (error) {
-    logger.error("Error fetching all banner messages:", { error: error.message });
+    logger.error("Error fetching all banner messages:", {
+      error: error.message,
+    });
     res.status(500).json({ error: error.message });
   }
 });
@@ -341,4 +363,4 @@ router.get("/health", (req, res) => {
   res.status(200).json(healthResponse);
 });
 
-module.exports = router; 
+module.exports = router;

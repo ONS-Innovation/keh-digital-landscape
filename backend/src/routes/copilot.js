@@ -1,4 +1,4 @@
-const logger = require('../config/logger');
+const logger = require("../config/logger");
 const express = require("express");
 const s3Service = require("../services/s3Service");
 const githubService = require("../services/githubService");
@@ -29,7 +29,10 @@ router.get("/org/live", async (req, res) => {
  */
 router.get("/org/historic", async (req, res) => {
   try {
-    const data = await s3Service.getObjectViaSignedUrl('copilot', 'historic_usage_data.json');
+    const data = await s3Service.getObjectViaSignedUrl(
+      "copilot",
+      "historic_usage_data.json"
+    );
     res.json(data);
   } catch (error) {
     logger.error("Error fetching JSON:", { error: error.message });
@@ -53,4 +56,4 @@ router.get("/seats", async (req, res) => {
   }
 });
 
-module.exports = router; 
+module.exports = router;
