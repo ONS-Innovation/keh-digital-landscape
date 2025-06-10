@@ -73,12 +73,21 @@ nvm use 18.19.0
 
 4. Remember to export the following:
 ```bash
+# AWS
 export AWS_ACCESS_KEY_ID=<your_access_key>
 export AWS_SECRET_ACCESS_KEY=<your_secret_key>
 export AWS_SECRET_NAME=<your_secret_name>
+export AWS_REGION=<your_region>
+
+# Github
 export GITHUB_APP_ID=<your_github_app_id>
 export GITHUB_APP_CLIENT_ID=<your_github_app_client_id>
 export GITHUB_ORG=<your_github_organisation>
+
+# Cognito
+export ALB_ARN=<your_alb_arn>
+export COGNITO_USER_POOL_ID=<your_cognito_user_pool_id>
+export COGNITO_USER_POOL_CLIENT_ID=<your_cognito_user_pool_client_id>
 ```
 ## Running locally
 
