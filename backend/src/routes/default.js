@@ -4,6 +4,7 @@ const logger = require("../config/logger");
 const {
   transformProjectToCSVFormat,
 } = require("../utilities/projectDataTransformer");
+const { healthCheckLimiter } = require("../config/rateLimiter");
 
 const router = express.Router();
 
@@ -337,7 +338,7 @@ router.get("/banners/all", async (req, res) => {
  * @returns {Object} response.memory - Memory usage statistics
  * @returns {number} response.pid - Process ID
  */
-router.get("/health", (req, res) => {
+router.get("/health", healthCheckLimiter, (req, res) => {
   logger.info("Health check endpoint called", {
     timestamp: new Date().toISOString(),
   });
