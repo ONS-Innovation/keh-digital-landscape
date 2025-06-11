@@ -91,7 +91,7 @@ const getRepositoryData = useCallback(
       return pendingRequests.repository[cacheKey];
     }
 
-    // Initialize repository requests object if needed
+    // Initialise repository requests object if needed
     if (!pendingRequests.repository) {
       pendingRequests.repository = {};
     }
