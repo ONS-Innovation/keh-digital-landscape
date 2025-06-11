@@ -2,12 +2,14 @@ import React, { useMemo, useRef } from "react";
 import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
 import { formatNumberWithCommas } from "../../../utilities/getCommaSeparated";
+import { getCellRenderers } from "../../../utilities/getCellRenderers";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-function TableBreakdown({ data, idField, idHeader, columns, headerMap, computedFields, customCellRenderers = {}, tableContext = "" }) {
+function TableBreakdown({ data, idField, idHeader, columns, headerMap, computedFields, tableContext = "" }) {
     const gridRef = useRef();
     const containerRef = useRef();
+    const cellRenderers = getCellRenderers();
 
     const defaultColDef = useMemo(() => ({
       sortable: true,
@@ -31,7 +33,7 @@ function TableBreakdown({ data, idField, idHeader, columns, headerMap, computedF
       return keys.map((key) => ({
         field: key,
         headerName: key === idField ? idHeader : headerMap[key] || key,
-        valueFormatter: !customCellRenderers[key]
+        valueFormatter: !cellRenderers[key]
           ? key.toLowerCase().includes("rate")
             ? (params) => `${(params.value * 100).toFixed(1)}%`
             : (params) =>
@@ -39,9 +41,9 @@ function TableBreakdown({ data, idField, idHeader, columns, headerMap, computedF
                   ? formatNumberWithCommas(params.value)
                   : params.value
           : undefined,
-        cellRenderer: customCellRenderers[key] || undefined,
+        cellRenderer: cellRenderers[key] || undefined,
       }));
-    }, [rowData, idField, idHeader, columns, headerMap, customCellRenderers]);
+    }, [rowData, idField, idHeader, columns, headerMap, cellRenderers]);
 
     // Generate unique aria-label based on context
     const generateAriaLabel = () => {

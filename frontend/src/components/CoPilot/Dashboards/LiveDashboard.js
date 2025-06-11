@@ -7,7 +7,6 @@ import EngagedUsersGraph from "../Breakdowns/EngagedUsersGraph";
 import PieChart from "../Breakdowns/PieChart";
 import TableBreakdown from "../Breakdowns/TableBreakdown";
 import { getFormattedTime } from "../../../utilities/getFormattedTime";
-import { getCellRenderers } from "../../../utilities/getCellRenderers";
 import CompletionsCards from "../Breakdowns/CompletionsCards";
 import ChatCards from "../Breakdowns/ChatCards";
 
@@ -219,7 +218,6 @@ function LiveDashboard({scope, data, isLiveLoading, isSeatsLoading, inactiveDays
                         github: "GitHub Profile",
                         lastActivity: "Last Activity"
                       }}
-                      customCellRenderers={getCellRenderers()}
                     />
                   </div>
                   <div className="seat-breakdown-item">
@@ -243,7 +241,6 @@ function LiveDashboard({scope, data, isLiveLoading, isSeatsLoading, inactiveDays
                         github: "GitHub Profile",
                         lastActivity: "Last Activity"
                       }}
-                      customCellRenderers={getCellRenderers()}
                     />
                   </div>
                 </div>
