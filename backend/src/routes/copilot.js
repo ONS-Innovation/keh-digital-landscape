@@ -53,7 +53,7 @@ router.get("/seats", async (req, res) => {
 });
 
 /**
- * Endpoint for fetching all teams in an organisation visible to the authenticated user from the GitHub API.
+ * Endpoint for fetching teams the authenticated user is a member of in the organisation from the GitHub API.
  * @route GET /copilot/api/teams
  * @returns {Object} Copilot teams JSON data
  * @throws {Error} 500 - If fetching fails

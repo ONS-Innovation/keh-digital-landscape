@@ -1,5 +1,5 @@
 /**
- * Fetch Github teams visible to the authenticated user in the organisation
+ * Fetch Github teams the authenticated user is a member of in the organisation
  * @returns {Promise<Array>} Array of teams
  */
 export const fetchUserTeams = async (token) => {

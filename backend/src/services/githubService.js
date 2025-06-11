@@ -63,36 +63,32 @@ class GitHubService {
   }
 
   /**
-   * Get all teams in the organisation visible to the authenticated user
-   * @returns {Promise<Array>} Array of teams
+   * Get teams the authenticated user is a member of in the organisation
+   * @param {string} userToken - GitHub access token
+   * @returns {Promise<Array>} Array of teams the user is a member of in the organisation
    */
   async getUserTeams(userToken) {
     const { Octokit } = await import("@octokit/rest");
 
     try {
       const octokit = new Octokit({ auth: userToken });
-      let allTeams = [];
-      let page = 1;
-      let hasMore = true;
 
-      while (hasMore) {
-        const response = await octokit.request(`GET /orgs/${this.org}/teams`, {
-          headers: {
-            "X-GitHub-Api-Version": "2022-11-28",
-          },
-          per_page: 100,
-          page,
-        });
+      const response = await octokit.request(`GET /user/teams`, {
+        headers: {
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
+        per_page: 100,
+      });
 
-        const currentTeams = response.data ?? [];
-        allTeams.push(...currentTeams);
-        hasMore = currentTeams.length === 100;
-        page += 1;
-      }
-
-      return allTeams;
+      // Only return slug, name, description, and url for each team
+      return (response.data || []).map(team => ({
+        slug: team.slug,
+        name: team.name,
+        description: team.description,
+        url: team.url,
+      }));
     } catch (error) {
-      logger.error("GitHub API error while fetching available teams:", { error: error.message });
+      logger.error("GitHub API error while fetching user's teams:", { error: error.message });
       throw error;
     }
   }
