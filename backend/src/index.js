@@ -1,17 +1,24 @@
 /**
  * @file This is the main file for the backend server.
- * It sets up an Express server, handles CORS, and provides endpoints for fetching CSV/JSON data and checking server health.
+ * It sets up an Express server, handles CORS, and provides endpoints for the frontend.
  */
 require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
 const logger = require('./config/logger');
+const {
+  generalApiLimiter,
+  adminApiLimiter,
+  userApiLimiter,
+  externalApiLimiter
+} = require('./config/rateLimiter');
 
 // Import route modules
 const apiRoutes = require('./routes/default');
 const adminRoutes = require('./routes/admin');
 const reviewRoutes = require('./routes/review');
 const copilotRoutes = require('./routes/copilot');
+const userRoutes = require('./routes/user');
 
 const app = express();
 const port = process.env.PORT || 5001;
@@ -20,19 +27,26 @@ app.use(
   cors({
     origin: "*",
     methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: [
+      "Content-Type", 
+      "Authorization", 
+      "x-amzn-oidc-data", 
+      "x-amzn-oidc-accesstoken"
+    ],
   })
 );
 
 app.use(express.json());
 
-// Mount route modules
-app.use('/api', apiRoutes);
-app.use('/admin/api', adminRoutes);
-app.use('/review/api', reviewRoutes);
-app.use('/copilot/api', copilotRoutes);
+// Apply rate limiting middleware before mounting routes
+// Note: Health endpoint has its own rate limiter applied directly in the route
+app.use('/api', generalApiLimiter, apiRoutes);
+app.use('/admin/api', adminApiLimiter, adminRoutes);
+app.use('/review/api', adminApiLimiter, reviewRoutes);
+app.use('/copilot/api', externalApiLimiter, copilotRoutes);
+app.use('/user/api', userApiLimiter, userRoutes);
 
-// Add error handling
+// Error handling
 process.on("uncaughtException", (error) => {
   logger.error("Uncaught Exception:", { error });
 });

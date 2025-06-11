@@ -1,4 +1,0 @@
-bucket              = "sdp-dev-tf-state"
-key                 = "sdp-dev-ecs-digital-landscape-admin-auth/terraform.tfstate"
-region              = "eu-west-2"
-dynamodb_table      = "terraform-state-lock"

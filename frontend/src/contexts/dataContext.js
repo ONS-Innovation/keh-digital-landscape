@@ -5,6 +5,7 @@ import { fetchRepositoryData, fetchRepositoryStats } from "../utilities/getRepos
 import { fetchBanners } from "../utilities/getBanner";
 import { fetchOrgLiveUsageData, fetchOrgHistoricUsageData } from "../utilities/getUsageData";
 import { fetchSeatData } from "../utilities/getSeatData";
+import { fetchUserInfo } from "../utilities/getUser";
 /**
  * DataContext provides centralized data management and caching for the application.
  * It handles fetching and caching of CSV data, Tech Radar data, repository data,
@@ -28,6 +29,7 @@ export function DataProvider({ children }) {
   const [liveUsageData, setLiveUsageData] = useState(null);
   const [historicUsageData, setHistoricUsageData] = useState(null);
   const [seatsData, setSeatsData] = useState(null);
+  const [userData, setUserData] = useState(null);
   
   const pendingRequests = useRef({
     csv: null,
@@ -37,7 +39,8 @@ export function DataProvider({ children }) {
     banners: new Map(),
     liveUsageData: null,
     historicUsageData: null,
-    seatsData: null
+    seatsData: null,
+    userData: null
   });
 
   /**
@@ -264,6 +267,31 @@ export function DataProvider({ children }) {
     return promise;
   }
 
+  /**
+   * Fetches and caches user information.
+   *
+   * @param {boolean} [forceRefresh=false] - Whether to force a refresh of the cached data
+   * @returns {Promise<Object>} The user data
+   */
+  const getUserData = async (forceRefresh = false) => {
+    if (!forceRefresh && userData) {
+      return userData;
+    }
+
+    if (pendingRequests.current.userData) {
+      return pendingRequests.current.userData;
+    }
+
+    const promise = fetchUserInfo().then(data => {
+      setUserData(data);
+      pendingRequests.current.userData = null;
+      return data;
+    });
+
+    pendingRequests.current.userData = promise;
+    return promise;
+  }
+
   const clearCache = () => {
     setCsvData(null);
     setTechRadarData(null);
@@ -273,6 +301,7 @@ export function DataProvider({ children }) {
     setLiveUsageData(null);
     setHistoricUsageData(null);
     setSeatsData(null);
+    setUserData(null);
     pendingRequests.current = {
       csv: null,
       techRadar: null,
@@ -281,7 +310,8 @@ export function DataProvider({ children }) {
       banners: new Map(),
       liveUsageData: null,
       historicUsageData: null,
-      seatsData: null
+      seatsData: null,
+      userData: null
     };
   };
 
@@ -290,6 +320,7 @@ export function DataProvider({ children }) {
       value={{
         csvData,
         techRadarData,
+        userData,
         getCsvData,
         getTechRadarData,
         getRepositoryData,
@@ -299,6 +330,7 @@ export function DataProvider({ children }) {
         getLiveUsageData,
         getHistoricUsageData,
         getSeatsData,
+        getUserData,
       }}
     >
       {children}

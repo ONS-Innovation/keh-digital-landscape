@@ -8,6 +8,7 @@ import ReviewDashboard from "./pages/ReviewPage";
 import AdminPage from "./pages/AdminPage";
 import Layout from "./components/Layout/Layout";
 import CopilotDashboard from "./pages/CopilotPage";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 const App = () => {
   return (
@@ -18,10 +19,30 @@ const App = () => {
         <Route path="/statistics" element={<Statistics />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="*" element={<Navigate to="/" replace />} />
-        <Route path="/review/dashboard" element={<ReviewDashboard />} />
-        <Route path="/admin/dashboard" element={<AdminPage />} />
+        <Route
+          path="/review/dashboard"
+          element={
+            <ProtectedRoute
+              requiredRoles={["reviewer"]}
+              pageName="Review Dashboard"
+            >
+              <ReviewDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute
+              requiredRoles={["admin"]}
+              pageName="Admin Dashboard"
+            >
+              <AdminPage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/copilot" element={<CopilotDashboard />} />
-    </Routes>
+      </Routes>
     </Layout>
   );
 };

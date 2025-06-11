@@ -1,5 +1,7 @@
-const { getAppAndInstallation } = require("../utilities/getAppAndInstallation.js");
-const logger = require('../config/logger');
+const {
+  getAppAndInstallation,
+} = require("../utilities/getAppAndInstallation.js");
+const logger = require("../config/logger");
 
 /**
  * GitHubService class for managing GitHub operations
@@ -17,15 +19,20 @@ class GitHubService {
     try {
       const octokit = await getAppAndInstallation();
 
-      const response = await octokit.request(`GET /orgs/${this.org}/copilot/metrics`, {
-        headers: {
-          "X-GitHub-Api-Version": "2022-11-28",
-        },
-      });
+      const response = await octokit.request(
+        `GET /orgs/${this.org}/copilot/metrics`,
+        {
+          headers: {
+            "X-GitHub-Api-Version": "2022-11-28",
+          },
+        }
+      );
 
       return response.data;
     } catch (error) {
-      logger.error("GitHub API error while fetching Copilot org metrics:", { error: error.message });
+      logger.error("GitHub API error while fetching Copilot org metrics:", {
+        error: error.message,
+      });
       throw error;
     }
   }
@@ -42,26 +49,31 @@ class GitHubService {
       let hasMore = true;
 
       while (hasMore) {
-        const response = await octokit.request(`GET /orgs/${this.org}/copilot/billing/seats`, {
-          per_page: 100,
-          page,
-          headers: {
-            "X-GitHub-Api-Version": "2022-11-28",
-          },
-        });
+        const response = await octokit.request(
+          `GET /orgs/${this.org}/copilot/billing/seats`,
+          {
+            per_page: 100,
+            page,
+            headers: {
+              "X-GitHub-Api-Version": "2022-11-28",
+            },
+          }
+        );
 
         const currentSeats = response.data.seats ?? [];
         allSeats.push(...currentSeats);
-        currentSeats.length < 100 ? hasMore = false : page += 1;
+        currentSeats.length < 100 ? (hasMore = false) : (page += 1);
       }
 
       return allSeats;
     } catch (error) {
-      logger.error("GitHub API error while fetching Copilot seats:", { error: error.message });
+      logger.error("GitHub API error while fetching Copilot seats:", {
+        error: error.message,
+      });
       throw error;
     }
   }
 }
 
 // Export a singleton instance
-module.exports = new GitHubService(); 
+module.exports = new GitHubService();

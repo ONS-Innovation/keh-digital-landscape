@@ -60,6 +60,16 @@ variable "domain_extension" {
   default     = "aws.onsdigital.uk"
 }
 
+
+variable "user_groups" {
+  description = "Map of user groups to create in the user pool, where key is group name and value is description"
+  type        = map(string)
+  default     = {
+    "admin" = "The admin users for the Digital Landscape"
+    "reviewer" = "The reviewer users for the Digital Landscape"
+  }
+}
+
 variable "token_validity_values" {
   description = "Token validity duration values"
   type = object({
@@ -71,7 +81,14 @@ variable "token_validity_values" {
     refresh_token = 30  # 30 days
     access_token  = 3   # 3 hours
     id_token      = 3   # 3 hours
+
   }
+}
+
+variable "sign_out_urls" {
+  description = "List of allowed sign out URLs for the identity providers"
+  type        = list(string)
+  default     = []
 }
 
 locals {
