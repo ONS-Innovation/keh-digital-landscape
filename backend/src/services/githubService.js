@@ -85,7 +85,7 @@ class GitHubService {
         slug: team.slug,
         name: team.name,
         description: team.description,
-        url: team.url,
+        url: team.html_url,
       }));
     } catch (error) {
       logger.error("GitHub API error while fetching user's teams:", { error: error.message });

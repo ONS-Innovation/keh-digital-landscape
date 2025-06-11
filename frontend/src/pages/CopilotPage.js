@@ -10,6 +10,7 @@ import Slider from 'rc-slider';
 import "rc-slider/assets/index.css";
 import { useData } from "../contexts/dataContext";
 import { exchangeCodeForToken, fetchUserTeams } from "../utilities/getTeams"; //TODO: cache
+import TableBreakdown from "../components/CoPilot/Breakdowns/TableBreakdown";
 
 //todo: move to backend
 const loginUrl = `https://github.com/login/oauth/authorize?` + 
@@ -359,7 +360,24 @@ function CopilotDashboard() {
               </div>
               {isAuthenticated ? (
                 <div>
-                  <p>TODO: Display team selection UI</p>
+                  {availableTeams && availableTeams.length > 0 ? (
+                    <div>
+                      <TableBreakdown
+                      data={availableTeams}
+                      columns={["name", "description", "url"]}
+                      idField="slug"
+                      idHeader="Team Slug"
+                      headerMap={{
+                        name: "Name",
+                        description: "Description",
+                        url: "URL"
+                      }}
+                      tableContext="Copilot Team Selection"
+                      />
+                    </div>
+                  ) : (
+                    <p>No teams available. Please ensure you are a member of at least one team in the organisation.</p>
+                  )}
                 </div>
               ) : (
                 <div>
