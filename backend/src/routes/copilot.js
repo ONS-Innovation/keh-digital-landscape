@@ -80,29 +80,6 @@ router.get("/teams", async (req, res) => {
 });
 
 /**
- * Endpoint for fetching teams the authenticated user is a member of in the organisation from the GitHub API.
- * @route GET /copilot/api/teams
- * @returns {Object} Copilot teams JSON data
- * @throws {Error} 500 - If fetching fails
- */
-router.get("/teams", async (req, res) => {
-  const authHeader = req.headers.authorization;
-  const userToken = authHeader?.startsWith("Bearer ") ? authHeader.split(" ")[1] : null;
-
-  if (!userToken) {
-    return res.status(401).json({ error: "Missing GitHub user token" });
-  }
-  
-  try {
-    const teams = await githubService.getUserTeams(userToken);
-    res.json(teams);
-  } catch (error) {
-    console.error("GitHub API error:", error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-/**
  * Endpoint for exchanging GitHub OAuth code for access token.
  * @route POST /copilot/api/github/oauth/token
  * @returns {Object} Access token JSON data
@@ -138,7 +115,7 @@ router.post("/github/oauth/token", async (req, res) => {
     // Return the access token to frontend
     res.json({ access_token: tokenData.access_token });
   } catch (error) {
-    console.error("Error exchanging code for token:", error);
+    logger.error("Error exchanging code for token:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
