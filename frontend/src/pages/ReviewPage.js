@@ -244,7 +244,7 @@ const ReviewPage = () => {
   const handleSaveConfirmModalYes = async () => {
     try {
       const baseUrl =
-        process.env.NODE_ENV === "development"
+        import.meta.env.MODE === "development"
           ? "http://localhost:5001/review/api/tech-radar/update"
           : "/review/api/tech-radar/update";
 

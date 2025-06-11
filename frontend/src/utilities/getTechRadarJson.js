@@ -9,7 +9,7 @@ import { useData } from "../contexts/dataContext";
 export const fetchTechRadarJSONFromS3 = async () => {
   try {
     let response;
-    if (process.env.NODE_ENV === "development") {
+    if (import.meta.env.MODE === "development") {
       response = await fetch(`http://localhost:5001/api/tech-radar/json`);
     } else {
       response = await fetch("/api/tech-radar/json");

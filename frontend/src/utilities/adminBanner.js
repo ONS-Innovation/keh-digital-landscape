@@ -2,7 +2,7 @@
  * Gets the base URL for banner API calls based on environment
  */
 const getBannerApiUrl = (endpoint) => {
-  return process.env.NODE_ENV === "development"
+  return import.meta.env.MODE === "development"
     ? `http://localhost:5001${endpoint}`
     : endpoint;
 };

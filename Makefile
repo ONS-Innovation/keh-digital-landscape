@@ -7,7 +7,7 @@ dev:
 	make frontend & make backend & wait
 
 frontend:
-	cd frontend && REACT_APP_BACKEND_URL=http://localhost:5001 npm start
+	cd frontend && npm start
 
 backend:
 	cd backend && npm run dev

@@ -40,7 +40,7 @@ const RecentBanners = () => {
     const fetchBanners = async () => {
       try {
         const baseUrl =
-          process.env.NODE_ENV === "development"
+          import.meta.env.MODE === "development"
             ? "http://localhost:5001/api/banners/all"
             : "/api/banners/all";
 
