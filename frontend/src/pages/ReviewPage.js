@@ -9,8 +9,11 @@ import MultiSelect from "../components/MultiSelect/MultiSelect";
 import InfoBox from "../components/InfoBox/InfoBox";
 import ProjectModal from "../components/Projects/ProjectModal";
 import { useTechnologyStatus } from "../utilities/getTechnologyStatus";
+import { useData } from "../contexts/dataContext";
 
 const ReviewPage = () => {
+  const { getUserData } = useData();
+  const [currentUser, setCurrentUser] = useState(null);
   const [entries, setEntries] = useState({
     adopt: [],
     trial: [],
@@ -76,14 +79,16 @@ const ReviewPage = () => {
     const fetchAllData = async () => {
       try {
         setIsLoading(true);
-        const [radarData, csvData] = await Promise.all([
+        const [radarData, csvData, userData] = await Promise.all([
           fetchTechRadarJSONFromS3(),
           fetchCSVFromS3(),
+          getUserData(),
         ]);
 
         const categorizedEntries = categorizeEntries(radarData.entries);
         setEntries(categorizedEntries);
         setProjectsData(csvData);
+        setCurrentUser(userData);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -91,7 +96,7 @@ const ReviewPage = () => {
       }
     };
     fetchAllData();
-  }, []);
+  }, [getUserData]);
 
   // Update project counts when project data is loaded and counts are shown
   useEffect(() => {
@@ -212,6 +217,7 @@ const ReviewPage = () => {
           ringId: destList.toLowerCase(),
           date: now,
           description: moveDescription,
+          author: currentUser?.user?.email || null,
         },
       ],
     };
@@ -350,6 +356,7 @@ const ReviewPage = () => {
           ringId: "review",
           date: new Date().toISOString().split("T")[0],
           description: "Added for review",
+          author: currentUser?.user?.email || null,
         },
       ],
       links: [],
@@ -402,6 +409,7 @@ const ReviewPage = () => {
       ringId: currentRing,
       date: now,
       description: `Changed from ${selectedItem.title} (${selectedItem.description}) to ${editedTitle} (${editedCategory})`,
+      author: currentUser?.user?.email || null,
     };
 
     // Update the item with new values and timeline
@@ -1013,8 +1021,11 @@ const ReviewPage = () => {
                 onChange={(e) => setMoveDescription(e.target.value)}
                 className="technology-input"
                 rows={3}
-                placeholder="Enter move description"
+                placeholder="Enter move description. You can use *italic*, **bold**, and [links](url)"
               />
+              <small className="markdown-hint">
+                Supports: *italic*, **bold**, [link text](url)
+              </small>
             </div>
             <div className="modal-buttons">
               <button

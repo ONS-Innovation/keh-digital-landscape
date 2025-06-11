@@ -518,7 +518,7 @@ text {
 
 /* Update resize handle styling */
 .info-box::-webkit-resizer {
-  border-radius: 0 0 var(--radius) 0;
+  border-radius: 0 0 6px 0;
   background: hsl(var(--muted));
   border: 1px solid hsl(var(--border));
   cursor: se-resize;
@@ -576,6 +576,44 @@ text {
   border-top: 1px solid hsl(var(--border));
 }
 
+.info-box-timeline-item-title {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 500 !important;
+}
+
+
+.timeline-author {
+  color: hsl(var(--foreground));
+  font-size: 10px;
+  font-weight: normal;
+  margin-top: 8px;
+  display: block;
+}
+
+.timeline-description {
+  margin-top: 8px;
+  max-height: 200px;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 8px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.timeline-description em {
+  font-style: italic;
+}
+
+.timeline-description strong {
+  font-weight: 700;
+}
+
+.timeline-description a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+}
+
 .info-box-timeline-item p{
   margin-bottom: 0 !important;
   margin-top: 4px;
@@ -585,7 +623,7 @@ text {
 .info-box-timeline-item span{
   color: hsl(var(--foreground));
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .info-box-placeholder {
@@ -1166,10 +1204,6 @@ text {
   position: relative;
   min-height: fit-content;
   max-height: 65px;
-}
-
-.timeline-container:focus-within {
-  outline: 1px solid hsl(var(--primary));
 }
 
 .timeline-container::-webkit-scrollbar {

@@ -1312,3 +1312,10 @@ textarea.technology-input {
   background-color: var(--color-bg-ignore);
   border: 1px solid var(--color-ignore);
 }
+
+.markdown-hint {
+  color: hsl(var(--foreground));
+  font-size: 11px;
+  margin-top: 4px;
+  display: block;
+}
