@@ -8,9 +8,7 @@ body {
 }
 
 .loading-container {
-  margin-top: var(--header-height);
   min-height: calc(100vh - var(--header-height));
-  width: 100vw;
   display: flex;
   align-items: center;
   justify-content: center;

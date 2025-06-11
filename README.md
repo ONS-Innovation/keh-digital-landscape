@@ -73,9 +73,13 @@ nvm use 18.19.0
 
 4. Remember to export the following:
 ```bash
+# AWS
 export AWS_ACCESS_KEY_ID=<your_access_key>
 export AWS_SECRET_ACCESS_KEY=<your_secret_key>
 export AWS_SECRET_NAME=<your_secret_name>
+export AWS_REGION=<your_region>
+
+# Github
 export GITHUB_APP_ID=<your_github_app_id>
 export GITHUB_APP_CLIENT_ID=<your_github_app_client_id>
 export GITHUB_APP_CLIENT_SECRET=<your_github_app_client_secret>
@@ -97,6 +101,12 @@ make frontend
 To run the backend only:
 ```bash
 make backend
+```
+
+The backend, when ran locally, will bypass ALB authentication and use a developer user found in the `backend/src/services/cognitoService.js` file with the helper function `getDevUser()`. This defaults the dev user to `dev@ons.gov.uk` with the groups `admin` and `reviewer`. If you want to run locally with the dev user without the groups, you can use the following environment variable:
+
+```bash
+export DEV_USER_GROUPS=group1,group2
 ```
 
 ## How to deploy locally

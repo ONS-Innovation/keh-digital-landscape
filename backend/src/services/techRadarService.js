@@ -1,5 +1,5 @@
-const s3Service = require('./s3Service');
-const logger = require('../config/logger');
+const s3Service = require("./s3Service");
+const logger = require("../config/logger");
 
 /**
  * TechRadarService class for managing tech radar data
@@ -15,7 +15,7 @@ class TechRadarService {
    */
   async getTechRadarData() {
     try {
-      return await s3Service.getObject('main', this.radarKey);
+      return await s3Service.getObject("main", this.radarKey);
     } catch (error) {
       logger.error("Error fetching tech radar data:", { error: error.message });
       throw error;
@@ -28,7 +28,7 @@ class TechRadarService {
    * @param {string} role - Role making the request (for logging)
    * @returns {Promise<void>}
    */
-  async updateTechRadarEntries(entries, role = 'unknown') {
+  async updateTechRadarEntries(entries, role = "unknown") {
     try {
       // Validate entries is present, is an array, and is not empty
       if (!entries || !Array.isArray(entries) || entries.length === 0) {
@@ -112,19 +112,20 @@ class TechRadarService {
       });
 
       // Save the updated data
-      await s3Service.putObject('main', this.radarKey, existingData);
-      
-      logger.info(`Tech radar updated successfully by ${role}`, { 
-        entriesCount: entries.length,
-        totalEntries: existingData.entries.length 
-      });
+      await s3Service.putObject("main", this.radarKey, existingData);
 
+      logger.info(`Tech radar updated successfully by ${role}`, {
+        entriesCount: entries.length,
+        totalEntries: existingData.entries.length,
+      });
     } catch (error) {
-      logger.error(`Error updating tech radar (${role}):`, { error: error.message });
+      logger.error(`Error updating tech radar (${role}):`, {
+        error: error.message,
+      });
       throw error;
     }
   }
 }
 
 // Export a singleton instance
-module.exports = new TechRadarService(); 
+module.exports = new TechRadarService();
