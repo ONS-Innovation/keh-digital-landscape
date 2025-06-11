@@ -3,7 +3,7 @@ const { AlbJwtVerifier, CognitoJwtVerifier } = require("aws-jwt-verify");
 
 // Helper function to get dev user
 const getDevUser = () =>
-  createUserObject("dev@ons.gov.uk", process.env.DEV_USER_GROUPS.split(",") || ["admin", "reviewer"]);
+  createUserObject("dev@ons.gov.uk", process.env.DEV_USER_GROUPS?.split(",") || ["admin", "reviewer"]);
 
 // Initialize verifiers based on environment
 let verifier;
