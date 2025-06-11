@@ -599,6 +599,10 @@ text {
   padding: 8px;
   box-sizing: border-box;
   overflow-y: auto;
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
 }
 
 .timeline-description em {
