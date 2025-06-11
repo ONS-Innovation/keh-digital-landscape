@@ -83,11 +83,6 @@ export AWS_REGION=<your_region>
 export GITHUB_APP_ID=<your_github_app_id>
 export GITHUB_APP_CLIENT_ID=<your_github_app_client_id>
 export GITHUB_ORG=<your_github_organisation>
-
-# Cognito
-export ALB_ARN=<your_alb_arn>
-export COGNITO_USER_POOL_ID=<your_cognito_user_pool_id>
-export COGNITO_USER_POOL_CLIENT_ID=<your_cognito_user_pool_client_id>
 ```
 ## Running locally
 
@@ -105,6 +100,12 @@ make frontend
 To run the backend only:
 ```bash
 make backend
+```
+
+The backend, when ran locally, will bypass ALB authentication and use a developer user found in the `backend/src/services/cognitoService.js` file with the helper function `getDevUser()`. This defaults the dev user to `dev@ons.gov.uk` with the groups `admin` and `reviewer`. If you want to run locally with the dev user without the groups, you can use the following environment variable:
+
+```bash
+export DEV_USER_GROUPS=group1,group2
 ```
 
 ## How to deploy locally

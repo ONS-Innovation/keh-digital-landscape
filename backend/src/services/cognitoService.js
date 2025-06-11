@@ -1,5 +1,10 @@
 const logger = require("../config/logger");
 const { AlbJwtVerifier, CognitoJwtVerifier } = require("aws-jwt-verify");
+
+// Helper function to get dev user
+const getDevUser = () =>
+  createUserObject("dev@ons.gov.uk", process.env.DEV_USER_GROUPS.split(",") || ["admin", "reviewer"]);
+
 // Initialize verifiers based on environment
 let verifier;
 let cognitoVerifier;
@@ -40,10 +45,6 @@ const createUserObject = (email, groups) => ({
   email,
   groups,
 });
-
-// Helper function to get dev user
-const getDevUser = () =>
-  createUserObject("dev@ons.gov.uk", ["admin", "reviewer"]);
 
 // Helper function to verify tokens and extract user data
 const verifyTokensAndExtractUser = async (req) => {
