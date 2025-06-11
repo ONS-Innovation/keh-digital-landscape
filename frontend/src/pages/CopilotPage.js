@@ -85,6 +85,7 @@ function CopilotDashboard() {
   const [viewDatesBy, setViewDatesBy] = useState("Day");
   const [isSelectingTeam, setIsSelectingTeam] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false); //TODO: useData context
+  const [availableTeams, setAvailableTeams] = useState([]); //todo: cache
 
   /**
    * Trigger data filter upon slider completion
@@ -153,15 +154,16 @@ function CopilotDashboard() {
   }, []);
 
   /**
-   * Handle OAuth login flow
-   * If the user is not authenticated, redirect to GitHub login
-   * If the user is authenticated, fetch their token and set it in localStorage
+   * Authenticate user with GitHub and fetch teams if authenticated
    */
   useEffect(() => {
     const code = new URLSearchParams(window.location.search).get("code");
   
-    if (code && !localStorage.getItem("userToken")) {
-      (async () => {
+    const authenticate = async () => {
+      const existingToken = localStorage.getItem("userToken");
+  
+      // Exchange code for token
+      if (code && !existingToken) {
         try {
           const token = await exchangeCodeForToken(code);
           if (!token) {
@@ -170,7 +172,6 @@ function CopilotDashboard() {
           }
   
           localStorage.setItem("userToken", token);
-          setIsAuthenticated(true);
   
           // Remove code from URL after use
           const url = new URL(window.location);
@@ -178,11 +179,38 @@ function CopilotDashboard() {
           window.history.replaceState({}, "", url);
         } catch (err) {
           console.error("OAuth token exchange failed", err);
+          return;
         }
-      })();
-    } else if (localStorage.getItem("userToken")) {
-      setIsAuthenticated(true);
-    }
+      }
+  
+      // Validate token with GitHub
+      const token = localStorage.getItem("userToken");
+      if (token) {
+        try {
+          const res = await fetch("https://api.github.com/user", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+  
+          if (res.status === 200) {
+            setIsAuthenticated(true);
+            const teams = await fetchUserTeams(token);
+            if (teams && teams.length > 0) {
+              setAvailableTeams(teams);
+            }
+          } else if (res.status === 401) {
+            console.warn("GitHub token invalid. Clearing.");
+            localStorage.removeItem("userToken");
+            setIsAuthenticated(false);
+          } else {
+            console.error("Unexpected token validation response", res.status);
+          }
+        } catch (err) {
+          console.error("Failed to validate GitHub token", err);
+        }
+      }
+    };
+  
+    authenticate();
   }, []);
 
   useEffect(() => {
