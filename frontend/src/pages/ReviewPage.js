@@ -1021,10 +1021,10 @@ const ReviewPage = () => {
                 onChange={(e) => setMoveDescription(e.target.value)}
                 className="technology-input"
                 rows={3}
-                placeholder="Enter move description. You can use *italic*, **bold**, and [links](url)"
+                placeholder="Enter move description. You can use # headers, *italic*, **bold**, and [links](url)"
               />
               <small className="markdown-hint">
-                Supports: *italic*, **bold**, [link text](url)
+                Supports: # h1, ## h2, *italic*, **bold**, [link text](url)
               </small>
             </div>
             <div className="modal-buttons">

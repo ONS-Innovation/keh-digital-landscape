@@ -22,6 +22,10 @@ export const renderSimpleMarkdown = (text) => {
 
   html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
 
+  // Handle headers - ## h2 first, then # h1 to avoid conflicts
+  html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+  html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+
   html = html.replace(/\n/g, '<br>');
 
   return html;
