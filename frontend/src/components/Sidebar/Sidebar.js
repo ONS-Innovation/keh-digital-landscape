@@ -32,7 +32,7 @@ const Sidebar = () => {
     setShowHelpModal(!showHelpModal);
   };
 
-  const navItems = [
+  const generalNavItems = [
     { path: "/", label: "Home", icon: <TbSmartHome />, isLink: true },
     {
       path: "/radar",
@@ -48,6 +48,15 @@ const Sidebar = () => {
     },
     { path: "/projects", label: "Projects", icon: <TbUsers />, isLink: true },
     {
+      path: "/copilot",
+      label: "Copilot",
+      icon: <VscCopilot />,
+      isLink: true,
+    },
+  ];
+
+  const restrictedNavItems = [
+    {
       path: "/review/dashboard",
       label: "Review",
       icon: <TbEditCircle />,
@@ -59,44 +68,50 @@ const Sidebar = () => {
       icon: <TbUserShield />,
       isLink: false,
     },
-    {
-      path: "/copilot",
-      label: "Copilot",
-      icon: <VscCopilot />,
-      isLink: true,
-    },
   ];
+
+  const renderNavItems = (items) => {
+    return items.map((item) =>
+      item.isLink ? (
+        <Link
+          key={item.path}
+          to={item.path}
+          className={`sidebar-link ${location.pathname === item.path ? "active" : ""}`}
+          aria-label={item.label}
+        >
+          <span className="sidebar-icon">{item.icon}</span>
+          {!isCollapsed && (
+            <span className="sidebar-label">{item.label}</span>
+          )}
+        </Link>
+      ) : (
+        <a
+          key={item.path}
+          href={item.path}
+          className={`sidebar-link ${location.pathname === item.path ? "active" : ""}`}
+          aria-label={item.label}
+        >
+          <span className="sidebar-icon">{item.icon}</span>
+          {!isCollapsed && (
+            <span className="sidebar-label">{item.label}</span>
+          )}
+        </a>
+      )
+    );
+  };
 
   return (
     <aside className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
       <nav className="sidebar-nav">
-        {navItems.map((item) =>
-          item.isLink ? (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`sidebar-link ${location.pathname === item.path ? "active" : ""}`}
-              aria-label={item.label}
-            >
-              <span className="sidebar-icon">{item.icon}</span>
-              {!isCollapsed && (
-                <span className="sidebar-label">{item.label}</span>
-              )}
-            </Link>
-          ) : (
-            <a
-              key={item.path}
-              href={item.path}
-              className={`sidebar-link ${location.pathname === item.path ? "active" : ""}`}
-              aria-label={item.label}
-            >
-              <span className="sidebar-icon">{item.icon}</span>
-              {!isCollapsed && (
-                <span className="sidebar-label">{item.label}</span>
-              )}
-            </a>
-          )
-        )}
+        {renderNavItems(generalNavItems)}
+        
+        {/* Restricted Section */}
+        <div className="sidebar-section">
+          {!isCollapsed && (
+            <div className="sidebar-section-title">Restricted</div>
+          )}
+          {renderNavItems(restrictedNavItems)}
+        </div>
       </nav>
       <div className="sidebar-footer">
         <div className="sidebar-footer-buttons">

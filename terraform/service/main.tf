@@ -119,6 +119,14 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
         {
           name = "COGNITO_USER_POOL_CLIENT_ID",
           value = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_client_id
+        },
+        {
+          name = "COGNITO_USER_POOL_DOMAIN",
+          value = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_domain
+        },
+        {
+          name = "SIGN_OUT_URL",
+          value = data.terraform_remote_state.ecs_auth.outputs.cognito_user_pool_sign_out_urls[0]
         }
       ],
       logConfiguration = {

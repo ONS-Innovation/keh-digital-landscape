@@ -29,3 +29,7 @@ output "cognito_user_groups" {
 output "cognito_user_pool_domain" {
   value = module.cognito.user_pool_domain
 }
+
+output "cognito_user_pool_sign_out_urls" {
+  value = module.cognito.sign_out_urls
+}

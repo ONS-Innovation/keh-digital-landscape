@@ -11,8 +11,7 @@ import { MdOutlineRadar } from "react-icons/md";
  * MenuDropdown component for displaying a dropdown menu with navigation links.
  *
  * @param {Object} props - The props passed to the MenuDropdown component.
- * @param {boolean} props.show - Whether the dropdown menu should be shown.
- * @param {Function} props.onClose - Function to call when the dropdown menu is closed.
+ * @param {Function} props.setShowHelpModal - Function to show the help modal.
  */
 function MenuDropdown({ setShowHelpModal }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -54,46 +53,53 @@ function MenuDropdown({ setShowHelpModal }) {
 
       {isOpen && (
         <div className="dropdown-content">
-            <div className="home-button-container">
-              <button onClick={() => handleNavClick('/')} className={location.pathname === '/' ? 'active' : ''}>
-                <TbSmartHome size={16} />
-                Home
-              </button>
-            </div>
-            <div>
-              <button onClick={() => handleNavClick('/radar')} className={location.pathname === '/radar' ? 'active' : ''}>
-                <MdOutlineRadar size={16} />
-                Tech Radar
-              </button>
-              <button onClick={() => handleNavClick('/statistics')} className={location.pathname === '/statistics' ? 'active' : ''}>
-                <TbChartBar size={16} />
-                Statistics
-              </button>
-              <button onClick={() => handleNavClick('/projects')} className={location.pathname === '/projects' ? 'active' : ''}>
-                <TbUsers size={16} />
-                Projects
-              </button>
-              {/* Keep these as <a> tags */}
-              <a href='/review/dashboard' className={location.pathname === '/review/dashboard' ? 'active' : ''}>
-                <TbEditCircle size={16} />
-                Review
-              </a>
-              <a href='/admin/dashboard' className={location.pathname === '/admin/dashboard' ? 'active' : ''}>
-                <TbUserShield size={16} />
-                Admin
-              </a>
-              <button onClick={() => handleNavClick('/copilot')} className={location.pathname === '/copilot' ? 'active' : ''}>
-                <VscCopilot size={16} />
-                CoPilot
-              </button>
-            </div>
-            <div className="help-button-container">
-              <button onClick={handleHelpClick}>
-                <TbHelp size={16} />
-                Help
-              </button>
-            </div>
-            <UserProfile variant="dropdown" />
+          <div className="home-button-container">
+            <button onClick={() => handleNavClick('/')} className={location.pathname === '/' ? 'active' : ''}>
+              <TbSmartHome size={16} />
+              Home
+            </button>
+          </div>
+          
+          <div className="menu-section">
+            <button onClick={() => handleNavClick('/radar')} className={location.pathname === '/radar' ? 'active' : ''}>
+              <MdOutlineRadar size={16} />
+              Tech Radar
+            </button>
+            <button onClick={() => handleNavClick('/statistics')} className={location.pathname === '/statistics' ? 'active' : ''}>
+              <TbChartBar size={16} />
+              Statistics
+            </button>
+            <button onClick={() => handleNavClick('/projects')} className={location.pathname === '/projects' ? 'active' : ''}>
+              <TbUsers size={16} />
+              Projects
+            </button>
+            <button onClick={() => handleNavClick('/copilot')} className={location.pathname === '/copilot' ? 'active' : ''}>
+              <VscCopilot size={16} />
+              CoPilot
+            </button>
+          </div>
+          
+          <div className="menu-section restricted-section">
+            <div className="menu-section-title">Restricted</div>
+            {/* Keep these as <a> tags for proper authentication handling */}
+            <a href='/review/dashboard' className={location.pathname === '/review/dashboard' ? 'active' : ''}>
+              <TbEditCircle size={16} />
+              Review
+            </a>
+            <a href='/admin/dashboard' className={location.pathname === '/admin/dashboard' ? 'active' : ''}>
+              <TbUserShield size={16} />
+              Admin
+            </a>
+          </div>
+          
+          <div className="help-button-container">
+            <button onClick={handleHelpClick}>
+              <TbHelp size={16} />
+              Help
+            </button>
+          </div>
+          
+          <UserProfile variant="dropdown" />
         </div>
       )}
     </div>

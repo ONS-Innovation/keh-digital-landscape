@@ -85,6 +85,12 @@ variable "token_validity_values" {
   }
 }
 
+variable "sign_out_urls" {
+  description = "List of allowed sign out URLs for the identity providers"
+  type        = list(string)
+  default     = []
+}
+
 locals {
   url         = "${var.domain}.${var.domain_extension}"
   service_url = "${var.service_subdomain}.${local.url}"

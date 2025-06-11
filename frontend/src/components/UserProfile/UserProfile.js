@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useData } from "../../contexts/dataContext";
-import { TbUser, TbEditCircle, TbUserShield, TbUsers } from "react-icons/tb";
+import { TbUser, TbEditCircle, TbUserShield, TbUsers, TbLogout, TbChevronDown } from "react-icons/tb";
+import { logoutUser } from "../../utilities/getUser";
 import "../../styles/components/UserProfile.css";
 
 /**
@@ -10,9 +11,11 @@ import "../../styles/components/UserProfile.css";
  * @param {string} props.variant - 'sidebar' or 'dropdown' to control styling
  */
 const UserProfile = ({ isCollapsed = false, variant = "sidebar" }) => {
-  const { getUserData } = useData();
+  const { getUserData, clearCache } = useData();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [showLogoutMenu, setShowLogoutMenu] = useState(false);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -28,6 +31,17 @@ const UserProfile = ({ isCollapsed = false, variant = "sidebar" }) => {
 
     fetchUser();
   }, [getUserData]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowLogoutMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const getUserIcon = () => {
     if (!user?.user?.groups || user.user.groups.length === 0) {
@@ -64,6 +78,24 @@ const UserProfile = ({ isCollapsed = false, variant = "sidebar" }) => {
     return user.user.groups.join(", ");
   };
 
+  const isLoggedIn = () => {
+    return user?.user?.email && user.user.email !== null;
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser(clearCache);
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
+  const toggleLogoutMenu = () => {
+    if (isLoggedIn()) {
+      setShowLogoutMenu(!showLogoutMenu);
+    }
+  };
+
   if (variant === "sidebar" && isCollapsed) {
     return (
       <div className="user-profile user-profile-sidebar collapsed">
@@ -75,21 +107,37 @@ const UserProfile = ({ isCollapsed = false, variant = "sidebar" }) => {
   }
 
   return (
-    <div className={`user-profile user-profile-${variant}`}>
-      <div className="user-avatar">
-        {getUserIcon()}
-      </div>
-      <div className="user-info">
-        <div 
-          className="user-email" 
-          title={getDisplayEmail()}
-        >
-          {getDisplayEmail()}
+    <div className={`user-profile user-profile-${variant}`} ref={dropdownRef}>
+      <div className="user-profile-content" onClick={toggleLogoutMenu}>
+        <div className="user-avatar">
+          {getUserIcon()}
         </div>
-        {user?.development_mode && (
-          <div className="user-dev-badge">Dev Mode</div>
+        <div className="user-info">
+          <div 
+            className="user-email" 
+            title={getDisplayEmail()}
+          >
+            {getDisplayEmail()}
+          </div>
+          {user?.development_mode && (
+            <div className="user-dev-badge">Dev Mode</div>
+          )}
+        </div>
+        {isLoggedIn() && (
+          <div className="user-profile-chevron">
+            <TbChevronDown size={14} />
+          </div>
         )}
       </div>
+      
+      {isLoggedIn() && showLogoutMenu && (
+        <div className="user-profile-menu">
+          <button className="logout-button" onClick={handleLogout}>
+            <TbLogout size={16} />
+            <span>Logout</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 };
