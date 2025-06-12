@@ -175,7 +175,7 @@ Diagram_Tools: "Supporting Tools",
   const fetchArrayData = async () => {
     try {
       const baseUrl =
-        process.env.NODE_ENV === "development"
+        import.meta.env.MODE === "development"
           ? "http://localhost:5001/admin/api/array-data"
           : "/admin/api/array-data";
 
@@ -532,7 +532,7 @@ Diagram_Tools: "Supporting Tools",
   const handleSaveEditorContent = async () => {
     try {
       const baseUrl =
-        process.env.NODE_ENV === "development"
+        import.meta.env.MODE === "development"
           ? "http://localhost:5001/admin/api/array-data/update"
           : "/admin/api/array-data/update";
 
@@ -586,7 +586,7 @@ Diagram_Tools: "Supporting Tools",
 
     try {
       const baseUrl =
-        process.env.NODE_ENV === "development"
+        import.meta.env.MODE === "development"
           ? "http://localhost:5001/admin/api/array-data/update"
           : "/admin/api/array-data/update";
 
@@ -643,7 +643,7 @@ Diagram_Tools: "Supporting Tools",
 
     try {
       const baseUrl =
-        process.env.NODE_ENV === "development"
+        import.meta.env.MODE === "development"
           ? "http://localhost:5001/admin/api/array-data/update"
           : "/admin/api/array-data/update";
 
@@ -999,7 +999,7 @@ Diagram_Tools: "Supporting Tools",
       }));
 
       const baseUrl =
-        process.env.NODE_ENV === "development"
+        import.meta.env.MODE === "development"
           ? "http://localhost:5001/admin/api/tech-radar/update"
           : "/admin/api/tech-radar/update";
 
@@ -1054,7 +1054,7 @@ Diagram_Tools: "Supporting Tools",
 
       // Save changes to backend
       const baseUrl =
-        process.env.NODE_ENV === "development"
+        import.meta.env.MODE === "development"
           ? "http://localhost:5001/admin/api/array-data/update"
           : "/admin/api/array-data/update";
 
@@ -1137,7 +1137,7 @@ Diagram_Tools: "Supporting Tools",
 
     try {
       const baseUrl =
-        process.env.NODE_ENV === "development"
+        import.meta.env.MODE === "development"
           ? "http://localhost:5001/admin/api/normalise-technology"
           : "/admin/api/normalise-technology";
 
@@ -1180,7 +1180,7 @@ Diagram_Tools: "Supporting Tools",
       const updatedTechs = [...arrayData[category], newTechnology];
 
       const baseUrl =
-        process.env.NODE_ENV === "development"
+        import.meta.env.MODE === "development"
           ? "http://localhost:5001/admin/api/array-data/update"
           : "/admin/api/array-data/update";
 

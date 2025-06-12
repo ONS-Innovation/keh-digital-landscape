@@ -10,7 +10,7 @@ import { useData } from "../contexts/dataContext";
  */
 export const fetchRepositoryStats = async (date = null, archived = null) => {
   try {
-    const baseUrl = process.env.NODE_ENV === "development" 
+    const baseUrl = import.meta.env.MODE === "development" 
       ? 'http://localhost:5001/api/json'
       : '/api/json';
 
@@ -60,7 +60,7 @@ export const fetchRepositoryData = async (
     if (date) params.append("datetime", date);
     if (archived !== null) params.append("archived", archived);
     const baseUrl =
-      process.env.NODE_ENV === "development"
+      import.meta.env.MODE === "development"
         ? "http://localhost:5001/api/repository/project/json"
         : "/api/repository/project/json";
 
