@@ -613,6 +613,21 @@ text {
   font-weight: 700;
 }
 
+.markdown-h1 {
+  font-size: 22px !important;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: hsl(var(--muted-foreground));
+}
+
+.markdown-h2 {
+  font-size: 18px !important;
+  font-weight: 500;
+  color: hsl(var(--foreground));
+}
+
 .timeline-description a {
   color: hsl(var(--primary));
   text-decoration: underline;
