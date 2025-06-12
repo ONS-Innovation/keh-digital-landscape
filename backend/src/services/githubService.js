@@ -37,6 +37,28 @@ class GitHubService {
     }
   }
 
+  async getCopilotTeamMetrics(teamSlug) {
+    try {
+      const octokit = await getAppAndInstallation();
+
+      const response = await octokit.request(
+        `GET /orgs/${this.org}/teams/${teamSlug}/copilot/metrics`,
+        {
+          headers: {
+            "X-GitHub-Api-Version": "2022-11-28",
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      logger.error("GitHub API error while fetching Copilot team metrics:", {
+        error: error.message,
+      });
+      throw error;
+    }
+  }
+
   /**
    * Get GitHub Copilot seat data with pagination
    * @returns {Promise<Array>} Array of all seats

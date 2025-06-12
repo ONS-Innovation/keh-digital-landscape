@@ -41,6 +41,29 @@ router.get("/org/historic", async (req, res) => {
 });
 
 /**
+ * Endpoint for fetching Copilot team live metrics from the Github API.
+ * @route GET /copilot/api/team/live
+ * @param {string} teamSlug - The slug of the team to fetch metrics for
+ * @returns {Object} Team live metrics JSON data
+ * @throws {Error} 400 - If team slug is missing
+ * @throws {Error} 500 - If fetching fails
+ */
+router.get("/team/live", async (req, res) => {
+  const teamSlug = req.query.teamSlug;
+  if (!teamSlug) {
+    return res.status(400).json({ error: "Missing team slug" });
+  }
+
+  try {
+    const data = await githubService.getCopilotTeamMetrics(teamSlug);
+    res.json(data);
+  } catch (error) {
+    logger.error("GitHub API error:", { error: error.message });
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
  * Endpoint for fetching Copilot seat data from the Github API.
  * @route GET /copilot/api/seats
  * @returns {Object} Copilot seat JSON data
