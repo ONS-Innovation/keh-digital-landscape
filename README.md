@@ -32,8 +32,8 @@ This tool aims to provide a visual representation of the digital landscape at ON
 - Banner management - create and manage different banners to be displayed on different pages within the Digital Landscape.
 - Technology management - manage new technologies and the autocomplete list to ensure conformity between platforms.
 
-**CoPilot Page**
-- Displays both live and historical statistics on CoPilot usage within ONS.
+**Copilot Page**
+- Displays both live and historical statistics on Copilot usage within ONS.
 - Statistics can be viewed organisation-wide or for a specific team.
 
 **Home Page:**

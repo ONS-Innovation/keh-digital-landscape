@@ -1,16 +1,16 @@
 import React, { useEffect, useState, useMemo } from "react";
 import Header from "../components/Header/Header";
-import LiveDashboard from "../components/CoPilot/Dashboards/LiveDashboard";
-import HistoricDashboard from "../components/CoPilot/Dashboards/HistoricDashboard";
+import LiveDashboard from "../components/Copilot/Dashboards/LiveDashboard";
+import HistoricDashboard from "../components/Copilot/Dashboards/HistoricDashboard";
 import { filterInactiveUsers } from "../utilities/getSeatData";
 import { filterUsageData, processUsageData } from "../utilities/getUsageData";
 import PageBanner from "../components/PageBanner/PageBanner";
-import "../styles/CoPilotPage.css";
+import "../styles/CopilotPage.css";
 import Slider from 'rc-slider';
 import "rc-slider/assets/index.css";
 import { useData } from "../contexts/dataContext";
 import { exchangeCodeForToken, fetchUserTeams } from "../utilities/getTeams"; //TODO: cache
-import TableBreakdown from "../components/CoPilot/Breakdowns/TableBreakdown";
+import TableBreakdown from "../components/Copilot/Breakdowns/TableBreakdown";
 
 //todo: move to backend
 const loginUrl = `https://github.com/login/oauth/authorize?` + 
@@ -274,8 +274,8 @@ function CopilotDashboard() {
       <Header hideSearch={true}/>
       <div className="admin-page">
         <PageBanner
-          title="CoPilot Usage Dashboard"
-          description="Analyse CoPilot usage statistics organisation-wide and by team"
+          title="Copilot Usage Dashboard"
+          description="Analyse Copilot usage statistics organisation-wide and by team"
           tabs={[
             { id: "organisation", label: "Organisation Usage" },
             { id: "team", label: "Team Usage" }
@@ -364,13 +364,14 @@ function CopilotDashboard() {
                     <div>
                       <TableBreakdown
                       data={availableTeams}
-                      columns={["name", "description", "url"]}
+                      columns={["name", "description", "url", "viewData"]}
                       idField="slug"
                       idHeader="Team Slug"
                       headerMap={{
                         name: "Name",
                         description: "Description",
-                        url: "URL"
+                        url: "URL",
+                        viewData: "View Data",
                       }}
                       tableContext="Copilot Team Selection"
                       />

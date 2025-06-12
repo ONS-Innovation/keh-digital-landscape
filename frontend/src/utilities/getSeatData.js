@@ -1,5 +1,5 @@
 /**
- * Fetch CoPilot seat data from Github API
+ * Fetch Copilot seat data from Github API
  * 
  * @returns {Promise<Object>} - The seat data
  */

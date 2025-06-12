@@ -1,7 +1,7 @@
 import React from "react";
 import "../../../styles/components/Statistics.css";
 import SkeletonStatCard from "../../Statistics/Skeletons/SkeletonStatCard";
-import "../../../styles/CoPilotPage.css";
+import "../../../styles/CopilotPage.css";
 import AcceptanceGraph from "../Breakdowns/AcceptanceGraph";
 import EngagedUsersGraph from "../Breakdowns/EngagedUsersGraph";
 import PieChart from "../Breakdowns/PieChart";
@@ -104,7 +104,7 @@ function LiveDashboard({scope, data, isLiveLoading, isSeatsLoading, inactiveDays
             </div>
           )}
         
-        <h1 className="title">CoPilot Chat</h1>
+        <h1 className="title">Copilot Chat</h1>
         {isLiveLoading ? (
             <div className="copilot-chat-grid">
               <SkeletonStatCard />
@@ -132,7 +132,7 @@ function LiveDashboard({scope, data, isLiveLoading, isSeatsLoading, inactiveDays
               data={chats?.editorBreakdown ?? 0}
               idField="editor"
               idHeader="Editor"
-              tableContext="CoPilot Chat Editor Breakdown"
+              tableContext="Copilot Chat Editor Breakdown"
               columns={[
                 "chats",
                 "insertions",

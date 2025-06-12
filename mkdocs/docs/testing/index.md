@@ -23,7 +23,7 @@ The tests are organized into four main files:
 | `test_main.py` | `/api/*` | Core API endpoints (health, CSV, JSON, repository) |
 | `test_admin.py` | `/admin/api/*` | Admin API endpoints for banner management |
 | `test_review.py` | `/review/api/*` | Review API endpoints for tech radar updates |
-| `test_copilot.py` | `/api/*` | CoPilot API endpoints |
+| `test_copilot.py` | `/api/*` | Copilot API endpoints |
 
 ## Test Setup
 
@@ -64,7 +64,7 @@ make test-admin
 # Run only review API tests
 make test-review
 
-# Run only CoPilot API tests
+# Run only Copilot API tests
 make test-copilot
 
 # Run a specific test
