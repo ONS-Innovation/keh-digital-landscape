@@ -9,8 +9,12 @@ import MultiSelect from "../components/MultiSelect/MultiSelect";
 import InfoBox from "../components/InfoBox/InfoBox";
 import ProjectModal from "../components/Projects/ProjectModal";
 import { useTechnologyStatus } from "../utilities/getTechnologyStatus";
+import { useData } from "../contexts/dataContext";
+import { MarkdownText } from "../utilities/markdownRenderer";
 
 const ReviewPage = () => {
+  const { getUserData } = useData();
+  const [currentUser, setCurrentUser] = useState(null);
   const [entries, setEntries] = useState({
     adopt: [],
     trial: [],
@@ -38,6 +42,7 @@ const ReviewPage = () => {
   const [showMoveModal, setShowMoveModal] = useState(false);
   const [pendingMove, setPendingMove] = useState(null);
   const [moveDescription, setMoveDescription] = useState("");
+  const [activeTab, setActiveTab] = useState("write");
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isDuplicate, setIsDuplicate] = useState(false);
@@ -76,14 +81,16 @@ const ReviewPage = () => {
     const fetchAllData = async () => {
       try {
         setIsLoading(true);
-        const [radarData, csvData] = await Promise.all([
+        const [radarData, csvData, userData] = await Promise.all([
           fetchTechRadarJSONFromS3(),
           fetchCSVFromS3(),
+          getUserData(),
         ]);
 
         const categorizedEntries = categorizeEntries(radarData.entries);
         setEntries(categorizedEntries);
         setProjectsData(csvData);
+        setCurrentUser(userData);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -91,11 +98,15 @@ const ReviewPage = () => {
       }
     };
     fetchAllData();
-  }, []);
+  }, [getUserData]);
 
   // Update project counts when project data is loaded and counts are shown
   useEffect(() => {
-    if (projectsData && showProjectCount && Object.keys(projectCountMap).length === 0) {
+    if (
+      projectsData &&
+      showProjectCount &&
+      Object.keys(projectCountMap).length === 0
+    ) {
       calculateAllProjectCounts();
     }
   }, [projectsData, showProjectCount]);
@@ -212,6 +223,7 @@ const ReviewPage = () => {
           ringId: destList.toLowerCase(),
           date: now,
           description: moveDescription,
+          author: currentUser?.user?.email || null,
         },
       ],
     };
@@ -229,12 +241,14 @@ const ReviewPage = () => {
     setShowMoveModal(false);
     setPendingMove(null);
     setMoveDescription("");
+    setActiveTab("write");
   };
 
   const handleMoveCancel = () => {
     setShowMoveModal(false);
     setPendingMove(null);
     setMoveDescription("");
+    setActiveTab("write");
   };
 
   const handleSaveClick = () => {
@@ -350,6 +364,7 @@ const ReviewPage = () => {
           ringId: "review",
           date: new Date().toISOString().split("T")[0],
           description: "Added for review",
+          author: currentUser?.user?.email || null,
         },
       ],
       links: [],
@@ -402,6 +417,7 @@ const ReviewPage = () => {
       ringId: currentRing,
       date: now,
       description: `Changed from ${selectedItem.title} (${selectedItem.description}) to ${editedTitle} (${editedCategory})`,
+      author: currentUser?.user?.email || null,
     };
 
     // Update the item with new values and timeline
@@ -441,16 +457,16 @@ const ReviewPage = () => {
     setSelectedCategory("");
     setPendingNewTechnology(null);
     setShowAddConfirmModal(false);
-    
+
     // Update project count for the new technology if project counts are shown
     if (showProjectCount) {
       const techName = pendingNewTechnology.title;
-      setProjectCountMap(prev => ({
+      setProjectCountMap((prev) => ({
         ...prev,
-        [techName]: findProjectsUsingTechnology(techName).length
+        [techName]: findProjectsUsingTechnology(techName).length,
       }));
     }
-    
+
     toast.success("Technology added to Review");
   };
 
@@ -582,21 +598,21 @@ const ReviewPage = () => {
    */
   const calculateAllProjectCounts = () => {
     if (!projectsData) return;
-    
+
     const countMap = {};
-    
+
     // Get all technologies from all entries
     const allTechnologies = Object.values(entries)
       .flat()
-      .map(entry => entry.title);
-    
+      .map((entry) => entry.title);
+
     // Calculate counts for each technology
-    allTechnologies.forEach(tech => {
+    allTechnologies.forEach((tech) => {
       if (!countMap[tech]) {
         countMap[tech] = findProjectsUsingTechnology(tech).length;
       }
     });
-    
+
     setProjectCountMap(countMap);
   };
 
@@ -607,7 +623,7 @@ const ReviewPage = () => {
   const toggleProjectCount = () => {
     const newState = !showProjectCount;
     setShowProjectCount(newState);
-    
+
     // Calculate project counts when enabling the feature
     if (newState && Object.keys(projectCountMap).length === 0) {
       calculateAllProjectCounts();
@@ -681,7 +697,9 @@ const ReviewPage = () => {
               <div className="droppable-group-header">{description}</div>
               <div className="droppable-group-items">
                 {groupItems.map((item) => {
-                  const projectCount = showProjectCount ? (projectCountMap[item.title] || 0) : 0;
+                  const projectCount = showProjectCount
+                    ? projectCountMap[item.title] || 0
+                    : 0;
                   return (
                     <div
                       key={item.id}
@@ -699,7 +717,9 @@ const ReviewPage = () => {
                       <div className="draggable-item-content">
                         <span className="item-title">{item.title}</span>
                         {showProjectCount && projectCount > 0 && (
-                          <span className="project-count-badge">{projectCount}</span>
+                          <span className="project-count-badge">
+                            {projectCount}
+                          </span>
                         )}
                       </div>
                     </div>
@@ -746,8 +766,8 @@ const ReviewPage = () => {
   const handleTechClick = (tech) => {
     const foundTech = Object.values(entries)
       .flat()
-      .find(entry => entry.title.toLowerCase() === tech.toLowerCase());
-    
+      .find((entry) => entry.title.toLowerCase() === tech.toLowerCase());
+
     if (foundTech) {
       setIsProjectModalOpen(false);
       handleItemClick(foundTech);
@@ -801,7 +821,9 @@ const ReviewPage = () => {
                     title="Toggle Project Count"
                     aria-label="Toggle Project Count"
                   >
-                    {showProjectCount ? 'Hide Project Count' : 'Show Project Count'}
+                    {showProjectCount
+                      ? "Hide Project Count"
+                      : "Show Project Count"}
                   </button>
                   <button
                     className="admin-button"
@@ -921,11 +943,7 @@ const ReviewPage = () => {
               >
                 Yes
               </button>
-              <button
-                onClick={handleConfirmModalNo}
-                title="No"
-                aria-label="No"
-              >
+              <button onClick={handleConfirmModalNo} title="No" aria-label="No">
                 No
               </button>
             </div>
@@ -982,7 +1000,7 @@ const ReviewPage = () => {
                 onClick={handleAddConfirmModalNo}
                 title="No"
                 aria-label="No"
-                >
+              >
                 No
               </button>
             </div>
@@ -1008,13 +1026,50 @@ const ReviewPage = () => {
             </p>
             <div className="admin-modal-field">
               <label>Description</label>
-              <textarea
-                value={moveDescription}
-                onChange={(e) => setMoveDescription(e.target.value)}
-                className="technology-input"
-                rows={3}
-                placeholder="Enter move description"
-              />
+              <div className="markdown-editor">
+                <div className="markdown-tabs">
+                  <button
+                    type="button"
+                    className={`markdown-tab ${activeTab === "write" ? "active" : ""}`}
+                    onClick={() => setActiveTab("write")}
+                  >
+                    Write
+                  </button>
+                  <button
+                    type="button"
+                    className={`markdown-tab ${activeTab === "preview" ? "active" : ""}`}
+                    onClick={() => setActiveTab("preview")}
+                  >
+                    Preview
+                  </button>
+                </div>
+                <div className="markdown-content">
+                  {activeTab === "write" ? (
+                    <>
+                      <textarea
+                        value={moveDescription}
+                        onChange={(e) => setMoveDescription(e.target.value)}
+                        className="technology-input markdown-textarea"
+                        rows={5}
+                        placeholder="Enter move description. You can use # headers, *italic*, **bold**, and [links](url)"
+                      />
+                    </>
+                  ) : (
+                    <div className="markdown-preview">
+                      {moveDescription.trim() ? (
+                        <MarkdownText text={moveDescription} />
+                      ) : (
+                        <span className="preview-placeholder">
+                          Nothing to preview
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <small className="markdown-hint">
+                  Supports: # h1, ## h2, *italic*, **bold**, [link text](url)
+                </small>
             </div>
             <div className="modal-buttons">
               <button
@@ -1029,7 +1084,9 @@ const ReviewPage = () => {
                 onClick={handleMoveCancel}
                 title="Cancel"
                 aria-label="Cancel"
-              >Cancel</button>
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>
