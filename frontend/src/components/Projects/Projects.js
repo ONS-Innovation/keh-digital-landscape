@@ -965,13 +965,13 @@ const Projects = ({
                           searchTerm ? (
                             <>
                               {highlightText(
-                                project.Description.substring(0, 128),
+                                project.Description.substring(0, 256),
                                 searchTerm
                               )}
                               ...
                             </>
                           ) : (
-                            `${project.Description.substring(0, 128)}...`
+                            `${project.Description.substring(0, 256)}...`
                           )
                         ) : searchTerm ? (
                           highlightText(project.Description, searchTerm)
