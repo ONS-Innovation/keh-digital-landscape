@@ -617,15 +617,16 @@ text {
   font-size: 22px !important;
   font-weight: 600;
   color: hsl(var(--foreground));
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  text-decoration-color: hsl(var(--muted-foreground));
+  margin: 0;
+  max-width: fit-content;
 }
 
 .markdown-h2 {
   font-size: 18px !important;
   font-weight: 500;
   color: hsl(var(--foreground));
+  margin: 0;
+  max-width: fit-content;
 }
 
 .timeline-description a {
