@@ -1,11 +1,7 @@
 import { FaArrowRight } from "react-icons/fa";
 import "../styles/CopilotPage.css";
 
-const handleViewDataClick = (slug) => {
-  console.log(`View data for ${slug}`);
-};
-
-export const getCellRenderers = () => ({
+export const getCellRenderers = (onViewDataClick) => ({
     avatar: ({ value }) =>
       value ? (
         <div className="custom-cell">
@@ -34,7 +30,7 @@ export const getCellRenderers = () => ({
       data?.slug ? (
         <div className="custom-cell">
           <button className="view-data-button"
-            onClick={() => handleViewDataClick(data.slug)}
+            onClick={() => onViewDataClick(data.slug)}
             aria-label={`View data for ${data.name}`}
           >
             View <FaArrowRight />

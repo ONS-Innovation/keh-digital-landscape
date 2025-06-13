@@ -3,7 +3,7 @@ import Header from "../components/Header/Header";
 import LiveDashboard from "../components/Copilot/Dashboards/LiveDashboard";
 import HistoricDashboard from "../components/Copilot/Dashboards/HistoricDashboard";
 import { filterInactiveUsers } from "../utilities/getSeatData";
-import { filterUsageData, processUsageData } from "../utilities/getUsageData";
+import { filterUsageData, processUsageData, fetchTeamLiveUsageData } from "../utilities/getUsageData";
 import PageBanner from "../components/PageBanner/PageBanner";
 import "../styles/CopilotPage.css";
 import Slider from 'rc-slider';
@@ -24,17 +24,18 @@ function CopilotDashboard() {
 
   const getDashboardData = () => {
     if (viewMode === "live" && scope === "organisation") return liveOrgData;
-    if (viewMode === "live" && scope === "team") return liveOrgData; //TODO: Temporary
+    if (viewMode === "live" && scope === "team") return liveTeamData;
     if (viewMode === "historic" && scope === "organisation") return historicOrgData;
-    if (viewMode === "historic" && scope === "team") return historicOrgData; //TODO: Temporary
+    if (viewMode === "historic" && scope === "team") return historicTeamData; // Team historic data not currently supported
   };
 
   const getGroupedData = () => {
     if (scope === "team") {
-      if(viewDatesBy === "Day") return historicOrgData.allUsage; //TODO: Temporary
-      if(viewDatesBy === "Week") return historicOrgData.weekUsage; //TODO: Temporary
-      if(viewDatesBy === "Month") return historicOrgData.monthUsage; //TODO: Temporary
-      if(viewDatesBy === "Year") return historicOrgData.yearUsage; //TODO: Temporary
+      // Team historic data not currently supported
+      if(viewDatesBy === "Day") return historicTeamData.allUsage;
+      if(viewDatesBy === "Week") return historicTeamData.weekUsage;
+      if(viewDatesBy === "Month") return historicTeamData.monthUsage;
+      if(viewDatesBy === "Year") return historicTeamData.yearUsage;
     } else {
       if(viewDatesBy === "Day") return historicOrgData.allUsage;
       if(viewDatesBy === "Week") return historicOrgData.weekUsage;
@@ -56,6 +57,14 @@ function CopilotDashboard() {
     weekUsage: [],
     monthUsage: [],
     yearUsage: [],
+  });
+
+  const [liveTeamData, setLiveTeamData] = useState({
+    allUsage: [],
+    filteredUsage: [],
+    processedUsage: [],
+    allSeatData: [],
+    activeSeatData: []
   });
 
   const dateOptions = [
@@ -236,6 +245,7 @@ function CopilotDashboard() {
    * Filter and then process live usage data based on start and end date
    */
   useEffect(() => {
+    //todo: add live team data
     if (!liveOrgData.allUsage?.length || !startDate || !endDate || !sliderFinished) return;
     const filtered = filterUsageData(liveOrgData.allUsage, startDate, endDate);
     setLiveOrgData(prev => ({
@@ -250,6 +260,7 @@ function CopilotDashboard() {
    * Update active seats
    */
   useEffect(() => {
+    //todo: add live team data
     if (!liveOrgData.allSeatData?.length || !inactivityDate) return;
     const active = filterInactiveUsers(liveOrgData.allSeatData, inactivityDate);
     setLiveOrgData(prev => ({
@@ -281,11 +292,15 @@ function CopilotDashboard() {
             { id: "team", label: "Team Usage" }
           ]}
           activeTab={scope}
-          onTabChange={() => setScope(scope => scope === "organisation" ? "team" : "organisation")}
+          onTabChange={() => {
+            setViewMode("live"); // Team historic data not currently supported
+            setScope(scope => scope === "organisation" ? "team" : "organisation")
+          }}
         />
         <div className="admin-container" tabIndex="0">
           { !isSelectingTeam && (
           <div className="dashboard-header">
+            { scope === "organisation" ? ( // Team historic data not currently supported
             <div>
               <p className="header-text">View Data Type</p>
               <div className="banner-type-selector">
@@ -303,6 +318,12 @@ function CopilotDashboard() {
                 </div>
               </div>
             </div>
+            ) : (
+            <div>
+              <p className="header-text">Return to Team Selection</p>
+              {/* todo */}
+            </div>
+            )}
             {viewMode === "live" ? (
               <div id="slider">
                 <p className="header-text">Filter Live Data Range</p>
@@ -374,6 +395,30 @@ function CopilotDashboard() {
                         viewData: "View Data",
                       }}
                       tableContext="Copilot Team Selection"
+                      onViewDataClick={(slug) => {
+                        async function fetchTeamData() {
+                          const liveUsage = await fetchTeamLiveUsageData(slug);
+
+                          // todo: fix Filter seats by team membership
+                          const teamSeats = (liveOrgData.allSeatData ?? []).filter(
+                            (seat) => seat.teams && seat.teams.some((team) => team.slug === slug)
+                          );
+                          const activeTeamSeats = filterInactiveUsers(teamSeats, startDate);
+
+                          setLiveTeamData({
+                            allUsage: liveUsage ?? [],
+                            filteredUsage: liveUsage ?? [],
+                            processedUsage: liveUsage ? processUsageData(liveUsage) : [],
+                            allSeatData: teamSeats,
+                            activeSeatData: activeTeamSeats,
+                          });
+
+                        }
+
+                        fetchTeamData();
+                        setIsSelectingTeam(false);
+                      }
+                      }
                       />
                     </div>
                   ) : (

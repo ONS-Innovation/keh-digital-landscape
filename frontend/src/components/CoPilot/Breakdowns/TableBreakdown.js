@@ -6,10 +6,10 @@ import { getCellRenderers } from "../../../utilities/getCellRenderers";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-function TableBreakdown({ data, idField, idHeader, columns, headerMap, computedFields, tableContext = "" }) {
+function TableBreakdown({ data, idField, idHeader, columns, headerMap, computedFields, tableContext = "", onViewDataClick }) {
     const gridRef = useRef();
     const containerRef = useRef();
-    const cellRenderers = getCellRenderers();
+    const cellRenderers = getCellRenderers(onViewDataClick);
 
     const defaultColDef = useMemo(() => ({
       sortable: true,
