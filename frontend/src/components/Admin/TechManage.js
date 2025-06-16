@@ -992,7 +992,7 @@ Diagram_Tools: "Supporting Tools",
           {
             moved: 0,
             ringId: "review",
-            date: new Date().toISOString().split("T")[0],
+            date: new Date().toISOString().replace('T', ' ').replace('Z', ''),
             description: `Added for review from tech audit (${Array.from(info.sources).join(", ")})`,
           },
         ],

@@ -212,7 +212,7 @@ const ReviewPage = () => {
     );
 
     const movement = calculateRingMovement(lastRing, destList);
-    const now = new Date().toISOString().split("T")[0];
+    const now = new Date().toISOString().replace('T', ' ').replace('Z', '');
 
     const updatedItem = {
       ...item,
@@ -362,7 +362,7 @@ const ReviewPage = () => {
         {
           moved: 0,
           ringId: "review",
-          date: new Date().toISOString().split("T")[0],
+          date: new Date().toISOString().replace('T', ' ').replace('Z', ''),
           description: "Added for review",
           author: currentUser?.user?.email || null,
         },
@@ -411,7 +411,7 @@ const ReviewPage = () => {
       ].ringId.toLowerCase();
 
     // Create timeline entry for the change
-    const now = new Date().toISOString().split("T")[0];
+    const now = new Date().toISOString().replace('T', ' ').replace('Z', '');
     const timelineEntry = {
       moved: 0,
       ringId: currentRing,
