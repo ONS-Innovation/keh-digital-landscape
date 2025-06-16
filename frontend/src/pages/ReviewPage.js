@@ -11,6 +11,7 @@ import ProjectModal from "../components/Projects/ProjectModal";
 import { useTechnologyStatus } from "../utilities/getTechnologyStatus";
 import { useData } from "../contexts/dataContext";
 import { MarkdownText } from "../utilities/markdownRenderer";
+import { format } from "date-fns";
 
 const ReviewPage = () => {
   const { getUserData } = useData();
@@ -212,7 +213,7 @@ const ReviewPage = () => {
     );
 
     const movement = calculateRingMovement(lastRing, destList);
-    const now = new Date().toISOString().replace('T', ' ').replace('Z', '');
+    const now = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
 
     const updatedItem = {
       ...item,
@@ -362,7 +363,7 @@ const ReviewPage = () => {
         {
           moved: 0,
           ringId: "review",
-          date: new Date().toISOString().replace('T', ' ').replace('Z', ''),
+          date: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
           description: "Added for review",
           author: currentUser?.user?.email || null,
         },
@@ -411,7 +412,7 @@ const ReviewPage = () => {
       ].ringId.toLowerCase();
 
     // Create timeline entry for the change
-    const now = new Date().toISOString().replace('T', ' ').replace('Z', '');
+    const now = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
     const timelineEntry = {
       moved: 0,
       ringId: currentRing,

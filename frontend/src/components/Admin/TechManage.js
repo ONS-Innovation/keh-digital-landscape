@@ -7,6 +7,7 @@ import Header from "../Header/Header";
 import { FaCheck, FaRegTimesCircle, FaPencilAlt, FaPencilRuler, FaTrash, FaPlus } from "react-icons/fa";
 import stringSimilarity from "string-similarity";
 import SimilarityModal from "./TechManagement/SimilarityModal";
+import { format } from "date-fns";
 
 const TechManage = () => {
   // Fields to scan from CSV and their corresponding categories
@@ -992,7 +993,7 @@ Diagram_Tools: "Supporting Tools",
           {
             moved: 0,
             ringId: "review",
-            date: new Date().toISOString().replace('T', ' ').replace('Z', ''),
+            date: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
             description: `Added for review from tech audit (${Array.from(info.sources).join(", ")})`,
           },
         ],
