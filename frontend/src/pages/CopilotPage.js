@@ -222,6 +222,9 @@ function CopilotDashboard() {
     authenticate();
   }, []);
 
+  /**
+   * Fetch historic data if view mode is set to historic and has not been fetched yet
+   */
   useEffect(() => {
     const fetchHistoricData = async () => {
       if (!hasFetchedHistoric && viewMode === "historic") {
@@ -244,27 +247,46 @@ function CopilotDashboard() {
    * Filter and then process live usage data based on start and end date
    */
   useEffect(() => {
-    if (!liveOrgData.allUsage?.length || !startDate || !endDate || !sliderFinished) return;
-    const filtered = filterUsageData(liveOrgData.allUsage, startDate, endDate);
-    setLiveOrgData(prev => ({
-      ...prev,
-      filteredUsage: filtered,
-      processedUsage: processUsageData(filtered),
-    }));
+    if (scope === "organisation") {
+      if (!liveOrgData.allUsage?.length || !startDate || !endDate || !sliderFinished) return;
+      const filtered = filterUsageData(liveOrgData.allUsage, startDate, endDate);
+      setLiveOrgData(prev => ({
+        ...prev,
+        filteredUsage: filtered,
+        processedUsage: processUsageData(filtered),
+      }));
+    } else if (scope === "team") {
+      if (!liveTeamData.allUsage?.length || !startDate || !endDate || !sliderFinished) return;
+      const filtered = filterUsageData(liveTeamData.allUsage, startDate, endDate);
+      setLiveTeamData(prev => ({
+        ...prev,
+        filteredUsage: filtered,
+        processedUsage: processUsageData(filtered),
+      }));
+    }
     setSliderFinished(false);
-  }, [liveOrgData.allUsage, startDate, endDate, sliderFinished]);
+  }, [scope, liveOrgData.allUsage, liveTeamData.allUsage, startDate, endDate, sliderFinished]);
 
   /**
    * Update active seats
    */
   useEffect(() => {
-    if (!liveOrgData.allSeatData?.length || !inactivityDate) return;
-    const active = filterInactiveUsers(liveOrgData.allSeatData, inactivityDate);
-    setLiveOrgData(prev => ({
-      ...prev,
-      activeSeatData: active,
-    }));
-  }, [inactiveDays, inactivityDate, liveOrgData.allSeatData]);
+    if (scope === "organisation") {
+      if (!liveOrgData.allSeatData?.length || !inactivityDate) return;
+      const active = filterInactiveUsers(liveOrgData.allSeatData, inactivityDate);
+      setLiveOrgData(prev => ({
+        ...prev,
+        activeSeatData: active,
+      }));
+    } else if (scope === "team") {
+      if (!liveTeamData.allSeatData?.length || !inactivityDate) return;
+      const active = filterInactiveUsers(liveTeamData.allSeatData, inactivityDate);
+      setLiveTeamData(prev => ({
+        ...prev,
+        activeSeatData: active,
+      }));
+    }
+  }, [scope, inactiveDays, inactivityDate, liveOrgData.allSeatData, liveTeamData.allSeatData]);
 
   /**
    * Display team selection UI to choose a team to fetch data for
