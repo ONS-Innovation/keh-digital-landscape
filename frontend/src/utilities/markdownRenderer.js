@@ -26,7 +26,7 @@ export const renderSimpleMarkdown = (text) => {
   html = html.replace(/^## (.+)$/gm, '<h2 class="markdown-h2">$1</h2>');
   html = html.replace(/^# (.+)$/gm, '<h1 class="markdown-h1">$1</h1>');
 
-  html = html.replace(/\n/g, '<p>');
+  html = html.replace(/\n/g, '<p> </p>');
 
   return html;
 };
