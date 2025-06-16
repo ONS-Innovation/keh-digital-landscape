@@ -21,6 +21,16 @@ const loginUrl = `https://github.com/login/oauth/authorize?` +
 
 function CopilotDashboard() {
 
+  const initialiseDateRange = () => {
+    let end = new Date();
+    let start = new Date(end);
+    start.setDate(end.getDate() - 28);
+    return {
+      start: start.toISOString().slice(0, 10),
+      end: end.toISOString().slice(0, 10),
+    };
+  };
+
   const getDashboardData = () => {
     if (viewMode === "live" && scope === "organisation") return liveOrgData;
     if (viewMode === "live" && scope === "team") return liveTeamData;
@@ -139,12 +149,7 @@ function CopilotDashboard() {
         getSeatsData(),
       ]);
 
-      let end = new Date();
-      let start = new Date(end);
-      start.setDate(end.getDate() - 28);
-      end = end.toISOString().slice(0, 10);
-      start = start.toISOString().slice(0, 10);
-
+      const { start, end } = initialiseDateRange();
       setStartDate(start);
       setEndDate(end);
 
@@ -297,6 +302,11 @@ function CopilotDashboard() {
     } else if (scope === "team") {
       setIsSelectingTeam(true);
     }
+    //Reset start and end dates when switching scopes
+    const {start, end} = initialiseDateRange();
+    setStartDate(start);
+    setEndDate(end);
+    setSliderValues([1, 28]);
   }, [scope]);
 
   return (
