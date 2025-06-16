@@ -133,7 +133,7 @@ const ReviewPage = () => {
 
   // Add this function to calculate ring movement
   const calculateRingMovement = (sourceRing, destRing) => {
-    const ringOrder = ["hold", "assess", "trial", "adopt", "review", "ignore"];
+    const ringOrder = ["ignore", "review", "hold", "assess", "trial", "adopt"];
     const sourceIndex = ringOrder.indexOf(sourceRing.toLowerCase());
     const destIndex = ringOrder.indexOf(destRing.toLowerCase());
 
