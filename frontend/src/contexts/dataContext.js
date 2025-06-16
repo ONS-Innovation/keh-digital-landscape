@@ -4,7 +4,7 @@ import { fetchTechRadarJSONFromS3 } from "../utilities/getTechRadarJson";
 import { fetchRepositoryData, fetchRepositoryStats } from "../utilities/getRepositoryData";
 import { fetchBanners } from "../utilities/getBanner";
 import { fetchOrgLiveUsageData, fetchOrgHistoricUsageData } from "../utilities/getUsageData";
-import { fetchSeatData } from "../utilities/getSeatData";
+import { fetchOrgSeatData } from "../utilities/getSeatData";
 import { fetchUserInfo } from "../utilities/getUser";
 /**
  * DataContext provides centralized data management and caching for the application.
@@ -257,7 +257,7 @@ export function DataProvider({ children }) {
       return pendingRequests.current.seatsData;
     }
 
-    const promise = fetchSeatData().then(data => {
+    const promise = fetchOrgSeatData().then(data => {
       setSeatsData(data);
       pendingRequests.current.seatsData = null;
       return data;

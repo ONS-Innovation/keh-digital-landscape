@@ -97,6 +97,35 @@ class GitHubService {
   }
 
   /**
+   * Get team members for a specific team in the organisation
+   * @param {string} teamSlug - The slug of the team to fetch members for
+   * @returns {Promise<Array>} Array of team members with login, name, and url
+   */
+  async getTeamMembers(teamSlug) {
+    try {
+      const octokit = await getAppAndInstallation();
+
+      const response = await octokit.request(
+        `GET /orgs/${this.org}/teams/${teamSlug}/members`,
+        {
+          headers: {
+            "X-GitHub-Api-Version": "2022-11-28",
+          },
+          per_page: 100,
+        }
+      );
+
+      // Only return login, name, and url for each member
+      return (response.data || []);
+    } catch (error) {
+      logger.error("GitHub API error while fetching team members:", {
+        error: error.message,
+      });
+      throw error;
+    }
+  }
+
+  /**
    * Get teams the authenticated user is a member of in the organisation
    * @param {string} userToken - GitHub access token
    * @returns {Promise<Array>} Array of teams the user is a member of in the organisation

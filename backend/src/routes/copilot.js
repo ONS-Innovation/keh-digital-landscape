@@ -103,6 +103,34 @@ router.get("/teams", async (req, res) => {
 });
 
 /**
+ * Endpoint for fetching Copilot seats for a specific team.
+ * @route GET /copilot/api/team/seats
+ * @param {string} teamSlug - The slug of the team to fetch seats for
+ * @returns {Object} Copilot team seats JSON data
+ * @throws {Error} 400 - If team slug is missing
+ * @throws {Error} 500 - If fetching fails
+ */
+router.get("/team/seats", async (req, res) => {
+  const { teamSlug } = req.query;
+  if (!teamSlug) return res.status(400).json({ error: "Missing team slug" });
+
+  try {
+    const [allSeats, members] = await Promise.all([
+      githubService.getCopilotSeats(),
+      githubService.getTeamMembers(teamSlug),
+    ]);
+
+    const memberIds = new Set(members.map((m) => m.id));
+    const teamSeats = allSeats.filter((s) => memberIds.has(s.assignee.id));
+
+    res.json(teamSeats);
+  } catch (err) {
+    logger.error("GitHub API error:", { err: err.message });
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/**
  * Endpoint for exchanging GitHub OAuth code for access token.
  * @route POST /copilot/api/github/oauth/token
  * @returns {Object} Access token JSON data
@@ -117,7 +145,7 @@ router.post("/github/oauth/token", async (req, res) => {
       client_id: process.env.GITHUB_APP_CLIENT_ID,
       client_secret: process.env.GITHUB_APP_CLIENT_SECRET,
       code,
-      redirect_uri: "http://localhost:3000/copilot?fromTab=team", //todo: pass dev/prod NODE.ENV
+      redirect_uri: "http://localhost:3000/copilot?fromTab=team",
       scope: "user:email read:org",
     });
 

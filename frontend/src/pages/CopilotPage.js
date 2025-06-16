@@ -2,17 +2,16 @@ import React, { useEffect, useState, useMemo } from "react";
 import Header from "../components/Header/Header";
 import LiveDashboard from "../components/Copilot/Dashboards/LiveDashboard";
 import HistoricDashboard from "../components/Copilot/Dashboards/HistoricDashboard";
-import { filterInactiveUsers } from "../utilities/getSeatData";
+import { filterInactiveUsers, fetchTeamSeatData } from "../utilities/getSeatData";
 import { filterUsageData, processUsageData, fetchTeamLiveUsageData } from "../utilities/getUsageData";
 import PageBanner from "../components/PageBanner/PageBanner";
 import "../styles/CopilotPage.css";
 import Slider from 'rc-slider';
 import "rc-slider/assets/index.css";
 import { useData } from "../contexts/dataContext";
-import { exchangeCodeForToken, fetchUserTeams } from "../utilities/getTeams"; //TODO: cache
+import { exchangeCodeForToken, fetchUserTeams } from "../utilities/getTeams";
 import TableBreakdown from "../components/Copilot/Breakdowns/TableBreakdown";
 
-//todo: move to backend
 const loginUrl = `https://github.com/login/oauth/authorize?` + 
   new URLSearchParams({
     client_id: process.env.REACT_APP_GITHUB_CLIENT_ID,
@@ -94,8 +93,8 @@ function CopilotDashboard() {
   const [sliderFinished, setSliderFinished] = useState(true);
   const [viewDatesBy, setViewDatesBy] = useState("Day");
   const [isSelectingTeam, setIsSelectingTeam] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false); //TODO: useData context
-  const [availableTeams, setAvailableTeams] = useState([]); //todo: cache
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [availableTeams, setAvailableTeams] = useState([]);
 
   /**
    * Trigger data filter upon slider completion
@@ -245,7 +244,6 @@ function CopilotDashboard() {
    * Filter and then process live usage data based on start and end date
    */
   useEffect(() => {
-    //todo: add live team data
     if (!liveOrgData.allUsage?.length || !startDate || !endDate || !sliderFinished) return;
     const filtered = filterUsageData(liveOrgData.allUsage, startDate, endDate);
     setLiveOrgData(prev => ({
@@ -260,7 +258,6 @@ function CopilotDashboard() {
    * Update active seats
    */
   useEffect(() => {
-    //todo: add live team data
     if (!liveOrgData.allSeatData?.length || !inactivityDate) return;
     const active = filterInactiveUsers(liveOrgData.allSeatData, inactivityDate);
     setLiveOrgData(prev => ({
@@ -321,7 +318,6 @@ function CopilotDashboard() {
             ) : (
             <div>
               <p className="header-text">Return to Team Selection</p>
-              {/* todo */}
             </div>
             )}
             {viewMode === "live" ? (
@@ -398,11 +394,7 @@ function CopilotDashboard() {
                       onViewDataClick={(slug) => {
                         async function fetchTeamData() {
                           const liveUsage = await fetchTeamLiveUsageData(slug);
-
-                          // todo: fix Filter seats by team membership
-                          const teamSeats = (liveOrgData.allSeatData ?? []).filter(
-                            (seat) => seat.teams && seat.teams.some((team) => team.slug === slug)
-                          );
+                          const teamSeats = await fetchTeamSeatData(localStorage.getItem("userToken"), slug);
                           const activeTeamSeats = filterInactiveUsers(teamSeats, startDate);
 
                           setLiveTeamData({
@@ -412,7 +404,6 @@ function CopilotDashboard() {
                             allSeatData: teamSeats,
                             activeSeatData: activeTeamSeats,
                           });
-
                         }
 
                         fetchTeamData();
