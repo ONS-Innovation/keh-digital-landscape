@@ -99,6 +99,7 @@ function CopilotDashboard() {
   const [isSelectingTeam, setIsSelectingTeam] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [availableTeams, setAvailableTeams] = useState([]);
+  const [isTeamLoading, setIsTeamLoading] = useState(false);
 
   /**
    * Trigger data filter upon slider completion
@@ -432,6 +433,8 @@ function CopilotDashboard() {
                       tableContext="Copilot Team Selection"
                       onViewDataClick={(slug) => {
                         async function fetchTeamData() {
+                          setIsTeamLoading(true);
+
                           const liveUsage = await fetchTeamLiveUsageData(slug);
                           const teamSeats = await fetchTeamSeatData(localStorage.getItem("userToken"), slug);
                           const activeTeamSeats = filterInactiveUsers(teamSeats, startDate);
@@ -443,6 +446,8 @@ function CopilotDashboard() {
                             allSeatData: teamSeats,
                             activeSeatData: activeTeamSeats,
                           });
+
+                          setIsTeamLoading(false);
                         }
 
                         fetchTeamData();
@@ -467,14 +472,14 @@ function CopilotDashboard() {
               <LiveDashboard 
                 scope={scope} 
                 data={data} 
-                isLiveLoading={isLiveLoading}
+                isLiveLoading={scope === "organisation" ? isLiveLoading : isTeamLoading}
                 isSeatsLoading={isSeatsLoading} 
                 inactiveDays={inactiveDays}
                 setInactiveDays={setInactiveDays} 
                 inactivityDate={inactivityDate}/>
             ) : (
               <HistoricDashboard 
-                scope={scope} 
+                scope={scope}
                 data={getGroupedData()} 
                 isLoading={isHistoricLoading}
                 viewDatesBy={viewDatesBy}
