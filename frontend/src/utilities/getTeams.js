@@ -71,3 +71,15 @@ export const exchangeCodeForToken = async (code) => {
     return null;
   }
 };
+
+/**
+ * Redirect user to GitHub OAuth login
+ * @returns {void}
+ */
+export const loginWithGitHub = () => {
+  const url = process.env.NODE_ENV === "development"
+    ? "http://localhost:5001/copilot/api/github/oauth/login"
+    : "/copilot/api/github/oauth/login";
+
+  window.location.href = url;
+  }

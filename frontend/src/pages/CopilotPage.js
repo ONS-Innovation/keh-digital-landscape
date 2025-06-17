@@ -9,15 +9,8 @@ import "../styles/CopilotPage.css";
 import Slider from 'rc-slider';
 import "rc-slider/assets/index.css";
 import { useData } from "../contexts/dataContext";
-import { exchangeCodeForToken, fetchUserTeams } from "../utilities/getTeams";
+import { exchangeCodeForToken, fetchUserTeams, loginWithGitHub } from "../utilities/getTeams";
 import TableBreakdown from "../components/Copilot/Breakdowns/TableBreakdown";
-
-const loginUrl = `https://github.com/login/oauth/authorize?` + 
-  new URLSearchParams({
-    client_id: process.env.REACT_APP_GITHUB_CLIENT_ID,
-    redirect_uri: `${process.env.REACT_APP_URL}/copilot?fromTab=team`,
-    scope: "user:email read:org",
-  }).toString();
 
 function CopilotDashboard() {
 
@@ -450,7 +443,8 @@ function CopilotDashboard() {
                 </div>
               ) : (
                 <div>
-                  <a href={loginUrl} target="_self"><button>Login with GitHub</button></a>
+                  
+                  <button type="button" onClick={loginWithGitHub}>Login with GitHub</button>
                 </div>
               )}
             </>

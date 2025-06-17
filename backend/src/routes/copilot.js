@@ -145,7 +145,7 @@ router.post("/github/oauth/token", async (req, res) => {
       client_id: process.env.GITHUB_APP_CLIENT_ID,
       client_secret: process.env.GITHUB_APP_CLIENT_SECRET,
       code,
-      redirect_uri: "http://localhost:3000/copilot?fromTab=team",
+      redirect_uri: `http://localhost:3000/copilot?fromTab=team`,
       scope: "user:email read:org",
     });
 
@@ -170,5 +170,23 @@ router.post("/github/oauth/token", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+/**
+ * Endpoint for redirecting to GitHub OAuth login.
+ * @route GET /copilot/github/oauth/login
+ * @returns {void} Redirects to GitHub OAuth login page
+ */
+router.get("/github/oauth/login", (req, res) => {
+  
+  const loginUrl = `https://github.com/login/oauth/authorize?` + 
+  new URLSearchParams({
+    client_id: process.env.GITHUB_APP_CLIENT_ID,
+    redirect_uri: `http://localhost:3000/copilot?fromTab=team`,
+    scope: "user:email read:org",
+  })
+
+  res.redirect(loginUrl);
+}
+);
 
 module.exports = router;
