@@ -34,13 +34,13 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
-          cache-dependency-path: testing/requirements.txt
+          cache-dependency-path: testing/backend/req_dev.txt
         
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
 
       - name: Install dependencies
-        run: make setup
+        run: make setup-dev
 
       - name: Run linting
         run: make lint

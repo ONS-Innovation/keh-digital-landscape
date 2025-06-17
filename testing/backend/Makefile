@@ -1,7 +1,10 @@
 .PHONY: setup test test-main test-admin test-review clean lint ruff pylint
 
 setup:
-	python3 -m pip install -r requirements.txt
+	python3 -m pip install -r req.txt -r req_dev.txt
+
+setup-dev:
+	python3 -m pip install -r req_dev.txt
 
 test: # Run all tests
 	python3 -m pytest src/test_*.py -v
