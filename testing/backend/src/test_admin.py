@@ -363,7 +363,7 @@ def test_admin_banner_delete_invalid():
     num_banners = 0
     if get_response.status_code == 200:
         num_banners = len(get_response.json().get("messages", []))
-    
+
     response = requests.post(
         f"{BASE_URL}/admin/api/banners/delete",
         json={"index": num_banners + 100},
@@ -413,11 +413,11 @@ def test_admin_update_array_data_single_category():
         - Data correctly updated and other categories preserved
     """
     original_data = _get_initial_array_data(BASE_URL)
-    
+
     try:
         category_to_update = "languages"
         new_items = ["item1", "item2_updated"]
-        
+
         payload = {
             "allCategories": False,
             "category": category_to_update,
@@ -451,7 +451,7 @@ def test_admin_update_array_data_all_categories():
         - Data completely replaced with new data
     """
     original_data = _get_initial_array_data(BASE_URL)
-    
+
     try:
         new_full_data = {
             "languages_updated": ["Go", "Rust"],
