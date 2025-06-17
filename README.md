@@ -71,7 +71,7 @@ nvm install 18.19.0
 nvm use 18.19.0
 ```
 
-4. Remember to export the following:
+4. Remember to export the following in the terminal that the backend is running in:
 ```bash
 # AWS
 export AWS_ACCESS_KEY_ID=<your_access_key>
@@ -84,6 +84,9 @@ export GITHUB_APP_ID=<your_github_app_id>
 export GITHUB_APP_CLIENT_ID=<your_github_app_client_id>
 export GITHUB_ORG=<your_github_organisation>
 ```
+
+Alternatively, you can use the `.env.example` file in the backend to set the environment variables. Copy the `.env.example` file to `.env` and fill in the values. Do not commit the `.env` file to the repository and do not put the secrets in the `.env.example` file.
+
 ## Running locally
 
 To run the project locally (frontend and backend together):
@@ -109,6 +112,13 @@ export DEV_USER_GROUPS=group1,group2
 ```
 
 ## How to deploy locally
+
+**Prerequisites:**
+- Docker
+- Docker Compose
+- .env files (for environment variables) set in `/backend/.env`
+
+To run the project locally using Docker:
 
 ```bash
 make docker-build
