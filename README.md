@@ -116,7 +116,7 @@ export DEV_USER_GROUPS=group1,group2
 **Prerequisites:**
 - Docker
 - Docker Compose
-- .env files (for environment variables) set in `/backend/.env`
+- .env file (for environment variables) set in `/backend/.env` (see [.env.example](./backend/.env.example))
 
 To run the project locally using Docker:
 
