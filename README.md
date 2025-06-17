@@ -137,9 +137,9 @@ make docker-down
 
 ## Testing
 
-Tests are run with PyTest. To run the tests, refer to the [README.md](/testing/README.md) in the `/testing/` folder.
+Backend tests are run with PyTest (Python). To run the tests, refer to the [README.md](/testing/backend/README.md) in the `/testing/backend/` folder.
 
-Accessing the testing is run with Playwright and AxeCore. To run the tests, refer to the [README.md](/testing_ui/README.md) in the `/testing_ui/` folder.
+Frontend (accessibility) tests are run with Playwright and AxeCore (JS). To run the tests, refer to the [README.md](/testing/frontend/README.md) in the `/testing/frontend/` folder.
 
 ## Linting 
 
