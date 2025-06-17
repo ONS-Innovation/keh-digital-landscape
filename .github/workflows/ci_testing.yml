@@ -1,15 +1,15 @@
 ---
-name: CI Testing
+name: CI Backend Testing
 
 on:
   push:
     branches: [main]
     paths:
-      - 'testing/**'
+      - 'testing/backend/**'
   pull_request:
     branches: [main]
     paths:
-      - 'testing/**'
+      - 'testing/backend/**'
 
 concurrency:
   group: "${{ github.head_ref || github.ref }}-${{ github.workflow }}"
@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   test:
-    name: Lint and Test
+    name: Backend Lint
     runs-on: ubuntu-22.04
     defaults:
       run:
