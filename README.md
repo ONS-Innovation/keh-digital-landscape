@@ -187,3 +187,32 @@ To see the available commands, run the following command:
 ```bash
 make
 ```
+### Common Issues
+
+1. When building the docker image, you *may* run into a memory problem. To increase the memory available to the docker container, you can use the following command:
+```bash
+# Stop the docker container
+colima stop
+
+# Start the docker container with more memory
+colima start --memory 8 # 8GB of memory, adjust as needed i.e 16, 32, 64, but 8 should be enough
+```
+
+2. The frontend is making requests to `localhost:3000` instead of the backend `localhost:5001`. To fix this, stop the application. Ensure the environment variable is set in the terminal that is running the frontend:
+```bash
+# Navigate to the frontend directory
+cd frontend
+
+# Ensure the environment variable is set in the terminal that is running the frontend
+export REACT_APP_BACKEND_URL=http://localhost:5001
+
+# Run the frontend
+npm start
+```
+
+3. If the backend is returning nothing, ensure you have the correct environment variables set in the `.env` file. See the [.env.example](./backend/.env.example) file for the correct variables.
+
+4. If all backend tests are failing, make sure that the backend is running and the environment variables are set correctly.
+
+
+
