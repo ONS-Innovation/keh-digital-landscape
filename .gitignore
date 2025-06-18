@@ -76,9 +76,3 @@ terraform/service/highest_alb_listener_priority.txt
 
 /testing/frontend/reports
 /testing/backend/venv
-
-# This file already exists but doesn't need to change from now on.
-# I've added this for safety. If a developer needs to add a new environment variable,
-# they should remove this file from the .gitignore file and add the new environment variable to the .env.example file
-# then re-add this file to the .gitignore file.
-/backend/.env.example
