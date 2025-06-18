@@ -1,13 +1,12 @@
 import React from "react";
 import "../../../styles/components/Statistics.css";
 import SkeletonStatCard from "../../Statistics/Skeletons/SkeletonStatCard";
-import "../../../styles/CoPilotPage.css";
+import "../../../styles/CopilotPage.css";
 import AcceptanceGraph from "../Breakdowns/AcceptanceGraph";
 import EngagedUsersGraph from "../Breakdowns/EngagedUsersGraph";
 import PieChart from "../Breakdowns/PieChart";
 import TableBreakdown from "../Breakdowns/TableBreakdown";
 import { getFormattedTime } from "../../../utilities/getFormattedTime";
-import { getCellRenderers } from "../../../utilities/getCellRenderers";
 import CompletionsCards from "../Breakdowns/CompletionsCards";
 import ChatCards from "../Breakdowns/ChatCards";
 
@@ -48,6 +47,11 @@ function LiveDashboard({scope, data, isLiveLoading, isSeatsLoading, inactiveDays
 
   return (
     <div className="copilot-dashboard">
+        { scope === "team" && (
+        <p className="disclaimer">
+          Note: The GitHub API does not return Copilot team usage data if there are fewer than 5 members with Copilot licenses. This may result in only seat statistics being viewable on the dashboard.
+        </p>
+        )}
         <h1 className="title">IDE Code Completions</h1>
           {isLiveLoading ? (
             <div className="copilot-grid">
@@ -105,7 +109,7 @@ function LiveDashboard({scope, data, isLiveLoading, isSeatsLoading, inactiveDays
             </div>
           )}
         
-        <h1 className="title">CoPilot Chat</h1>
+        <h1 className="title">Copilot Chat</h1>
         {isLiveLoading ? (
             <div className="copilot-chat-grid">
               <SkeletonStatCard />
@@ -133,7 +137,7 @@ function LiveDashboard({scope, data, isLiveLoading, isSeatsLoading, inactiveDays
               data={chats?.editorBreakdown ?? 0}
               idField="editor"
               idHeader="Editor"
-              tableContext="CoPilot Chat Editor Breakdown"
+              tableContext="Copilot Chat Editor Breakdown"
               columns={[
                 "chats",
                 "insertions",
@@ -219,7 +223,6 @@ function LiveDashboard({scope, data, isLiveLoading, isSeatsLoading, inactiveDays
                         github: "GitHub Profile",
                         lastActivity: "Last Activity"
                       }}
-                      customCellRenderers={getCellRenderers()}
                     />
                   </div>
                   <div className="seat-breakdown-item">
@@ -243,7 +246,6 @@ function LiveDashboard({scope, data, isLiveLoading, isSeatsLoading, inactiveDays
                         github: "GitHub Profile",
                         lastActivity: "Last Activity"
                       }}
-                      customCellRenderers={getCellRenderers()}
                     />
                   </div>
                 </div>

@@ -97,10 +97,10 @@ function HomePage() {
             <a className="nav-card" href="/copilot">
               <div className="nav-card-header">
                 <VscCopilot />
-                <h2>CoPilot</h2>
+                <h2>Copilot</h2>
               </div>
               <p>
-                Analyse CoPilot usage statistics organisation-wide and by team.
+                Analyse Copilot usage statistics organisation-wide and by team.
               </p>
             </a>
           </div>

@@ -75,7 +75,7 @@ function MenuDropdown({ setShowHelpModal }) {
             </button>
             <button onClick={() => handleNavClick('/copilot')} className={location.pathname === '/copilot' ? 'active' : ''}>
               <VscCopilot size={16} />
-              CoPilot
+              Copilot
             </button>
           </div>
           

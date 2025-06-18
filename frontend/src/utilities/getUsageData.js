@@ -48,6 +48,26 @@ export const fetchOrgHistoricUsageData = async () => {
   }
 }
 
+export const fetchTeamLiveUsageData = async (teamSlug) => {
+  try {
+    let response;
+    if (process.env.NODE_ENV === "development") {
+      response = await fetch(`http://localhost:5001/copilot/api/team/live?teamSlug=${teamSlug}`);
+    } else {
+      response = await fetch(`/copilot/api/team/live?teamSlug=${teamSlug}`);
+    }
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching team usage data:", error);
+    return null;
+  }
+}
+
 /**
  * Filter usage data based on start and end date
  * 

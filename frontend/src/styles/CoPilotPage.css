@@ -309,6 +309,30 @@
     background-color: hsl(var(--muted));
   }
 
+  .custom-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+
+  .view-data-button {
+    color: #007bff;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    font-weight: bold;
+  }
+
+  .avatar-image {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+  }
+
   @media (max-width: 1024px) {
     .seat-breakdown {
       flex-direction: column;

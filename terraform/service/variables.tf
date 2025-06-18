@@ -23,6 +23,11 @@ variable "github_app_client_id" {
   type        = string
 }
 
+variable "github_app_client_secret" {
+  description = "GitHub App Client Secret"
+  type        = string
+}
+
 variable "aws_secret_name" {
   description = "AWS Secret Name"
   type        = string
