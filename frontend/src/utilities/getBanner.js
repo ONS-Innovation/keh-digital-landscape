@@ -5,10 +5,8 @@
  */
 export const fetchBanners = async (page) => {
   try {
-    const baseUrl =
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:5001/api/banners"
-        : "/api/banners";
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+    const baseUrl = `${backendUrl}/api/banners`;
 
     const response = await fetch(baseUrl);
 

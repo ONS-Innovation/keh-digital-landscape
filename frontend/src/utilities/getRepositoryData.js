@@ -10,9 +10,8 @@ import { useData } from "../contexts/dataContext";
  */
 export const fetchRepositoryStats = async (date = null, archived = null) => {
   try {
-    const baseUrl = process.env.NODE_ENV === "development" 
-      ? 'http://localhost:5001/api/json'
-      : '/api/json';
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+    const baseUrl = `${backendUrl}/api/json`;
 
     const params = new URLSearchParams();
     if (date && date !== "all") params.append("datetime", date);
@@ -59,10 +58,8 @@ export const fetchRepositoryData = async (
     params.append("repositories", repositories.join(","));
     if (date) params.append("datetime", date);
     if (archived !== null) params.append("archived", archived);
-    const baseUrl =
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:5001/api/repository/project/json"
-        : "/api/repository/project/json";
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+    const baseUrl = `${backendUrl}/api/repository/project/json`;
 
     const response = await fetch(`${baseUrl}?${params.toString()}`);
 

@@ -5,12 +5,8 @@
  */
 export const fetchSeatData = async () => {
   try {
-    let response;
-    if (process.env.NODE_ENV === "development") {
-      response = await fetch(`http://localhost:5001/copilot/api/seats`);
-    } else {
-      response = await fetch("/copilot/api/seats");
-    }
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || '';
+    const response = await fetch(`${backendUrl}/copilot/api/seats`);
     if (!response.ok) {
       return null;
     }
