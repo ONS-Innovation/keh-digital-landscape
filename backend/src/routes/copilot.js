@@ -1,3 +1,4 @@
+const logger = require("../config/logger");
 const express = require("express");
 const s3Service = require("../services/s3Service");
 const githubService = require("../services/githubService");
@@ -15,7 +16,7 @@ router.get("/org/live", async (req, res) => {
     const data = await githubService.getCopilotOrgMetrics();
     res.json(data);
   } catch (error) {
-    console.error("GitHub API error:", error);
+    logger.error("GitHub API error:", { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });
@@ -28,10 +29,13 @@ router.get("/org/live", async (req, res) => {
  */
 router.get("/org/historic", async (req, res) => {
   try {
-    const data = await s3Service.getObjectViaSignedUrl('copilot', 'historic_usage_data.json');
+    const data = await s3Service.getObjectViaSignedUrl(
+      "copilot",
+      "historic_usage_data.json"
+    );
     res.json(data);
   } catch (error) {
-    console.error("Error fetching JSON:", error);
+    logger.error("Error fetching JSON:", { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });
@@ -47,9 +51,9 @@ router.get("/seats", async (req, res) => {
     const allSeats = await githubService.getCopilotSeats();
     res.json(allSeats);
   } catch (error) {
-    console.error("GitHub API error:", error);
+    logger.error("GitHub API error:", { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });
 
-module.exports = router; 
+module.exports = router;

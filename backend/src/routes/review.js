@@ -1,7 +1,12 @@
 const express = require("express");
-const techRadarService = require('../services/techRadarService');
+const techRadarService = require("../services/techRadarService");
+const { verifyJwt, requireReviewer } = require("../services/cognitoService");
 
 const router = express.Router();
+
+// Apply authentication middleware to all review routes
+router.use(verifyJwt);
+router.use(requireReviewer);
 
 /**
  * Endpoint for updating the tech radar JSON in S3 from review.
@@ -19,7 +24,7 @@ const router = express.Router();
 router.post("/tech-radar/update", async (req, res) => {
   try {
     const { entries } = req.body;
-    await techRadarService.updateTechRadarEntries(entries, 'review');
+    await techRadarService.updateTechRadarEntries(entries, "review");
     res.json({ message: "Tech radar updated successfully" });
   } catch (error) {
     if (error.message.includes("Invalid")) {
@@ -29,4 +34,4 @@ router.post("/tech-radar/update", async (req, res) => {
   }
 });
 
-module.exports = router; 
+module.exports = router;

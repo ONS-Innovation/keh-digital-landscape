@@ -10,7 +10,7 @@ frontend:
 	cd frontend && npm start
 
 backend:
-	cd backend && npm run dev
+	cd backend && export NODE_ENV=development && npm run dev
 
 # Install dependencies
 install:

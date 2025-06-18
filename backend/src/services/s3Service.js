@@ -5,7 +5,7 @@ const {
 } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const fetch = require("node-fetch");
-const logger = require('../config/logger');
+const logger = require("../config/logger");
 
 /**
  * S3Service class for managing S3 operations
@@ -15,12 +15,13 @@ class S3Service {
     this.s3Client = new S3Client({
       region: "eu-west-2",
     });
-    
+
     // Bucket configurations
     this.buckets = {
       main: process.env.BUCKET_NAME || "sdp-dev-digital-landscape",
       tat: process.env.TAT_BUCKET_NAME || "sdp-dev-tech-audit-tool-api",
-      copilot: process.env.COPILOT_BUCKET_NAME || "sdp-dev-copilot-usage-dashboard"
+      copilot:
+        process.env.COPILOT_BUCKET_NAME || "sdp-dev-copilot-usage-dashboard",
     };
   }
 
@@ -42,14 +43,16 @@ class S3Service {
       const data = await Body.transformToString();
       return JSON.parse(data);
     } catch (error) {
-      logger.error(`Error getting object from S3: ${bucket}/${key}`, { error: error.message });
+      logger.error(`Error getting object from S3: ${bucket}/${key}`, {
+        error: error.message,
+      });
       throw error;
     }
   }
 
   /**
    * Put an object to S3 bucket
-   * @param {string} bucket - Bucket name or bucket key from this.buckets  
+   * @param {string} bucket - Bucket name or bucket key from this.buckets
    * @param {string} key - Object key
    * @param {Object} data - Data to store
    * @returns {Promise<void>}
@@ -67,7 +70,9 @@ class S3Service {
       await this.s3Client.send(command);
       logger.info(`Successfully put object to S3: ${bucket}/${key}`);
     } catch (error) {
-      logger.error(`Error putting object to S3: ${bucket}/${key}`, { error: error.message });
+      logger.error(`Error putting object to S3: ${bucket}/${key}`, {
+        error: error.message,
+      });
       throw error;
     }
   }
@@ -87,17 +92,22 @@ class S3Service {
         Key: key,
       });
 
-      const signedUrl = await getSignedUrl(this.s3Client, command, { expiresIn });
-      
+      const signedUrl = await getSignedUrl(this.s3Client, command, {
+        expiresIn,
+      });
+
       const response = await fetch(signedUrl);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const jsonData = await response.json();
       return jsonData;
     } catch (error) {
-      logger.error(`Error getting object via signed URL from S3: ${bucket}/${key}`, { error: error.message });
+      logger.error(
+        `Error getting object via signed URL from S3: ${bucket}/${key}`,
+        { error: error.message }
+      );
       throw error;
     }
   }
@@ -113,4 +123,4 @@ class S3Service {
 }
 
 // Export a singleton instance
-module.exports = new S3Service(); 
+module.exports = new S3Service();

@@ -61,6 +61,28 @@
   font-weight: 600;
 } 
 
+.menu-section {
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.menu-section:last-of-type {
+  border-bottom: none;
+}
+
+.menu-section-title {
+  font-size: 10px;
+  font-weight: 600;
+  color: hsl(var(--muted-foreground));
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 8px 16px 4px;
+  background: hsl(var(--muted) / 0.3);
+}
+
+.restricted-section {
+  background: hsl(var(--muted) / 0.1);
+}
+
 .home-button-container {
   border-bottom: 1px solid hsl(var(--border));
 }

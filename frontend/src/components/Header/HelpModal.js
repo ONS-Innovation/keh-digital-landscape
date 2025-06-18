@@ -130,7 +130,7 @@ function HelpModal({ show, onClose }) {
                       <strong>Assess:</strong> technologies that are emerging, have some promise, but require further testing and refinement. These technologies have moved beyond the initial curiosity phase. They&apos;ve shown some success in limited use cases and are ready for more structured testing.
                     </li>
                     <li>
-                      <strong>Hold:</strong> technologies that are either outdated, have signigicant limitations or do not align with the organisation&apos;s strategic direction.
+                      <strong>Hold:</strong> technologies that are either outdated, have significant limitations or do not align with the organisation&apos;s strategic direction.
                     </li>
                   </ul>
                 </li>

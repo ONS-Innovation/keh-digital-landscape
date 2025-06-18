@@ -1,9 +1,16 @@
-import React, {useEffect} from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useData } from "../contexts/dataContext";
 import Header from "../components/Header/Header";
 import Changelog from "../components/HomePage/Changelog";
 import RecentBanners from "../components/HomePage/RecentBanners";
-import { TbEditCircle, TbUserShield, TbUsers, TbChartBar, TbHelp } from "react-icons/tb";
+import {
+  TbEditCircle,
+  TbUserShield,
+  TbUsers,
+  TbChartBar,
+  TbHelp,
+} from "react-icons/tb";
 import { MdOutlineRadar } from "react-icons/md";
 import { VscCopilot } from "react-icons/vsc";
 import "../styles/HomePage.css";
@@ -92,7 +99,9 @@ function HomePage() {
                 <VscCopilot />
                 <h2>CoPilot</h2>
               </div>
-              <p>Analyse CoPilot usage statistics organisation-wide and by team.</p>
+              <p>
+                Analyse CoPilot usage statistics organisation-wide and by team.
+              </p>
             </a>
           </div>
 

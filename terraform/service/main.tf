@@ -107,6 +107,26 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
         {
           name = "COPILOT_BUCKET_NAME",
           value = var.copilot_bucket_name
+        },
+        {
+          name = "ALB_ARN",
+          value = data.terraform_remote_state.ecs_infrastructure.outputs.application_lb_arn
+        },
+        {
+          name = "COGNITO_USER_POOL_ID",
+          value = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_id
+        },
+        {
+          name = "COGNITO_USER_POOL_CLIENT_ID",
+          value = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_client_id
+        },
+        {
+          name = "COGNITO_USER_POOL_DOMAIN",
+          value = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_domain
+        },
+        {
+          name = "SIGN_OUT_URL",
+          value = data.terraform_remote_state.ecs_auth.outputs.cognito_user_pool_sign_out_urls[0]
         }
       ],
       logConfiguration = {
@@ -163,10 +183,8 @@ resource "aws_ecs_service" "application" {
 
   # Add dependencies to ensure target groups are created first
   depends_on = [
-    aws_lb_listener_rule.tech_radar_reviewer_frontend_rule,
-    aws_lb_listener_rule.tech_radar_reviewer_backend_rule,
-    aws_lb_listener_rule.tech_radar_admin_frontend_rule,
-    aws_lb_listener_rule.tech_radar_admin_backend_rule,
+    aws_lb_listener_rule.tech_radar_authenticated_frontend_rule,
+    aws_lb_listener_rule.tech_radar_authenticated_backend_rule,
     aws_lb_listener_rule.digital_landscape_copilot_api_rule,
     aws_lb_listener_rule.digital_landscape_api_rule,
     aws_lb_listener_rule.digital_landscape_frontend_rule
