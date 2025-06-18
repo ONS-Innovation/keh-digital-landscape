@@ -11,6 +11,48 @@ The backend is organised into the following key directories:
 - **`utilities/`** - Helper functions and data transformers
 - **`config/`** - Application configuration including logging
 
+## Authentication & Authorisation
+
+The backend uses AWS Cognito for authentication and role-based access control through the `aws-jwt-verify` library. The system utilises a single Cognito User Pool with group-based permissions.
+
+### Cognito Service (`services/cognitoService.js`)
+
+The authentication system provides:
+
+- **JWT Token Verification** - Validates ALB and Cognito access tokens
+- **Role-based Middleware** - Enforces access control based on user groups
+- **Development Mode** - Bypasses authentication for local development
+- **User Information Extraction** - Retrieves user email and group memberships
+
+#### User Groups & Permissions
+
+Users are assigned to groups in Cognito that determine their access levels:
+
+- **`admin`** - Full administrative access to all backend endpoints
+- **`reviewer`** - Access to review functionality and technology radar updates  
+- **Combined roles** - Users can belong to multiple groups for expanded permissions
+
+#### Authentication Middleware
+
+The service provides three main middleware functions:
+
+- **`verifyJwt`** - Base authentication middleware for all protected routes
+- **`requireAdmin`** - Restricts access to admin-only endpoints
+- **`requireReviewer`** - Restricts access to reviewer-only endpoints
+
+#### Development Mode
+
+In development environments (`NODE_ENV=development`), authentication is bypassed and a default developer user is provided with both admin and reviewer permissions.
+
+### Frontend Integration
+
+The authentication system integrates seamlessly with the frontend:
+
+- **User Profile Display** - Shows user email, roles, and appropriate icons in the sidebar and dropdown menu
+- **Role-based UI** - Displays restricted sections based on user permissions
+- **Author Attribution** - When reviewers add descriptions during technology moves, their email is automatically captured as the author
+- **Logout Functionality** - Handles secure logout through Cognito endpoints
+
 ## Main Application (`index.js`)
 
 The main application file sets up:
@@ -29,9 +71,16 @@ app.use('/api', default);           // Default API routes that points to /routes
 app.use('/admin/api', admin);       // Admin functionality that points to /routes/admin.js
 app.use('/review/api', review);     // Review functionality that points to /routes/review.js
 app.use('/copilot/api', copilot);   // GitHub Copilot metrics that points to /routes/copilot.js
+app.use('/user/api', userRoutes);   // User authentication endpoints
 ```
 
 ## Route Modules
+
+### User Routes (`/user/api`)
+Located in `routes/userRoutes.js`, these provide authentication functionality:
+
+- **GET `/info`** - Retrieve authenticated user information including email and groups
+- **POST `/logout`** - Handle user logout and return Cognito logout URL
 
 ### Default Routes (`/api`)
 Located in `routes/default.js`, these provide core application functionality:
@@ -44,10 +93,8 @@ Located in `routes/default.js`, these provide core application functionality:
 - **GET `/banners/all`** - Retrieve all banner messages (includes inactive banners)
 - **GET `/health`** - Health check endpoint
 
-
-
 ### Admin Routes (`/admin/api`)
-Located in `routes/admin.js`, these provide administrative functionality:
+Located in `routes/admin.js`, these provide administrative functionality requiring admin group membership:
 
 - **POST `/banners`** - Update the banner messages in S3 from admin
 - **POST `/banners/update`** - Update banner message
@@ -60,9 +107,9 @@ Located in `routes/admin.js`, these provide administrative functionality:
 - **POST `/normalise/technology`** - Normalise the technology names across projects in S3 from admin
 
 ### Review Routes (`/review/api`)
-Located in `routes/review.js`, these provide review functionality:
+Located in `routes/review.js`, these provide review functionality requiring reviewer group membership:
 
-- **POST `/tech-radar/update`** - Update the tech radar JSON in S3
+- **POST `/tech-radar/update`** - Update the tech radar JSON in S3 with reviewer attribution
 
 ### Copilot Routes (`/copilot/api`)
 Located in `routes/copilot.js`, these provide GitHub Copilot metrics:
@@ -74,6 +121,15 @@ Located in `routes/copilot.js`, these provide GitHub Copilot metrics:
 ## Services
 
 The backend uses centralised services to handle external integrations and business logic:
+
+### Cognito Service (`services/cognitoService.js`)
+Manages AWS Cognito authentication and authorisation:
+
+- JWT token verification using `aws-jwt-verify`
+- Role-based access control middleware
+- User information extraction from tokens
+- Development mode authentication bypass
+- Secure logout handling
 
 ### S3 Service (`services/s3Service.js`)
 Manages all Amazon S3 operations:
@@ -94,7 +150,7 @@ Handles GitHub API interactions:
 Manages technology radar operations:
 
 - Data retrieval and parsing
-- Entry updates with validation
+- Entry updates with validation and author attribution
 - Consistent error handling
 
 ## Utilities
@@ -128,12 +184,28 @@ Provides centralised logging using Winston:
 
 Key environment variables used by the backend:
 
+#### Server Configuration
 - `PORT` - Server port (default: 5001)
 - `LOG_LEVEL` - Logging level (default: info)
+- `NODE_ENV` - Environment mode (development/production)
+
+#### AWS Configuration  
 - `AWS_REGION` - AWS region for services
+- `ALB_ARN` - Application Load Balancer ARN for JWT verification
+- `AWS_SECRET_NAME` - AWS Secrets Manager secret name
+
+#### Cognito Configuration
+- `COGNITO_USER_POOL_ID` - Cognito User Pool ID
+- `COGNITO_USER_POOL_CLIENT_ID` - Cognito User Pool Client ID
+
+#### Development Configuration
+- `DEV_USER_GROUPS` - Comma-separated list of groups for development user
+
+#### GitHub Configuration
 - `GITHUB_ORG` - GitHub organisation name
 - `GITHUB_APP_ID` - GitHub App ID
-- `AWS_SECRET_NAME` - AWS Secrets Manager secret name
+
+#### Logging Configuration
 - `CLOUDWATCH_GROUP_NAME` - CloudWatch log group
 
 ## Error Handling
@@ -142,8 +214,10 @@ The application implements comprehensive error handling:
 
 - Global uncaught exception handling
 - Unhandled promise rejection handling
-- Service-level error logging
+- Service-level error logging with authentication context
 - Consistent error response formats
+- 401 Unauthorised responses for authentication failures
+- 403 Forbidden responses for insufficient permissions
 
 ## Development Considerations
 
@@ -152,3 +226,6 @@ The application implements comprehensive error handling:
 - Centralised configuration management
 - Consistent logging patterns across all modules
 - Environment-specific behaviour through configuration
+- Role-based access control ensures security at the API level
+- Author attribution tracks reviewer actions for audit purposes
+- Frontend-backend integration provides seamless user experience

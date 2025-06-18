@@ -350,7 +350,6 @@
 
 .item-title {
   flex-grow: 1;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -604,7 +603,7 @@
 }
 
 textarea.technology-input {
-  min-height: 100px;
+  min-height: 180px;
   min-width: 100%;
 }
 
@@ -863,7 +862,7 @@ textarea.technology-input {
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
   padding: 24px;
-  width: 400px;
+  width: 600px;
   max-width: 90vw;
   display: flex;
   flex-direction: column;
@@ -904,12 +903,13 @@ textarea.technology-input {
   border-radius: var(--radius);
   padding: 4px;
   box-sizing: border-box;
-  gap: 8px;
+  /* gap: 8px; */
 }
 
 .admin-modal-field label {
   font-size: 14px;
   font-weight: 400;
+  margin-bottom: 4px;
 }
 
 .admin-modal-field .admin-buttons {
@@ -1311,4 +1311,87 @@ textarea.technology-input {
 .ignore-modal {
   background-color: var(--color-bg-ignore);
   border: 1px solid var(--color-ignore);
+}
+
+.markdown-hint {
+  color: hsl(var(--foreground));
+  background: hsl(var(--muted));
+  font-size: 11px;
+  padding: 4px 8px;
+  box-sizing: border-box;
+  display: block;
+  border: 1px solid hsl(var(--border));
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+  letter-spacing: 0.5px;
+}
+
+/* Markdown editor tabs */
+.markdown-editor {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius) var(--radius) 0 0;
+  overflow: hidden;
+}
+
+.markdown-tabs {
+  display: flex;
+  background: hsl(var(--muted) / 0.3);
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.markdown-tab {
+  flex: 1;
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  color: hsl(var(--muted-foreground));
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.markdown-tab:hover {
+  background: hsl(var(--muted) / 0.5);
+  color: hsl(var(--foreground));
+}
+
+.markdown-tab.active {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  border-bottom: 2px solid hsl(var(--primary));
+}
+
+.markdown-content {
+  padding: 0;
+  position: relative;
+}
+
+.markdown-textarea {
+  border: none !important;
+  border-radius: 0 !important;
+  resize: vertical;
+  min-height: 120px;
+}
+
+.markdown-preview {
+  min-height: 120px;
+  padding: 12px;
+  background: hsl(var(--background));
+  border: none;
+  color: hsl(var(--foreground));
+  line-height: 1.5;
+}
+
+.markdown-preview a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+}
+
+.preview-placeholder {
+  color: hsl(var(--muted-foreground));
+  font-style: italic;
+  font-size: 14px;
 }

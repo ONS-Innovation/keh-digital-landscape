@@ -14,6 +14,7 @@ import {
   FaCheck,
   FaTimes,
 } from "react-icons/fa";
+import { MarkdownText } from "../../utilities/markdownRenderer";
 
 const InfoBox = ({
   isAdmin = false,
@@ -58,16 +59,22 @@ const InfoBox = ({
   const formatTimelineDate = (date) => {
     const dateObj = new Date(date);
     const day = dateObj.getDate();
-    const suffix = 
-      day % 10 === 1 && day !== 11 ? "st" :
-      day % 10 === 2 && day !== 12 ? "nd" :
-      day % 10 === 3 && day !== 13 ? "rd" : "th";
-    
-    return dateObj.toLocaleDateString("en-GB", {
-      day: "numeric",
-      month: "short", 
-      year: "numeric"
-    }).replace(/\d+/, day + suffix);
+    const suffix =
+      day % 10 === 1 && day !== 11
+        ? "st"
+        : day % 10 === 2 && day !== 12
+          ? "nd"
+          : day % 10 === 3 && day !== 13
+            ? "rd"
+            : "th";
+
+    return dateObj
+      .toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      })
+      .replace(/\d+/, day + suffix);
   };
 
   useEffect(() => {
@@ -213,7 +220,12 @@ const InfoBox = ({
               >
                 <FaCheck size={12} />
               </button>
-              <button className="edit-cancel-button" onClick={handleCancelEdit} tabIndex={0} title="Cancel changes">
+              <button
+                className="edit-cancel-button"
+                onClick={handleCancelEdit}
+                tabIndex={0}
+                title="Cancel changes"
+              >
                 <FaTimes size={12} />
               </button>
             </div>
@@ -222,7 +234,12 @@ const InfoBox = ({
           <>
             <h2>{localTitle}</h2>
             {isAdmin && (
-              <button className="edit-button" onClick={handleEditClick} tabIndex={0} title="Edit technology">
+              <button
+                className="edit-button"
+                onClick={handleEditClick}
+                tabIndex={0}
+                title="Edit technology"
+              >
                 <FaEdit size={12} />
               </button>
             )}
@@ -292,12 +309,19 @@ const InfoBox = ({
       </div>
       {selectedTimelineItem && (
         <div className="info-box-timeline-item">
-          <span>
+          <span className="info-box-timeline-item-title">
             Review {" - "}
             {formatTimelineDate(selectedTimelineItem.date)}
-
           </span>
-          <p>{selectedTimelineItem.description}</p>
+          <div className="timeline-description">
+            <MarkdownText text={selectedTimelineItem.description} />
+          </div>
+          {selectedTimelineItem.author && (
+            <span className="timeline-author">
+              {" "}
+              by {selectedTimelineItem.author}
+            </span>
+          )}
         </div>
       )}
 
