@@ -5,12 +5,8 @@
  */
 export const fetchOrgLiveUsageData = async () => {
   try {
-    let response;
-    if (import.meta.env.MODE === "development") {
-      response = await fetch(`http://localhost:5001/copilot/api/org/live`);
-    } else {
-      response = await fetch("/copilot/api/org/live");
-    }
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+    const response = await fetch(`${backendUrl}/copilot/api/org/live`);
     if (!response.ok) {
       return null;
     }
@@ -30,12 +26,8 @@ export const fetchOrgLiveUsageData = async () => {
  */
 export const fetchOrgHistoricUsageData = async () => {
   try {
-    let response;
-    if (import.meta.env.MODE === "development") {
-      response = await fetch(`http://localhost:5001/copilot/api/org/historic`);
-    } else {
-      response = await fetch("/copilot/api/org/historic");
-    }
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+    const response = await fetch(`${backendUrl}/copilot/api/org/historic`);
     if (!response.ok) {
       return null;
     }

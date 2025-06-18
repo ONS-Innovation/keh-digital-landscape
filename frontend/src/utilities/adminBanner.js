@@ -2,9 +2,8 @@
  * Gets the base URL for banner API calls based on environment
  */
 const getBannerApiUrl = (endpoint) => {
-  return import.meta.env.MODE === "development"
-    ? `http://localhost:5001${endpoint}`
-    : endpoint;
+  const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+  return `${backendUrl}${endpoint}`;
 };
 
 /**

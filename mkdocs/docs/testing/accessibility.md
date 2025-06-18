@@ -95,8 +95,8 @@ HTML reports include:
 To run the accessibility tests:
 
 ```bash
-# Navigate to the testing_ui directory
-cd testing_ui
+# Navigate to the testing/frontend directory
+cd testing/frontend
 
 # Run tests with all rules
 npm run test:accessibility

@@ -8,10 +8,10 @@ This directory contains tests for the backend API endpoints. The tests are writt
 - Make (for using Makefile commands)
 - Backend server running on localhost:5001
 
-Make sure you are currently in the /testing directory when running the commands. To change directory, run:
+Make sure you are currently in the /testing/backend directory when running the commands. To change directory, run:
 
 ```bash
-cd testing
+cd testing/backend
 ```
 
 ## Setup
@@ -67,15 +67,15 @@ make test-copilot
 To run a specific test, use:
 
 ```bash
-python3 -m pytest backend/test_main.py::test_name -v
+python3 -m pytest src/test_main.py::test_name -v
 ```
 
 For example:
 
 ```bash
-python3 -m pytest backend/test_main.py::test_health_check -v
-python3 -m pytest backend/test_admin.py::test_admin_banner_update -v
-python3 -m pytest backend/test_review.py::test_tech_radar_update_valid_structure -v
+python3 -m pytest src/test_main.py::test_health_check -v
+python3 -m pytest src/test_admin.py::test_admin_banner_update -v
+python3 -m pytest src/test_review.py::test_tech_radar_update_valid_structure -v
 ```
 
 Ensure tests are passing before committing.

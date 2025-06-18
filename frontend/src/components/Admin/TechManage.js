@@ -175,10 +175,8 @@ Diagram_Tools: "Supporting Tools",
    */
   const fetchArrayData = async () => {
     try {
-      const baseUrl =
-        import.meta.env.MODE === "development"
-          ? "http://localhost:5001/admin/api/array-data"
-          : "/admin/api/array-data";
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+      const baseUrl = `${backendUrl}/admin/api/array-data`;
 
       const response = await fetch(baseUrl);
       if (!response.ok) {
@@ -532,10 +530,8 @@ Diagram_Tools: "Supporting Tools",
    */
   const handleSaveEditorContent = async () => {
     try {
-      const baseUrl =
-        import.meta.env.MODE === "development"
-          ? "http://localhost:5001/admin/api/array-data/update"
-          : "/admin/api/array-data/update";
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+      const baseUrl = `${backendUrl}/admin/api/array-data/update`;
 
       // Save all categories at once
       const response = await fetch(baseUrl, {
@@ -586,10 +582,8 @@ Diagram_Tools: "Supporting Tools",
     );
 
     try {
-      const baseUrl =
-        import.meta.env.MODE === "development"
-          ? "http://localhost:5001/admin/api/array-data/update"
-          : "/admin/api/array-data/update";
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+      const baseUrl = `${backendUrl}/admin/api/array-data/update`;
 
       const response = await fetch(baseUrl, {
         method: "POST",
@@ -643,10 +637,8 @@ Diagram_Tools: "Supporting Tools",
     );
 
     try {
-      const baseUrl =
-        import.meta.env.MODE === "development"
-          ? "http://localhost:5001/admin/api/array-data/update"
-          : "/admin/api/array-data/update";
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+      const baseUrl = `${backendUrl}/admin/api/array-data/update`;
 
       const response = await fetch(baseUrl, {
         method: "POST",
@@ -999,10 +991,8 @@ Diagram_Tools: "Supporting Tools",
         ],
       }));
 
-      const baseUrl =
-        import.meta.env.MODE === "development"
-          ? "http://localhost:5001/admin/api/tech-radar/update"
-          : "/admin/api/tech-radar/update";
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+      const baseUrl = `${backendUrl}/admin/api/tech-radar/update`;
 
       const response = await fetch(baseUrl, {
         method: "POST",
@@ -1054,10 +1044,8 @@ Diagram_Tools: "Supporting Tools",
       const updatedTechs = [...new Set([...currentTechs, ...selectedTechs])];
 
       // Save changes to backend
-      const baseUrl =
-        import.meta.env.MODE === "development"
-          ? "http://localhost:5001/admin/api/array-data/update"
-          : "/admin/api/array-data/update";
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+      const baseUrl = `${backendUrl}/admin/api/array-data/update`;
 
       const response = await fetch(baseUrl, {
         method: "POST",
@@ -1137,10 +1125,8 @@ Diagram_Tools: "Supporting Tools",
     if (!normaliseFrom || !normaliseTo) return;
 
     try {
-      const baseUrl =
-        import.meta.env.MODE === "development"
-          ? "http://localhost:5001/admin/api/normalise-technology"
-          : "/admin/api/normalise-technology";
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+      const baseUrl = `${backendUrl}/admin/api/normalise-technology`;
 
       const response = await fetch(baseUrl, {
         method: "POST",
@@ -1180,10 +1166,8 @@ Diagram_Tools: "Supporting Tools",
     try {
       const updatedTechs = [...arrayData[category], newTechnology];
 
-      const baseUrl =
-        import.meta.env.MODE === "development"
-          ? "http://localhost:5001/admin/api/array-data/update"
-          : "/admin/api/array-data/update";
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+      const baseUrl = `${backendUrl}/admin/api/array-data/update`;
 
       const response = await fetch(baseUrl, {
         method: "POST",

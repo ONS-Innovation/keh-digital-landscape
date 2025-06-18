@@ -39,10 +39,8 @@ const RecentBanners = () => {
   useEffect(() => {
     const fetchBanners = async () => {
       try {
-        const baseUrl =
-          import.meta.env.MODE === "development"
-            ? "http://localhost:5001/api/banners/all"
-            : "/api/banners/all";
+        const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+        const baseUrl = `${backendUrl}/api/banners/all`;
 
         const response = await fetch(baseUrl);
         if (!response.ok) {
