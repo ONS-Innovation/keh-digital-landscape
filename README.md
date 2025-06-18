@@ -114,7 +114,7 @@ export DEV_USER_GROUPS=group1,group2
 ## How to deploy locally
 
 **Prerequisites:**
-- Docker
+- Docker/Colima
 - Docker Compose
 - .env file (for environment variables) set in `/backend/.env` (see [.env.example](./backend/.env.example))
 
@@ -126,6 +126,11 @@ make docker-build
 
 ```bash
 make docker-up
+```
+
+When building the docker image, you *may* run into a memory problem. To increase the memory available to the docker container, you can use the following command:
+```bash
+colima start --memory 8 # 8GB of memory, adjust as needed i.e 16, 32, 64, but 8 should be enough
 ```
 
 This should build the project and then start the project locally on port 3000 and 5001.
