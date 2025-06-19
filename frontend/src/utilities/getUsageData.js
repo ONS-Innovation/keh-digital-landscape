@@ -5,7 +5,7 @@
  */
 export const fetchOrgLiveUsageData = async () => {
   try {
-    const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
     const response = await fetch(`${backendUrl}/copilot/api/org/live`);
     if (!response.ok) {
       return null;
@@ -26,7 +26,7 @@ export const fetchOrgLiveUsageData = async () => {
  */
 export const fetchOrgHistoricUsageData = async () => {
   try {
-    const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
     const response = await fetch(`${backendUrl}/copilot/api/org/historic`);
     if (!response.ok) {
       return null;

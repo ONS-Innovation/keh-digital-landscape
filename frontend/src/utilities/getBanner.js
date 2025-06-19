@@ -5,7 +5,7 @@
  */
 export const fetchBanners = async (page) => {
   try {
-    const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
     const baseUrl = `${backendUrl}/api/banners`;
 
     const response = await fetch(baseUrl);
