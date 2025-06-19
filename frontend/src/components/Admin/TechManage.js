@@ -175,7 +175,7 @@ Diagram_Tools: "Supporting Tools",
    */
   const fetchArrayData = async () => {
     try {
-      const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
       const baseUrl = `${backendUrl}/admin/api/array-data`;
 
       const response = await fetch(baseUrl);
@@ -530,7 +530,7 @@ Diagram_Tools: "Supporting Tools",
    */
   const handleSaveEditorContent = async () => {
     try {
-      const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
       const baseUrl = `${backendUrl}/admin/api/array-data/update`;
 
       // Save all categories at once
@@ -582,7 +582,7 @@ Diagram_Tools: "Supporting Tools",
     );
 
     try {
-      const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
       const baseUrl = `${backendUrl}/admin/api/array-data/update`;
 
       const response = await fetch(baseUrl, {
@@ -637,7 +637,7 @@ Diagram_Tools: "Supporting Tools",
     );
 
     try {
-      const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
       const baseUrl = `${backendUrl}/admin/api/array-data/update`;
 
       const response = await fetch(baseUrl, {
@@ -991,7 +991,7 @@ Diagram_Tools: "Supporting Tools",
         ],
       }));
 
-      const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
       const baseUrl = `${backendUrl}/admin/api/tech-radar/update`;
 
       const response = await fetch(baseUrl, {
@@ -1044,7 +1044,7 @@ Diagram_Tools: "Supporting Tools",
       const updatedTechs = [...new Set([...currentTechs, ...selectedTechs])];
 
       // Save changes to backend
-      const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
       const baseUrl = `${backendUrl}/admin/api/array-data/update`;
 
       const response = await fetch(baseUrl, {
@@ -1125,7 +1125,7 @@ Diagram_Tools: "Supporting Tools",
     if (!normaliseFrom || !normaliseTo) return;
 
     try {
-      const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
       const baseUrl = `${backendUrl}/admin/api/normalise-technology`;
 
       const response = await fetch(baseUrl, {
@@ -1166,7 +1166,7 @@ Diagram_Tools: "Supporting Tools",
     try {
       const updatedTechs = [...arrayData[category], newTechnology];
 
-      const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
       const baseUrl = `${backendUrl}/admin/api/array-data/update`;
 
       const response = await fetch(baseUrl, {

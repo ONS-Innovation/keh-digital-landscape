@@ -204,7 +204,7 @@ colima start --memory 8 # 8GB of memory, adjust as needed i.e 16, 32, 64, but 8 
 cd frontend
 
 # Ensure the environment variable is set in the terminal that is running the frontend
-export REACT_APP_BACKEND_URL=http://localhost:5001
+export VITE_BACKEND_URL=http://localhost:5001
 
 # Run the frontend
 npm start

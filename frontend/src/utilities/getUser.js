@@ -39,7 +39,7 @@ const makeUserApiCall = async (url) => {
  * @returns {Promise<Object>} User data including email, username, groups, and development mode info
  */
 export const fetchUserInfo = async () => {
-  const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
   const url = `${backendUrl}/user/api/info`;
   return makeUserApiCall(url);
 };
@@ -59,10 +59,10 @@ export const logoutUser = async (clearCache) => {
     }
   }
 
-  if (process.env.NODE_ENV === "development") {
+  if (import.meta.env.NODE_ENV === "development") {
     // In development mode, call the backend logout endpoint then reload the page
     try {
-      const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
       const logoutUrl = `${backendUrl}/user/api/logout`;
       const currentUrl = window.location.origin;
       

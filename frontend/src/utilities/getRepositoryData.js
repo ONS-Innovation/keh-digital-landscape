@@ -10,7 +10,7 @@ import { useData } from "../contexts/dataContext";
  */
 export const fetchRepositoryStats = async (date = null, archived = null) => {
   try {
-    const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
     const baseUrl = `${backendUrl}/api/json`;
 
     const params = new URLSearchParams();
@@ -58,7 +58,7 @@ export const fetchRepositoryData = async (
     params.append("repositories", repositories.join(","));
     if (date) params.append("datetime", date);
     if (archived !== null) params.append("archived", archived);
-    const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
     const baseUrl = `${backendUrl}/api/repository/project/json`;
 
     const response = await fetch(`${baseUrl}?${params.toString()}`);

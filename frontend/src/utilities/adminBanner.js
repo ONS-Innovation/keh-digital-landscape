@@ -2,7 +2,7 @@
  * Gets the base URL for banner API calls based on environment
  */
 const getBannerApiUrl = (endpoint) => {
-  const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
   return `${backendUrl}${endpoint}`;
 };
 

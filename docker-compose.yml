@@ -4,7 +4,7 @@ services:
       context: ./frontend
       args:
         NODE_ENV: development
-        REACT_APP_BACKEND_URL: http://localhost:5001
+        VITE_BACKEND_URL: http://localhost:5001
     ports:
       - "3000:3000"
     networks:
