@@ -29,12 +29,12 @@ function CopilotDashboard() {
     if (viewMode === "live" && scope === "organisation") return liveOrgData;
     if (viewMode === "live" && scope === "team") return liveTeamData;
     if (viewMode === "historic" && scope === "organisation") return historicOrgData;
-    if (viewMode === "historic" && scope === "team") return historicTeamData; // Team historic data not currently supported
+    if (viewMode === "historic" && scope === "team") return historicTeamData; // TODO: Add team historic data support
   };
 
   const getGroupedData = () => {
     if (scope === "team") {
-      // Team historic data not currently supported
+      // TODO: Add team historic data support
       if(viewDatesBy === "Day") return historicTeamData.allUsage;
       if(viewDatesBy === "Week") return historicTeamData.weekUsage;
       if(viewDatesBy === "Month") return historicTeamData.monthUsage;
@@ -317,14 +317,14 @@ function CopilotDashboard() {
           ]}
           activeTab={scope}
           onTabChange={() => {
-            setViewMode("live"); // Team historic data not currently supported
+            setViewMode("live"); // TODO: Add team historic data support
             setScope(scope => scope === "organisation" ? "team" : "organisation")
           }}
         />
         <div className="admin-container" tabIndex="0">
           { !isSelectingTeam && (
           <div className="dashboard-header">
-            { scope === "organisation" ? ( // Team historic data not currently supported
+            { scope === "organisation" ? ( // TODO: Add team historic data support
             <div>
               <p className="header-text">View Data Type</p>
               <div className="banner-type-selector">
