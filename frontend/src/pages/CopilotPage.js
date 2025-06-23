@@ -11,7 +11,7 @@ import "rc-slider/assets/index.css";
 import { useData } from "../contexts/dataContext";
 import { exchangeCodeForToken, fetchUserTeams, loginWithGitHub } from "../utilities/getTeams";
 import TableBreakdown from "../components/Copilot/Breakdowns/TableBreakdown";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 
 function CopilotDashboard() {
 
@@ -344,8 +344,7 @@ function CopilotDashboard() {
             </div>
             ) : (
             <div>
-              <p className="header-text">Return to Team Selection</p>
-              <button className="view-data-button"
+              <button id="return-to-selection" className="view-data-button"
                 onClick={() => {
                   setIsSelectingTeam(true);
                   const {start, end} = initialiseDateRange();
@@ -356,7 +355,8 @@ function CopilotDashboard() {
                 }
                 aria-label={`Return to team selection`}
               >
-                <FaArrowRight />
+                <FaArrowLeft />
+                <p>Return to Team Selection</p>
               </button>
             </div>
             )}

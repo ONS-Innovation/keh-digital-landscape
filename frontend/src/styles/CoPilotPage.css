@@ -115,6 +115,13 @@
     font-weight: 600;
   }
 
+  #return-to-selection {
+    font-weight: 600;
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+  }
+
   #slider {
     width: 50%;
   }
