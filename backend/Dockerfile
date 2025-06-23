@@ -1,5 +1,5 @@
 # backend/Dockerfile
-FROM node:18-alpine as builder
+FROM node:18-alpine AS builder
 WORKDIR /app
 
 # Install wget before creating non-root user

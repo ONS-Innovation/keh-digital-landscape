@@ -82,19 +82,19 @@ The test suite covers the following API endpoints:
 
 Tests the `/api/health` endpoint to verify server status and health metrics.
 
-::: testing.backend.test_main.test_health_check
+::: testing.backend.src.test_main.test_health_check
 
 ### Project Data Endpoint
 
 Tests the `/api/csv` endpoint that provides project data from CSV sources.
 
-::: testing.backend.test_main.test_csv_endpoint
+::: testing.backend.src.test_main.test_csv_endpoint
 
 ### Tech Radar Data Endpoint
 
 Tests the `/api/tech-radar/json` endpoint that provides Tech Radar configuration data.
 
-::: testing.backend.test_main.test_tech_radar_json_endpoint
+::: testing.backend.src.test_main.test_tech_radar_json_endpoint
 
 ### Repository Statistics Endpoints
 
@@ -106,9 +106,9 @@ Tests the `/api/json` endpoint with various filtering parameters:
 - Combined parameter filtering
 - Invalid parameter handling
 
-::: testing.backend.test_main.test_json_endpoint_no_params
+::: testing.backend.src.test_main.test_json_endpoint_no_params
 
-::: testing.backend.test_main.test_json_endpoint_with_datetime
+::: testing.backend.src.test_main.test_json_endpoint_with_datetime
 
 ### Repository Project Endpoints
 
@@ -122,9 +122,9 @@ Tests the `/api/repository/project/json` endpoint with various parameters:
 - Combined parameter filtering
 - Language statistics validation
 
-::: testing.backend.test_main.test_repository_project_json_with_repos
+::: testing.backend.src.test_main.test_repository_project_json_with_repos
 
-::: testing.backend.test_main.test_repository_project_json_multiple_repos
+::: testing.backend.src.test_main.test_repository_project_json_multiple_repos
 
 ### Tech Radar Update Endpoints
 
@@ -136,9 +136,9 @@ Tests the endpoints for updating Tech Radar data:
 - Structure validation
 - Reference validation
 
-::: testing.backend.test_review.test_tech_radar_update_valid_structure
+::: testing.backend.src.test_review.test_tech_radar_update_valid_structure
 
-::: testing.backend.test_review.test_tech_radar_update_invalid_structure
+::: testing.backend.src.test_review.test_tech_radar_update_invalid_structure
 
 ### Admin Banner Management Endpoints
 
@@ -150,9 +150,9 @@ Tests the endpoints for managing banner messages:
 - Banner deletion
 - Validation of requests
 
-::: testing.backend.test_admin.test_admin_banner_get
+::: testing.backend.src.test_admin.test_admin_banner_get
 
-::: testing.backend.test_admin.test_admin_banner_update
+::: testing.backend.src.test_admin.test_admin_banner_update
 
 ## Error Handling Tests
 
@@ -163,9 +163,9 @@ The test suite includes specific tests for error conditions:
 - Missing required parameters
 - Invalid data structures
 
-::: testing.backend.test_main.test_invalid_endpoint
+::: testing.backend.src.test_main.test_invalid_endpoint
 
-::: testing.backend.test_main.test_json_endpoint_invalid_date
+::: testing.backend.src.test_main.test_json_endpoint_invalid_date
 
 ## Code Quality
 

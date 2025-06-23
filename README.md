@@ -71,7 +71,7 @@ nvm install 18.19.0
 nvm use 18.19.0
 ```
 
-4. Remember to export the following:
+4. Remember to export the following in the terminal that the backend is running in:
 ```bash
 # AWS
 export AWS_ACCESS_KEY_ID=<your_access_key>
@@ -85,6 +85,9 @@ export GITHUB_APP_CLIENT_ID=<your_github_app_client_id>
 export GITHUB_APP_CLIENT_SECRET=<your_github_app_client_secret>
 export GITHUB_ORG=<your_github_organisation>
 ```
+
+Alternatively, you can use the `.env.example` file in the backend to set the environment variables. Copy the `.env.example` file to `.env` and fill in the values. Do not commit the `.env` file to the repository and do not put the secrets in the `.env.example` file.
+
 ## Running locally
 
 To run the project locally (frontend and backend together):
@@ -111,12 +114,24 @@ export DEV_USER_GROUPS=group1,group2
 
 ## How to deploy locally
 
+**Prerequisites:**
+- Docker/Colima
+- Docker Compose
+- .env file (for environment variables) set in `/backend/.env` (see [.env.example](./backend/.env.example))
+
+To run the project locally using Docker:
+
 ```bash
 make docker-build
 ```
 
 ```bash
 make docker-up
+```
+
+When building the docker image, you *may* run into a memory problem. To increase the memory available to the docker container, you can use the following command:
+```bash
+colima start --memory 8 # 8GB of memory, adjust as needed i.e 16, 32, 64, but 8 should be enough
 ```
 
 This should build the project and then start the project locally on port 3000 and 5001.
@@ -128,9 +143,9 @@ make docker-down
 
 ## Testing
 
-Tests are run with PyTest. To run the tests, refer to the [README.md](/testing/README.md) in the `/testing/` folder.
+Backend tests are run with PyTest (Python). To run the tests, refer to the [README.md](/testing/backend/README.md) in the `/testing/backend/` folder.
 
-Accessing the testing is run with Playwright and AxeCore. To run the tests, refer to the [README.md](/testing_ui/README.md) in the `/testing_ui/` folder.
+Frontend (accessibility) tests are run with Playwright and AxeCore (JS). To run the tests, refer to the [README.md](/testing/frontend/README.md) in the `/testing/frontend/` folder.
 
 ## Linting 
 
@@ -164,9 +179,8 @@ Follow these instructions in the central documenation to configure the Terraform
 When deploying the new service and its resources, deploy in this order:
 
 1. storage
-2. admin
-3. authentication
-4. service
+2. authentication
+3. service
 
 ### Makefile
 
@@ -174,3 +188,32 @@ To see the available commands, run the following command:
 ```bash
 make
 ```
+### Common Issues
+
+1. When building the docker image, you *may* run into a memory problem. To increase the memory available to the docker container, you can use the following command:
+```bash
+# Stop the docker container
+colima stop
+
+# Start the docker container with more memory
+colima start --memory 8 # 8GB of memory, adjust as needed i.e 16, 32, 64, but 8 should be enough
+```
+
+2. The frontend is making requests to `localhost:3000` instead of the backend `localhost:5001`. To fix this, stop the application. Ensure the environment variable is set in the terminal that is running the frontend:
+```bash
+# Navigate to the frontend directory
+cd frontend
+
+# Ensure the environment variable is set in the terminal that is running the frontend
+export REACT_APP_BACKEND_URL=http://localhost:5001
+
+# Run the frontend
+npm start
+```
+
+3. If the backend is returning nothing, ensure you have the correct environment variables set in the `.env` file. See the [.env.example](./backend/.env.example) file for the correct variables.
+
+4. If all backend tests are failing, make sure that the backend is running and the environment variables are set correctly.
+
+
+

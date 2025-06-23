@@ -23,7 +23,7 @@ BASE_URL = "http://localhost:5001"
 ### Running Tests
 ```bash
 # Navigate to the testing directory
-cd testing
+cd testing/backend
 
 # Create a virtual environment (recommended)
 python3 -m venv venv
@@ -56,19 +56,19 @@ make test-copilot
 
 The health check endpoint test verifies that the server is operational and returns basic health metrics:
 
-::: testing.backend.test_main.test_health_check
+::: testing.backend.src.test_main.test_health_check
 
 ### Project Data Tests
 
 The CSV endpoint test verifies that project data is correctly retrieved and formatted:
 
-::: testing.backend.test_main.test_csv_endpoint
+::: testing.backend.src.test_main.test_csv_endpoint
 
 ### Tech Radar Data Tests
 
 The Tech Radar JSON endpoint test verifies that the radar configuration data is correctly retrieved:
 
-::: testing.backend.test_main.test_tech_radar_json_endpoint
+::: testing.backend.src.test_main.test_tech_radar_json_endpoint
 
 ### Repository Statistics Tests
 
@@ -76,25 +76,25 @@ The Tech Radar JSON endpoint test verifies that the radar configuration data is 
 
 Tests the default behavior with no filters:
 
-::: testing.backend.test_main.test_json_endpoint_no_params
+::: testing.backend.src.test_main.test_json_endpoint_no_params
 
 #### Date Filtering
 
 Tests filtering repositories by a specific date:
 
-::: testing.backend.test_main.test_json_endpoint_with_datetime
+::: testing.backend.src.test_main.test_json_endpoint_with_datetime
 
 #### Archived Status Filtering
 
 Tests filtering repositories by archived status:
 
-::: testing.backend.test_main.test_json_endpoint_with_archived
+::: testing.backend.src.test_main.test_json_endpoint_with_archived
 
 #### Combined Filtering
 
 Tests applying multiple filters simultaneously:
 
-::: testing.backend.test_main.test_json_endpoint_combined_params
+::: testing.backend.src.test_main.test_json_endpoint_combined_params
 
 ### Repository Project Tests
 
@@ -102,19 +102,19 @@ Tests applying multiple filters simultaneously:
 
 Tests the endpoint's response when required parameters are missing:
 
-::: testing.backend.test_main.test_repository_project_json_no_params
+::: testing.backend.src.test_main.test_repository_project_json_no_params
 
 #### Single Repository
 
 Tests retrieving data for a single repository:
 
-::: testing.backend.test_main.test_repository_project_json_with_repos
+::: testing.backend.src.test_main.test_repository_project_json_with_repos
 
 #### Multiple Repositories
 
 Tests retrieving data for multiple repositories:
 
-::: testing.backend.test_main.test_repository_project_json_multiple_repos
+::: testing.backend.src.test_main.test_repository_project_json_multiple_repos
 
 ### Tech Radar Update Tests
 
@@ -124,37 +124,37 @@ These tests are located in `test_review.py` and verify the review API endpoints.
 
 Tests handling of missing entries data:
 
-::: testing.backend.test_review.test_tech_radar_update_no_entries
+::: testing.backend.src.test_review.test_tech_radar_update_no_entries
 
 #### Partial Updates
 
 Tests processing of partial updates:
 
-::: testing.backend.test_review.test_tech_radar_update_partial
+::: testing.backend.src.test_review.test_tech_radar_update_partial
 
 #### Invalid Entries
 
 Tests validation of invalid entries:
 
-::: testing.backend.test_review.test_tech_radar_update_invalid_entries
+::: testing.backend.src.test_review.test_tech_radar_update_invalid_entries
 
 #### Valid Structure
 
 Tests updating the Tech Radar with valid data:
 
-::: testing.backend.test_review.test_tech_radar_update_valid_structure
+::: testing.backend.src.test_review.test_tech_radar_update_valid_structure
 
 #### Invalid Structure
 
 Tests the endpoint's handling of invalid data structures:
 
-::: testing.backend.test_review.test_tech_radar_update_invalid_structure
+::: testing.backend.src.test_review.test_tech_radar_update_invalid_structure
 
 #### Invalid References
 
 Tests validation of references between entries and quadrants/rings:
 
-::: testing.backend.test_review.test_tech_radar_update_invalid_references
+::: testing.backend.src.test_review.test_tech_radar_update_invalid_references
 
 ### Admin API Tests
 
@@ -164,43 +164,43 @@ These tests are located in `test_admin.py` and verify the admin API endpoints.
 
 Tests retrieving banner messages:
 
-::: testing.backend.test_admin.test_admin_banner_get
+::: testing.backend.src.test_admin.test_admin_banner_get
 
 #### Banner Creation
 
 Tests creating new banner messages:
 
-::: testing.backend.test_admin.test_admin_banner_update
+::: testing.backend.src.test_admin.test_admin_banner_update
 
 #### Banner Creation Validation
 
 Tests validation of banner creation requests:
 
-::: testing.backend.test_admin.test_admin_banner_update_invalid
+::: testing.backend.src.test_admin.test_admin_banner_update_invalid
 
 #### Banner Visibility Toggle
 
 Tests toggling banner visibility:
 
-::: testing.backend.test_admin.test_admin_banner_toggle
+::: testing.backend.src.test_admin.test_admin_banner_toggle
 
 #### Banner Visibility Toggle Validation
 
 Tests validation of banner toggle requests:
 
-::: testing.backend.test_admin.test_admin_banner_toggle_invalid
+::: testing.backend.src.test_admin.test_admin_banner_toggle_invalid
 
 #### Banner Deletion
 
 Tests deleting banner messages:
 
-::: testing.backend.test_admin.test_admin_banner_delete
+::: testing.backend.src.test_admin.test_admin_banner_delete
 
 #### Banner Deletion Validation
 
 Tests validation of banner deletion requests:
 
-::: testing.backend.test_admin.test_admin_banner_delete_invalid
+::: testing.backend.src.test_admin.test_admin_banner_delete_invalid
 
 ### Copilot API Tests
 
@@ -209,7 +209,7 @@ These tests are located in `test_copilot.py` and verify the Copilot API endpoint
 #### Live Organisation Data Retrieval
 Tests retrieving live Copilot organisation usage data:
 
-::: testing.backend.test_copilot.test_org_live_get
+::: testing.backend.src.test_copilot.test_org_live_get
 
 #### Live Team Data Retrieval
 Tests retrieving live Copilot team usage data:
@@ -223,12 +223,12 @@ Tests retrieving live Copilot team usage data:
 #### Historic Organisation Data Retrieval
 Tests retrieving historic Copilot organisation usage data:
 
-::: testing.backend.test_copilot.test_org_historic_get
+::: testing.backend.src.test_copilot.test_org_historic_get
 
 #### Organisation Seat Data Retrieval
 Tests retrieving Copilot seat data for the organisation:
 
-::: testing.backend.test_copilot.test_seats_get
+::: testing.backend.src.test_copilot.test_seats_get
 
 #### Team Seat Data Retrieval
 Tests retrieving Copilot seat data for a team within the organisation:
@@ -243,7 +243,7 @@ Tests retrieving Copilot seat data for a team within the organisation:
 
 Tests the banner message endpoints for retrieving active and all banners:
 
-::: testing.backend.test_main.test_banner_endpoints
+::: testing.backend.src.test_main.test_banner_endpoints
 
 The banner endpoint tests verify:
 - Active banners are correctly filtered in the /api/banners endpoint
@@ -262,7 +262,7 @@ These tests are located in `test_admin.py` and verify the administration API end
 
 Tests retrieving all banner messages from the admin endpoint:
 
-::: testing.backend.test_admin.test_admin_banner_get
+::: testing.backend.src.test_admin.test_admin_banner_get
 
 This test validates that:
 - The endpoint correctly returns banner messages from the S3 bucket
@@ -273,7 +273,7 @@ This test validates that:
 
 Tests creating a new banner with complete and valid data:
 
-::: testing.backend.test_admin.test_admin_banner_update
+::: testing.backend.src.test_admin.test_admin_banner_update
 
 This test verifies:
 - Creating a banner with title, message, type, and target pages
@@ -284,7 +284,7 @@ This test verifies:
 
 Tests validation of banner creation requests with invalid data:
 
-::: testing.backend.test_admin.test_admin_banner_update_invalid
+::: testing.backend.src.test_admin.test_admin_banner_update_invalid
 
 This test checks error handling for:
 - Missing required message field
@@ -295,7 +295,7 @@ This test checks error handling for:
 
 Tests toggling the visibility status of an existing banner:
 
-::: testing.backend.test_admin.test_admin_banner_toggle
+::: testing.backend.src.test_admin.test_admin_banner_toggle
 
 This test ensures:
 - A test banner can be created for toggling
@@ -307,7 +307,7 @@ This test ensures:
 
 Tests validation of banner visibility toggle requests with invalid data:
 
-::: testing.backend.test_admin.test_admin_banner_toggle_invalid
+::: testing.backend.src.test_admin.test_admin_banner_toggle_invalid
 
 This test validates error handling for:
 - Non-numeric index values
@@ -318,7 +318,7 @@ This test validates error handling for:
 
 Tests deleting an existing banner:
 
-::: testing.backend.test_admin.test_admin_banner_delete
+::: testing.backend.src.test_admin.test_admin_banner_delete
 
 This test verifies:
 - A test banner can be created for deletion
@@ -329,7 +329,7 @@ This test verifies:
 
 Tests validation of banner deletion requests with invalid parameters:
 
-::: testing.backend.test_admin.test_admin_banner_delete_invalid
+::: testing.backend.src.test_admin.test_admin_banner_delete_invalid
 
 This test checks error handling for:
 - Non-numeric index values
@@ -342,7 +342,7 @@ This test checks error handling for:
 
 Tests retrieval of the technology reference lists:
 
-::: testing.backend.test_admin.test_admin_get_array_data
+::: testing.backend.src.test_admin.test_admin_get_array_data
 
 This test verifies:
 - The endpoint returns JSON data with technology references
@@ -352,7 +352,7 @@ This test verifies:
 
 Tests updating a single category in the technology reference lists:
 
-::: testing.backend.test_admin.test_admin_update_array_data_single_category
+::: testing.backend.src.test_admin.test_admin_update_array_data_single_category
 
 This test ensures:
 - A single category can be updated without affecting others
@@ -363,7 +363,7 @@ This test ensures:
 
 Tests updating all categories in the technology reference lists simultaneously:
 
-::: testing.backend.test_admin.test_admin_update_array_data_all_categories
+::: testing.backend.src.test_admin.test_admin_update_array_data_all_categories
 
 This test validates:
 - The entire technology reference data structure can be replaced
@@ -374,7 +374,7 @@ This test validates:
 
 Tests validation of technology reference list updates with invalid data:
 
-::: testing.backend.test_admin.test_admin_update_array_data_invalid
+::: testing.backend.src.test_admin.test_admin_update_array_data_invalid
 
 This test checks error handling for:
 - Updating all categories with non-object data
@@ -386,7 +386,7 @@ This test checks error handling for:
 
 Tests fetching the Tech Radar data for administrative purposes:
 
-::: testing.backend.test_admin.test_admin_get_tech_radar
+::: testing.backend.src.test_admin.test_admin_get_tech_radar
 
 This test verifies that the admin endpoint correctly returns the radar configuration data.
 
@@ -394,7 +394,7 @@ This test verifies that the admin endpoint correctly returns the radar configura
 
 Tests normalising technology names across projects:
 
-::: testing.backend.test_admin.test_admin_normalise_technology_positive
+::: testing.backend.src.test_admin.test_admin_normalise_technology_positive
 
 This test ensures:
 - Technology names can be normalised from one form to another
@@ -405,7 +405,7 @@ This test ensures:
 
 Tests validation of technology normalisation requests with invalid data:
 
-::: testing.backend.test_admin.test_admin_normalise_technology_invalid
+::: testing.backend.src.test_admin.test_admin_normalise_technology_invalid
 
 This test checks error handling for:
 - Missing "from" parameter
@@ -418,13 +418,13 @@ This test checks error handling for:
 
 Tests the server's response to non-existent endpoints:
 
-::: testing.backend.test_main.test_invalid_endpoint
+::: testing.backend.src.test_main.test_invalid_endpoint
 
 ### Invalid Parameters
 
 Tests the server's handling of invalid parameter values:
 
-::: testing.backend.test_main.test_json_endpoint_invalid_date
+::: testing.backend.src.test_main.test_json_endpoint_invalid_date
 
 ## Test Execution Flow
 

@@ -258,10 +258,8 @@ const ReviewPage = () => {
 
   const handleSaveConfirmModalYes = async () => {
     try {
-      const baseUrl =
-        process.env.NODE_ENV === "development"
-          ? "http://localhost:5001/review/api/tech-radar/update"
-          : "/review/api/tech-radar/update";
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+      const baseUrl = `${backendUrl}/review/api/tech-radar/update`;
 
       // Combine all entries back into a single array
       const allEntries = [

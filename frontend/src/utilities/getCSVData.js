@@ -8,12 +8,8 @@ import { useData } from "../contexts/dataContext";
  */
 export const fetchCSVFromS3 = async () => {
   try {
-    let response;
-    if (process.env.NODE_ENV === "development") {
-      response = await fetch(`http://localhost:5001/api/csv`);
-    } else {
-      response = await fetch("/api/csv");
-    }
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+    const response = await fetch(`${backendUrl}/api/csv`);
     if (!response.ok) {
       throw new Error("Failed to fetch CSV data");
     }

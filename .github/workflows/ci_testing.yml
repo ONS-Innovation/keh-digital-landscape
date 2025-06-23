@@ -1,15 +1,15 @@
 ---
-name: CI Testing
+name: CI Backend Testing
 
 on:
   push:
     branches: [main]
     paths:
-      - 'testing/**'
+      - 'testing/backend/**'
   pull_request:
     branches: [main]
     paths:
-      - 'testing/**'
+      - 'testing/backend/**'
 
 concurrency:
   group: "${{ github.head_ref || github.ref }}-${{ github.workflow }}"
@@ -17,11 +17,11 @@ concurrency:
 
 jobs:
   test:
-    name: Lint and Test
+    name: Backend Lint
     runs-on: ubuntu-22.04
     defaults:
       run:
-        working-directory: testing
+        working-directory: testing/backend
     strategy:
       matrix:
         python-version: ["3.12"]
@@ -34,13 +34,13 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
-          cache-dependency-path: testing/requirements.txt
+          cache-dependency-path: testing/backend/req_dev.txt
         
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
 
       - name: Install dependencies
-        run: make setup
+        run: make setup-dev
 
       - name: Run linting
         run: make lint
