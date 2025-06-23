@@ -139,7 +139,6 @@ def test_seats_get():
         assert "created_at" in first_item and isinstance(first_item["created_at"], str)
         assert "assignee" in first_item and isinstance(first_item["assignee"], dict)
         assert "last_activity_at" in first_item and isinstance(first_item["last_activity_at"], str)
-<<<<<<< HEAD:testing/backend/test_copilot.py
 
 def test_team_seats_get():
     """Test the copilot teams seats get endpoint.
@@ -192,5 +191,3 @@ def test_team_seats_get_missing_slug():
     assert response.status_code == 400
     data = response.json()
     assert "error" in data
-=======
->>>>>>> main:testing/backend/src/test_copilot.py
