@@ -47,6 +47,25 @@ function CopilotDashboard() {
     }
   }
 
+  const setFilteredData = (data, setData) => {
+    if(!data || !startDate || !endDate || !sliderFinished) return;
+    const filteredData = filterUsageData(data, startDate, endDate);
+    setData(prev => ({
+      ...prev,
+      filteredUsage: filteredData,
+      processedUsage: processUsageData(filteredData),
+    }));
+  }
+
+  const setActiveSeats = (data, setData) => {
+    if(!data || !inactivityDate) return;
+    const activeSeats = filterInactiveUsers(data, inactivityDate);
+    setData(prev => ({
+      ...prev,
+      activeSeatData: activeSeats,
+    }));
+  };
+
   const [liveOrgData, setLiveOrgData] = useState({
     allUsage: [],
     filteredUsage: [],
@@ -247,23 +266,10 @@ function CopilotDashboard() {
    * Filter and then process live usage data based on start and end date
    */
   useEffect(() => {
-    if (scope === "organisation") {
-      if (!liveOrgData.allUsage?.length || !startDate || !endDate || !sliderFinished) return;
-      const filtered = filterUsageData(liveOrgData.allUsage, startDate, endDate);
-      setLiveOrgData(prev => ({
-        ...prev,
-        filteredUsage: filtered,
-        processedUsage: processUsageData(filtered),
-      }));
-    } else if (scope === "team") {
-      if (!liveTeamData.allUsage?.length || !startDate || !endDate || !sliderFinished) return;
-      const filtered = filterUsageData(liveTeamData.allUsage, startDate, endDate);
-      setLiveTeamData(prev => ({
-        ...prev,
-        filteredUsage: filtered,
-        processedUsage: processUsageData(filtered),
-      }));
-    }
+    scope === "organisation" ? 
+    setFilteredData(liveOrgData.allUsage, setLiveOrgData) : 
+    setFilteredData(liveTeamData.allUsage, setLiveTeamData);
+
     setSliderFinished(false);
   }, [scope, liveOrgData.allUsage, liveTeamData.allUsage, startDate, endDate, sliderFinished]);
 
@@ -271,21 +277,10 @@ function CopilotDashboard() {
    * Update active seats
    */
   useEffect(() => {
-    if (scope === "organisation") {
-      if (!liveOrgData.allSeatData?.length || !inactivityDate) return;
-      const active = filterInactiveUsers(liveOrgData.allSeatData, inactivityDate);
-      setLiveOrgData(prev => ({
-        ...prev,
-        activeSeatData: active,
-      }));
-    } else if (scope === "team") {
-      if (!liveTeamData.allSeatData?.length || !inactivityDate) return;
-      const active = filterInactiveUsers(liveTeamData.allSeatData, inactivityDate);
-      setLiveTeamData(prev => ({
-        ...prev,
-        activeSeatData: active,
-      }));
-    }
+    scope === "organisation" ?
+    setActiveSeats(liveOrgData.allSeatData, setLiveOrgData) :
+    setActiveSeats(liveTeamData.allSeatData, setLiveTeamData);
+
   }, [scope, inactiveDays, inactivityDate, liveOrgData.allSeatData, liveTeamData.allSeatData]);
 
   /**
