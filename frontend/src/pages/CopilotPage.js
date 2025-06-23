@@ -187,7 +187,7 @@ function CopilotDashboard() {
   useEffect(() => {
     const code = new URLSearchParams(window.location.search).get("code");
   
-    const authenticate = async () => {
+    const authenticateGitHubUser = async () => {
       const existingToken = localStorage.getItem("userToken");
   
       // Exchange code for token
@@ -238,7 +238,7 @@ function CopilotDashboard() {
       }
     };
   
-    authenticate();
+    authenticateGitHubUser();
   }, []);
 
   /**
