@@ -5,7 +5,7 @@ import HistoricDashboard from "../components/Copilot/Dashboards/HistoricDashboar
 import { filterInactiveUsers, fetchTeamSeatData } from "../utilities/getSeatData";
 import { filterUsageData, processUsageData, fetchTeamLiveUsageData } from "../utilities/getUsageData";
 import PageBanner from "../components/PageBanner/PageBanner";
-import "../styles/CopilotPage.css";
+import "../styles/CoPilotPage.css";
 import Slider from 'rc-slider';
 import "rc-slider/assets/index.css";
 import { useData } from "../contexts/dataContext";

@@ -37,6 +37,11 @@ class GitHubService {
     }
   }
 
+  /**
+   * Get GitHub Copilot team metrics
+   * @param {string} teamSlug - The slug of the team to fetch metrics for
+   * @returns {Promise<Object>} Team metrics data
+   */
   async getCopilotTeamMetrics(teamSlug) {
     try {
       const octokit = await getAppAndInstallation();
