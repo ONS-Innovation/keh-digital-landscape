@@ -16,14 +16,30 @@ import { FaArrowLeft } from "react-icons/fa";
 function CopilotDashboard() {
 
   const initialiseDateRange = () => {
-    let end = new Date();
-    let start = new Date(end);
-    start.setDate(end.getDate() - 28);
+    let data = getDashboardData();
+    let end = data.allUsage[data.allUsage.length - 1]?.date ? new Date(data.allUsage[data.allUsage.length - 1].date) : new Date();
+    let start = data.allUsage[0]?.date ? new Date(data.allUsage[0].date) : new Date();
+
     return {
       start: start.toISOString().slice(0, 10),
       end: end.toISOString().slice(0, 10),
     };
   };
+
+  const getEndSliderValue = () => {
+    let data = getDashboardData();
+    if (!data || data.allUsage.length === 0) return 28; // Default to 28 days if no data
+
+    const startDateStr = data.allUsage[0]?.date;
+    const endDateStr = data.allUsage[data.allUsage.length - 1]?.date;
+  
+    const start = new Date(startDateStr);
+    const end = new Date(endDateStr);
+  
+    // Calculate number of days between the two dates, inclusive
+    const diffDays = Math.abs(Math.ceil((end - start) / (1000 * 60 * 60 * 24))) + 1;
+    return diffDays;
+  }
 
   const getDashboardData = () => {
     if (viewMode === "live" && scope === "organisation") return liveOrgData;
@@ -96,7 +112,7 @@ function CopilotDashboard() {
     { value: "Year", label: "Year" },
   ];
   
-  const [sliderValues, setSliderValues] = useState([1, 28]);
+  const [sliderValues, setSliderValues] = useState(null);
   const [inactiveDays, setInactiveDays] = useState(28);
   const inactivityDate = useMemo(() => {
     const date = new Date();
@@ -136,12 +152,14 @@ function CopilotDashboard() {
     setSliderValues(values);
 
     const newStart = new Date();
-    newStart.setDate(newStart.getDate() - 29 + values[0]);
+    newStart.setDate(newStart.getDate() - getEndSliderValue() - 1 + values[0]);
     const newEnd = new Date();
-    newEnd.setDate(newEnd.getDate() - 28 + values[1]);
+    newEnd.setDate(newEnd.getDate() - getEndSliderValue() + values[1]);
 
     setStartDate(newStart.toISOString().slice(0, 10));
     setEndDate(newEnd.toISOString().slice(0, 10));
+
+    console.log(newEnd.toISOString().slice(0,10), newStart.toISOString().slice(0,10));
   };
   
   /**
@@ -166,6 +184,7 @@ function CopilotDashboard() {
       const { start, end } = initialiseDateRange();
       setStartDate(start);
       setEndDate(end);
+      setSliderValues([1, getEndSliderValue()]);
 
       setLiveOrgData({
         allUsage: liveUsage ?? [],
@@ -296,7 +315,7 @@ function CopilotDashboard() {
     const {start, end} = initialiseDateRange();
     setStartDate(start);
     setEndDate(end);
-    setSliderValues([1, 28]);
+    setSliderValues([1, getEndSliderValue()]);
   }, [scope]);
 
   return (
@@ -345,7 +364,7 @@ function CopilotDashboard() {
                   const {start, end} = initialiseDateRange();
                   setStartDate(start);
                   setEndDate(end);
-                  setSliderValues([1, 28]);
+                  setSliderValues([1, getEndSliderValue()]);
                 }
                 }
                 aria-label={`Return to team selection`}
@@ -366,7 +385,7 @@ function CopilotDashboard() {
                     <Slider
                       range
                       min={1}
-                      max={28}
+                      max={getEndSliderValue()}
                       value={sliderValues}
                       onChange={updateSlider}
                       onChangeComplete={handleSliderCompletion}
@@ -374,7 +393,7 @@ function CopilotDashboard() {
                       ariaLabelForHandle={['Start date selector', 'End date selector']}
                       ariaValueTextFormatterForHandle={(value, index) => {
                         const date = new Date();
-                        date.setDate(date.getDate() - 29 + value);
+                        date.setDate(date.getDate() - getEndSliderValue() - 1 + value);
                         return `${index === 0 ? 'Start' : 'End'} date: ${date.toISOString().slice(0, 10)}`;
                       }}
                     />
