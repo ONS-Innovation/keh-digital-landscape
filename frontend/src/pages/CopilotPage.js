@@ -15,10 +15,9 @@ import { FaArrowLeft } from "react-icons/fa";
 
 function CopilotDashboard() {
 
-  const initialiseDateRange = () => {
-    let data = getDashboardData();
-    let end = data.allUsage[data.allUsage.length - 1]?.date ? new Date(data.allUsage[data.allUsage.length - 1].date) : new Date();
-    let start = data.allUsage[0]?.date ? new Date(data.allUsage[0].date) : new Date();
+  const initialiseDateRange = (data) => {
+    let end = data[data.length - 1]?.date ? new Date(data[data.length - 1].date) : new Date();
+    let start = data[0]?.date ? new Date(data[0].date) : new Date();
 
     return {
       start: start.toISOString().slice(0, 10),
@@ -26,12 +25,9 @@ function CopilotDashboard() {
     };
   };
 
-  const getEndSliderValue = () => {
-    let data = getDashboardData();
-    if (!data || data.allUsage.length === 0) return 28; // Default to 28 days if no data
-
-    const startDateStr = data.allUsage[0]?.date;
-    const endDateStr = data.allUsage[data.allUsage.length - 1]?.date;
+  const getEndSliderValue = (data) => {
+    const startDateStr = data[0]?.date;
+    const endDateStr = data[data.length - 1]?.date;
   
     const start = new Date(startDateStr);
     const end = new Date(endDateStr);
@@ -123,7 +119,6 @@ function CopilotDashboard() {
   const [endDate, setEndDate] = useState(null);
   const [viewMode, setViewMode] = useState("live");
   const [scope, setScope] = useState("organisation");
-  const data = getDashboardData();
   const [isLiveLoading, setIsLiveLoading] = useState(true);
   const [isSeatsLoading, setIsSeatsLoading] = useState(true);
   const [isHistoricLoading, setIsHistoricLoading] = useState(false);
@@ -135,6 +130,8 @@ function CopilotDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [availableTeams, setAvailableTeams] = useState([]);
   const [isTeamLoading, setIsTeamLoading] = useState(false);
+
+  const data = getDashboardData();
 
   /**
    * Trigger data filter upon slider completion
@@ -152,14 +149,12 @@ function CopilotDashboard() {
     setSliderValues(values);
 
     const newStart = new Date();
-    newStart.setDate(newStart.getDate() - getEndSliderValue() - 1 + values[0]);
+    newStart.setDate(newStart.getDate() - getEndSliderValue(data.allUsage) - 1 + values[0]);
     const newEnd = new Date();
-    newEnd.setDate(newEnd.getDate() - getEndSliderValue() + values[1]);
+    newEnd.setDate(newEnd.getDate() - getEndSliderValue(data.allUsage) + values[1]);
 
     setStartDate(newStart.toISOString().slice(0, 10));
     setEndDate(newEnd.toISOString().slice(0, 10));
-
-    console.log(newEnd.toISOString().slice(0,10), newStart.toISOString().slice(0,10));
   };
   
   /**
@@ -181,10 +176,10 @@ function CopilotDashboard() {
         getSeatsData(),
       ]);
 
-      const { start, end } = initialiseDateRange();
+      const { start, end } = initialiseDateRange(liveUsage);
       setStartDate(start);
       setEndDate(end);
-      setSliderValues([1, getEndSliderValue()]);
+      setSliderValues([1, getEndSliderValue(liveUsage)]);
 
       setLiveOrgData({
         allUsage: liveUsage ?? [],
@@ -312,10 +307,10 @@ function CopilotDashboard() {
       setIsSelectingTeam(true);
     }
     //Reset start and end dates when switching scopes
-    const {start, end} = initialiseDateRange();
+    const {start, end} = initialiseDateRange(data.allUsage);
     setStartDate(start);
     setEndDate(end);
-    setSliderValues([1, getEndSliderValue()]);
+    setSliderValues([1, getEndSliderValue(data.allUsage)]);
   }, [scope]);
 
   return (
@@ -361,10 +356,10 @@ function CopilotDashboard() {
               <button id="return-to-selection" className="view-data-button"
                 onClick={() => {
                   setIsSelectingTeam(true);
-                  const {start, end} = initialiseDateRange();
+                  const {start, end} = initialiseDateRange(data.allUsage);
                   setStartDate(start);
                   setEndDate(end);
-                  setSliderValues([1, getEndSliderValue()]);
+                  setSliderValues([1, getEndSliderValue(data.allUsage)]);
                 }
                 }
                 aria-label={`Return to team selection`}
@@ -377,7 +372,7 @@ function CopilotDashboard() {
             {viewMode === "live" ? (
               <div id="slider">
                 <p className="header-text">Filter Live Data Range</p>
-                {isLiveLoading ? (
+                {isLiveLoading || isTeamLoading ? (
                   <p>Loading dates...</p>
                 ) : (
                   <div>
@@ -385,15 +380,22 @@ function CopilotDashboard() {
                     <Slider
                       range
                       min={1}
-                      max={getEndSliderValue()}
+                      max={getEndSliderValue(data.allUsage)}
                       value={sliderValues}
                       onChange={updateSlider}
                       onChangeComplete={handleSliderCompletion}
                       allowCross={false}
                       ariaLabelForHandle={['Start date selector', 'End date selector']}
                       ariaValueTextFormatterForHandle={(value, index) => {
+                        const usage = data?.allUsage;
+                        if (!usage?.length) return `${index === 0 ? 'Start' : 'End'} date: Unknown`;
+                      
+                        const totalRange = getEndSliderValue(usage);
                         const date = new Date();
-                        date.setDate(date.getDate() - getEndSliderValue() - 1 + value);
+                        date.setDate(date.getDate() - totalRange - 1 + value);
+                      
+                        if (isNaN(date.getTime())) return `${index === 0 ? 'Start' : 'End'} date: Invalid`;
+                      
                         return `${index === 0 ? 'Start' : 'End'} date: ${date.toISOString().slice(0, 10)}`;
                       }}
                     />
@@ -450,6 +452,11 @@ function CopilotDashboard() {
                           setIsTeamLoading(true);
 
                           const liveUsage = await fetchTeamLiveUsageData(slug);
+
+                          const { start, end } = initialiseDateRange(liveUsage);
+                          setStartDate(start);
+                          setEndDate(end);
+                          setSliderValues([1, getEndSliderValue(liveUsage)]);
                           const teamSeats = await fetchTeamSeatData(localStorage.getItem("userToken"), slug);
                           const activeTeamSeats = filterInactiveUsers(teamSeats, startDate);
 
