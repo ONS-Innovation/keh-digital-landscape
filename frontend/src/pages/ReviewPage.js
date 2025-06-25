@@ -258,7 +258,7 @@ const ReviewPage = () => {
 
   const handleSaveConfirmModalYes = async () => {
     try {
-      const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
       const baseUrl = `${backendUrl}/review/api/tech-radar/update`;
 
       // Combine all entries back into a single array
