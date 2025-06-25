@@ -1,5 +1,5 @@
 import { FaArrowRight } from "react-icons/fa";
-import "../styles/CoPilotPage.css";
+import "../styles/CopilotPage.css";
 
 export const getCellRenderers = (onViewDataClick) => ({
     avatar: ({ value }) =>

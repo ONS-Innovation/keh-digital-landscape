@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import "../../../styles/CoPilotPage.css";
+import "../../../styles/CopilotPage.css";
 import {
   PieChart as RechartsPieChart,
   Pie,
