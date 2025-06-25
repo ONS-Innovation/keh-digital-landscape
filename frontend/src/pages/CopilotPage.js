@@ -482,9 +482,13 @@ function CopilotDashboard() {
                   )}
                 </div>
               ) : (
-                <div>
-                  
-                  <button type="button" onClick={loginWithGitHub}>Login with GitHub</button>
+                <div> 
+                  <button 
+                    type="button" 
+                    className="multi-select-control" 
+                    onClick={loginWithGitHub}>
+                      Login with GitHub
+                  </button>
                 </div>
               )}
             </>
