@@ -12,6 +12,7 @@ import { useData } from "../contexts/dataContext";
 import { exchangeCodeForToken, fetchUserTeams, loginWithGitHub } from "../utilities/getTeams";
 import TableBreakdown from "../components/Copilot/Breakdowns/TableBreakdown";
 import { FaArrowLeft } from "react-icons/fa";
+import "../styles/components/MultiSelect.css";
 
 function CopilotDashboard() {
 
