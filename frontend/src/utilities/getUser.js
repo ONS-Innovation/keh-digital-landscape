@@ -59,56 +59,32 @@ export const logoutUser = async (clearCache) => {
     }
   }
 
-  if (import.meta.env.NODE_ENV === "development") {
-    // In development mode, call the backend logout endpoint then reload the page
-    try {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
-      const logoutUrl = `${backendUrl}/user/api/logout`;
-      const currentUrl = window.location.origin;
-      
-      await fetch(logoutUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ logout_uri: currentUrl }),
-      });
-    } catch (error) {
-      console.warn('Failed to call backend logout endpoint:', error);
-    }
-    
-    // Reload the page to clear local state
-    window.location.reload();
-  } else {
-    // In production, call the backend logout endpoint
-    try {
-      const logoutUrl = '/user/api/logout';
-      const currentUrl = window.location.origin;
-      
-      const response = await fetch(logoutUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ logout_uri: currentUrl }),
-      });
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
+  const logoutUrl = `${backendUrl}/user/api/logout`;
+  const currentUrl = window.location.origin;
 
-      if (response.ok) {
-        const data = await response.json();
-        if (data.logoutUrl) {
-          // Redirect to the Cognito logout URL
-          window.location.href = data.logoutUrl;
-        } else {
-          // Fallback: redirect to home page
-          window.location.href = '/';
-        }
-      } else {
-        throw new Error(`Logout failed: ${response.status}`);
-      }
-    } catch (error) {
-      console.error('Failed to logout:', error);
-      // Fallback: redirect to home page
-      window.location.href = '/';
+  try {
+    const response = await fetch(logoutUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ logout_uri: currentUrl }),
+    });
+
+    if (import.meta.env.NODE_ENV === "development") {
+      window.location.reload();
+      return;
     }
+
+    if (response.ok) {
+      const data = await response.json();
+      window.location.href = data.logoutUrl || '/';
+    } else {
+      throw new Error(`Logout failed: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Failed to logout:', error);
+    window.location.href = '/';
   }
 };
