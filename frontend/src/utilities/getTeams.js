@@ -8,24 +8,15 @@ export const fetchUserTeams = async (token) => {
     return [];
   }
   try {
-    let response;
-    if (process.env.NODE_ENV === "development") {
-      response = await fetch(`http://localhost:5001/copilot/api/teams`,
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
+    const response = await fetch(`${backendUrl}/copilot/api/teams`,
         {
             headers: {
                 Authorization: `Bearer ${token}`,
             }
         }
       );
-    } else {
-      response = await fetch("/copilot/api/teams",
-        {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
-        }
-      );
-    }
+
     if (!response.ok) {
       return [];
     }
@@ -45,20 +36,13 @@ export const fetchUserTeams = async (token) => {
  */
 export const exchangeCodeForToken = async (code) => {
   try {
-    let response;
-    if (process.env.NODE_ENV === "development") {
-      response = await fetch(`http://localhost:5001/copilot/api/github/oauth/token`, {
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
+    const response = await fetch(`${backendUrl}/copilot/api/github/oauth/token`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code }),
       });
-    } else {
-      response = await fetch("/copilot/api/github/oauth/token", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code }),
-      });
-    }
+
     if(!response.ok) {
       console.error("Failed to exchange code for token:", response.statusText);
       return null;
@@ -77,9 +61,8 @@ export const exchangeCodeForToken = async (code) => {
  * @returns {void}
  */
 export const loginWithGitHub = () => {
-  const url = process.env.NODE_ENV === "development"
-    ? "http://localhost:5001/copilot/api/github/oauth/login"
-    : "/copilot/api/github/oauth/login";
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
+  const url = `${backendUrl}/copilot/api/github/oauth/login`;
 
   window.location.href = url;
   }

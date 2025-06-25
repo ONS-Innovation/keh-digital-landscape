@@ -31,16 +31,10 @@ export const fetchTeamSeatData = async (token, teamSlug) => {
     return [];
   }
   try {
-    let response;
-    if (process.env.NODE_ENV === "development") {
-      response = await fetch(`http://localhost:5001/copilot/api/team/seats?teamSlug=${teamSlug}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-    } else {
-      response = await fetch(`/copilot/api/team/seats?teamSlug=${teamSlug}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-    }
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
+    const response = await fetch(`${backendUrl}/copilot/api/team/seats?teamSlug=${teamSlug}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
     if (!response.ok) {
       console.error("Failed to fetch team seats:", response.statusText);
       return [];

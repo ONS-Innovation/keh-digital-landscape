@@ -42,12 +42,8 @@ export const fetchOrgHistoricUsageData = async () => {
 
 export const fetchTeamLiveUsageData = async (teamSlug) => {
   try {
-    let response;
-    if (process.env.NODE_ENV === "development") {
-      response = await fetch(`http://localhost:5001/copilot/api/team/live?teamSlug=${teamSlug}`);
-    } else {
-      response = await fetch(`/copilot/api/team/live?teamSlug=${teamSlug}`);
-    }
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
+    const response = await fetch(`${backendUrl}/copilot/api/team/live?teamSlug=${teamSlug}`);
     if (!response.ok) {
       return null;
     }
