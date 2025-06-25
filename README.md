@@ -63,12 +63,12 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 
 2. Install Node.js using nvm:
 ```bash
-nvm install 18.19.0
+nvm install 24.1.0
 ```
 
 3. Set the Node.js version to use:
 ```bash
-nvm use 18.19.0
+nvm use 24.1.0
 ```
 
 4. Remember to export the following in the terminal that the backend is running in:
@@ -205,7 +205,7 @@ colima start --memory 8 # 8GB of memory, adjust as needed i.e 16, 32, 64, but 8 
 cd frontend
 
 # Ensure the environment variable is set in the terminal that is running the frontend
-export REACT_APP_BACKEND_URL=http://localhost:5001
+export VITE_BACKEND_URL=http://localhost:5001
 
 # Run the frontend
 npm start

@@ -48,7 +48,7 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
       },
       environment = [
         {
-          name  = "REACT_APP_BACKEND_URL",
+          name  = "VITE_BACKEND_URL",
           value = "https://${local.service_url}"
         }
       ]
