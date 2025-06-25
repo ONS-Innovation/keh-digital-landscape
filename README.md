@@ -63,12 +63,12 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 
 2. Install Node.js using nvm:
 ```bash
-nvm install 18.19.0
+nvm install 24.1.0
 ```
 
 3. Set the Node.js version to use:
 ```bash
-nvm use 18.19.0
+nvm use 24.1.0
 ```
 
 4. Remember to export the following in the terminal that the backend is running in:
