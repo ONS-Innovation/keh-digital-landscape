@@ -3,14 +3,14 @@
  * It sets up an Express server, handles CORS, and provides endpoints for the frontend.
  */
 require('dotenv').config();
-const express = require("express");
-const cors = require("cors");
+const express = require('express');
+const cors = require('cors');
 const logger = require('./config/logger');
 const {
   generalApiLimiter,
   adminApiLimiter,
   userApiLimiter,
-  externalApiLimiter
+  externalApiLimiter,
 } = require('./config/rateLimiter');
 
 // Import route modules
@@ -25,13 +25,13 @@ const port = process.env.PORT || 5001;
 
 app.use(
   cors({
-    origin: "*",
-    methods: ["GET", "POST", "OPTIONS"],
+    origin: '*',
+    methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: [
-      "Content-Type", 
-      "Authorization", 
-      "x-amzn-oidc-data", 
-      "x-amzn-oidc-accesstoken"
+      'Content-Type',
+      'Authorization',
+      'x-amzn-oidc-data',
+      'x-amzn-oidc-accesstoken',
     ],
   })
 );
@@ -47,12 +47,12 @@ app.use('/copilot/api', externalApiLimiter, copilotRoutes);
 app.use('/user/api', userApiLimiter, userRoutes);
 
 // Error handling
-process.on("uncaughtException", (error) => {
-  logger.error("Uncaught Exception:", { error });
+process.on('uncaughtException', error => {
+  logger.error('Uncaught Exception:', { error });
 });
 
-process.on("unhandledRejection", (reason, promise) => {
-  logger.error("Unhandled Rejection:", { promise, reason });
+process.on('unhandledRejection', (reason, promise) => {
+  logger.error('Unhandled Rejection:', { promise, reason });
 });
 
 /**

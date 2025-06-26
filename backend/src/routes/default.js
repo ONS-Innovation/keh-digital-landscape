@@ -1,10 +1,10 @@
-const express = require("express");
-const s3Service = require("../services/s3Service");
-const logger = require("../config/logger");
+const express = require('express');
+const s3Service = require('../services/s3Service');
+const logger = require('../config/logger');
 const {
   transformProjectToCSVFormat,
-} = require("../utilities/projectDataTransformer");
-const { healthCheckLimiter } = require("../config/rateLimiter");
+} = require('../utilities/projectDataTransformer');
+const { healthCheckLimiter } = require('../config/rateLimiter');
 
 const router = express.Router();
 
@@ -14,11 +14,11 @@ const router = express.Router();
  * @returns {Object[]} Array of objects containing parsed project data in CSV format
  * @throws {Error} 500 - If data fetching or processing fails
  */
-router.get("/csv", async (req, res) => {
+router.get('/csv', async (req, res) => {
   try {
     const jsonData = await s3Service.getObjectViaSignedUrl(
-      "tat",
-      "new_project_data.json"
+      'tat',
+      'new_project_data.json'
     );
 
     // Transform JSON data to CSV format using the utility function
@@ -26,7 +26,7 @@ router.get("/csv", async (req, res) => {
 
     res.json(transformedData);
   } catch (error) {
-    logger.error("Error fetching and transforming project data:", {
+    logger.error('Error fetching and transforming project data:', {
       error: error.message,
     });
     res.status(500).json({ error: error.message });
@@ -39,15 +39,15 @@ router.get("/csv", async (req, res) => {
  * @returns {Object} The tech radar configuration data
  * @throws {Error} 500 - If JSON fetching fails
  */
-router.get("/tech-radar/json", async (req, res) => {
+router.get('/tech-radar/json', async (req, res) => {
   try {
     const jsonData = await s3Service.getObjectViaSignedUrl(
-      "main",
-      "onsRadarSkeleton.json"
+      'main',
+      'onsRadarSkeleton.json'
     );
     res.json(jsonData);
   } catch (error) {
-    logger.error("Error fetching JSON:", { error: error.message });
+    logger.error('Error fetching JSON:', { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });
@@ -63,12 +63,12 @@ router.get("/tech-radar/json", async (req, res) => {
  * @returns {Object} response.metadata - Last updated timestamp and filter information
  * @throws {Error} 500 - If JSON fetching fails
  */
-router.get("/json", async (req, res) => {
+router.get('/json', async (req, res) => {
   try {
     const { datetime, archived } = req.query;
     const jsonData = await s3Service.getObjectViaSignedUrl(
-      "main",
-      "repositories.json"
+      'main',
+      'repositories.json'
     );
 
     // First filter by date if provided
@@ -77,17 +77,17 @@ router.get("/json", async (req, res) => {
     if (datetime && !isNaN(Date.parse(datetime))) {
       const targetDate = new Date(datetime);
       const now = new Date();
-      filteredRepos = jsonData.repositories.filter((repo) => {
+      filteredRepos = jsonData.repositories.filter(repo => {
         const lastCommitDate = new Date(repo.last_commit);
         return lastCommitDate >= targetDate && lastCommitDate <= now;
       });
     }
 
     // Then filter by archived status if specified
-    if (archived === "true") {
-      filteredRepos = filteredRepos.filter((repo) => repo.is_archived);
-    } else if (archived === "false") {
-      filteredRepos = filteredRepos.filter((repo) => !repo.is_archived);
+    if (archived === 'true') {
+      filteredRepos = filteredRepos.filter(repo => repo.is_archived);
+    } else if (archived === 'false') {
+      filteredRepos = filteredRepos.filter(repo => !repo.is_archived);
     }
     // If archived is not specified, use all repos (for total view)
 
@@ -95,22 +95,22 @@ router.get("/json", async (req, res) => {
     const stats = {
       total_repos: filteredRepos.length,
       total_private_repos: filteredRepos.filter(
-        (repo) => repo.visibility === "PRIVATE"
+        repo => repo.visibility === 'PRIVATE'
       ).length,
       total_public_repos: filteredRepos.filter(
-        (repo) => repo.visibility === "PUBLIC"
+        repo => repo.visibility === 'PUBLIC'
       ).length,
       total_internal_repos: filteredRepos.filter(
-        (repo) => repo.visibility === "INTERNAL"
+        repo => repo.visibility === 'INTERNAL'
       ).length,
     };
 
     // Calculate language statistics
     const languageStats = {};
-    filteredRepos.forEach((repo) => {
+    filteredRepos.forEach(repo => {
       if (!repo.technologies?.languages) return;
 
-      repo.technologies.languages.forEach((lang) => {
+      repo.technologies.languages.forEach(lang => {
         if (!languageStats[lang.name]) {
           languageStats[lang.name] = {
             repo_count: 0,
@@ -125,7 +125,7 @@ router.get("/json", async (req, res) => {
     });
 
     // Calculate averages
-    Object.keys(languageStats).forEach((lang) => {
+    Object.keys(languageStats).forEach(lang => {
       languageStats[lang] = {
         repo_count: languageStats[lang].repo_count,
         average_percentage: +(
@@ -145,7 +145,7 @@ router.get("/json", async (req, res) => {
       },
     });
   } catch (error) {
-    logger.error("Error fetching JSON:", { error: error.message });
+    logger.error('Error fetching JSON:', { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });
@@ -164,24 +164,24 @@ router.get("/json", async (req, res) => {
  * @throws {Error} 400 - If no repositories are specified
  * @throws {Error} 500 - If repository data fetching fails
  */
-router.get("/repository/project/json", async (req, res) => {
+router.get('/repository/project/json', async (req, res) => {
   try {
     const { repositories, datetime, archived } = req.query;
     if (!repositories) {
-      return res.status(400).json({ error: "No repositories specified" });
+      return res.status(400).json({ error: 'No repositories specified' });
     }
 
     const repoNames = repositories
-      .split(",")
-      .map((repo) => repo.toLowerCase().trim());
+      .split(',')
+      .map(repo => repo.toLowerCase().trim());
 
     const jsonData = await s3Service.getObjectViaSignedUrl(
-      "main",
-      "repositories.json"
+      'main',
+      'repositories.json'
     );
 
     // Filter repositories based on provided names
-    let filteredRepos = jsonData.repositories.filter((repo) =>
+    let filteredRepos = jsonData.repositories.filter(repo =>
       repoNames.includes(repo.name.toLowerCase())
     );
 
@@ -189,38 +189,37 @@ router.get("/repository/project/json", async (req, res) => {
     if (datetime && !isNaN(Date.parse(datetime))) {
       const targetDate = new Date(datetime);
       const now = new Date();
-      filteredRepos = filteredRepos.filter((repo) => {
+      filteredRepos = filteredRepos.filter(repo => {
         const lastCommitDate = new Date(repo.last_commit);
         return lastCommitDate >= targetDate && lastCommitDate <= now;
       });
     }
 
     // Apply archived filter if specified
-    if (archived === "true") {
-      filteredRepos = filteredRepos.filter((repo) => repo.is_archived);
-    } else if (archived === "false") {
-      filteredRepos = filteredRepos.filter((repo) => !repo.is_archived);
+    if (archived === 'true') {
+      filteredRepos = filteredRepos.filter(repo => repo.is_archived);
+    } else if (archived === 'false') {
+      filteredRepos = filteredRepos.filter(repo => !repo.is_archived);
     }
 
     // Calculate statistics from filtered repository data
     const stats = {
       total_repos: filteredRepos.length,
-      total_private_repos: filteredRepos.filter(
-        (r) => r.visibility === "PRIVATE"
-      ).length,
-      total_public_repos: filteredRepos.filter((r) => r.visibility === "PUBLIC")
+      total_private_repos: filteredRepos.filter(r => r.visibility === 'PRIVATE')
+        .length,
+      total_public_repos: filteredRepos.filter(r => r.visibility === 'PUBLIC')
         .length,
       total_internal_repos: filteredRepos.filter(
-        (r) => r.visibility === "INTERNAL"
+        r => r.visibility === 'INTERNAL'
       ).length,
     };
 
     // Calculate language statistics
     const languageStats = {};
-    filteredRepos.forEach((repo) => {
+    filteredRepos.forEach(repo => {
       if (!repo.technologies?.languages) return;
 
-      repo.technologies.languages.forEach((lang) => {
+      repo.technologies.languages.forEach(lang => {
         if (!languageStats[lang.name]) {
           languageStats[lang.name] = {
             repo_count: 0,
@@ -235,7 +234,7 @@ router.get("/repository/project/json", async (req, res) => {
     });
 
     // Calculate averages
-    Object.keys(languageStats).forEach((lang) => {
+    Object.keys(languageStats).forEach(lang => {
       languageStats[lang] = {
         repo_count: languageStats[lang].repo_count,
         average_percentage: +(
@@ -253,13 +252,13 @@ router.get("/repository/project/json", async (req, res) => {
         last_updated:
           jsonData.metadata?.last_updated || new Date().toISOString(),
         requested_repos: repoNames,
-        found_repos: filteredRepos.map((repo) => repo.name),
+        found_repos: filteredRepos.map(repo => repo.name),
         filter_date: datetime && !isNaN(Date.parse(datetime)) ? datetime : null,
         filter_archived: archived,
       },
     });
   } catch (error) {
-    logger.error("Error fetching repository data:", { error: error.message });
+    logger.error('Error fetching repository data:', { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });
@@ -270,27 +269,27 @@ router.get("/repository/project/json", async (req, res) => {
  * @returns {Object} Active banner messages data
  * @throws {Error} 500 - If fetching fails
  */
-router.get("/banners", async (req, res) => {
+router.get('/banners', async (req, res) => {
   try {
     let messagesData = { messages: [] };
 
     try {
       // Try to get existing messages.json file
-      const data = await s3Service.getObject("main", "messages.json");
+      const data = await s3Service.getObject('main', 'messages.json');
 
       // Filter only active banners
       messagesData.messages = data.messages.filter(
-        (banner) => banner.show === true
+        banner => banner.show === true
       );
     } catch (error) {
       // If file doesn't exist, return empty array
-      logger.info("No messages.json file found, returning empty array");
+      logger.info('No messages.json file found, returning empty array');
       messagesData = { messages: [] };
     }
 
     res.json(messagesData);
   } catch (error) {
-    logger.error("Error fetching banner messages:", { error: error.message });
+    logger.error('Error fetching banner messages:', { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });
@@ -301,27 +300,27 @@ router.get("/banners", async (req, res) => {
  * @returns {Object} All banner messages data
  * @throws {Error} 500 - If fetching fails
  */
-router.get("/banners/all", async (req, res) => {
+router.get('/banners/all', async (req, res) => {
   try {
     let messagesData = { messages: [] };
 
     try {
       // Try to get existing messages.json file
-      const data = await s3Service.getObject("main", "messages.json");
+      const data = await s3Service.getObject('main', 'messages.json');
 
       // Filter only active banners
       messagesData.messages = data.messages.filter(
-        (banner) => banner.show === true
+        banner => banner.show === true
       );
     } catch (error) {
       // If file doesn't exist, return empty array
-      logger.info("No messages.json file found, returning empty array");
+      logger.info('No messages.json file found, returning empty array');
       messagesData = { messages: [] };
     }
 
     res.json(messagesData);
   } catch (error) {
-    logger.error("Error fetching all banner messages:", {
+    logger.error('Error fetching all banner messages:', {
       error: error.message,
     });
     res.status(500).json({ error: error.message });
@@ -338,28 +337,28 @@ router.get("/banners/all", async (req, res) => {
  * @returns {Object} response.memory - Memory usage statistics
  * @returns {number} response.pid - Process ID
  */
-router.get("/health", healthCheckLimiter, (req, res) => {
-  logger.info("Health check endpoint called", {
+router.get('/health', healthCheckLimiter, (req, res) => {
+  logger.info('Health check endpoint called', {
     timestamp: new Date().toISOString(),
   });
 
   // Add more specific headers
   res.set({
-    "Content-Type": "application/json",
-    Connection: "keep-alive",
-    "Cache-Control": "no-cache",
-    "X-Health-Check": "true",
+    'Content-Type': 'application/json',
+    Connection: 'keep-alive',
+    'Cache-Control': 'no-cache',
+    'X-Health-Check': 'true',
   });
 
   const healthResponse = {
-    status: "healthy",
+    status: 'healthy',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     memory: process.memoryUsage(),
     pid: process.pid,
   };
 
-  logger.debug("Health check details", healthResponse);
+  logger.debug('Health check details', healthResponse);
 
   res.status(200).json(healthResponse);
 });
