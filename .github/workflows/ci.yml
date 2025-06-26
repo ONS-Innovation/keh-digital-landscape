@@ -1,4 +1,4 @@
-name: CI
+name: Linting and Formatting
 
 on:
   pull_request:
@@ -23,3 +23,6 @@ jobs:
         
     - name: Run Linting
       run: make lint
+    
+    - name: Run Formatting Check
+      run: make format-check
