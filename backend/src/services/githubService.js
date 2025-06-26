@@ -1,14 +1,14 @@
 const {
   getAppAndInstallation,
-} = require("../utilities/getAppAndInstallation.js");
-const logger = require("../config/logger");
+} = require('../utilities/getAppAndInstallation.js');
+const logger = require('../config/logger');
 
 /**
  * GitHubService class for managing GitHub operations
  */
 class GitHubService {
   constructor() {
-    this.org = process.env.GITHUB_ORG || "ONSdigital";
+    this.org = process.env.GITHUB_ORG || 'ONSdigital';
   }
 
   /**
@@ -23,14 +23,14 @@ class GitHubService {
         `GET /orgs/${this.org}/copilot/metrics`,
         {
           headers: {
-            "X-GitHub-Api-Version": "2022-11-28",
+            'X-GitHub-Api-Version': '2022-11-28',
           },
         }
       );
 
       return response.data;
     } catch (error) {
-      logger.error("GitHub API error while fetching Copilot org metrics:", {
+      logger.error('GitHub API error while fetching Copilot org metrics:', {
         error: error.message,
       });
       throw error;
@@ -82,7 +82,7 @@ class GitHubService {
             per_page: 100,
             page,
             headers: {
-              "X-GitHub-Api-Version": "2022-11-28",
+              'X-GitHub-Api-Version': '2022-11-28',
             },
           }
         );
@@ -94,7 +94,7 @@ class GitHubService {
 
       return allSeats;
     } catch (error) {
-      logger.error("GitHub API error while fetching Copilot seats:", {
+      logger.error('GitHub API error while fetching Copilot seats:', {
         error: error.message,
       });
       throw error;

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import "../../styles/components/Banner.css";
+import React, { useState, useEffect } from 'react';
+import '../../styles/components/Banner.css';
 
 /**
  * Banner component for displaying important messages to users.
- * 
+ *
  * @param {Object} props - Component props
  * @param {string} props.title - The banner title/heading
  * @param {string} props.description - The banner description/message
@@ -11,12 +11,15 @@ import "../../styles/components/Banner.css";
  * @param {Function} props.onClose - Optional callback when banner is closed
  * @returns {JSX.Element|null} The Banner component or null if hidden
  */
-const Banner = ({ title, description, type = "info", onClose }) => {
+const Banner = ({ title, description, type = 'info', onClose }) => {
   const [isVisible, setIsVisible] = useState(true);
-  
+
   // Create a unique key for this banner in localStorage
-  const bannerId = `dismissed_banner_${title}_${description}`.replace(/\s+/g, '_');
-  
+  const bannerId = `dismissed_banner_${title}_${description}`.replace(
+    /\s+/g,
+    '_'
+  );
+
   useEffect(() => {
     // Check localStorage to see if this banner was previously dismissed
     const isDismissed = localStorage.getItem(bannerId);
@@ -31,12 +34,15 @@ const Banner = ({ title, description, type = "info", onClose }) => {
 
   const handleClose = () => {
     setIsVisible(false);
-    
+
     // Store the dismissed state in localStorage with current timestamp
-    localStorage.setItem(bannerId, JSON.stringify({
-      dismissedAt: new Date().getTime()
-    }));
-    
+    localStorage.setItem(
+      bannerId,
+      JSON.stringify({
+        dismissedAt: new Date().getTime(),
+      })
+    );
+
     if (onClose) {
       onClose();
     }
@@ -55,4 +61,4 @@ const Banner = ({ title, description, type = "info", onClose }) => {
   );
 };
 
-export default Banner; 
+export default Banner;

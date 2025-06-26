@@ -1,11 +1,11 @@
 /**
  * Fetch organisation live usage data from Github API
- * 
+ *
  * @returns {Promise<Object>} - The live usage data
  */
 export const fetchOrgLiveUsageData = async () => {
   try {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
     const response = await fetch(`${backendUrl}/copilot/api/org/live`);
     if (!response.ok) {
       return null;
@@ -14,19 +14,19 @@ export const fetchOrgLiveUsageData = async () => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error fetching usage data:", error);
+    console.error('Error fetching usage data:', error);
     return null;
   }
-}
+};
 
 /**
  * Fetch organisation historic usage data from AWS S3
- * 
+ *
  * @returns {Promise<Object>} - The historic usage data
  */
 export const fetchOrgHistoricUsageData = async () => {
   try {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
     const response = await fetch(`${backendUrl}/copilot/api/org/historic`);
     if (!response.ok) {
       return null;
@@ -35,10 +35,10 @@ export const fetchOrgHistoricUsageData = async () => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error fetching usage data:", error);
+    console.error('Error fetching usage data:', error);
     return null;
   }
-}
+};
 
 export const fetchTeamLiveUsageData = async (teamSlug) => {
   try {
@@ -58,7 +58,7 @@ export const fetchTeamLiveUsageData = async (teamSlug) => {
 
 /**
  * Filter usage data based on start and end date
- * 
+ *
  * @param {Object} data - The full, raw usage data
  * @param {string} startDate - ISO date string for start of range to filter
  * @param {string} endDate - ISO date string for end of range to filter
@@ -69,11 +69,11 @@ export const filterUsageData = (data, startDate, endDate) => {
   const start = new Date(startDate);
   const end = new Date(endDate);
 
-  return data.filter((item) => {
+  return data.filter(item => {
     const itemDate = new Date(item.date);
     return itemDate >= start && itemDate <= end;
   });
-}
+};
 
 /**
  * Normalise date based on grouping level
@@ -98,7 +98,7 @@ const getGroupedDate = (dateStr, groupBy) => {
 
 /**
  * Process usage data in a format suitable for dashboard display
- * 
+ *
  * @param {Object[]} data  - Filtered usage data
  * @param {string} groupBy - Grouping by day, week, month or year
  * @returns {Object} - The processed usage data
@@ -112,7 +112,7 @@ export const processUsageData = (data, groupBy = 'day') => {
     perGroupedPeriod: [],
     engagedUsersByLanguage: {},
     engagedUsersByEditor: {},
-    languageBreakdown: {}
+    languageBreakdown: {},
   };
 
   const chat = {
@@ -121,7 +121,7 @@ export const processUsageData = (data, groupBy = 'day') => {
     totalCopies: 0,
     perGroupedPeriod: [],
     engagedUsersByEditor: {},
-    editorBreakdown: {}
+    editorBreakdown: {},
   };
 
   if (!data || !data.length) return { completions, chat };
@@ -129,7 +129,7 @@ export const processUsageData = (data, groupBy = 'day') => {
   const completionsPerDate = {};
   const chatPerDate = {};
 
-  data.forEach((entry) => {
+  data.forEach(entry => {
     const rawDate = entry.date;
     const groupDate = getGroupedDate(rawDate, groupBy);
 
@@ -168,17 +168,20 @@ export const processUsageData = (data, groupBy = 'day') => {
                 suggestions: 0,
                 acceptances: 0,
                 linesSuggested: 0,
-                linesAccepted: 0
+                linesAccepted: 0,
               };
             }
 
             completions.languageBreakdown[langName].suggestions += suggestions;
             completions.languageBreakdown[langName].acceptances += acceptances;
-            completions.languageBreakdown[langName].linesSuggested += linesSuggested;
-            completions.languageBreakdown[langName].linesAccepted += linesAccepted;
+            completions.languageBreakdown[langName].linesSuggested +=
+              linesSuggested;
+            completions.languageBreakdown[langName].linesAccepted +=
+              linesAccepted;
 
             completions.engagedUsersByLanguage[langName] =
-              (completions.engagedUsersByLanguage[langName] || 0) + engagedUsers;
+              (completions.engagedUsersByLanguage[langName] || 0) +
+              engagedUsers;
           });
         });
       });
@@ -188,7 +191,7 @@ export const processUsageData = (data, groupBy = 'day') => {
           date: groupDate,
           acceptances: 0,
           suggestions: 0,
-          engagedUsers: 0
+          engagedUsers: 0,
         };
       }
       completionsPerDate[groupDate].acceptances += dailyAcceptances;
@@ -231,7 +234,7 @@ export const processUsageData = (data, groupBy = 'day') => {
               insertions: 0,
               copies: 0,
               insertionRate: 0,
-              copyRate: 0
+              copyRate: 0,
             };
           }
 
@@ -244,7 +247,7 @@ export const processUsageData = (data, groupBy = 'day') => {
       if (!chatPerDate[groupDate]) {
         chatPerDate[groupDate] = {
           date: groupDate,
-          engagedUsers: 0
+          engagedUsers: 0,
         };
       }
       chatPerDate[groupDate].engagedUsers += chatEngagedUsers;
@@ -260,35 +263,33 @@ export const processUsageData = (data, groupBy = 'day') => {
     date: day.date,
     acceptances: day.acceptances,
     engagedUsers: day.engagedUsers,
-    acceptanceRate: day.suggestions > 0 ? (day.acceptances / day.suggestions) * 100 : 0
+    acceptanceRate:
+      day.suggestions > 0 ? (day.acceptances / day.suggestions) * 100 : 0,
   }));
 
   chat.perGroupedPeriod = Object.values(chatPerDate);
 
   // Final calculations
-  completions.acceptanceRate = completions.totalSuggestions > 0
-    ? completions.totalAcceptances / completions.totalSuggestions
-    : 0;
+  completions.acceptanceRate =
+    completions.totalSuggestions > 0
+      ? completions.totalAcceptances / completions.totalSuggestions
+      : 0;
 
-  completions.lineAcceptanceRate = completions.totalLinesSuggested > 0
-    ? completions.totalLinesAccepted / completions.totalLinesSuggested
-    : 0;
+  completions.lineAcceptanceRate =
+    completions.totalLinesSuggested > 0
+      ? completions.totalLinesAccepted / completions.totalLinesSuggested
+      : 0;
 
-  chat.insertionRate = chat.totalChats > 0
-    ? chat.totalInsertions / chat.totalChats
-    : 0;
+  chat.insertionRate =
+    chat.totalChats > 0 ? chat.totalInsertions / chat.totalChats : 0;
 
-  chat.copyRate = chat.totalChats > 0
-    ? chat.totalCopies / chat.totalChats
-    : 0;
+  chat.copyRate = chat.totalChats > 0 ? chat.totalCopies / chat.totalChats : 0;
 
   Object.entries(chat.editorBreakdown).forEach(([editorName, breakdown]) => {
-    breakdown.insertionRate = breakdown.chats > 0
-      ? breakdown.insertions / breakdown.chats
-      : 0;
-    breakdown.copyRate = breakdown.chats > 0
-      ? breakdown.copies / breakdown.chats
-      : 0;
+    breakdown.insertionRate =
+      breakdown.chats > 0 ? breakdown.insertions / breakdown.chats : 0;
+    breakdown.copyRate =
+      breakdown.chats > 0 ? breakdown.copies / breakdown.chats : 0;
   });
 
   return { completions, chat };

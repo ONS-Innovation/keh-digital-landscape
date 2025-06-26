@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { toast } from "react-hot-toast";
-import MultiSelect from "../MultiSelect/MultiSelect";
+import React, { useState, useEffect } from 'react';
+import { toast } from 'react-hot-toast';
+import MultiSelect from '../MultiSelect/MultiSelect';
 import {
   fetchExistingBanners,
   saveBanner,
   toggleBanner,
-  deleteBanner
-} from "../../utilities/adminBanner";
+  deleteBanner,
+} from '../../utilities/adminBanner';
 
 const BannerManage = () => {
   // Banner management state
-  const [bannerTitle, setBannerTitle] = useState("");
-  const [bannerMessage, setBannerMessage] = useState("");
-  const [bannerType, setBannerType] = useState("info");
+  const [bannerTitle, setBannerTitle] = useState('');
+  const [bannerMessage, setBannerMessage] = useState('');
+  const [bannerType, setBannerType] = useState('info');
   const [selectedPages, setSelectedPages] = useState([]);
   const [existingBanners, setExistingBanners] = useState([]);
   const [showBannerConfirmModal, setShowBannerConfirmModal] = useState(false);
@@ -20,9 +20,9 @@ const BannerManage = () => {
 
   // Page options for banners
   const pageOptions = [
-    { label: "Radar", value: "radar" },
-    { label: "Statistics", value: "statistics" },
-    { label: "Projects", value: "projects" },
+    { label: 'Radar', value: 'radar' },
+    { label: 'Statistics', value: 'statistics' },
+    { label: 'Projects', value: 'projects' },
   ];
 
   useEffect(() => {
@@ -37,8 +37,8 @@ const BannerManage = () => {
       const banners = await fetchExistingBanners();
       setExistingBanners(banners);
     } catch (error) {
-      console.error("Error fetching existing banners:", error);
-      toast.error("Failed to load existing banners");
+      console.error('Error fetching existing banners:', error);
+      toast.error('Failed to load existing banners');
     }
   };
 
@@ -58,29 +58,29 @@ const BannerManage = () => {
         message: bannerMessage,
         title: bannerTitle,
         type: bannerType,
-        pages: selectedPages.map((page) => page.value),
+        pages: selectedPages.map(page => page.value),
         show: true,
       };
 
       await saveBanner(bannerData);
-      
-      setBannerSaveStatus("success");
-      toast.success("Banner saved successfully!");
+
+      setBannerSaveStatus('success');
+      toast.success('Banner saved successfully!');
 
       // Clear form after successful save
       setTimeout(() => {
-        setBannerMessage("");
-        setBannerTitle("");
-        setBannerType("info");
+        setBannerMessage('');
+        setBannerTitle('');
+        setBannerType('info');
         setSelectedPages([]);
         setShowBannerConfirmModal(false);
         setBannerSaveStatus(null);
         loadExistingBanners(); // Refresh the list of banners
       }, 2000);
     } catch (error) {
-      console.error("Error saving banner:", error);
-      setBannerSaveStatus("error");
-      toast.error("Failed to save banner. Please try again.");
+      console.error('Error saving banner:', error);
+      setBannerSaveStatus('error');
+      toast.error('Failed to save banner. Please try again.');
       setShowBannerConfirmModal(false);
     }
   };
@@ -107,17 +107,17 @@ const BannerManage = () => {
       };
       setExistingBanners(updatedBanners);
 
-      toast.success(`Banner ${shouldShow ? "shown" : "hidden"} successfully`);
+      toast.success(`Banner ${shouldShow ? 'shown' : 'hidden'} successfully`);
     } catch (error) {
-      console.error("Error toggling banner:", error);
-      toast.error("Failed to update banner visibility");
+      console.error('Error toggling banner:', error);
+      toast.error('Failed to update banner visibility');
     }
   };
 
   /**
    * Deletes a banner
    */
-  const handleDeleteBanner = async (index) => {
+  const handleDeleteBanner = async index => {
     try {
       await deleteBanner(index);
 
@@ -125,10 +125,10 @@ const BannerManage = () => {
       const updatedBanners = existingBanners.filter((_, i) => i !== index);
       setExistingBanners(updatedBanners);
 
-      toast.success("Banner deleted successfully");
+      toast.success('Banner deleted successfully');
     } catch (error) {
-      console.error("Error deleting banner:", error);
-      toast.error("Failed to delete banner");
+      console.error('Error deleting banner:', error);
+      toast.error('Failed to delete banner');
     }
   };
 
@@ -141,7 +141,7 @@ const BannerManage = () => {
             <input
               type="text"
               value={bannerTitle}
-              onChange={(e) => setBannerTitle(e.target.value)}
+              onChange={e => setBannerTitle(e.target.value)}
               placeholder="Enter banner title"
               className="technology-input"
               aria-label="Enter Banner Title"
@@ -152,7 +152,7 @@ const BannerManage = () => {
             <label>Message</label>
             <textarea
               value={bannerMessage}
-              onChange={(e) => setBannerMessage(e.target.value)}
+              onChange={e => setBannerMessage(e.target.value)}
               placeholder="Enter banner message"
               className="technology-input"
               rows={4}
@@ -164,22 +164,22 @@ const BannerManage = () => {
             <label>Type</label>
             <div className="banner-type-selector">
               <div
-                className={`banner-type-option ${bannerType === "info" ? "selected" : ""}`}
-                onClick={() => setBannerType("info")}
+                className={`banner-type-option ${bannerType === 'info' ? 'selected' : ''}`}
+                onClick={() => setBannerType('info')}
               >
                 <span className="banner-type-indicator info"></span>
                 Info
               </div>
               <div
-                className={`banner-type-option ${bannerType === "warning" ? "selected" : ""}`}
-                onClick={() => setBannerType("warning")}
+                className={`banner-type-option ${bannerType === 'warning' ? 'selected' : ''}`}
+                onClick={() => setBannerType('warning')}
               >
                 <span className="banner-type-indicator warning"></span>
                 Warning
               </div>
               <div
-                className={`banner-type-option ${bannerType === "error" ? "selected" : ""}`}
-                onClick={() => setBannerType("error")}
+                className={`banner-type-option ${bannerType === 'error' ? 'selected' : ''}`}
+                onClick={() => setBannerType('error')}
               >
                 <span className="banner-type-indicator error"></span>
                 Error
@@ -226,20 +226,20 @@ const BannerManage = () => {
                     <div className="banner-actions">
                       <div className="banner-meta">
                         <span
-                          className={`banner-type ${banner.type || "info"}`}
+                          className={`banner-type ${banner.type || 'info'}`}
                         >
-                          {banner.type || "info"}
+                          {banner.type || 'info'}
                         </span>
                         <span className="banner-pages">
-                          Pages:{" "}
+                          Pages:{' '}
                           {Array.isArray(banner.pages)
-                            ? banner.pages.join(", ")
-                            : banner.page || "none"}
+                            ? banner.pages.join(', ')
+                            : banner.page || 'none'}
                         </span>
                         <span
-                          className={`banner-status ${banner.show ? "active" : "hidden"}`}
+                          className={`banner-status ${banner.show ? 'active' : 'hidden'}`}
                         >
-                          {banner.show ? "Active" : "Hidden"}
+                          {banner.show ? 'Active' : 'Hidden'}
                         </span>
                       </div>
                       <div className="banner-actions">
@@ -248,10 +248,10 @@ const BannerManage = () => {
                           onClick={() =>
                             handleToggleBanner(index, !banner.show)
                           }
-                          title={banner.show ? "Hide" : "Show"}
-                          aria-label={banner.show ? "Hide" : "Show"}
+                          title={banner.show ? 'Hide' : 'Show'}
+                          aria-label={banner.show ? 'Hide' : 'Show'}
                         >
-                          {banner.show ? "Hide" : "Show"}
+                          {banner.show ? 'Hide' : 'Show'}
                         </button>
                         <button
                           className="banner-delete-btn"

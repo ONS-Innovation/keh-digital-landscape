@@ -11,23 +11,26 @@ function TableBreakdown({ data, idField, idHeader, columns, headerMap, computedF
     const containerRef = useRef();
     const cellRenderers = getCellRenderers(onViewDataClick);
 
-    const defaultColDef = useMemo(() => ({
+  const defaultColDef = useMemo(
+    () => ({
       sortable: true,
       filter: true,
-      cellStyle: { textAlign: "left" },
+      cellStyle: { textAlign: 'left' },
       flex: 1,
-    }), []);
-    
-    const rowData = useMemo(() => {
-      return Object.entries(data).map(([id, stats]) => ({
-        [idField]: id || "(unknown)",
-        ...stats,
-        ...(computedFields ? computedFields(stats) : {}),
-      }));
-    }, [data, idField, computedFields]);
+    }),
+    []
+  );
 
-    const colDefs = useMemo(() => {
-      if (!rowData.length) return [];
+  const rowData = useMemo(() => {
+    return Object.entries(data).map(([id, stats]) => ({
+      [idField]: id || '(unknown)',
+      ...stats,
+      ...(computedFields ? computedFields(stats) : {}),
+    }));
+  }, [data, idField, computedFields]);
+
+  const colDefs = useMemo(() => {
+    if (!rowData.length) return [];
 
       const keys = [idField, ...columns];
       return keys.map((key) => ({
@@ -45,40 +48,40 @@ function TableBreakdown({ data, idField, idHeader, columns, headerMap, computedF
       }));
     }, [rowData, idField, idHeader, columns, headerMap, cellRenderers]);
 
-    // Generate unique aria-label based on context
-    const generateAriaLabel = () => {
-      if (tableContext) {
-        return `${tableContext} - ${idHeader || 'data'} table`;
-      }
-      return `Data table for ${idHeader || 'data'}`;
-    };
+  // Generate unique aria-label based on context
+  const generateAriaLabel = () => {
+    if (tableContext) {
+      return `${tableContext} - ${idHeader || 'data'} table`;
+    }
+    return `Data table for ${idHeader || 'data'}`;
+  };
 
-    return (
-      <div 
-        ref={containerRef}
-        style={{ height: 300}}
-        role="region"
-        aria-label={generateAriaLabel()}
-        tabIndex="0"
-      >
-        <AgGridReact
-          ref={gridRef}
-          rowData={rowData}
-          columnDefs={colDefs}
-          defaultColDef={defaultColDef}
-          pagination={true}
-          paginationPageSize={20}
-          onFirstDataRendered={(params) => {
-            params.api.ensureIndexVisible(0);
-          }}
-          getRowId={(params) => params.data[idField]}
-          domLayout="normal"
-          navigateToNextCell={(params) => {
-            return params.nextCellPosition;
-          }}
-        />
-      </div>
-    );
-  }  
+  return (
+    <div
+      ref={containerRef}
+      style={{ height: 300 }}
+      role="region"
+      aria-label={generateAriaLabel()}
+      tabIndex="0"
+    >
+      <AgGridReact
+        ref={gridRef}
+        rowData={rowData}
+        columnDefs={colDefs}
+        defaultColDef={defaultColDef}
+        pagination={true}
+        paginationPageSize={20}
+        onFirstDataRendered={params => {
+          params.api.ensureIndexVisible(0);
+        }}
+        getRowId={params => params.data[idField]}
+        domLayout="normal"
+        navigateToNextCell={params => {
+          return params.nextCellPosition;
+        }}
+      />
+    </div>
+  );
+}
 
 export default TableBreakdown;

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -8,9 +8,9 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend
-} from "recharts";
-import { formatNumberWithCommas } from "../../../utilities/getCommaSeparated";
+  Legend,
+} from 'recharts';
+import { formatNumberWithCommas } from '../../../utilities/getCommaSeparated';
 
 const AcceptanceGraph = ({ data }) => {
   return (
@@ -27,12 +27,12 @@ const AcceptanceGraph = ({ data }) => {
             dataKey="date"
             interval={data.length - 2}
             tickLine={false}
-            axisLine={{ stroke: "#f5f5f5" }}
+            axisLine={{ stroke: '#f5f5f5' }}
           />
           <Tooltip
-            wrapperStyle={{ color: "black" }}
+            wrapperStyle={{ color: 'black' }}
             formatter={(value, name) =>
-              name === "Acceptance Rate"
+              name === 'Acceptance Rate'
                 ? `${value.toFixed(2)}%`
                 : formatNumberWithCommas(value)
             }
@@ -61,19 +61,19 @@ const AcceptanceGraph = ({ data }) => {
           <YAxis
             tickLine={false}
             yAxisId="left"
-            axisLine={{ stroke: "#f5f5f5" }}
-            domain={[0, "dataMax + 5"]}
+            axisLine={{ stroke: '#f5f5f5' }}
+            domain={[0, 'dataMax + 5']}
             tickCount={5}
-            tickFormatter={(value) => formatNumberWithCommas(value)}
+            tickFormatter={value => formatNumberWithCommas(value)}
           />
           <YAxis
             tickLine={false}
             yAxisId="right"
             orientation="right"
             stroke="#3B7AD9"
-            axisLine={{ stroke: "#f5f5f5" }}
-            domain={[0, (dataMax) => Math.ceil(dataMax / 10) * 10]}
-            tickFormatter={(value) => `${value.toFixed(0)}%`}
+            axisLine={{ stroke: '#f5f5f5' }}
+            domain={[0, dataMax => Math.ceil(dataMax / 10) * 10]}
+            tickFormatter={value => `${value.toFixed(0)}%`}
             tickCount={5}
           />
         </ComposedChart>

@@ -16,7 +16,7 @@ const getGuestUser = () => ({
  * @param {string} url - The API endpoint URL
  * @returns {Promise<Object>} User data or guest user on error
  */
-const makeUserApiCall = async (url) => {
+const makeUserApiCall = async url => {
   try {
     const response = await fetch(url);
 
@@ -29,7 +29,10 @@ const makeUserApiCall = async (url) => {
 
     return await response.json();
   } catch (error) {
-    console.warn('Failed to fetch user info, falling back to guest:', error.message);
+    console.warn(
+      'Failed to fetch user info, falling back to guest:',
+      error.message
+    );
     return getGuestUser();
   }
 };
@@ -39,7 +42,7 @@ const makeUserApiCall = async (url) => {
  * @returns {Promise<Object>} User data including email, username, groups, and development mode info
  */
 export const fetchUserInfo = async () => {
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
   const url = `${backendUrl}/user/api/info`;
   return makeUserApiCall(url);
 };
@@ -49,7 +52,7 @@ export const fetchUserInfo = async () => {
  * The backend handles ALB cookie deletion and returns the Cognito logout URL
  * @param {Function} clearCache - Optional function to clear application cache before logout
  */
-export const logoutUser = async (clearCache) => {
+export const logoutUser = async clearCache => {
   // Clear application cache if provided
   if (clearCache && typeof clearCache === 'function') {
     try {

@@ -1,11 +1,11 @@
-const express = require("express");
-const s3Service = require("../services/s3Service");
-const techRadarService = require("../services/techRadarService");
-const logger = require("../config/logger");
+const express = require('express');
+const s3Service = require('../services/s3Service');
+const techRadarService = require('../services/techRadarService');
+const logger = require('../config/logger');
 const {
   updateTechnologyInArray,
-} = require("../utilities/updateTechnologyInArray");
-const { verifyJwt, requireAdmin } = require("../services/cognitoService");
+} = require('../utilities/updateTechnologyInArray');
+const { verifyJwt, requireAdmin } = require('../services/cognitoService');
 
 const router = express.Router();
 
@@ -26,13 +26,13 @@ router.use(requireAdmin);
  * @throws {Error} 400 - If entries data is invalid
  * @throws {Error} 500 - If update operation fails
  */
-router.post("/tech-radar/update", async (req, res) => {
+router.post('/tech-radar/update', async (req, res) => {
   try {
     const { entries } = req.body;
-    await techRadarService.updateTechRadarEntries(entries, "admin");
-    res.json({ message: "Tech radar updated successfully" });
+    await techRadarService.updateTechRadarEntries(entries, 'admin');
+    res.json({ message: 'Tech radar updated successfully' });
   } catch (error) {
-    if (error.message.includes("Invalid")) {
+    if (error.message.includes('Invalid')) {
       return res.status(400).json({ error: error.message });
     }
     res.status(500).json({ error: error.message });
@@ -48,7 +48,7 @@ router.post("/tech-radar/update", async (req, res) => {
  * @throws {Error} 400 - If banner data is invalid
  * @throws {Error} 500 - If update operation fails
  */
-router.post("/banners/update", async (req, res) => {
+router.post('/banners/update', async (req, res) => {
   try {
     const { banner } = req.body;
 
@@ -59,35 +59,35 @@ router.post("/banners/update", async (req, res) => {
       !Array.isArray(banner.pages) ||
       banner.pages.length === 0
     ) {
-      return res.status(400).json({ error: "Invalid banner data" });
+      return res.status(400).json({ error: 'Invalid banner data' });
     }
 
     let messagesData;
 
     try {
       // Try to get existing messages.json file
-      messagesData = await s3Service.getObject("main", "messages.json");
+      messagesData = await s3Service.getObject('main', 'messages.json');
     } catch (error) {
       // If file doesn't exist, create a new structure
       messagesData = { messages: [] };
-      logger.info("Creating new messages.json file");
+      logger.info('Creating new messages.json file');
     }
 
     // Add the new banner to messages
     messagesData.messages.push({
-      title: banner.title || "",
+      title: banner.title || '',
       message: banner.message,
       description: banner.message, // For backwards compatibility
-      type: banner.type || "info",
+      type: banner.type || 'info',
       pages: banner.pages,
       show: banner.show !== false, // Default to true if not explicitly set to false
     });
 
     // Save the updated data
-    await s3Service.putObject("main", "messages.json", messagesData);
-    res.json({ message: "Banner added successfully" });
+    await s3Service.putObject('main', 'messages.json', messagesData);
+    res.json({ message: 'Banner added successfully' });
   } catch (error) {
-    logger.error("Error updating banner messages:", { error: error.message });
+    logger.error('Error updating banner messages:', { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });
@@ -98,18 +98,18 @@ router.post("/banners/update", async (req, res) => {
  * @returns {Object} Object containing array of banner messages
  * @throws {Error} 500 - If fetching operation fails
  */
-router.get("/banners", async (req, res) => {
+router.get('/banners', async (req, res) => {
   try {
     try {
       // Try to get existing messages.json file
-      const messagesData = await s3Service.getObject("main", "messages.json");
+      const messagesData = await s3Service.getObject('main', 'messages.json');
       res.json(messagesData);
     } catch (error) {
       // If file doesn't exist, return empty array
       res.json({ messages: [] });
     }
   } catch (error) {
-    logger.error("Error fetching banner messages:", { error: error.message });
+    logger.error('Error fetching banner messages:', { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });
@@ -124,19 +124,19 @@ router.get("/banners", async (req, res) => {
  * @throws {Error} 400 - If index is invalid
  * @throws {Error} 500 - If toggle operation fails
  */
-router.post("/banners/toggle", async (req, res) => {
+router.post('/banners/toggle', async (req, res) => {
   try {
     const { index, show } = req.body;
 
-    if (index === undefined || typeof index !== "number") {
-      return res.status(400).json({ error: "Invalid banner index" });
+    if (index === undefined || typeof index !== 'number') {
+      return res.status(400).json({ error: 'Invalid banner index' });
     }
 
     let messagesData;
     try {
-      messagesData = await s3Service.getObject("main", "messages.json");
+      messagesData = await s3Service.getObject('main', 'messages.json');
     } catch (error) {
-      return res.status(400).json({ error: "Messages file not found" });
+      return res.status(400).json({ error: 'Messages file not found' });
     }
 
     // Check if index is valid
@@ -145,17 +145,17 @@ router.post("/banners/toggle", async (req, res) => {
       index >= messagesData.messages.length ||
       index < 0
     ) {
-      return res.status(400).json({ error: "Banner index out of range" });
+      return res.status(400).json({ error: 'Banner index out of range' });
     }
 
     // Update the banner visibility
     messagesData.messages[index].show = show;
 
     // Save the updated data
-    await s3Service.putObject("main", "messages.json", messagesData);
-    res.json({ message: "Banner visibility updated successfully" });
+    await s3Service.putObject('main', 'messages.json', messagesData);
+    res.json({ message: 'Banner visibility updated successfully' });
   } catch (error) {
-    logger.error("Error toggling banner visibility:", { error: error.message });
+    logger.error('Error toggling banner visibility:', { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });
@@ -169,19 +169,19 @@ router.post("/banners/toggle", async (req, res) => {
  * @throws {Error} 400 - If index is invalid
  * @throws {Error} 500 - If delete operation fails
  */
-router.post("/banners/delete", async (req, res) => {
+router.post('/banners/delete', async (req, res) => {
   try {
     const { index } = req.body;
 
-    if (index === undefined || typeof index !== "number") {
-      return res.status(400).json({ error: "Invalid banner index" });
+    if (index === undefined || typeof index !== 'number') {
+      return res.status(400).json({ error: 'Invalid banner index' });
     }
 
     let messagesData;
     try {
-      messagesData = await s3Service.getObject("main", "messages.json");
+      messagesData = await s3Service.getObject('main', 'messages.json');
     } catch (error) {
-      return res.status(400).json({ error: "Messages file not found" });
+      return res.status(400).json({ error: 'Messages file not found' });
     }
 
     // Check if index is valid
@@ -190,17 +190,17 @@ router.post("/banners/delete", async (req, res) => {
       index >= messagesData.messages.length ||
       index < 0
     ) {
-      return res.status(400).json({ error: "Banner index out of range" });
+      return res.status(400).json({ error: 'Banner index out of range' });
     }
 
     // Remove the banner
     messagesData.messages.splice(index, 1);
 
     // Save the updated data
-    await s3Service.putObject("main", "messages.json", messagesData);
-    res.json({ message: "Banner deleted successfully" });
+    await s3Service.putObject('main', 'messages.json', messagesData);
+    res.json({ message: 'Banner deleted successfully' });
   } catch (error) {
-    logger.error("Error deleting banner:", { error: error.message });
+    logger.error('Error deleting banner:', { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });
@@ -211,17 +211,17 @@ router.post("/banners/delete", async (req, res) => {
  * @returns {Object} Object containing categorised technology arrays
  * @throws {Error} 500 - If fetching operation fails
  */
-router.get("/array-data", async (req, res) => {
+router.get('/array-data', async (req, res) => {
   try {
     try {
-      const arrayData = await s3Service.getObject("tat", "array_data.json");
+      const arrayData = await s3Service.getObject('tat', 'array_data.json');
       res.json(arrayData);
     } catch (error) {
-      logger.error("Error fetching array data:", { error: error.message });
-      res.status(500).json({ error: "Failed to fetch technology data" });
+      logger.error('Error fetching array data:', { error: error.message });
+      res.status(500).json({ error: 'Failed to fetch technology data' });
     }
   } catch (error) {
-    logger.error("Error in array data endpoint:", { error: error.message });
+    logger.error('Error in array data endpoint:', { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });
@@ -238,42 +238,38 @@ router.get("/array-data", async (req, res) => {
  * @throws {Error} 400 - If data is invalid
  * @throws {Error} 500 - If update operation fails
  */
-router.post("/array-data/update", async (req, res) => {
+router.post('/array-data/update', async (req, res) => {
   try {
     const { allCategories, category, items } = req.body;
 
     // Validate input
     if (allCategories) {
-      if (!items || typeof items !== "object") {
-        return res
-          .status(400)
-          .json({
-            error:
-              "Invalid data format. Complete items object is required for all categories update.",
-          });
+      if (!items || typeof items !== 'object') {
+        return res.status(400).json({
+          error:
+            'Invalid data format. Complete items object is required for all categories update.',
+        });
       }
     } else {
       if (!category || !items || !Array.isArray(items)) {
-        return res
-          .status(400)
-          .json({
-            error:
-              "Invalid data format. Category and items array are required for single category update.",
-          });
+        return res.status(400).json({
+          error:
+            'Invalid data format. Category and items array are required for single category update.',
+        });
       }
     }
 
     // Get existing array data
     let arrayData;
     try {
-      arrayData = await s3Service.getObject("tat", "array_data.json");
+      arrayData = await s3Service.getObject('tat', 'array_data.json');
     } catch (error) {
-      logger.error("Error fetching existing array data:", {
+      logger.error('Error fetching existing array data:', {
         error: error.message,
       });
       return res
         .status(500)
-        .json({ error: "Failed to fetch existing data for update" });
+        .json({ error: 'Failed to fetch existing data for update' });
     }
 
     // Update the data
@@ -283,12 +279,10 @@ router.post("/array-data/update", async (req, res) => {
     } else {
       // Validate that the category exists in the current data to prevent category injection
       if (!Object.keys(arrayData).includes(category)) {
-        logger.error("Invalid category attempted:", { category });
-        return res
-          .status(400)
-          .json({
-            error: "Invalid category. The specified category does not exist.",
-          });
+        logger.error('Invalid category attempted:', { category });
+        return res.status(400).json({
+          error: 'Invalid category. The specified category does not exist.',
+        });
       }
 
       // For single category update, update just that category
@@ -296,14 +290,14 @@ router.post("/array-data/update", async (req, res) => {
     }
 
     // Save the updated data
-    await s3Service.putObject("tat", "array_data.json", arrayData);
+    await s3Service.putObject('tat', 'array_data.json', arrayData);
     res.json({
       message: allCategories
-        ? "All technology lists updated successfully"
+        ? 'All technology lists updated successfully'
         : `Technology list for ${category} updated successfully`,
     });
   } catch (error) {
-    logger.error("Error updating array data:", { error: error.message });
+    logger.error('Error updating array data:', { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });
@@ -314,7 +308,7 @@ router.post("/array-data/update", async (req, res) => {
  * @returns {Object} The tech radar configuration data
  * @throws {Error} 500 - If JSON fetching fails
  */
-router.get("/tech-radar", async (req, res) => {
+router.get('/tech-radar', async (req, res) => {
   try {
     const radarData = await techRadarService.getTechRadarData();
     res.json(radarData);
@@ -333,7 +327,7 @@ router.get("/tech-radar", async (req, res) => {
  * @throws {Error} 400 - If data is invalid
  * @throws {Error} 500 - If normalisation operation fails
  */
-router.post("/normalise-technology", async (req, res) => {
+router.post('/normalise-technology', async (req, res) => {
   try {
     const { from, to } = req.body;
 
@@ -347,15 +341,15 @@ router.post("/normalise-technology", async (req, res) => {
     // Get existing project data
     let projectData;
     try {
-      projectData = await s3Service.getObject("tat", "new_project_data.json");
+      projectData = await s3Service.getObject('tat', 'new_project_data.json');
     } catch (error) {
-      logger.error("Error fetching project data:", { error: error.message });
-      return res.status(500).json({ error: "Failed to fetch project data" });
+      logger.error('Error fetching project data:', { error: error.message });
+      return res.status(500).json({ error: 'Failed to fetch project data' });
     }
 
     // Update technology names in project data
     let updateCount = 0;
-    projectData.projects = projectData.projects.map((project) => {
+    projectData.projects = projectData.projects.map(project => {
       let updated = false;
       const architecture = project.architecture;
 
@@ -590,7 +584,7 @@ router.post("/normalise-technology", async (req, res) => {
 
         // Update project_tracking and incident_management if they're string values
         if (
-          typeof supportingTools.project_tracking === "string" &&
+          typeof supportingTools.project_tracking === 'string' &&
           supportingTools.project_tracking === from
         ) {
           supportingTools.project_tracking = to;
@@ -598,7 +592,7 @@ router.post("/normalise-technology", async (req, res) => {
         }
 
         if (
-          typeof supportingTools.incident_management === "string" &&
+          typeof supportingTools.incident_management === 'string' &&
           supportingTools.incident_management === from
         ) {
           supportingTools.incident_management = to;
@@ -614,13 +608,13 @@ router.post("/normalise-technology", async (req, res) => {
     });
 
     // Save the updated data
-    await s3Service.putObject("tat", "new_project_data.json", projectData);
+    await s3Service.putObject('tat', 'new_project_data.json', projectData);
     res.json({
-      message: "Technology names normalised successfully",
+      message: 'Technology names normalised successfully',
       updatedProjects: updateCount,
     });
   } catch (error) {
-    logger.error("Error normalising technology names:", {
+    logger.error('Error normalising technology names:', {
       error: error.message,
     });
     res.status(500).json({ error: error.message });

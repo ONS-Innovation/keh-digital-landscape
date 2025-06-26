@@ -2,10 +2,10 @@ const {
   S3Client,
   GetObjectCommand,
   PutObjectCommand,
-} = require("@aws-sdk/client-s3");
-const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
-const fetch = require("node-fetch");
-const logger = require("../config/logger");
+} = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+const fetch = require('node-fetch');
+const logger = require('../config/logger');
 
 /**
  * S3Service class for managing S3 operations
@@ -13,15 +13,15 @@ const logger = require("../config/logger");
 class S3Service {
   constructor() {
     this.s3Client = new S3Client({
-      region: "eu-west-2",
+      region: 'eu-west-2',
     });
 
     // Bucket configurations
     this.buckets = {
-      main: process.env.BUCKET_NAME || "sdp-dev-digital-landscape",
-      tat: process.env.TAT_BUCKET_NAME || "sdp-dev-tech-audit-tool-api",
+      main: process.env.BUCKET_NAME || 'sdp-dev-digital-landscape',
+      tat: process.env.TAT_BUCKET_NAME || 'sdp-dev-tech-audit-tool-api',
       copilot:
-        process.env.COPILOT_BUCKET_NAME || "sdp-dev-copilot-usage-dashboard",
+        process.env.COPILOT_BUCKET_NAME || 'sdp-dev-copilot-usage-dashboard',
     };
   }
 
@@ -64,7 +64,7 @@ class S3Service {
         Bucket: bucketName,
         Key: key,
         Body: JSON.stringify(data, null, 2),
-        ContentType: "application/json",
+        ContentType: 'application/json',
       });
 
       await this.s3Client.send(command);

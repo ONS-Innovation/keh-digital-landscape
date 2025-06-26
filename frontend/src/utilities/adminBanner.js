@@ -1,8 +1,8 @@
 /**
  * Gets the base URL for banner API calls based on environment
  */
-const getBannerApiUrl = (endpoint) => {
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
+const getBannerApiUrl = endpoint => {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
   return `${backendUrl}${endpoint}`;
 };
 
@@ -11,16 +11,16 @@ const getBannerApiUrl = (endpoint) => {
  */
 export const fetchExistingBanners = async () => {
   try {
-    const response = await fetch(getBannerApiUrl("/admin/api/banners"));
+    const response = await fetch(getBannerApiUrl('/admin/api/banners'));
 
     if (!response.ok) {
-      throw new Error("Failed to fetch banners");
+      throw new Error('Failed to fetch banners');
     }
 
     const data = await response.json();
     return data.messages || [];
   } catch (error) {
-    console.error("Error fetching existing banners:", error);
+    console.error('Error fetching existing banners:', error);
     throw error;
   }
 };
@@ -28,11 +28,11 @@ export const fetchExistingBanners = async () => {
 /**
  * Saves a new banner to the backend
  */
-export const saveBanner = async (banner) => {
-  const response = await fetch(getBannerApiUrl("/admin/api/banners/update"), {
-    method: "POST",
+export const saveBanner = async banner => {
+  const response = await fetch(getBannerApiUrl('/admin/api/banners/update'), {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({ banner }),
   });
@@ -44,7 +44,7 @@ export const saveBanner = async (banner) => {
     } catch (_) {
       // ignore parse errors
     }
-    throw new Error(errorData.error || "Failed to save banner");
+    throw new Error(errorData.error || 'Failed to save banner');
   }
 };
 
@@ -52,10 +52,10 @@ export const saveBanner = async (banner) => {
  * Toggles a banner's visibility
  */
 export const toggleBanner = async (index, shouldShow) => {
-  const response = await fetch(getBannerApiUrl("/admin/api/banners/toggle"), {
-    method: "POST",
+  const response = await fetch(getBannerApiUrl('/admin/api/banners/toggle'), {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       index,
@@ -70,18 +70,18 @@ export const toggleBanner = async (index, shouldShow) => {
     } catch (_) {
       // ignore parse errors
     }
-    throw new Error(errorData.error || "Failed to toggle banner visibility");
+    throw new Error(errorData.error || 'Failed to toggle banner visibility');
   }
 };
 
 /**
  * Deletes a banner
  */
-export const deleteBanner = async (index) => {
-  const response = await fetch(getBannerApiUrl("/admin/api/banners/delete"), {
-    method: "POST",
+export const deleteBanner = async index => {
+  const response = await fetch(getBannerApiUrl('/admin/api/banners/delete'), {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({ index }),
   });
@@ -93,6 +93,6 @@ export const deleteBanner = async (index) => {
     } catch (_) {
       // ignore parse errors
     }
-    throw new Error(errorData.error || "Failed to delete banner");
+    throw new Error(errorData.error || 'Failed to delete banner');
   }
 };

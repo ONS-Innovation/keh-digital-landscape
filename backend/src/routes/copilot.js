@@ -1,7 +1,7 @@
-const logger = require("../config/logger");
-const express = require("express");
-const s3Service = require("../services/s3Service");
-const githubService = require("../services/githubService");
+const logger = require('../config/logger');
+const express = require('express');
+const s3Service = require('../services/s3Service');
+const githubService = require('../services/githubService');
 
 const router = express.Router();
 
@@ -11,12 +11,12 @@ const router = express.Router();
  * @returns {Object} Organisation usage JSON data
  * @throws {Error} 500 - If fetching fails
  */
-router.get("/org/live", async (req, res) => {
+router.get('/org/live', async (req, res) => {
   try {
     const data = await githubService.getCopilotOrgMetrics();
     res.json(data);
   } catch (error) {
-    logger.error("GitHub API error:", { error: error.message });
+    logger.error('GitHub API error:', { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });
@@ -27,15 +27,15 @@ router.get("/org/live", async (req, res) => {
  * @returns {Object} Organisation usage JSON data
  * @throws {Error} 500 - If fetching fails
  */
-router.get("/org/historic", async (req, res) => {
+router.get('/org/historic', async (req, res) => {
   try {
     const data = await s3Service.getObjectViaSignedUrl(
-      "copilot",
-      "historic_usage_data.json"
+      'copilot',
+      'historic_usage_data.json'
     );
     res.json(data);
   } catch (error) {
-    logger.error("Error fetching JSON:", { error: error.message });
+    logger.error('Error fetching JSON:', { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });
@@ -69,12 +69,12 @@ router.get("/team/live", async (req, res) => {
  * @returns {Object} Copilot seat JSON data
  * @throws {Error} 500 - If JSON fetching fails
  */
-router.get("/seats", async (req, res) => {
+router.get('/seats', async (req, res) => {
   try {
     const allSeats = await githubService.getCopilotSeats();
     res.json(allSeats);
   } catch (error) {
-    logger.error("GitHub API error:", { error: error.message });
+    logger.error('GitHub API error:', { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });

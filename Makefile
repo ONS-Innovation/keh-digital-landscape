@@ -1,4 +1,4 @@
-.PHONY: dev frontend backend install install-dev docker-build docker-up docker-down clean test logs ps setup lint lint-frontend lint-fix-frontend lint-backend lint-fix-backend help
+.PHONY: dev frontend backend install install-dev docker-build docker-up docker-down clean test logs ps setup lint lint-frontend lint-fix-frontend lint-backend lint-fix-backend format format-frontend format-backend format-check help
 
 # Development environment
 dev:
@@ -76,6 +76,18 @@ lint-backend:
 lint-fix-backend:
 	cd backend && npm run lint:fix
 
+format: format-frontend format-backend
+
+format-frontend:
+	cd frontend && npm run format ./src
+
+format-backend:
+	cd backend && npm run format ./src
+
+format-check:
+	cd frontend && npm run format:check ./src
+	cd backend && npm run format:check ./src
+
 # Default help command
 help:
 	@echo "Available commands:"
@@ -94,12 +106,16 @@ help:
 	@echo "  make test         			- Run tests"
 	@echo "  make lint         			- Run linting for both frontend and backend"
 	@echo "  make lint-fix     			- Fix linting issues for both frontend and backend"
+	@echo "  make format       			- Format code for both frontend and backend"
+	@echo "  make format-check 			- Check formatting for both frontend and backend"
 	@echo " "
 	@echo "  make lint-frontend         		- Run linting for frontend without fix"
 	@echo "  make lint-fix-frontend     		- Fix linting for frontend and fix"
+	@echo "  make format-frontend       		- Format frontend code"
 	@echo " "
 	@echo "  make lint-backend         		- Run linting for backend without fix"
 	@echo "  make lint-fix-backend     		- Fix linting for backend and fix"
+	@echo "  make format-backend        		- Format backend code"
 	@echo " "
 	@echo "  make logs         			- View Docker logs"
 	@echo "  make ps           			- List running Docker containers"

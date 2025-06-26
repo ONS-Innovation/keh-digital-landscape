@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { IoClose } from "react-icons/io5";
-import "../../styles/components/HelpModal.css";
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { IoClose } from 'react-icons/io5';
+import '../../styles/components/HelpModal.css';
 
 /**
  * HelpModal component for displaying help information in a modal.
@@ -39,10 +39,10 @@ function HelpModal({ show, onClose }) {
   const githubPagesLink = () => {
     return (
       <span>
-        {" "}
+        {' '}
         To view more detailed information about the Digital Landscape, view this
         documentation:
-        <br />{" "}
+        <br />{' '}
         <a
           href="https://ons-innovation.github.io/keh-digital-landscape/"
           target="_blank"
@@ -62,9 +62,9 @@ function HelpModal({ show, onClose }) {
    */
   const getModalContent = () => {
     switch (location.pathname) {
-      case "/radar":
+      case '/radar':
         return {
-          title: "Tech Radar Help",
+          title: 'Tech Radar Help',
           content: (
             <div className="help-modal-body">
               {githubPagesLink()}
@@ -121,16 +121,27 @@ function HelpModal({ show, onClose }) {
                   What do the 4 rings mean?
                   <ul className="help-modal-sublist">
                     <li>
-                      <strong>Adopt:</strong> technologies that are mature, widely adopted and recommended for use in production environments.
+                      <strong>Adopt:</strong> technologies that are mature,
+                      widely adopted and recommended for use in production
+                      environments.
                     </li>
                     <li>
-                      <strong>Trial:</strong> technologies that are gaining traction, have significant potential and warrant further investigation or experimentation.
+                      <strong>Trial:</strong> technologies that are gaining
+                      traction, have significant potential and warrant further
+                      investigation or experimentation.
                     </li>
                     <li>
-                      <strong>Assess:</strong> technologies that are emerging, have some promise, but require further testing and refinement. These technologies have moved beyond the initial curiosity phase. They&apos;ve shown some success in limited use cases and are ready for more structured testing.
+                      <strong>Assess:</strong> technologies that are emerging,
+                      have some promise, but require further testing and
+                      refinement. These technologies have moved beyond the
+                      initial curiosity phase. They&apos;ve shown some success
+                      in limited use cases and are ready for more structured
+                      testing.
                     </li>
                     <li>
-                      <strong>Hold:</strong> technologies that are either outdated, have significant limitations or do not align with the organisation&apos;s strategic direction.
+                      <strong>Hold:</strong> technologies that are either
+                      outdated, have significant limitations or do not align
+                      with the organisation&apos;s strategic direction.
                     </li>
                   </ul>
                 </li>
@@ -138,16 +149,24 @@ function HelpModal({ show, onClose }) {
                   When should you use the technology in the 4 rings?
                   <ul className="help-modal-sublist">
                     <li>
-                      <strong>Adopt:</strong> use these technologies as the foundation for core applications and infrastructure.
+                      <strong>Adopt:</strong> use these technologies as the
+                      foundation for core applications and infrastructure.
                     </li>
                     <li>
-                      <strong>Trial:</strong> conduct pilot projects, proof-of-concepts, or small-scale deployments with a low risk to evaluate their suitability before adopting them widely.
+                      <strong>Trial:</strong> conduct pilot projects,
+                      proof-of-concepts, or small-scale deployments with a low
+                      risk to evaluate their suitability before adopting them
+                      widely.
                     </li>
                     <li>
-                      <strong>Assess:</strong> experiment with these technologies in non-critical environments, such as research projects, internal tools or sandbox deployments.
+                      <strong>Assess:</strong> experiment with these
+                      technologies in non-critical environments, such as
+                      research projects, internal tools or sandbox deployments.
                     </li>
                     <li>
-                      <strong>Hold:</strong> avoid using these technologies unless they are required for supporting legacy systems that cannot be easily migrated.
+                      <strong>Hold:</strong> avoid using these technologies
+                      unless they are required for supporting legacy systems
+                      that cannot be easily migrated.
                     </li>
                   </ul>
                 </li>
@@ -155,9 +174,9 @@ function HelpModal({ show, onClose }) {
             </div>
           ),
         };
-      case "/":
+      case '/':
         return {
-          title: "Digital Landscape Help",
+          title: 'Digital Landscape Help',
           content: (
             <div className="help-modal-body">
               {githubPagesLink()}
@@ -174,9 +193,9 @@ function HelpModal({ show, onClose }) {
             </div>
           ),
         };
-      case "/statistics":
+      case '/statistics':
         return {
-          title: "Statistics Help",
+          title: 'Statistics Help',
           content: (
             <div className="help-modal-body">
               {githubPagesLink()}
@@ -216,9 +235,9 @@ function HelpModal({ show, onClose }) {
             </div>
           ),
         };
-      case "/projects":
+      case '/projects':
         return {
-          title: "Projects Help",
+          title: 'Projects Help',
           content: (
             <div className="help-modal-body">
               {githubPagesLink()}
@@ -250,16 +269,16 @@ function HelpModal({ show, onClose }) {
             </div>
           ),
         };
-      case "/review/dashboard":
+      case '/review/dashboard':
         return {
-          title: "Review Dashboard",
+          title: 'Review Dashboard',
           content: (
             <div className="help-modal-body">
               {githubPagesLink()}
               <h1>Guide</h1>
               <span>
                 This page should only be used by reviewers. Here is how to use
-                it:{" "}
+                it:{' '}
               </span>
               <ul className="help-modal-list">
                 <li>
@@ -295,9 +314,9 @@ function HelpModal({ show, onClose }) {
             </div>
           ),
         };
-      case "/admin/dashboard":
+      case '/admin/dashboard':
         return {
-          title: "Admin Dashboard",
+          title: 'Admin Dashboard',
           content: (
             <div className="help-modal-body">
               {githubPagesLink()}
@@ -306,37 +325,46 @@ function HelpModal({ show, onClose }) {
               <ul className="help-modal-list">
                 <li>View the Existing banners at the bottom of the page.</li>
                 <li>
-                  To create a new banner, enter the banner title and the banner message. Then choose what type of banner, either Info, Warning or Error.
+                  To create a new banner, enter the banner title and the banner
+                  message. Then choose what type of banner, either Info, Warning
+                  or Error.
                 </li>
                 <li>
-                  Select which pages to display the banner on, either Radar, Statistics or Projects.
+                  Select which pages to display the banner on, either Radar,
+                  Statistics or Projects.
                 </li>
                 <li>
-                  Click on the &quot;Save Banner&quot; button to create the banner.
+                  Click on the &quot;Save Banner&quot; button to create the
+                  banner.
                 </li>
                 <li>
-                  Click on the &quot;Delete&quot; button in the Existing banners to delete the banner.
+                  Click on the &quot;Delete&quot; button in the Existing banners
+                  to delete the banner.
                 </li>
                 <li>
-                  Click on the &quot;Hide&quot; button in the Existing banners to hide the banner.
+                  Click on the &quot;Hide&quot; button in the Existing banners
+                  to hide the banner.
                 </li>
                 <li>
-                  Click on the &quot;Show&quot; button in the Existing banners to show the banner.
+                  Click on the &quot;Show&quot; button in the Existing banners
+                  to show the banner.
                 </li>
-                
               </ul>
               <h1>Technology Management</h1>
 
               <ul className="help-modal-list">
                 <li>View the Banner and Technology Management sections.</li>
                 <li>
-                  The blue technology items are the technologies that are in the Tech Radar but not the Technology Reference List.
+                  The blue technology items are the technologies that are in the
+                  Tech Radar but not the Technology Reference List.
                 </li>
                 <li>
-                  The yellow technology items are the technologies that are in the Technology Reference List but not the Tech Radar.
+                  The yellow technology items are the technologies that are in
+                  the Technology Reference List but not the Tech Radar.
                 </li>
                 <li>
-                  Here are some general rules for the Technology Management section:
+                  Here are some general rules for the Technology Management
+                  section:
                   <ul className="help-modal-sublist">
                     <li>
                       <strong>Node.js</strong> instead of NodeJS or node.js
@@ -345,13 +373,15 @@ function HelpModal({ show, onClose }) {
                       <strong>AWS</strong> instead of Amazon Web Services or aws
                     </li>
                     <li>
-                      <strong>GCP</strong> instead of Google Cloud Platform or gcp
+                      <strong>GCP</strong> instead of Google Cloud Platform or
+                      gcp
                     </li>
                     <li>
                       <strong>Azure</strong> instead of Microsoft Azure or azure
                     </li>
                     <li>
-                      Capitalise and anagram the technology like AWS or CraftCMS unless it is a .js framework.
+                      Capitalise and anagram the technology like AWS or CraftCMS
+                      unless it is a .js framework.
                     </li>
                   </ul>
                 </li>
@@ -359,7 +389,7 @@ function HelpModal({ show, onClose }) {
             </div>
           ),
         };
-      case "/copilot":
+      case '/copilot':
         return {
           title: "Copilot Dashboard",
           content: (
@@ -377,7 +407,8 @@ function HelpModal({ show, onClose }) {
                   Click &quot;Team Usage&quot; to view Copilot usage for a specific team within ONS Digital. You must have permissions to view this team.
                 </li>
                 <li>
-                  Switch between &quot;live&quot; and &quot;historic&quot; data to view real-time usage or historical trends.
+                  Switch between &quot;live&quot; and &quot;historic&quot; data
+                  to view real-time usage or historical trends.
                 </li>
               </ul>
             </div>
@@ -385,7 +416,7 @@ function HelpModal({ show, onClose }) {
         };
       default:
         return {
-          title: "Help",
+          title: 'Help',
           content: (
             <div className="help-modal-body">
               {githubPagesLink()}
@@ -403,13 +434,17 @@ function HelpModal({ show, onClose }) {
 
   return (
     <div
-      className={`help-modal-overlay ${isVisible ? "show" : ""}`}
+      className={`help-modal-overlay ${isVisible ? 'show' : ''}`}
       onClick={onClose}
     >
-      <div className="help-modal-content" onClick={(e) => e.stopPropagation()}>
+      <div className="help-modal-content" onClick={e => e.stopPropagation()}>
         <div className="help-modal-header">
           <h2 className="help-modal-title">{modalContent.title}</h2>
-          <button className="help-modal-close" onClick={onClose} aria-label="Close modal">
+          <button
+            className="help-modal-close"
+            onClick={onClose}
+            aria-label="Close modal"
+          >
             <IoClose size={20} />
           </button>
         </div>

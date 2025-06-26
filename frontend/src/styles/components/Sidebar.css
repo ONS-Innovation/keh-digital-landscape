@@ -101,12 +101,11 @@
   gap: 16px;
 }
 
-
 .sidebar-footer .theme-toggle {
   width: 100%;
   justify-content: flex-start;
   border: none;
-  gap: 12px
+  gap: 12px;
 }
 
 .sidebar-footer-buttons {

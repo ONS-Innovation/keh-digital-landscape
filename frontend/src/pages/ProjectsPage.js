@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import Header from "../components/Header/Header";
-import Projects from "../components/Projects/Projects";
-import ProjectModal from "../components/Projects/ProjectModal";
-import { useData } from "../contexts/dataContext";
-import toast from "react-hot-toast";
-import { useTechnologyStatus } from "../utilities/getTechnologyStatus";
-import { BannerContainer } from "../components/Banner";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Header from '../components/Header/Header';
+import Projects from '../components/Projects/Projects';
+import ProjectModal from '../components/Projects/ProjectModal';
+import { useData } from '../contexts/dataContext';
+import toast from 'react-hot-toast';
+import { useTechnologyStatus } from '../utilities/getTechnologyStatus';
+import { BannerContainer } from '../components/Banner';
 /**
  * ProjectsPage component for displaying the projects page.
  *
@@ -19,7 +19,7 @@ function ProjectsPage() {
   const [radarData, setRadarData] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
-  
+
   const { getCsvData, getTechRadarData } = useData();
   const getTechnologyStatus = useTechnologyStatus();
 
@@ -28,13 +28,13 @@ function ProjectsPage() {
       try {
         const [csvData, techData] = await Promise.all([
           getCsvData(),
-          getTechRadarData()
+          getTechRadarData(),
         ]);
         setProjectsData(csvData);
         setRadarData(techData);
       } catch (error) {
         console.error(error);
-        toast.error("Unexpected error occurred.");
+        toast.error('Unexpected error occurred.');
       }
     };
 
@@ -46,7 +46,7 @@ function ProjectsPage() {
    *
    * @param {Object} project - The project object to handle the click for.
    */
-  const handleProjectClick = (project) => {
+  const handleProjectClick = project => {
     setSelectedProject(project);
     setIsProjectModalOpen(true);
   };
@@ -58,9 +58,9 @@ function ProjectsPage() {
     try {
       const newData = await getCsvData(true); // Pass forceRefresh as true
       setProjectsData(newData);
-      toast.success("Data refreshed successfully.");
+      toast.success('Data refreshed successfully.');
     } catch (error) {
-      console.error("Error refreshing data:", error);
+      console.error('Error refreshing data:', error);
     }
   };
 
@@ -69,21 +69,21 @@ function ProjectsPage() {
    *
    * @param {string} tech - The technology to handle the click for.
    */
-  const handleTechClick = (tech) => {
+  const handleTechClick = tech => {
     if (!tech) return;
 
     const entry = radarData?.entries.find(
-      (entry) => entry.title.toLowerCase() === tech.toLowerCase().trim()
+      entry => entry.title.toLowerCase() === tech.toLowerCase().trim()
     );
 
     if (entry) {
-      navigate("/radar", { state: { selectedTech: tech } });
+      navigate('/radar', { state: { selectedTech: tech } });
     }
   };
 
   /**
    * getFilteredProjects function gets the filtered projects based on search term.
-   * 
+   *
    * @returns {Array} - The filtered projects.
    */
   const getFilteredProjects = () => {
@@ -91,7 +91,8 @@ function ProjectsPage() {
     if (!searchTerm.trim()) return projectsData;
 
     return projectsData.filter(project => {
-      const searchString = `${project.Project} ${project.Project_Short} ${project.Project_Area} ${project.Team} ${project.Programme} ${project.Programme_Short} ${project.Description}`.toLowerCase();
+      const searchString =
+        `${project.Project} ${project.Project_Short} ${project.Project_Area} ${project.Team} ${project.Programme} ${project.Programme_Short} ${project.Description}`.toLowerCase();
       return searchString.includes(searchTerm.toLowerCase());
     });
   };
@@ -102,16 +103,16 @@ function ProjectsPage() {
    * @param {string} technologies - The technologies to render.
    * @returns {JSX.Element|null} - The rendered technology list or null if not found.
    */
-  const renderTechnologyList = (technologies) => {
+  const renderTechnologyList = technologies => {
     if (!technologies) return null;
 
-    return technologies.split(";").map((tech, index) => {
+    return technologies.split(';').map((tech, index) => {
       const trimmedTech = tech.trim();
       const status = getTechnologyStatus(trimmedTech);
 
       return (
         <span key={index}>
-          {index > 0 && "; "}
+          {index > 0 && '; '}
           {status ? (
             <span
               className={`clickable-tech ${status}`}
@@ -131,9 +132,9 @@ function ProjectsPage() {
 
   return (
     <>
-      <Header 
+      <Header
         searchTerm={searchTerm}
-        onSearchChange={(value) => setSearchTerm(value)}
+        onSearchChange={value => setSearchTerm(value)}
         searchResults={[]}
         onSearchResultClick={handleProjectClick}
       />

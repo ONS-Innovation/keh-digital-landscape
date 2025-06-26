@@ -107,7 +107,7 @@ function CopilotDashboard() {
     filteredUsage: [],
     processedUsage: [],
     allSeatData: [],
-    activeSeatData: []
+    activeSeatData: [],
   });
 
   const [historicOrgData, setHistoricOrgData] = useState({
@@ -126,10 +126,10 @@ function CopilotDashboard() {
   });
 
   const dateOptions = [
-    { value: "Day", label: "Day" },
-    { value: "Week", label: "Week" },
-    { value: "Month", label: "Month" },
-    { value: "Year", label: "Year" },
+    { value: 'Day', label: 'Day' },
+    { value: 'Week', label: 'Week' },
+    { value: 'Month', label: 'Month' },
+    { value: 'Year', label: 'Year' },
   ];
   
   const [sliderValues, setSliderValues] = useState(null);
@@ -163,14 +163,14 @@ function CopilotDashboard() {
    *
    */
   const handleSliderCompletion = () => {
-    setSliderFinished(true)
+    setSliderFinished(true);
   };
 
   /**
    * Provide visual feedback on slider positions and dates
    *
    */
-  const updateSlider = (values) => {
+  const updateSlider = values => {
     setSliderValues(values);
 
     const newStart = new Date();
@@ -181,7 +181,7 @@ function CopilotDashboard() {
     setStartDate(newStart.toISOString().slice(0, 10));
     setEndDate(newEnd.toISOString().slice(0, 10));
   };
-  
+
   /**
    * Set states from API data
    */
@@ -285,14 +285,20 @@ function CopilotDashboard() {
    */
   useEffect(() => {
     const fetchHistoricData = async () => {
-      if (!hasFetchedHistoric && viewMode === "historic") {
+      if (!hasFetchedHistoric && viewMode === 'historic') {
         setIsHistoricLoading(true);
         const historicUsage = await getHistoricUsageData();
         setHistoricOrgData({
           allUsage: historicUsage ? processUsageData(historicUsage) : [],
-          weekUsage: historicUsage ? processUsageData(historicUsage, 'week') : [],
-          monthUsage: historicUsage ? processUsageData(historicUsage, 'month') : [],
-          yearUsage: historicUsage ? processUsageData(historicUsage, 'year') : [],
+          weekUsage: historicUsage
+            ? processUsageData(historicUsage, 'week')
+            : [],
+          monthUsage: historicUsage
+            ? processUsageData(historicUsage, 'month')
+            : [],
+          yearUsage: historicUsage
+            ? processUsageData(historicUsage, 'year')
+            : [],
         });
         setIsHistoricLoading(false);
         setHasFetchedHistoric(true);
@@ -340,7 +346,7 @@ function CopilotDashboard() {
 
   return (
     <>
-      <Header hideSearch={true}/>
+      <Header hideSearch={true} />
       <div className="admin-page">
         <PageBanner
           title="Copilot Usage Dashboard"
@@ -363,14 +369,14 @@ function CopilotDashboard() {
               <p className="header-text">View Data Type</p>
               <div className="banner-type-selector">
                 <div
-                  className={`banner-type-option ${viewMode === "live" ? "selected" : ""}`}
-                  onClick={() => setViewMode("live")}
+                  className={`banner-type-option ${viewMode === 'live' ? 'selected' : ''}`}
+                  onClick={() => setViewMode('live')}
                 >
                   Live
                 </div>
                 <div
-                  className={`banner-type-option ${viewMode === "historic" ? "selected" : ""}`}
-                  onClick={() => setViewMode("historic")}
+                  className={`banner-type-option ${viewMode === 'historic' ? 'selected' : ''}`}
+                  onClick={() => setViewMode('historic')}
                 >
                   Historic
                 </div>
@@ -413,7 +419,10 @@ function CopilotDashboard() {
                       onChange={updateSlider}
                       onChangeComplete={handleSliderCompletion}
                       allowCross={false}
-                      ariaLabelForHandle={['Start date selector', 'End date selector']}
+                      ariaLabelForHandle={[
+                        'Start date selector',
+                        'End date selector',
+                      ]}
                       ariaValueTextFormatterForHandle={(value, index) => {
                         const usage = data?.allUsage;
                         if (!usage?.length) return `${index === 0 ? 'Start' : 'End'} date: Unknown`;
@@ -437,17 +446,17 @@ function CopilotDashboard() {
                 <div className="date-selector">
                   <select
                     value={viewDatesBy}
-                    onChange={(e) => setViewDatesBy(e.target.value)}
+                    onChange={e => setViewDatesBy(e.target.value)}
                     disabled={isHistoricLoading}
                     aria-label="View Dates By"
                   >
-                    {dateOptions.map((option) => (
+                    {dateOptions.map(option => (
                       <option key={option.value} value={option.value}>
                         {option.label}
                       </option>
                     ))}
                   </select>
-              </div>
+                </div>
               </div>
             )}
           </div>

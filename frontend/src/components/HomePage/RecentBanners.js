@@ -7,7 +7,7 @@ const RecentBanners = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const getBannerIcon = (type) => {
+  const getBannerIcon = type => {
     switch (type) {
       case 'info':
         return <IoInformationCircle className="banner-icon info" />;
@@ -20,18 +20,25 @@ const RecentBanners = () => {
     }
   };
 
-  const capitalizeFirstLetter = (string) => {
+  const capitalizeFirstLetter = string => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
-  const formatPages = (pages) => {
+  const formatPages = pages => {
     if (pages.length === 3) {
-      return capitalizeFirstLetter(pages[0]) + ', ' + 
-             capitalizeFirstLetter(pages[1]) + ' and ' + 
-             capitalizeFirstLetter(pages[2]);
+      return (
+        capitalizeFirstLetter(pages[0]) +
+        ', ' +
+        capitalizeFirstLetter(pages[1]) +
+        ' and ' +
+        capitalizeFirstLetter(pages[2])
+      );
     } else if (pages.length === 2) {
-      return capitalizeFirstLetter(pages[0]) + ' and ' + 
-             capitalizeFirstLetter(pages[1]);
+      return (
+        capitalizeFirstLetter(pages[0]) +
+        ' and ' +
+        capitalizeFirstLetter(pages[1])
+      );
     }
     return capitalizeFirstLetter(pages[0]);
   };
@@ -39,7 +46,7 @@ const RecentBanners = () => {
   useEffect(() => {
     const fetchBanners = async () => {
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
+        const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
         const baseUrl = `${backendUrl}/api/banners/all`;
 
         const response = await fetch(baseUrl);
@@ -47,11 +54,10 @@ const RecentBanners = () => {
           throw new Error('Failed to fetch banners');
         }
         const data = await response.json();
-        
-        const recentBanners = data.messages
-          .sort((a, b) => {
-            return 0;
-          })
+
+        const recentBanners = data.messages.sort((a, b) => {
+          return 0;
+        });
 
         setBanners(recentBanners);
       } catch (err) {
@@ -65,11 +71,17 @@ const RecentBanners = () => {
   }, []);
 
   if (loading) {
-    return <div className="recent-banners-loading">Loading recent banners...</div>;
+    return (
+      <div className="recent-banners-loading">Loading recent banners...</div>
+    );
   }
 
   if (error) {
-    return <div className="recent-banners-error">Error loading recent banners: {error}</div>;
+    return (
+      <div className="recent-banners-error">
+        Error loading recent banners: {error}
+      </div>
+    );
   }
 
   if (banners.length === 0) {
@@ -80,11 +92,15 @@ const RecentBanners = () => {
     <div className="recent-banners-container">
       <h2>Recent Announcements</h2>
       <span>
-        These announcements are shown as banners at the bottom of different pages across the Digital Landscape. 
+        These announcements are shown as banners at the bottom of different
+        pages across the Digital Landscape.
       </span>
       <div className="recent-banners-list">
         {banners.map((banner, index) => (
-          <div key={index} className={`recent-banner-item banner-${banner.type}`}>
+          <div
+            key={index}
+            className={`recent-banner-item banner-${banner.type}`}
+          >
             <div className="recent-banner-header">
               <div className="banner-title-container">
                 {getBannerIcon(banner.type)}
@@ -96,7 +112,9 @@ const RecentBanners = () => {
             </div>
             <div className="recent-banner-body">
               {banner.message.split('\n').map((line, i) => (
-                <p key={i} className="recent-banner-line">{line}</p>
+                <p key={i} className="recent-banner-line">
+                  {line}
+                </p>
               ))}
             </div>
           </div>
