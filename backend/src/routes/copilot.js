@@ -48,17 +48,17 @@ router.get('/org/historic', async (req, res) => {
  * @throws {Error} 400 - If team slug is missing
  * @throws {Error} 500 - If fetching fails
  */
-router.get("/team/live", async (req, res) => {
+router.get('/team/live', async (req, res) => {
   const teamSlug = req.query.teamSlug;
   if (!teamSlug) {
-    return res.status(400).json({ error: "Missing team slug" });
+    return res.status(400).json({ error: 'Missing team slug' });
   }
 
   try {
     const data = await githubService.getCopilotTeamMetrics(teamSlug);
     res.json(data);
   } catch (error) {
-    logger.error("GitHub API error:", { error: error.message });
+    logger.error('GitHub API error:', { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });
@@ -85,19 +85,21 @@ router.get('/seats', async (req, res) => {
  * @returns {Object} Copilot teams JSON data
  * @throws {Error} 500 - If fetching fails
  */
-router.get("/teams", async (req, res) => {
+router.get('/teams', async (req, res) => {
   const authHeader = req.headers.authorization;
-  const userToken = authHeader?.startsWith("Bearer ") ? authHeader.split(" ")[1] : null;
+  const userToken = authHeader?.startsWith('Bearer ')
+    ? authHeader.split(' ')[1]
+    : null;
 
   if (!userToken) {
-    return res.status(401).json({ error: "Missing GitHub user token" });
+    return res.status(401).json({ error: 'Missing GitHub user token' });
   }
-  
+
   try {
     const teams = await githubService.getUserTeams(userToken);
     res.json(teams);
   } catch (error) {
-    logger.error("GitHub API error:", { error: error.message });
+    logger.error('GitHub API error:', { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });
@@ -110,9 +112,9 @@ router.get("/teams", async (req, res) => {
  * @throws {Error} 400 - If team slug is missing
  * @throws {Error} 500 - If fetching fails
  */
-router.get("/team/seats", async (req, res) => {
+router.get('/team/seats', async (req, res) => {
   const { teamSlug } = req.query;
-  if (!teamSlug) return res.status(400).json({ error: "Missing team slug" });
+  if (!teamSlug) return res.status(400).json({ error: 'Missing team slug' });
 
   try {
     const [allSeats, members] = await Promise.all([
@@ -120,12 +122,12 @@ router.get("/team/seats", async (req, res) => {
       githubService.getTeamMembers(teamSlug),
     ]);
 
-    const memberIds = new Set(members.map((m) => m.id));
-    const teamSeats = allSeats.filter((s) => memberIds.has(s.assignee.id));
+    const memberIds = new Set(members.map(m => m.id));
+    const teamSeats = allSeats.filter(s => memberIds.has(s.assignee.id));
 
     res.json(teamSeats);
   } catch (err) {
-    logger.error("GitHub API error:", { err: err.message });
+    logger.error('GitHub API error:', { err: err.message });
     res.status(500).json({ error: err.message });
   }
 });
@@ -136,9 +138,9 @@ router.get("/team/seats", async (req, res) => {
  * @returns {Object} Access token JSON data
  * @throws {Error} 400 - If code is missing or exchange fails
  */
-router.post("/github/oauth/token", async (req, res) => {
+router.post('/github/oauth/token', async (req, res) => {
   const { code } = req.body;
-  if (!code) return res.status(400).json({ error: "Missing code" });
+  if (!code) return res.status(400).json({ error: 'Missing code' });
 
   try {
     const params = new URLSearchParams({
@@ -146,28 +148,33 @@ router.post("/github/oauth/token", async (req, res) => {
       client_secret: process.env.GITHUB_APP_CLIENT_SECRET,
       code,
       redirect_uri: `http://localhost:3000/copilot?fromTab=team`,
-      scope: "user:email read:org",
+      scope: 'user:email read:org',
     });
 
-    const tokenResponse = await fetch("https://github.com/login/oauth/access_token", {
-      method: "POST",
-      headers: { 
-        "Content-Type": "application/x-www-form-urlencoded",
-        Accept: "application/json"
-       },
-      body: params,
-    });
+    const tokenResponse = await fetch(
+      'https://github.com/login/oauth/access_token',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Accept: 'application/json',
+        },
+        body: params,
+      }
+    );
 
     const tokenData = await tokenResponse.json();
     if (tokenData.error) {
-      return res.status(400).json({ error: tokenData.error_description || tokenData.error });
+      return res
+        .status(400)
+        .json({ error: tokenData.error_description || tokenData.error });
     }
 
     // Return the access token to frontend
     res.json({ access_token: tokenData.access_token });
   } catch (error) {
-    logger.error("Error exchanging code for token:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    logger.error('Error exchanging code for token:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
@@ -176,17 +183,16 @@ router.post("/github/oauth/token", async (req, res) => {
  * @route GET /copilot/github/oauth/login
  * @returns {void} Redirects to GitHub OAuth login page
  */
-router.get("/github/oauth/login", (req, res) => {
-  
-  const loginUrl = `https://github.com/login/oauth/authorize?` + 
-  new URLSearchParams({
-    client_id: process.env.GITHUB_APP_CLIENT_ID,
-    redirect_uri: `http://localhost:3000/copilot?fromTab=team`,
-    scope: "user:email read:org",
-  })
+router.get('/github/oauth/login', (req, res) => {
+  const loginUrl =
+    `https://github.com/login/oauth/authorize?` +
+    new URLSearchParams({
+      client_id: process.env.GITHUB_APP_CLIENT_ID,
+      redirect_uri: `http://localhost:3000/copilot?fromTab=team`,
+      scope: 'user:email read:org',
+    });
 
   res.redirect(loginUrl);
-}
-);
+});
 
 module.exports = router;

@@ -1,13 +1,13 @@
-import React from "react";
-import "../../../styles/components/Statistics.css";
-import SkeletonStatCard from "../../Statistics/Skeletons/SkeletonStatCard";
-import "../../../styles/CopilotPage.css";
-import AcceptanceGraph from "../Breakdowns/AcceptanceGraph";
-import EngagedUsersGraph from "../Breakdowns/EngagedUsersGraph";
-import PieChart from "../Breakdowns/PieChart";
-import TableBreakdown from "../Breakdowns/TableBreakdown";
-import CompletionsCards from "../Breakdowns/CompletionsCards";
-import ChatCards from "../Breakdowns/ChatCards";
+import React from 'react';
+import '../../../styles/components/Statistics.css';
+import SkeletonStatCard from '../../Statistics/Skeletons/SkeletonStatCard';
+import '../../../styles/CopilotPage.css';
+import AcceptanceGraph from '../Breakdowns/AcceptanceGraph';
+import EngagedUsersGraph from '../Breakdowns/EngagedUsersGraph';
+import PieChart from '../Breakdowns/PieChart';
+import TableBreakdown from '../Breakdowns/TableBreakdown';
+import CompletionsCards from '../Breakdowns/CompletionsCards';
+import ChatCards from '../Breakdowns/ChatCards';
 
 function HistoricDashboard({ scope, data, isLoading, viewDatesBy }) {
   let completions, chats;
@@ -35,13 +35,13 @@ function HistoricDashboard({ scope, data, isLoading, viewDatesBy }) {
         </div>
       ) : (
         <div>
-          <CompletionsCards completions={completions} prefix={"Total"} />
-          {viewDatesBy !== "Day" && (
+          <CompletionsCards completions={completions} prefix={'Total'} />
+          {viewDatesBy !== 'Day' && (
             <div>
               <h3>Averages per {viewDatesBy}</h3>
               <CompletionsCards
                 completions={completions}
-                prefix={"Average"}
+                prefix={'Average'}
                 divider={completions.perGroupedPeriod.length}
               />
             </div>
@@ -59,11 +59,11 @@ function HistoricDashboard({ scope, data, isLoading, viewDatesBy }) {
           <div className="copilot-charts-container">
             <PieChart
               engagedUsers={completions?.engagedUsersByLanguage ?? 0}
-              title={"Engaged Users by Language"}
+              title={'Engaged Users by Language'}
             />
             <PieChart
               engagedUsers={completions?.engagedUsersByEditor ?? 0}
-              title={"Engaged Users by Editor"}
+              title={'Engaged Users by Editor'}
             />
           </div>
           <h3>Language Breakdown</h3>
@@ -73,22 +73,22 @@ function HistoricDashboard({ scope, data, isLoading, viewDatesBy }) {
             idHeader="Language"
             tableContext="Historic IDE Code Completions Language Breakdown"
             columns={[
-              "suggestions",
-              "acceptances",
-              "acceptanceRate",
-              "linesSuggested",
-              "linesAccepted",
-              "lineAcceptanceRate",
+              'suggestions',
+              'acceptances',
+              'acceptanceRate',
+              'linesSuggested',
+              'linesAccepted',
+              'lineAcceptanceRate',
             ]}
             headerMap={{
-              suggestions: "Suggestions",
-              acceptances: "Acceptances",
-              acceptanceRate: "Acceptance Rate",
-              linesSuggested: "Lines of Code Suggested",
-              linesAccepted: "Lines of Code Accepted",
-              lineAcceptanceRate: "Line Acceptance Rate",
+              suggestions: 'Suggestions',
+              acceptances: 'Acceptances',
+              acceptanceRate: 'Acceptance Rate',
+              linesSuggested: 'Lines of Code Suggested',
+              linesAccepted: 'Lines of Code Accepted',
+              lineAcceptanceRate: 'Line Acceptance Rate',
             }}
-            computedFields={(stats) => ({
+            computedFields={stats => ({
               acceptanceRate: stats.suggestions
                 ? stats.acceptances / stats.suggestions
                 : 0,
@@ -111,13 +111,13 @@ function HistoricDashboard({ scope, data, isLoading, viewDatesBy }) {
         </div>
       ) : (
         <div>
-          <ChatCards chats={chats} prefix={"Total"} />
-          {viewDatesBy !== "Day" && (
+          <ChatCards chats={chats} prefix={'Total'} />
+          {viewDatesBy !== 'Day' && (
             <div>
               <h3>Averages per {viewDatesBy}</h3>
               <ChatCards
                 chats={chats}
-                prefix={"Average"}
+                prefix={'Average'}
                 divider={chats.perGroupedPeriod.length}
               />
             </div>
@@ -133,7 +133,7 @@ function HistoricDashboard({ scope, data, isLoading, viewDatesBy }) {
           <div className="copilot-charts-container">
             <PieChart
               engagedUsers={chats?.engagedUsersByEditor ?? 0}
-              title={"Engaged Users by Editor"}
+              title={'Engaged Users by Editor'}
             />
           </div>
           <h3>Editor Breakdown</h3>
@@ -143,20 +143,20 @@ function HistoricDashboard({ scope, data, isLoading, viewDatesBy }) {
             idHeader="Editor"
             tableContext="Historic Copilot Chat Editor Breakdown"
             columns={[
-              "chats",
-              "insertions",
-              "insertionRate",
-              "copies",
-              "copyRate",
+              'chats',
+              'insertions',
+              'insertionRate',
+              'copies',
+              'copyRate',
             ]}
             headerMap={{
-              chats: "Chats",
-              insertions: "Insertions",
-              insertionRate: "Insertion Rate",
-              copies: "Copies",
-              copyRate: "Copy Rate",
+              chats: 'Chats',
+              insertions: 'Insertions',
+              insertionRate: 'Insertion Rate',
+              copies: 'Copies',
+              copyRate: 'Copy Rate',
             }}
-            computedFields={(stats) => ({
+            computedFields={stats => ({
               insertionRate: stats.chats ? stats.insertions / stats.chats : 0,
               copyRate: stats.chats ? stats.copies / stats.chats : 0,
             })}

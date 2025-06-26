@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import "../../../styles/CopilotPage.css";
+import React, { useMemo } from 'react';
+import '../../../styles/CopilotPage.css';
 import {
   PieChart as RechartsPieChart,
   Pie,

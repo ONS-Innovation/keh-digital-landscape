@@ -1,11 +1,17 @@
-import React, { createContext, useContext, useState, useRef } from "react";
-import { fetchCSVFromS3 } from "../utilities/getCSVData";
-import { fetchTechRadarJSONFromS3 } from "../utilities/getTechRadarJson";
-import { fetchRepositoryData, fetchRepositoryStats } from "../utilities/getRepositoryData";
-import { fetchBanners } from "../utilities/getBanner";
-import { fetchOrgLiveUsageData, fetchOrgHistoricUsageData } from "../utilities/getUsageData";
-import { fetchOrgSeatData } from "../utilities/getSeatData";
-import { fetchUserInfo } from "../utilities/getUser";
+import React, { createContext, useContext, useState, useRef } from 'react';
+import { fetchCSVFromS3 } from '../utilities/getCSVData';
+import { fetchTechRadarJSONFromS3 } from '../utilities/getTechRadarJson';
+import {
+  fetchRepositoryData,
+  fetchRepositoryStats,
+} from '../utilities/getRepositoryData';
+import { fetchBanners } from '../utilities/getBanner';
+import {
+  fetchOrgLiveUsageData,
+  fetchOrgHistoricUsageData,
+} from '../utilities/getUsageData';
+import { fetchOrgSeatData } from '../utilities/getSeatData';
+import { fetchUserInfo } from '../utilities/getUser';
 /**
  * DataContext provides centralized data management and caching for the application.
  * It handles fetching and caching of CSV data, Tech Radar data, repository data,

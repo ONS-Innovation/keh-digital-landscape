@@ -62,7 +62,7 @@ export const logoutUser = async clearCache => {
     }
   }
 
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
   const logoutUrl = `${backendUrl}/user/api/logout`;
   const currentUrl = window.location.origin;
 
@@ -75,7 +75,7 @@ export const logoutUser = async clearCache => {
       body: JSON.stringify({ logout_uri: currentUrl }),
     });
 
-    if (import.meta.env.NODE_ENV === "development") {
+    if (import.meta.env.NODE_ENV === 'development') {
       window.location.reload();
       return;
     }

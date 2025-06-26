@@ -50,14 +50,14 @@ class GitHubService {
         `GET /orgs/${this.org}/teams/${teamSlug}/copilot/metrics`,
         {
           headers: {
-            "X-GitHub-Api-Version": "2022-11-28",
+            'X-GitHub-Api-Version': '2022-11-28',
           },
         }
       );
 
       return response.data;
     } catch (error) {
-      logger.error("GitHub API error while fetching Copilot team metrics:", {
+      logger.error('GitHub API error while fetching Copilot team metrics:', {
         error: error.message,
       });
       throw error;
@@ -114,16 +114,16 @@ class GitHubService {
         `GET /orgs/${this.org}/teams/${teamSlug}/members`,
         {
           headers: {
-            "X-GitHub-Api-Version": "2022-11-28",
+            'X-GitHub-Api-Version': '2022-11-28',
           },
           per_page: 100,
         }
       );
 
       // Only return login, name, and url for each member
-      return (response.data || []);
+      return response.data || [];
     } catch (error) {
-      logger.error("GitHub API error while fetching team members:", {
+      logger.error('GitHub API error while fetching team members:', {
         error: error.message,
       });
       throw error;
@@ -136,14 +136,14 @@ class GitHubService {
    * @returns {Promise<Array>} Array of teams the user is a member of in the organisation
    */
   async getUserTeams(userToken) {
-    const { Octokit } = await import("@octokit/rest");
+    const { Octokit } = await import('@octokit/rest');
 
     try {
       const octokit = new Octokit({ auth: userToken });
 
       const response = await octokit.request(`GET /user/teams`, {
         headers: {
-          "X-GitHub-Api-Version": "2022-11-28",
+          'X-GitHub-Api-Version': '2022-11-28',
         },
         per_page: 100,
       });
@@ -156,11 +156,12 @@ class GitHubService {
         url: team.html_url,
       }));
     } catch (error) {
-      logger.error("GitHub API error while fetching user's teams:", { error: error.message });
+      logger.error("GitHub API error while fetching user's teams:", {
+        error: error.message,
+      });
       throw error;
     }
   }
-
 }
 
 // Export a singleton instance

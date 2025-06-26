@@ -40,10 +40,12 @@ export const fetchOrgHistoricUsageData = async () => {
   }
 };
 
-export const fetchTeamLiveUsageData = async (teamSlug) => {
+export const fetchTeamLiveUsageData = async teamSlug => {
   try {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
-    const response = await fetch(`${backendUrl}/copilot/api/team/live?teamSlug=${teamSlug}`);
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
+    const response = await fetch(
+      `${backendUrl}/copilot/api/team/live?teamSlug=${teamSlug}`
+    );
     if (!response.ok) {
       return null;
     }
@@ -51,10 +53,10 @@ export const fetchTeamLiveUsageData = async (teamSlug) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error fetching team usage data:", error);
+    console.error('Error fetching team usage data:', error);
     return null;
   }
-}
+};
 
 /**
  * Filter usage data based on start and end date
