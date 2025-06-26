@@ -26,6 +26,7 @@ variable "github_app_client_id" {
 variable "github_app_client_secret" {
   description = "GitHub App Client Secret"
   type        = string
+  sensitive   = true
 }
 
 variable "aws_secret_name" {
