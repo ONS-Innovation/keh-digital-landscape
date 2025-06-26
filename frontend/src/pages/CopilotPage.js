@@ -38,6 +38,29 @@ function CopilotDashboard() {
     return diffDays;
   }
 
+  const fetchTeamData = async (slug) => {
+    setIsTeamLoading(true);
+
+    const liveUsage = await fetchTeamLiveUsageData(slug);
+
+    const { start, end } = initialiseDateRange(liveUsage);
+    setStartDate(start);
+    setEndDate(end);
+    setSliderValues([1, getEndSliderValue(liveUsage)]);
+    const teamSeats = await fetchTeamSeatData(localStorage.getItem("userToken"), slug);
+    const activeTeamSeats = filterInactiveUsers(teamSeats, startDate);
+
+    setLiveTeamData({
+      allUsage: liveUsage ?? [],
+      filteredUsage: liveUsage ?? [],
+      processedUsage: liveUsage ? processUsageData(liveUsage) : [],
+      allSeatData: teamSeats,
+      activeSeatData: activeTeamSeats,
+    });
+
+    setIsTeamLoading(false);
+  }
+
   const getDashboardData = () => {
     if (viewMode === "live" && scope === "organisation") return liveOrgData;
     if (viewMode === "live" && scope === "team") return liveTeamData;
@@ -449,30 +472,7 @@ function CopilotDashboard() {
                       }}
                       tableContext="Copilot Team Selection"
                       onViewDataClick={(slug) => {
-                        async function fetchTeamData() {
-                          setIsTeamLoading(true);
-
-                          const liveUsage = await fetchTeamLiveUsageData(slug);
-
-                          const { start, end } = initialiseDateRange(liveUsage);
-                          setStartDate(start);
-                          setEndDate(end);
-                          setSliderValues([1, getEndSliderValue(liveUsage)]);
-                          const teamSeats = await fetchTeamSeatData(localStorage.getItem("userToken"), slug);
-                          const activeTeamSeats = filterInactiveUsers(teamSeats, startDate);
-
-                          setLiveTeamData({
-                            allUsage: liveUsage ?? [],
-                            filteredUsage: liveUsage ?? [],
-                            processedUsage: liveUsage ? processUsageData(liveUsage) : [],
-                            allSeatData: teamSeats,
-                            activeSeatData: activeTeamSeats,
-                          });
-
-                          setIsTeamLoading(false);
-                        }
-
-                        fetchTeamData();
+                        fetchTeamData(slug);
                         setIsSelectingTeam(false);
                       }
                       }
