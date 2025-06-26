@@ -1,11 +1,18 @@
-import React from "react";
-import { FaTimes } from "react-icons/fa";
-import "../../../styles/components/SimilarityModal.css";
+import React from 'react';
+import { FaTimes } from 'react-icons/fa';
+import '../../../styles/components/SimilarityModal.css';
 
-const SimilarityModal = ({ isOpen, onClose, tech, similarTechnologies, onSelectTechnology, thresholdPercentage = 80 }) => {
+const SimilarityModal = ({
+  isOpen,
+  onClose,
+  tech,
+  similarTechnologies,
+  onSelectTechnology,
+  thresholdPercentage = 80,
+}) => {
   if (!isOpen) return null;
 
-  const handleSelectTech = (similarTech) => {
+  const handleSelectTech = similarTech => {
     if (onSelectTechnology) {
       onSelectTechnology(tech, similarTech.name);
     }
@@ -14,7 +21,10 @@ const SimilarityModal = ({ isOpen, onClose, tech, similarTechnologies, onSelectT
   // Helper function to highlight case differences
   const highlightCaseDifferences = (original, similar) => {
     // If lengths don't match or lowercase versions are different, return the regular string
-    if (original.length !== similar.length || original.toLowerCase() !== similar.toLowerCase()) {
+    if (
+      original.length !== similar.length ||
+      original.toLowerCase() !== similar.toLowerCase()
+    ) {
       return similar;
     }
 
@@ -24,10 +34,10 @@ const SimilarityModal = ({ isOpen, onClose, tech, similarTechnologies, onSelectT
         {similar.split('').map((char, index) => {
           const isDifferentCase = char !== original[index];
           return (
-            <span 
-              key={index} 
-              className={isDifferentCase ? "similarity-modal-diff-case" : ""}
-              title={isDifferentCase ? "Case difference detected" : ""}
+            <span
+              key={index}
+              className={isDifferentCase ? 'similarity-modal-diff-case' : ''}
+              title={isDifferentCase ? 'Case difference detected' : ''}
             >
               {char}
             </span>
@@ -57,17 +67,28 @@ const SimilarityModal = ({ isOpen, onClose, tech, similarTechnologies, onSelectT
               <div key={idx} className="similarity-modal-item">
                 <div className="similarity-modal-item-info">
                   <div className="similarity-modal-item-name">
-                    {tech.length === similarTech.name.length && 
-                     tech.toLowerCase() === similarTech.name.toLowerCase() 
-                      ? <span className="similarity-modal-diff-case">{similarTech.name}</span>
-                      : similarTech.name}
-                    {similarTech.isCaseMatch && !(tech.length === similarTech.name.length && 
-                     tech.toLowerCase() === similarTech.name.toLowerCase()) && (
-                      <span className="similarity-modal-case-badge">Case Diff</span>
+                    {tech.length === similarTech.name.length &&
+                    tech.toLowerCase() === similarTech.name.toLowerCase() ? (
+                      <span className="similarity-modal-diff-case">
+                        {similarTech.name}
+                      </span>
+                    ) : (
+                      similarTech.name
                     )}
+                    {similarTech.isCaseMatch &&
+                      !(
+                        tech.length === similarTech.name.length &&
+                        tech.toLowerCase() === similarTech.name.toLowerCase()
+                      ) && (
+                        <span className="similarity-modal-case-badge">
+                          Case Diff
+                        </span>
+                      )}
                   </div>
                   <div className="similarity-modal-item-details">
-                    <span className={`similarity-modal-source ${similarTech.source === "Tech Radar" ? "radar" : "reflist"}`}>
+                    <span
+                      className={`similarity-modal-source ${similarTech.source === 'Tech Radar' ? 'radar' : 'reflist'}`}
+                    >
                       {similarTech.source}
                     </span>
                     <span className="similarity-modal-match">
@@ -85,7 +106,9 @@ const SimilarityModal = ({ isOpen, onClose, tech, similarTechnologies, onSelectT
             ))}
           </div>
         ) : (
-          <div className="similarity-modal-empty">No similar technologies found</div>
+          <div className="similarity-modal-empty">
+            No similar technologies found
+          </div>
         )}
       </div>
     </div>

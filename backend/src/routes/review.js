@@ -1,6 +1,6 @@
-const express = require("express");
-const techRadarService = require("../services/techRadarService");
-const { verifyJwt, requireReviewer } = require("../services/cognitoService");
+const express = require('express');
+const techRadarService = require('../services/techRadarService');
+const { verifyJwt, requireReviewer } = require('../services/cognitoService');
 
 const router = express.Router();
 
@@ -21,13 +21,13 @@ router.use(requireReviewer);
  * @throws {Error} 400 - If entries data is invalid
  * @throws {Error} 500 - If update operation fails
  */
-router.post("/tech-radar/update", async (req, res) => {
+router.post('/tech-radar/update', async (req, res) => {
   try {
     const { entries } = req.body;
-    await techRadarService.updateTechRadarEntries(entries, "review");
-    res.json({ message: "Tech radar updated successfully" });
+    await techRadarService.updateTechRadarEntries(entries, 'review');
+    res.json({ message: 'Tech radar updated successfully' });
   } catch (error) {
-    if (error.message.includes("Invalid")) {
+    if (error.message.includes('Invalid')) {
       return res.status(400).json({ error: error.message });
     }
     res.status(500).json({ error: error.message });

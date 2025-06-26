@@ -1,11 +1,17 @@
-import React, { createContext, useContext, useState, useRef } from "react";
-import { fetchCSVFromS3 } from "../utilities/getCSVData";
-import { fetchTechRadarJSONFromS3 } from "../utilities/getTechRadarJson";
-import { fetchRepositoryData, fetchRepositoryStats } from "../utilities/getRepositoryData";
-import { fetchBanners } from "../utilities/getBanner";
-import { fetchOrgLiveUsageData, fetchOrgHistoricUsageData } from "../utilities/getUsageData";
-import { fetchSeatData } from "../utilities/getSeatData";
-import { fetchUserInfo } from "../utilities/getUser";
+import React, { createContext, useContext, useState, useRef } from 'react';
+import { fetchCSVFromS3 } from '../utilities/getCSVData';
+import { fetchTechRadarJSONFromS3 } from '../utilities/getTechRadarJson';
+import {
+  fetchRepositoryData,
+  fetchRepositoryStats,
+} from '../utilities/getRepositoryData';
+import { fetchBanners } from '../utilities/getBanner';
+import {
+  fetchOrgLiveUsageData,
+  fetchOrgHistoricUsageData,
+} from '../utilities/getUsageData';
+import { fetchSeatData } from '../utilities/getSeatData';
+import { fetchUserInfo } from '../utilities/getUser';
 /**
  * DataContext provides centralized data management and caching for the application.
  * It handles fetching and caching of CSV data, Tech Radar data, repository data,
@@ -15,7 +21,7 @@ const DataContext = createContext();
 
 /**
  * DataProvider component that wraps the application and provides data management functionality.
- * 
+ *
  * @param {Object} props - The component props
  * @param {React.ReactNode} props.children - The child components to be wrapped
  * @returns {JSX.Element} The provider component
@@ -30,7 +36,7 @@ export function DataProvider({ children }) {
   const [historicUsageData, setHistoricUsageData] = useState(null);
   const [seatsData, setSeatsData] = useState(null);
   const [userData, setUserData] = useState(null);
-  
+
   const pendingRequests = useRef({
     csv: null,
     techRadar: null,
@@ -40,17 +46,16 @@ export function DataProvider({ children }) {
     liveUsageData: null,
     historicUsageData: null,
     seatsData: null,
-    userData: null
+    userData: null,
   });
 
   /**
    * Fetches and caches CSV data from S3.
-   * 
+   *
    * @param {boolean} [forceRefresh=false] - Whether to force a refresh of the cached data
    * @returns {Promise<Object>} The CSV data
    */
   const getCsvData = async (forceRefresh = false) => {
-    
     if (!forceRefresh && csvData) {
       return csvData;
     }
@@ -58,7 +63,7 @@ export function DataProvider({ children }) {
     if (pendingRequests.current.csv) {
       return pendingRequests.current.csv;
     }
-    
+
     const promise = fetchCSVFromS3().then(data => {
       setCsvData(data);
       pendingRequests.current.csv = null;
@@ -71,7 +76,7 @@ export function DataProvider({ children }) {
 
   /**
    * Fetches and caches Tech Radar data from S3.
-   * 
+   *
    * @param {boolean} [forceRefresh=false] - Whether to force a refresh of the cached data
    * @returns {Promise<Object>} The Tech Radar data
    */
@@ -84,7 +89,7 @@ export function DataProvider({ children }) {
     if (pendingRequests.current.techRadar) {
       return pendingRequests.current.techRadar;
     }
-    
+
     // Create new request
     const promise = fetchTechRadarJSONFromS3().then(data => {
       setTechRadarData(data);
@@ -98,16 +103,21 @@ export function DataProvider({ children }) {
 
   /**
    * Fetches and caches repository data for specific repositories.
-   * 
+   *
    * @param {string[]} repositories - Array of repository names
    * @param {string} [date=null] - Optional date filter
    * @param {string} [archived=null] - Optional archived status filter
    * @param {boolean} [forceRefresh=false] - Whether to force a refresh of the cached data
    * @returns {Promise<Object>} The repository data
    */
-  const getRepositoryData = async (repositories, date = null, archived = null, forceRefresh = false) => {
+  const getRepositoryData = async (
+    repositories,
+    date = null,
+    archived = null,
+    forceRefresh = false
+  ) => {
     const cacheKey = JSON.stringify({ repositories, date, archived });
-    
+
     if (!forceRefresh && repositoryData.has(cacheKey)) {
       return repositoryData.get(cacheKey);
     }
@@ -116,13 +126,15 @@ export function DataProvider({ children }) {
     if (pendingRequests.current.repository.has(cacheKey)) {
       return pendingRequests.current.repository.get(cacheKey);
     }
-    
+
     // Create new request
-    const promise = fetchRepositoryData(repositories, date, archived).then(data => {
-      setRepositoryData(prev => new Map(prev).set(cacheKey, data));
-      pendingRequests.current.repository.delete(cacheKey);
-      return data;
-    });
+    const promise = fetchRepositoryData(repositories, date, archived).then(
+      data => {
+        setRepositoryData(prev => new Map(prev).set(cacheKey, data));
+        pendingRequests.current.repository.delete(cacheKey);
+        return data;
+      }
+    );
 
     pendingRequests.current.repository.set(cacheKey, promise);
     return promise;
@@ -130,13 +142,17 @@ export function DataProvider({ children }) {
 
   /**
    * Fetches and caches repository statistics.
-   * 
+   *
    * @param {string} [date=null] - Optional date filter
    * @param {string} [archived=null] - Optional archived status filter
    * @param {boolean} [forceRefresh=false] - Whether to force a refresh of the cached data
    * @returns {Promise<Object>} The repository statistics
    */
-  const getRepositoryStats = async (date = null, archived = null, forceRefresh = false) => {
+  const getRepositoryStats = async (
+    date = null,
+    archived = null,
+    forceRefresh = false
+  ) => {
     const cacheKey = JSON.stringify({ date, archived });
 
     if (!forceRefresh && repositoryStats.has(cacheKey)) {
@@ -159,14 +175,14 @@ export function DataProvider({ children }) {
 
   /**
    * Fetches and caches banners for a specific page.
-   * 
+   *
    * @param {string} page - The page to get banners for ('radar', 'statistics', or 'projects')
    * @param {boolean} [forceRefresh=false] - Whether to force a refresh of the cached data
    * @returns {Promise<Array>} Array of banner objects for the specified page
    */
   const getPageBanners = async (page, forceRefresh = false) => {
     if (!page) {
-      console.error("Page parameter is required for getPageBanners");
+      console.error('Page parameter is required for getPageBanners');
       return [];
     }
 
@@ -179,7 +195,7 @@ export function DataProvider({ children }) {
     if (pendingRequests.current.banners.has(page)) {
       return pendingRequests.current.banners.get(page);
     }
-    
+
     // Create new request
     const promise = fetchBanners(page).then(data => {
       setPageBanners(prev => new Map(prev).set(page, data));
@@ -215,7 +231,7 @@ export function DataProvider({ children }) {
 
     pendingRequests.current.usageData = promise;
     return promise;
-  }
+  };
 
   /**
    * Fetches and caches historic usage data for the organisation.
@@ -240,7 +256,7 @@ export function DataProvider({ children }) {
 
     pendingRequests.current.historicUsageData = promise;
     return promise;
-  }
+  };
 
   /**
    * Fetches and caches seat data for the organisation.
@@ -265,7 +281,7 @@ export function DataProvider({ children }) {
 
     pendingRequests.current.seatsData = promise;
     return promise;
-  }
+  };
 
   /**
    * Fetches and caches user information.
@@ -290,7 +306,7 @@ export function DataProvider({ children }) {
 
     pendingRequests.current.userData = promise;
     return promise;
-  }
+  };
 
   const clearCache = () => {
     setCsvData(null);
@@ -311,12 +327,12 @@ export function DataProvider({ children }) {
       liveUsageData: null,
       historicUsageData: null,
       seatsData: null,
-      userData: null
+      userData: null,
     };
   };
 
   return (
-    <DataContext.Provider 
+    <DataContext.Provider
       value={{
         csvData,
         techRadarData,
@@ -341,14 +357,14 @@ export function DataProvider({ children }) {
 /**
  * Hook to access the DataContext.
  * Must be used within a DataProvider component.
- * 
+ *
  * @returns {Object} The context value containing all data management methods
  * @throws {Error} If used outside of a DataProvider
  */
 export function useData() {
   const context = useContext(DataContext);
   if (context === undefined) {
-    throw new Error("useData must be used within a DataProvider");
+    throw new Error('useData must be used within a DataProvider');
   }
   return context;
 }

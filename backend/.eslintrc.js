@@ -14,4 +14,4 @@ module.exports = {
     'no-duplicate-imports': 'error',
     'no-multiple-empty-lines': ['error', { max: 1 }],
   },
-}; 
+};

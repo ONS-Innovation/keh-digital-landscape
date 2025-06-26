@@ -25,12 +25,11 @@
   .layout-content {
     flex-direction: column;
   }
-  
+
   .main-content {
     padding: 0px;
   }
 }
-
 
 .projects-page {
   padding: 24px;

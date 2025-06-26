@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import Statistics from "../components/Statistics/Statistics";
-import Header from "../components/Header/Header";
-import { toast } from "react-hot-toast";
-import { useData } from "../contexts/dataContext";
-import { BannerContainer } from "../components/Banner";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Statistics from '../components/Statistics/Statistics';
+import Header from '../components/Header/Header';
+import { toast } from 'react-hot-toast';
+import { useData } from '../contexts/dataContext';
+import { BannerContainer } from '../components/Banner';
 
 /**
  * StatisticsPage component for displaying the statistics page.
@@ -22,14 +22,19 @@ function StatisticsPage() {
   const [currentRepoView, setCurrentRepoView] = useState('unarchived');
   const [searchTerm, setSearchTerm] = useState('');
   const [radarData, setRadarData] = useState(null);
-  const { getTechRadarData, getRepositoryData, getRepositoryStats, getCsvData } = useData();
+  const {
+    getTechRadarData,
+    getRepositoryData,
+    getRepositoryStats,
+    getCsvData,
+  } = useData();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [techData, projectData] = await Promise.all([
           getTechRadarData(),
-          getCsvData()
+          getCsvData(),
         ]);
         setRadarData(techData);
         setProjectsData(projectData);
@@ -47,7 +52,7 @@ function StatisticsPage() {
    * @param {string|null} date - The date to fetch the statistics for.
    * @param {string} repoView - The repository view to fetch the statistics for.
    */
-  const fetchStatistics = async (date = null, repoView = "unarchived") => {
+  const fetchStatistics = async (date = null, repoView = 'unarchived') => {
     setIsLoading(true);
     try {
       let statsResponse;
@@ -55,22 +60,23 @@ function StatisticsPage() {
 
       if (selectedRepositories.length > 0) {
         const repoNames = selectedRepositories
-          .map((repoUrl) => {
+          .map(repoUrl => {
             const match = repoUrl.match(/github\.com\/[^/]+\/([^/]+)/);
             return match ? match[1] : null;
           })
           .filter(Boolean);
 
-        const archived = repoView === "archived" 
-          ? "true" 
-          : repoView === "unarchived" 
-            ? "false" 
-            : null;
+        const archived =
+          repoView === 'archived'
+            ? 'true'
+            : repoView === 'unarchived'
+              ? 'false'
+              : null;
 
         const repoResponse = await getRepositoryData(repoNames, date, archived);
 
         if (!repoResponse?.repositories) {
-          throw new Error("Failed to fetch repository data");
+          throw new Error('Failed to fetch repository data');
         }
 
         statsResponse = {
@@ -81,19 +87,22 @@ function StatisticsPage() {
       } else {
         // Use context for general statistics
         statsResponse = await getRepositoryStats(
-          date, 
-          repoView === "archived" ? "true" : 
-          repoView === "unarchived" ? "false" : null
+          date,
+          repoView === 'archived'
+            ? 'true'
+            : repoView === 'unarchived'
+              ? 'false'
+              : null
         );
       }
 
       if (!statsResponse || !radarResponse) {
-        throw new Error("Failed to fetch data");
+        throw new Error('Failed to fetch data');
       }
 
       const mappedStats = {
         stats_unarchived:
-          repoView === "unarchived"
+          repoView === 'unarchived'
             ? {
                 total: statsResponse.stats?.total_repos || 0,
                 private: statsResponse.stats?.total_private_repos || 0,
@@ -105,7 +114,7 @@ function StatisticsPage() {
               }
             : {},
         stats_archived:
-          repoView === "archived"
+          repoView === 'archived'
             ? {
                 total: statsResponse.stats?.total_repos || 0,
                 private: statsResponse.stats?.total_private_repos || 0,
@@ -117,7 +126,7 @@ function StatisticsPage() {
               }
             : {},
         stats:
-          repoView === "total"
+          repoView === 'total'
             ? {
                 total: statsResponse.stats?.total_repos || 0,
                 private: statsResponse.stats?.total_private_repos || 0,
@@ -129,11 +138,15 @@ function StatisticsPage() {
               }
             : null,
         language_statistics_unarchived:
-          repoView === "unarchived" ? statsResponse.language_statistics || {} : {},
+          repoView === 'unarchived'
+            ? statsResponse.language_statistics || {}
+            : {},
         language_statistics_archived:
-          repoView === "archived" ? statsResponse.language_statistics || {} : {},
+          repoView === 'archived'
+            ? statsResponse.language_statistics || {}
+            : {},
         language_statistics:
-          repoView === "total" ? statsResponse.language_statistics || {} : {},
+          repoView === 'total' ? statsResponse.language_statistics || {} : {},
         radar_entries: radarResponse.entries,
         metadata: statsResponse.metadata || {
           last_updated: new Date().toISOString(),
@@ -182,20 +195,20 @@ function StatisticsPage() {
     }
   }, [selectedRepositories, currentDate, currentRepoView, radarData]);
 
-  const handleDateChange = (date, repoView = "unarchived") => {
-    setCurrentDate(date === "all" ? null : date);
+  const handleDateChange = (date, repoView = 'unarchived') => {
+    setCurrentDate(date === 'all' ? null : date);
     setCurrentRepoView(repoView);
   };
 
-  const handleTechClick = (tech) => {
-    navigate("/radar", { state: { selectedTech: tech } });
+  const handleTechClick = tech => {
+    navigate('/radar', { state: { selectedTech: tech } });
   };
 
-  const handleProjectsChange = (repositories) => {
+  const handleProjectsChange = repositories => {
     // Flatten the array of repository URLs by splitting each URL by semicolon
-    const allRepoUrls = repositories.flatMap((repoUrl) =>
-      repoUrl.split(";").map((url) => {
-        const cleanUrl = url.trim().split("#")[0]; // Remove #readme and any other hash parts
+    const allRepoUrls = repositories.flatMap(repoUrl =>
+      repoUrl.split(';').map(url => {
+        const cleanUrl = url.trim().split('#')[0]; // Remove #readme and any other hash parts
         return cleanUrl;
       })
     );
@@ -204,7 +217,7 @@ function StatisticsPage() {
 
   const getFilteredLanguages = () => {
     if (!statsData) return [];
-    
+
     const languageStats = statsData.language_statistics_unarchived || {};
     const languages = Object.entries(languageStats)
       .filter(([language]) => {
@@ -212,7 +225,7 @@ function StatisticsPage() {
       })
       .map(([language, stats]) => ({
         language,
-        ...stats
+        ...stats,
       }));
 
     return languages;
@@ -224,9 +237,9 @@ function StatisticsPage() {
     <>
       <Header
         searchTerm={searchTerm}
-        onSearchChange={(value) => setSearchTerm(value)}
+        onSearchChange={value => setSearchTerm(value)}
         searchResults={[]}
-        onSearchResultClick={(result) => handleTechClick(result.language)}
+        onSearchResultClick={result => handleTechClick(result.language)}
       />
       <BannerContainer page="statistics" />
       <div className="statistics-page">

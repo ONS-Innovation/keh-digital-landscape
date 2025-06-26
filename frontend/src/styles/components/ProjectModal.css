@@ -120,7 +120,6 @@
   color: hsl(var(--foreground));
 }
 
-
 .project-link svg {
   margin-bottom: -3px;
   margin-left: 4px;
@@ -267,7 +266,7 @@
   .modal-content {
     width: 100vw;
     border-left: none;
-    border-right:none;
+    border-right: none;
     padding: 16px;
   }
 
@@ -467,7 +466,7 @@
 }
 
 .accordion-header:hover {
-  background-color: hsl(var(--muted) / .6);
+  background-color: hsl(var(--muted) / 0.6);
 }
 
 .accordion-header h3 {
@@ -528,7 +527,6 @@
 
 .project-link:hover {
   color: hsl(var(--muted-foreground));
-
 }
 
 .miscellaneous-block {

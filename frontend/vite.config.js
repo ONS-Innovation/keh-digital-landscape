@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -19,14 +19,16 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: Object.fromEntries(
-      ['/api', '/user/api', '/copilot/api', '/admin/api', '/review/api'].map(path => [
-        path,
-        {
-          target: process.env.VITE_BACKEND_URL || "http://localhost:5001",
-          changeOrigin: true,
-          secure: false,
-        }
-      ])
+      ['/api', '/user/api', '/copilot/api', '/admin/api', '/review/api'].map(
+        path => [
+          path,
+          {
+            target: process.env.VITE_BACKEND_URL || 'http://localhost:5001',
+            changeOrigin: true,
+            secure: false,
+          },
+        ]
+      )
     ),
   },
   build: {
@@ -36,4 +38,4 @@ export default defineConfig({
   define: {
     global: 'globalThis',
   },
-}) 
+});

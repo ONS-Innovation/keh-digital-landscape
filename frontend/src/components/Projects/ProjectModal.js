@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import "../../styles/components/ProjectModal.css";
-import "../../styles/LangColours.css";
-import { IoClose, IoSearch, IoChevronDown } from "react-icons/io5";
-import SkeletonLanguageCard from "../Statistics/Skeletons/SkeletonLanguageCard";
-import { fetchRepositoryData } from "../../utilities/getRepositoryData";
-import { useTechnologyStatus } from "../../utilities/getTechnologyStatus";
+import React, { useState, useEffect } from 'react';
+import '../../styles/components/ProjectModal.css';
+import '../../styles/LangColours.css';
+import { IoClose, IoSearch, IoChevronDown } from 'react-icons/io5';
+import SkeletonLanguageCard from '../Statistics/Skeletons/SkeletonLanguageCard';
+import { fetchRepositoryData } from '../../utilities/getRepositoryData';
+import { useTechnologyStatus } from '../../utilities/getTechnologyStatus';
 /**
  * ProjectModal component for displaying project details in a modal.
  *
@@ -22,7 +22,7 @@ const ProjectModal = ({
   renderTechnologyList,
   onTechClick,
 }) => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [repoData, setRepoData] = useState(null);
   const [otherRepoData, setOtherRepoData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,8 +30,7 @@ const ProjectModal = ({
     projectDetails: true,
     repositories: true,
   });
-  const [expandedGroups, setExpandedGroups] = useState({
-  });
+  const [expandedGroups, setExpandedGroups] = useState({});
   const getTechnologyStatus = useTechnologyStatus();
 
   useEffect(() => {
@@ -41,14 +40,14 @@ const ProjectModal = ({
         setIsLoading(true);
 
         // split the Repo string by ; and remove any whitespace
-        const allRepoUrls = project.Repo.split(";")
-          .map((url) => url.trim())
-          .filter((url) => url);
+        const allRepoUrls = project.Repo.split(';')
+          .map(url => url.trim())
+          .filter(url => url);
 
         // map the allRepoUrls to the github.com/ONSDigital repos
         const onsDigitalRepos = allRepoUrls
-          .map((repo) => {
-            const repoUrl = repo.split("#")[0].trim();
+          .map(repo => {
+            const repoUrl = repo.split('#')[0].trim();
             const match = repoUrl.match(/github\.com\/ONSDigital\/([^/\s]+)/i);
             return match ? match[1] : null;
           })
@@ -67,15 +66,15 @@ const ProjectModal = ({
         }
 
         const fetchedRepoUrls = new Set(
-          repoDataResults.map((repo) => repo.url.toLowerCase())
+          repoDataResults.map(repo => repo.url.toLowerCase())
         );
 
         // other repos are the repos that are not in the onsDigitalRepos
-        const otherRepos = allRepoUrls.filter((url) => {
+        const otherRepos = allRepoUrls.filter(url => {
           const normalizedUrl = url.toLowerCase();
 
           return !Array.from(fetchedRepoUrls).some(
-            (fetchedUrl) =>
+            fetchedUrl =>
               normalizedUrl.includes(fetchedUrl) ||
               fetchedUrl.includes(normalizedUrl)
           );
@@ -100,11 +99,11 @@ const ProjectModal = ({
       <div>
         <div
           className="accordion-header"
-          onClick={() => toggleAccordionItem("repositories")}
+          onClick={() => toggleAccordionItem('repositories')}
         >
           <h3 className="">Repositories</h3>
           <span
-            className={`accordion-icon ${expandedItems.repositories ? "expanded" : ""}`}
+            className={`accordion-icon ${expandedItems.repositories ? 'expanded' : ''}`}
           >
             <IoChevronDown />
           </span>
@@ -131,12 +130,12 @@ const ProjectModal = ({
                       {repo.visibility.toLowerCase()}
                     </span>
                     <span className="repo-badge">
-                      {repo.is_archived ? "Archived" : "Active"}
+                      {repo.is_archived ? 'Archived' : 'Active'}
                     </span>
                     <p
-                      className={`repo-last-commit ${!repo.is_archived && new Date(repo.last_commit) < new Date(Date.now() - 180 * 24 * 60 * 60 * 1000) ? "last-commit-threshold" : ""}`}
+                      className={`repo-last-commit ${!repo.is_archived && new Date(repo.last_commit) < new Date(Date.now() - 180 * 24 * 60 * 60 * 1000) ? 'last-commit-threshold' : ''}`}
                     >
-                      Last commit:{" "}
+                      Last commit:{' '}
                       {new Date(repo.last_commit).toLocaleDateString()}
                     </p>
                   </div>
@@ -148,11 +147,11 @@ const ProjectModal = ({
                       ? getTechnologyStatus(lang.name)
                       : null;
                     const isClickable =
-                      status && status !== "review" && status !== "ignore";
+                      status && status !== 'review' && status !== 'ignore';
                     return (
                       <span
                         key={i}
-                        className={`language-label ${isClickable ? `clickable-tech ${status}` : ""}`}
+                        className={`language-label ${isClickable ? `clickable-tech ${status}` : ''}`}
                         onClick={() =>
                           isClickable && onTechClick && onTechClick(lang.name)
                         }
@@ -201,11 +200,11 @@ const ProjectModal = ({
                         </div>
                         <div className="repo-badges">
                           <span className="repo-badge">
-                            {repoUrl.includes("gitlab")
-                              ? "GitLab"
-                              : repoUrl.includes("github")
-                                ? "GitHub"
-                                : "Repository"}
+                            {repoUrl.includes('gitlab')
+                              ? 'GitLab'
+                              : repoUrl.includes('github')
+                                ? 'GitHub'
+                                : 'Repository'}
                           </span>
                         </div>
                       </div>
@@ -215,7 +214,7 @@ const ProjectModal = ({
                             className={`language-bar`}
                             style={{
                               width: `100%`,
-                              backgroundColor: "#cccccc",
+                              backgroundColor: '#cccccc',
                             }}
                             title={`Unknown`}
                           />
@@ -240,94 +239,94 @@ const ProjectModal = ({
   // Group definitions
   const groups = {
     languages: [
-      "Language_Main",
-      "Language_Others",
-      "Language_Frameworks",
-      "Testing_Frameworks",
+      'Language_Main',
+      'Language_Others',
+      'Language_Frameworks',
+      'Testing_Frameworks',
     ],
     infrastructure: [
-      "Infrastructure",
-      "CICD",
-      "Cloud_Services",
-      "Containers",
-      "Hosted",
-      "Architectures",
+      'Infrastructure',
+      'CICD',
+      'Cloud_Services',
+      'Containers',
+      'Hosted',
+      'Architectures',
     ],
-    security: ["IAM_Services", "Source_Control", "Branching_Strategy"],
-    quality: ["Static_Analysis", "Code_Formatter", "Monitoring"],
-    data: ["Datastores", "Database_Technologies", "Data_Output_Formats"],
-    integrations: ["Integrations_ONS", "Integrations_External"],
+    security: ['IAM_Services', 'Source_Control', 'Branching_Strategy'],
+    quality: ['Static_Analysis', 'Code_Formatter', 'Monitoring'],
+    data: ['Datastores', 'Database_Technologies', 'Data_Output_Formats'],
+    integrations: ['Integrations_ONS', 'Integrations_External'],
     general: [
-      "Project_Area",
-      "DST_Area",
-      "Project_Tools",
-      "Other_Tools",
-      "Datasets_Used",
-      "Code_Editors",
-      "Communication",
-      "Collaboration",
-      "Incident_Management",
-      "Documentation_Tools",
-      "UI_Tools",
-      "Diagram_Tools",
-      "Miscellaneous",
+      'Project_Area',
+      'DST_Area',
+      'Project_Tools',
+      'Other_Tools',
+      'Datasets_Used',
+      'Code_Editors',
+      'Communication',
+      'Collaboration',
+      'Incident_Management',
+      'Documentation_Tools',
+      'UI_Tools',
+      'Diagram_Tools',
+      'Miscellaneous',
     ],
-    repos: ["Repo"],
+    repos: ['Repo'],
   };
 
   const fieldLabels = {
-    Project_Area: "Project Area",
-    DST_Area: "DST Area",
-    Language_Main: "Main Language",
-    Language_Others: "Other Languages",
-    Language_Frameworks: "Frameworks",
-    Testing_Frameworks: "Testing Frameworks",
-    Hosted: "Hosted On",
-    Architectures: "Architecture",
-    Source_Control: "Source Control",
-    Branching_Strategy: "Branching Strategy",
-    Static_Analysis: "Static Analysis",
-    Code_Formatter: "Code Formatter",
-    Data_Output_Formats: "Data Output Formats",
-    Integrations_ONS: "ONS Integrations",
-    Integrations_External: "External Integrations",
-    Miscellaneous: "Miscellaneous Tools",
+    Project_Area: 'Project Area',
+    DST_Area: 'DST Area',
+    Language_Main: 'Main Language',
+    Language_Others: 'Other Languages',
+    Language_Frameworks: 'Frameworks',
+    Testing_Frameworks: 'Testing Frameworks',
+    Hosted: 'Hosted On',
+    Architectures: 'Architecture',
+    Source_Control: 'Source Control',
+    Branching_Strategy: 'Branching Strategy',
+    Static_Analysis: 'Static Analysis',
+    Code_Formatter: 'Code Formatter',
+    Data_Output_Formats: 'Data Output Formats',
+    Integrations_ONS: 'ONS Integrations',
+    Integrations_External: 'External Integrations',
+    Miscellaneous: 'Miscellaneous Tools',
   };
 
   const technologyListFields = [
-    "Language_Main",
-    "Language_Others",
-    "Language_Frameworks",
-    "Infrastructure",
-    "CICD",
-    "Cloud_Services",
-    "IAM_Services",
-    "Testing_Frameworks",
-    "Containers",
-    "Static_Analysis",
-    "Source_Control",
-    "Code_Formatter",
-    "Monitoring",
-    "Datastores",
-    "Database_Technologies",
-    "Data_Output_Formats",
-    "Integrations_ONS",
-    "Integrations_External",
-    "Project_Tools",
-    "Code_Editors",
-    "Communication",
-    "Collaboration",
-    "Incident_Management",
-    "Documentation_Tools",
-    "UI_Tools",
-    "Diagram_Tools",
-    "Miscellaneous",
+    'Language_Main',
+    'Language_Others',
+    'Language_Frameworks',
+    'Infrastructure',
+    'CICD',
+    'Cloud_Services',
+    'IAM_Services',
+    'Testing_Frameworks',
+    'Containers',
+    'Static_Analysis',
+    'Source_Control',
+    'Code_Formatter',
+    'Monitoring',
+    'Datastores',
+    'Database_Technologies',
+    'Data_Output_Formats',
+    'Integrations_ONS',
+    'Integrations_External',
+    'Project_Tools',
+    'Code_Editors',
+    'Communication',
+    'Collaboration',
+    'Incident_Management',
+    'Documentation_Tools',
+    'UI_Tools',
+    'Diagram_Tools',
+    'Miscellaneous',
   ];
 
-  const filterItems = (items) => {
-    return items.filter((key) => {
+  const filterItems = items => {
+    return items.filter(key => {
       if (!project[key]) return false;
-      const label = fieldLabels[key] || key.replace(/_/g, " ");
+      const label = fieldLabels[key] || key.replace(/_/g, ' ');
       const value = project[key].toString().toLowerCase();
       return (
         label.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -336,8 +335,8 @@ const ProjectModal = ({
     });
   };
 
-  const toggleAccordionGroup = (item) => {
-    setExpandedGroups((prev) => ({
+  const toggleAccordionGroup = item => {
+    setExpandedGroups(prev => ({
       ...prev,
       [item]: !prev[item],
     }));
@@ -345,9 +344,9 @@ const ProjectModal = ({
 
   const renderGroup = (title, keys) => {
     const filteredKeys = filterItems(keys);
-    const validKeys = filteredKeys.filter((key) => {
+    const validKeys = filteredKeys.filter(key => {
       const value = project[key];
-      return value !== "None" && value !== "N/A" && value !== "none";
+      return value !== 'None' && value !== 'N/A' && value !== 'none';
     });
 
     if (validKeys.length === 0) return null;
@@ -360,27 +359,27 @@ const ProjectModal = ({
         >
           <h3>{title}</h3>
           <span
-            className={`accordion-icon ${!expandedGroups[title] ? "expanded" : ""}`}
+            className={`accordion-icon ${!expandedGroups[title] ? 'expanded' : ''}`}
           >
             <IoChevronDown />
           </span>
         </div>
         {!expandedGroups[title] && (
           <div className="group-content">
-            {validKeys.map((key) => {
+            {validKeys.map(key => {
               const value = project[key];
-              if (key.toLowerCase() === "miscellaneous") {
+              if (key.toLowerCase() === 'miscellaneous') {
                 return (
                   <div
                     key={key}
-                    className={`detail-item ${title === "Repositories" ? "large-span" : ""}`}
+                    className={`detail-item ${title === 'Repositories' ? 'large-span' : ''}`}
                   >
-                    <h3>{fieldLabels[key] || key.replace(/_/g, " ")}:</h3>
+                    <h3>{fieldLabels[key] || key.replace(/_/g, ' ')}:</h3>
                     <div className="miscellaneous-block">
-                      {value.split(";").map((item, idx) => {
-                        const colonIndex = item.indexOf(":");
+                      {value.split(';').map((item, idx) => {
+                        const colonIndex = item.indexOf(':');
                         let label = item;
-                        let description = "";
+                        let description = '';
                         if (colonIndex !== -1) {
                           label = item.slice(0, colonIndex);
                           description = item.slice(colonIndex + 1).trim();
@@ -401,14 +400,14 @@ const ProjectModal = ({
               return (
                 <div
                   key={key}
-                  className={`detail-item ${title === "Repositories" ? "large-span" : ""}`}
+                  className={`detail-item ${title === 'Repositories' ? 'large-span' : ''}`}
                   tabIndex={0}
                 >
-                  <h3>{fieldLabels[key] || key.replace(/_/g, " ")}:</h3>
+                  <h3>{fieldLabels[key] || key.replace(/_/g, ' ')}:</h3>
                   <p style={{ whiteSpace: 'pre-wrap' }}>
                     {technologyListFields.includes(key)
-                    ? renderTechnologyList(value)
-                    : value.replace(/;/g, "; ")}
+                      ? renderTechnologyList(value)
+                      : value.replace(/;/g, '; ')}
                   </p>
                 </div>
               );
@@ -419,8 +418,8 @@ const ProjectModal = ({
     );
   };
 
-  const toggleAccordionItem = (item) => {
-    setExpandedItems((prev) => ({
+  const toggleAccordionItem = item => {
+    setExpandedItems(prev => ({
       ...prev,
       [item]: !prev[item],
     }));
@@ -430,7 +429,7 @@ const ProjectModal = ({
     <div className="modal-overlay" onClick={onClose}>
       <div
         className="modal-content project-modal"
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
       >
         <div className="project-header">
           <div className="project-header-left">
@@ -452,12 +451,17 @@ const ProjectModal = ({
                 type="text"
                 placeholder="Search project details..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={e => setSearchQuery(e.target.value)}
                 className="search-input-projects"
                 aria-label="Search project details"
               />
             </div>
-            <button className="modal-close" onClick={onClose} title="Close modal" aria-label="Close modal">
+            <button
+              className="modal-close"
+              onClick={onClose}
+              title="Close modal"
+              aria-label="Close modal"
+            >
               <IoClose />
             </button>
           </div>
@@ -467,11 +471,11 @@ const ProjectModal = ({
           <div className="project-accordion-item">
             <div
               className="accordion-header"
-              onClick={() => toggleAccordionItem("projectDetails")}
+              onClick={() => toggleAccordionItem('projectDetails')}
             >
               <h3>Project Details</h3>
               <span
-                className={`accordion-icon ${expandedItems.projectDetails ? "expanded" : ""}`}
+                className={`accordion-icon ${expandedItems.projectDetails ? 'expanded' : ''}`}
               >
                 <IoChevronDown />
               </span>
@@ -545,13 +549,13 @@ const ProjectModal = ({
         {renderRepoInfo()}
 
         <div className="project-details">
-          {renderGroup("Languages & Frameworks", groups.languages)}
-          {renderGroup("Infrastructure & Deployment", groups.infrastructure)}
-          {renderGroup("Security & Source Control", groups.security)}
-          {renderGroup("Quality & Monitoring", groups.quality)}
-          {renderGroup("Data Management", groups.data)}
-          {renderGroup("Integrations", groups.integrations)}
-          {renderGroup("General Information", groups.general)}
+          {renderGroup('Languages & Frameworks', groups.languages)}
+          {renderGroup('Infrastructure & Deployment', groups.infrastructure)}
+          {renderGroup('Security & Source Control', groups.security)}
+          {renderGroup('Quality & Monitoring', groups.quality)}
+          {renderGroup('Data Management', groups.data)}
+          {renderGroup('Integrations', groups.integrations)}
+          {renderGroup('General Information', groups.general)}
         </div>
       </div>
     </div>

@@ -1,317 +1,317 @@
-  .copilot-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-  }
+.copilot-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
 
-  .copilot-grid-average {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-  }
+.copilot-grid-average {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
 
-  .copilot-chat-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    max-width: 100%;
-  }
+.copilot-chat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  max-width: 100%;
+}
 
-  .disclaimer {
-    padding-top: 20px;
-    font-size: 15px;
-  }
+.disclaimer {
+  padding-top: 20px;
+  font-size: 15px;
+}
 
-  .copilot-dashboard h1{
-    font-size: 20px;
-    font-weight: 600;
-  }
+.copilot-dashboard h1 {
+  font-size: 20px;
+  font-weight: 600;
+}
 
-  .copilot-dashboard h3 {
-    font-size: 18px;
-    font-weight: 600;
-  }
+.copilot-dashboard h3 {
+  font-size: 18px;
+  font-weight: 600;
+}
 
-  .copilot-charts-container {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    padding-bottom: 100px;
-  }
+.copilot-charts-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  padding-bottom: 100px;
+}
 
-  .copilot-pie-chart {
-    width: 50%;
-    height: 300px;
-    text-align: center;
-  }
+.copilot-pie-chart {
+  width: 50%;
+  height: 300px;
+  text-align: center;
+}
 
-  .copilot-pie-chart h3 {
-    font-size: 18px;
-    font-weight: 600;
-  }
+.copilot-pie-chart h3 {
+  font-size: 18px;
+  font-weight: 600;
+}
 
-  .copilot-title {
-    font-size: 20px;
-    font-weight: 600;
-  }
+.copilot-title {
+  font-size: 20px;
+  font-weight: 600;
+}
 
-  .pt-50 {
-    padding-top: 50px;
-  }
+.pt-50 {
+  padding-top: 50px;
+}
 
+.seat-breakdown {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+}
+
+.seat-breakdown-item {
+  width: 100%;
+}
+
+.inactivity-toggle {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-bottom: 20px;
+}
+
+.inactivity-button {
+  background: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  padding: 5px 10px;
+  margin-left: 5px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1;
+  transition: all 0.2s ease;
+  min-width: 36px;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inactivity-button:hover {
+  background: hsl(var(--muted-foreground) / 0.1);
+  border-color: hsl(var(--ring));
+}
+
+.inactivity-button:focus {
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: 2px;
+  background: hsl(var(--muted-foreground) / 0.1);
+}
+
+.inactivity-button:active {
+  transform: scale(0.95);
+}
+
+.header-text {
+  font-weight: 600;
+}
+
+#slider {
+  width: 50%;
+}
+
+#slider-end {
+  justify-self: right;
+}
+
+.dashboard-header {
+  display: flex;
+  flex-direction: row;
+  gap: 10%;
+}
+
+:root {
+  --ag-background-color: hsl(var(--background));
+  --ag-text-color: hsl(var(--foreground));
+
+  --ag-header-background-color: hsl(var(--muted));
+  --ag-header-text-color: hsl(var(--muted-foreground));
+}
+
+/* Accessibility improvements */
+
+.ag-root-wrapper {
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+}
+
+.ag-header-cell {
+  border-bottom: 2px solid hsl(var(--border));
+}
+
+.ag-row:focus,
+.ag-cell:focus {
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: -1px;
+}
+
+.ag-header-cell:focus,
+.ag-header-cell:focus-within {
+  background-color: hsl(var(--muted));
+  outline: 1px solid hsl(var(--primary));
+}
+
+.ag-header-cell[role='columnheader'] {
+  font-weight: bold;
+}
+
+.ag-root:focus-within {
+  box-shadow: 0 0 0 2px hsl(var(--primary), 0.3);
+}
+
+.ag-cell a {
+  color: hsl(var(--primary));
+}
+
+.copilot-graph-container {
+  width: calc(100% - 16px);
+  height: calc(50vh - 16px);
+}
+
+.ag-body-viewport {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+}
+
+.ag-body-viewport:focus {
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: -2px;
+}
+
+/* Enhanced accessibility for scrollable table regions */
+[role='region'][tabindex='0'] {
+  position: relative;
+}
+
+[role='region'][tabindex='0']:focus {
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+[role='region'][tabindex='0']:focus-within {
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+/* Improve pagination button accessibility */
+.ag-paging-button {
+  min-width: 32px;
+  min-height: 32px;
+}
+
+.ag-paging-button:focus {
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+/* Ensure scrollable content has visual indicators */
+.ag-body-horizontal-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted-foreground)) hsl(var(--muted));
+}
+
+.ag-body-vertical-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted-foreground)) hsl(var(--muted));
+}
+
+/* Screen reader improvements */
+.ag-header-cell-text {
+  font-weight: 600;
+}
+
+/* Ensure proper focus management for interactive elements */
+.ag-cell-focus {
+  background-color: hsl(var(--muted) / 0.5) !important;
+  border: 1px solid hsl(var(--primary)) !important;
+}
+
+/* Fix ARIA role conflicts in ag-grid - Remove grid roles entirely */
+.ag-root {
+  /* Remove any problematic ARIA attributes via CSS if JS doesn't work */
+}
+
+.ag-root[role='grid'] {
+  role: none !important;
+}
+
+.ag-root[aria-colcount] {
+  aria-colcount: none !important;
+}
+
+.ag-root[aria-rowcount] {
+  aria-rowcount: none !important;
+}
+
+/* Ensure viewport is properly accessible without presentation role */
+.ag-body-viewport[role='presentation'] {
+  role: none !important;
+}
+
+.ag-header-viewport[role='presentation'] {
+  role: none !important;
+}
+
+/* Improve keyboard navigation for ag-grid */
+.ag-body-viewport:focus {
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: -2px;
+  background-color: hsl(var(--muted) / 0.1);
+}
+
+.ag-body-viewport[tabindex='0'] {
+  outline: none;
+}
+
+.ag-body-viewport[tabindex='0']:focus {
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: -2px;
+  background-color: hsl(var(--muted) / 0.1);
+}
+
+/* Ensure viewport is keyboard accessible */
+.ag-body-viewport {
+  position: relative;
+}
+
+/* Make sure focusable content within viewport is accessible */
+.ag-body-viewport .ag-cell:focus {
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: -1px;
+  background-color: hsl(var(--muted) / 0.3);
+}
+
+/* Slider accessibility improvements */
+.rc-slider-handle {
+  border: 1px solid hsl(var(--primary));
+}
+
+.rc-slider-handle:focus {
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px hsl(var(--ring) / 0.2);
+}
+
+.rc-slider-track {
+  background-color: hsl(var(--primary));
+}
+
+.rc-slider-rail {
+  background-color: hsl(var(--muted));
+}
+
+@media (max-width: 1024px) {
   .seat-breakdown {
-    display: flex;
-    flex-direction: row;
-    gap: 16px;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
   }
-
-  .seat-breakdown-item {
-    width: 100%;
-  }
-
-  .inactivity-toggle {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding-bottom: 20px;
-  }
-
-  .inactivity-button {
-    background: hsl(var(--muted));
-    border: 1px solid hsl(var(--border));
-    padding: 5px 10px;
-    margin-left: 5px;
-    border-radius: var(--radius);
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 16px;
-    line-height: 1;
-    transition: all 0.2s ease;
-    min-width: 36px;
-    min-height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .inactivity-button:hover {
-    background: hsl(var(--muted-foreground) / 0.1);
-    border-color: hsl(var(--ring));
-  }
-
-  .inactivity-button:focus {
-    outline: 1px solid hsl(var(--primary));
-    outline-offset: 2px;
-    background: hsl(var(--muted-foreground) / 0.1);
-  }
-
-  .inactivity-button:active {
-    transform: scale(0.95);
-  }
-
-  .header-text {
-    font-weight: 600;
-  }
-
-  #slider {
-    width: 50%;
-  }
-
-  #slider-end {
-    justify-self: right;
-  }
-
-  .dashboard-header {
-    display: flex;
-    flex-direction: row;
-    gap: 10%;
-  }
-
-  :root {
-    --ag-background-color: hsl(var(--background));
-    --ag-text-color: hsl(var(--foreground));
-  
-    --ag-header-background-color: hsl(var(--muted));
-    --ag-header-text-color: hsl(var(--muted-foreground));
-  }
-
-  /* Accessibility improvements */
-  
-  .ag-root-wrapper {
-    border: 1px solid hsl(var(--border));
-    border-radius: var(--radius);
-  }
-  
-  .ag-header-cell {
-    border-bottom: 2px solid hsl(var(--border));
-  }
-  
-  .ag-row:focus, 
-  .ag-cell:focus {
-    outline: 1px solid hsl(var(--primary));
-    outline-offset: -1px;
-  }
-
-  .ag-header-cell:focus,
-  .ag-header-cell:focus-within {
-    background-color: hsl(var(--muted));
-    outline: 1px solid hsl(var(--primary));
-  }
-
-  .ag-header-cell[role="columnheader"] {
-    font-weight: bold;
-  }
-
-  .ag-root:focus-within {
-    box-shadow: 0 0 0 2px hsl(var(--primary), 0.3);
-  }
-
-  .ag-cell a {
-    color: hsl(var(--primary));
-  }
-
-  .copilot-graph-container {
-    width: calc(100% - 16px);
-    height: calc(50vh - 16px);
-  }
-  
-  .ag-body-viewport {
-    scroll-behavior: smooth;
-    scrollbar-width: thin;
-  }
-  
-  .ag-body-viewport:focus {
-    outline: 1px solid hsl(var(--primary));
-    outline-offset: -2px;
-  }
-
-  /* Enhanced accessibility for scrollable table regions */
-  [role="region"][tabindex="0"] {
-    position: relative;
-  }
-
-  [role="region"][tabindex="0"]:focus {
-    outline: 1px solid hsl(var(--primary));
-    outline-offset: 2px;
-  }
-
-  [role="region"][tabindex="0"]:focus-within {
-    outline: 1px solid hsl(var(--primary));
-    outline-offset: 2px;
-  }
-
-  /* Improve pagination button accessibility */
-  .ag-paging-button {
-    min-width: 32px;
-    min-height: 32px;
-  }
-
-  .ag-paging-button:focus {
-    outline: 1px solid hsl(var(--primary));
-    outline-offset: 2px;
-  }
-
-  /* Ensure scrollable content has visual indicators */
-  .ag-body-horizontal-scroll {
-    scrollbar-width: thin;
-    scrollbar-color: hsl(var(--muted-foreground)) hsl(var(--muted));
-  }
-
-  .ag-body-vertical-scroll {
-    scrollbar-width: thin;
-    scrollbar-color: hsl(var(--muted-foreground)) hsl(var(--muted));
-  }
-
-  /* Screen reader improvements */
-  .ag-header-cell-text {
-    font-weight: 600;
-  }
-
-  /* Ensure proper focus management for interactive elements */
-  .ag-cell-focus {
-    background-color: hsl(var(--muted) / 0.5) !important;
-    border: 1px solid hsl(var(--primary)) !important;
-  }
-
-  /* Fix ARIA role conflicts in ag-grid - Remove grid roles entirely */
-  .ag-root {
-    /* Remove any problematic ARIA attributes via CSS if JS doesn't work */
-  }
-
-  .ag-root[role="grid"] {
-    role: none !important;
-  }
-
-  .ag-root[aria-colcount] {
-    aria-colcount: none !important;
-  }
-
-  .ag-root[aria-rowcount] {
-    aria-rowcount: none !important;
-  }
-
-  /* Ensure viewport is properly accessible without presentation role */
-  .ag-body-viewport[role="presentation"] {
-    role: none !important;
-  }
-
-  .ag-header-viewport[role="presentation"] {
-    role: none !important;
-  }
-
-  /* Improve keyboard navigation for ag-grid */
-  .ag-body-viewport:focus {
-    outline: 1px solid hsl(var(--primary));
-    outline-offset: -2px;
-    background-color: hsl(var(--muted) / 0.1);
-  }
-
-  .ag-body-viewport[tabindex="0"] {
-    outline: none;
-  }
-
-  .ag-body-viewport[tabindex="0"]:focus {
-    outline: 1px solid hsl(var(--primary));
-    outline-offset: -2px;
-    background-color: hsl(var(--muted) / 0.1);
-  }
-
-  /* Ensure viewport is keyboard accessible */
-  .ag-body-viewport {
-    position: relative;
-  }
-
-  /* Make sure focusable content within viewport is accessible */
-  .ag-body-viewport .ag-cell:focus {
-    outline: 1px solid hsl(var(--primary));
-    outline-offset: -1px;
-    background-color: hsl(var(--muted) / 0.3);
-  }
-
-  /* Slider accessibility improvements */
-  .rc-slider-handle {
-    border: 1px solid hsl(var(--primary));
-  }
-
-  .rc-slider-handle:focus {
-    outline: 1px solid hsl(var(--primary));
-    outline-offset: 2px;
-    box-shadow: 0 0 0 4px hsl(var(--ring) / 0.2);
-  }
-
-  .rc-slider-track {
-    background-color: hsl(var(--primary));
-  }
-
-  .rc-slider-rail {
-    background-color: hsl(var(--muted));
-  }
-
-  @media (max-width: 1024px) {
-    .seat-breakdown {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  }
+}

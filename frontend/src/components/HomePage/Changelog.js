@@ -6,33 +6,30 @@ import '../../styles/components/Changelog.css';
  * Processes a changelog line to convert GitHub URLs into formatted HTML links
  * @param {string} line - The changelog line to process
  * @returns {string} The processed line with URLs converted to HTML links
- * 
+ *
  * The function handles three cases:
- * 1. Pull request URLs - Converts to "Pull Request #{number}" 
+ * 1. Pull request URLs - Converts to "Pull Request #{number}"
  * 2. Compare URLs - Converts to "Changelog Link"
  * 3. Other URLs - Displays the full URL as the link text
- * 
+ *
  * If the line is empty or contains no URLs, returns the original line unchanged.
  */
-const processChangelogLine = (line) => {
+const processChangelogLine = line => {
   // Skip empty lines or lines that don't contain links
   if (!line || !line.includes('http')) {
     return line;
   }
 
   // Replace GitHub URLs with appropriate text and links
-  return line.replace(
-    /(https:\/\/[^\s]+)/g,
-    (url) => {
-      if (url.includes('/pull/')) {
-        const pullNumber = url.match(/\/pull\/(\d+)/)[1];
-        return `<a href="${url}" target="_blank" rel="noopener noreferrer">Pull Request #${pullNumber}</a>`;
-      } else if (url.includes('/compare/')) {
-        return `<a href="${url}" target="_blank" rel="noopener noreferrer">Changelog Link</a>`;
-      }
-      return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+  return line.replace(/(https:\/\/[^\s]+)/g, url => {
+    if (url.includes('/pull/')) {
+      const pullNumber = url.match(/\/pull\/(\d+)/)[1];
+      return `<a href="${url}" target="_blank" rel="noopener noreferrer">Pull Request #${pullNumber}</a>`;
+    } else if (url.includes('/compare/')) {
+      return `<a href="${url}" target="_blank" rel="noopener noreferrer">Changelog Link</a>`;
     }
-  );
+    return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+  });
 };
 
 const Changelog = () => {
@@ -44,7 +41,7 @@ const Changelog = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [expandedItems, setExpandedItems] = useState(new Set());
 
-  const fetchReleases = async (pageNum) => {
+  const fetchReleases = async pageNum => {
     try {
       const response = await fetch(
         `https://api.github.com/repos/ONS-Innovation/keh-digital-landscape/releases?per_page=3&page=${pageNum}`
@@ -53,10 +50,10 @@ const Changelog = () => {
         throw new Error('Failed to fetch releases');
       }
       const data = await response.json();
-      
+
       // If we got less than 3 releases, there are no more to load
       setHasMore(data.length === 3);
-      
+
       if (pageNum === 1) {
         setReleases(data);
       } else {
@@ -80,7 +77,7 @@ const Changelog = () => {
     fetchReleases(page + 1);
   };
 
-  const toggleExpand = (releaseId) => {
+  const toggleExpand = releaseId => {
     setExpandedItems(prev => {
       const newSet = new Set(prev);
       if (newSet.has(releaseId)) {
@@ -97,19 +94,31 @@ const Changelog = () => {
   }
 
   if (error) {
-    return <div className="changelog-error">Error loading changelog: {error}</div>;
+    return (
+      <div className="changelog-error">Error loading changelog: {error}</div>
+    );
   }
 
   return (
     <div className="changelog-container">
       <h2>Recent Updates</h2>
       <span>
-        This is a list of the most recent updates to the Digital Landscape. If you have any features or changes you would like to see, please let us know by adding to the <a href='https://github.com/ONS-Innovation/keh-digital-landscape/discussions' target='_blank' rel='noopener noreferrer'>GitHub discussion board</a>.
+        This is a list of the most recent updates to the Digital Landscape. If
+        you have any features or changes you would like to see, please let us
+        know by adding to the{' '}
+        <a
+          href="https://github.com/ONS-Innovation/keh-digital-landscape/discussions"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub discussion board
+        </a>
+        .
       </span>
       <div className="changelog-list">
-        {releases.map((release) => (
-          <div 
-            key={release.id} 
+        {releases.map(release => (
+          <div
+            key={release.id}
             className={`changelog-item ${expandedItems.has(release.id) ? 'expanded' : ''}`}
           >
             <div className="changelog-header">
@@ -121,10 +130,12 @@ const Changelog = () => {
             <div className="changelog-body">
               {release.body.split('\n').map((line, index) => {
                 if (line.startsWith('*')) {
-                  const processedLine = processChangelogLine(line.replace(/\*/g, '•'));
+                  const processedLine = processChangelogLine(
+                    line.replace(/\*/g, '•')
+                  );
                   return (
-                    <p 
-                      key={index} 
+                    <p
+                      key={index}
                       className="changelog-entry"
                       dangerouslySetInnerHTML={{ __html: processedLine }}
                     />
@@ -139,12 +150,15 @@ const Changelog = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="changelog-link"
-                onClick={(e) => e.stopPropagation()}
+                onClick={e => e.stopPropagation()}
               >
                 View on GitHub
               </a>
               <div className="changelog-footer-divider" />
-              <button className="changelog-expand-button" onClick={() => toggleExpand(release.id)}>
+              <button
+                className="changelog-expand-button"
+                onClick={() => toggleExpand(release.id)}
+              >
                 {expandedItems.has(release.id) ? 'Show less' : 'Show more'}
               </button>
             </div>
@@ -153,7 +167,7 @@ const Changelog = () => {
       </div>
       {hasMore && (
         <div className="changelog-load-more">
-          <button 
+          <button
             onClick={handleLoadMore}
             disabled={loadingMore}
             className="changelog-load-more-button"

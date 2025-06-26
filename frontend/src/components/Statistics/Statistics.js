@@ -1,11 +1,11 @@
-import React, { useState, useMemo, useCallback } from "react";
-import "../../styles/components/Statistics.css";
-import { subMonths, isValid, parseISO } from "date-fns";
-import SkeletonStatCard from "./Skeletons/SkeletonStatCard";
-import SkeletonLanguageCard from "./Skeletons/SkeletonLanguageCard";
-import MultiSelect from "../MultiSelect/MultiSelect";
-import { useTechnologyStatus } from "../../utilities/getTechnologyStatus";
-import { formatNumberWithCommas } from "../../utilities/getCommaSeparated";
+import React, { useState, useMemo, useCallback } from 'react';
+import '../../styles/components/Statistics.css';
+import { subMonths, isValid, parseISO } from 'date-fns';
+import SkeletonStatCard from './Skeletons/SkeletonStatCard';
+import SkeletonLanguageCard from './Skeletons/SkeletonLanguageCard';
+import MultiSelect from '../MultiSelect/MultiSelect';
+import { useTechnologyStatus } from '../../utilities/getTechnologyStatus';
+import { formatNumberWithCommas } from '../../utilities/getCommaSeparated';
 
 /**
  * Statistics component for displaying repository statistics.
@@ -26,28 +26,28 @@ function Statistics({
   isLoading,
   projectsData,
   onProjectsChange,
-  searchTerm = ""
+  searchTerm = '',
 }) {
   const [sortConfig, setSortConfig] = useState({
-    key: "repo_count",
-    direction: "descending",
+    key: 'repo_count',
+    direction: 'descending',
   });
   const [searchQuery, setSearchQuery] = useState(searchTerm);
   const [isFiltersVisible, setIsFiltersVisible] = useState(false);
-  const [selectedDate, setSelectedDate] = useState("all");
+  const [selectedDate, setSelectedDate] = useState('all');
   const [hoveredLanguage, setHoveredLanguage] = useState(null);
   const [showTechRadarOnly, setShowTechRadarOnly] = useState(false);
-  const [repoView, setRepoView] = useState("unarchived"); // 'unarchived', 'archived', 'total'
+  const [repoView, setRepoView] = useState('unarchived'); // 'unarchived', 'archived', 'total'
   const [selectedProjects, setSelectedProjects] = useState([]);
   const [showTotalSize, setShowTotalSize] = useState(false);
 
   const dateOptions = [
-    { value: "all", label: "All Time" },
-    { value: "1", label: "Last Month" },
-    { value: "3", label: "Last 3 Months" },
-    { value: "6", label: "Last 6 Months" },
-    { value: "12", label: "Last Year" },
-    { value: "custom", label: "Custom Date" },
+    { value: 'all', label: 'All Time' },
+    { value: '1', label: 'Last Month' },
+    { value: '3', label: 'Last 3 Months' },
+    { value: '6', label: 'Last 6 Months' },
+    { value: '12', label: 'Last Year' },
+    { value: 'custom', label: 'Custom Date' },
   ];
 
   // Use our custom hook instead of local implementation
@@ -58,11 +58,11 @@ function Statistics({
    *
    * @param {string} value - The selected date value.
    */
-  const handleDateChange = (value) => {
+  const handleDateChange = value => {
     setSelectedDate(value);
-    if (value === "all") {
+    if (value === 'all') {
       onDateChange(null, repoView);
-    } else if (value === "custom") {
+    } else if (value === 'custom') {
       // Do nothing, wait for custom date input
     } else {
       const date = subMonths(new Date(), parseInt(value));
@@ -75,7 +75,7 @@ function Statistics({
    *
    * @param {Event} e - The event object.
    */
-  const handleCustomDateChange = (e) => {
+  const handleCustomDateChange = e => {
     const date = e.target.value;
     if (date && isValid(parseISO(date))) {
       onDateChange(new Date(date).toISOString(), repoView);
@@ -87,7 +87,7 @@ function Statistics({
    *
    * @param {string} language - The language to handle the click for.
    */
-  const handleLanguageClick = (language) => {
+  const handleLanguageClick = language => {
     const status = getTechnologyStatus(language);
     if (status && status !== 'review' && status !== 'ignore') {
       onTechClick(language);
@@ -103,9 +103,9 @@ function Statistics({
     if (!data) return null;
     // NEEDS ERROR HANDLING SEB
     // Otherwise, use the split format (stats_unarchived/stats_archived)
-    if (repoView === "archived") {
+    if (repoView === 'archived') {
       return data.stats_archived || null;
-    } else if (repoView === "total") {
+    } else if (repoView === 'total') {
       return data.stats || null;
     }
     return data.stats_unarchived || null;
@@ -119,9 +119,9 @@ function Statistics({
   const getCurrentLanguageStats = useCallback(() => {
     if (!data) return null;
 
-    if (repoView === "archived") {
+    if (repoView === 'archived') {
       return data.language_statistics_archived || {};
-    } else if (repoView === "total") {
+    } else if (repoView === 'total') {
       return data.language_statistics || {};
     }
     return data.language_statistics_unarchived || {};
@@ -143,15 +143,20 @@ function Statistics({
 
       if (showTechRadarOnly) {
         const status = getTechnologyStatus(language);
-        return matchesSearch && status !== null && status !== 'review' && status !== 'ignore';
+        return (
+          matchesSearch &&
+          status !== null &&
+          status !== 'review' &&
+          status !== 'ignore'
+        );
       }
 
       return matchesSearch;
     });
 
     filtered.sort((a, b) => {
-      if (sortConfig.key === "language") {
-        return sortConfig.direction === "asc"
+      if (sortConfig.key === 'language') {
+        return sortConfig.direction === 'asc'
           ? a[0].localeCompare(b[0])
           : b[0].localeCompare(a[0]);
       }
@@ -159,7 +164,7 @@ function Statistics({
       const aValue = a[1][sortConfig.key];
       const bValue = b[1][sortConfig.key];
 
-      return sortConfig.direction === "asc"
+      return sortConfig.direction === 'asc'
         ? aValue > bValue
           ? 1
           : -1
@@ -182,10 +187,10 @@ function Statistics({
    *
    * @param {string} key - The key to sort by.
    */
-  const handleSort = (key) => {
-    setSortConfig((prev) => ({
+  const handleSort = key => {
+    setSortConfig(prev => ({
       key,
-      direction: prev.key === key && prev.direction === "desc" ? "asc" : "desc",
+      direction: prev.key === key && prev.direction === 'desc' ? 'asc' : 'desc',
     }));
   };
 
@@ -194,11 +199,11 @@ function Statistics({
    *
    * @param {boolean} value - The value to set the show total size to.
    */
-  const handleShowTotalSize = (value) => {
+  const handleShowTotalSize = value => {
     setShowTotalSize(value);
     // If we're currently sorting by size, trigger a resort
-    if (sortConfig.key === "average_size") {
-      handleSort("average_size");
+    if (sortConfig.key === 'average_size') {
+      handleSort('average_size');
     }
   };
 
@@ -208,7 +213,7 @@ function Statistics({
    * @param {number} repoCount - The repository count.
    * @returns {string} - The repository count display.
    */
-  const getRepoCountDisplay = (repoCount) => {
+  const getRepoCountDisplay = repoCount => {
     const stats = getCurrentStats();
     if (hoveredLanguage && stats?.total) {
       const percentage = ((repoCount / stats.total) * 100).toFixed(1);
@@ -222,16 +227,20 @@ function Statistics({
   const projectOptions = useMemo(() => {
     if (!projectsData) return [];
     return projectsData
-      .filter((project) => project.Repo && project.Repo.toLowerCase().includes("github.com/onsdigital"))
-      .map((project) => ({
+      .filter(
+        project =>
+          project.Repo &&
+          project.Repo.toLowerCase().includes('github.com/onsdigital')
+      )
+      .map(project => ({
         value: project.Repo,
         label: project.Project || project.Project_Short,
       }));
   }, [projectsData]);
 
-  const handleProjectsChange = (selected) => {
+  const handleProjectsChange = selected => {
     setSelectedProjects(selected || []);
-    onProjectsChange(selected?.map((option) => option.value) || []);
+    onProjectsChange(selected?.map(option => option.value) || []);
   };
 
   const metadata = data?.metadata || {};
@@ -247,21 +256,21 @@ function Statistics({
             <div className="date-selector">
               <select
                 value={selectedDate}
-                onChange={(e) => handleDateChange(e.target.value)}
+                onChange={e => handleDateChange(e.target.value)}
                 disabled={isLoading}
                 aria-label="Select a date range"
               >
-                {dateOptions.map((option) => (
+                {dateOptions.map(option => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
                 ))}
               </select>
-              {selectedDate === "custom" && (
+              {selectedDate === 'custom' && (
                 <input
                   type="date"
                   onChange={handleCustomDateChange}
-                  max={new Date().toISOString().split("T")[0]}
+                  max={new Date().toISOString().split('T')[0]}
                   className="custom-date-input"
                 />
               )}
@@ -270,14 +279,14 @@ function Statistics({
               className="archive-toggle"
               aria-label="Select a repository view"
               value={repoView}
-              onChange={(e) => {
+              onChange={e => {
                 setRepoView(e.target.value);
                 let dateToUse = null;
-                if (selectedDate === "all") {
+                if (selectedDate === 'all') {
                   dateToUse = null;
-                } else if (selectedDate === "custom") {
+                } else if (selectedDate === 'custom') {
                   const customDate =
-                    document.querySelector(".custom-date-input")?.value;
+                    document.querySelector('.custom-date-input')?.value;
                   if (customDate) {
                     dateToUse = new Date(customDate).toISOString();
                   }
@@ -308,13 +317,13 @@ function Statistics({
         <div className="metadata">
           {metadata?.last_updated && (
             <>
-              Last updated:{" "}
+              Last updated:{' '}
               {new Date(metadata.last_updated).toLocaleDateString()}
             </>
           )}
         </div>
       </div>
-      
+
       {isLoading ? (
         <>
           <div className="stats-grid">
@@ -350,9 +359,12 @@ function Statistics({
           <div className="stats-grid">
             <div className="stat-card">
               <h2>Total Repositories</h2>
-              <p>{hoveredLanguage && languageStats ? 
-                  getRepoCountDisplay(languageStats[hoveredLanguage]?.repo_count) :
-                  formatNumberWithCommas(stats.total || 0)}
+              <p>
+                {hoveredLanguage && languageStats
+                  ? getRepoCountDisplay(
+                      languageStats[hoveredLanguage]?.repo_count
+                    )
+                  : formatNumberWithCommas(stats.total || 0)}
               </p>
             </div>
             <div className="stat-card">
@@ -378,52 +390,52 @@ function Statistics({
 
             <div className="sort-options">
               <button
-                className={sortConfig.key === "language" ? "active" : ""}
-                onClick={() => handleSort("language")}
+                className={sortConfig.key === 'language' ? 'active' : ''}
+                onClick={() => handleSort('language')}
                 disabled={isLoading}
               >
-                Name{" "}
-                {sortConfig.key === "language" &&
-                  (sortConfig.direction === "asc" ? "↑" : "↓")}
+                Name{' '}
+                {sortConfig.key === 'language' &&
+                  (sortConfig.direction === 'asc' ? '↑' : '↓')}
               </button>
               <button
-                className={sortConfig.key === "repo_count" ? "active" : ""}
-                onClick={() => handleSort("repo_count")}
+                className={sortConfig.key === 'repo_count' ? 'active' : ''}
+                onClick={() => handleSort('repo_count')}
                 disabled={isLoading}
               >
-                Repos{" "}
-                {sortConfig.key === "repo_count" &&
-                  (sortConfig.direction === "asc" ? "↑" : "↓")}
+                Repos{' '}
+                {sortConfig.key === 'repo_count' &&
+                  (sortConfig.direction === 'asc' ? '↑' : '↓')}
               </button>
               <button
                 className={
-                  sortConfig.key === "average_percentage" ? "active" : ""
+                  sortConfig.key === 'average_percentage' ? 'active' : ''
                 }
-                onClick={() => handleSort("average_percentage")}
+                onClick={() => handleSort('average_percentage')}
                 disabled={isLoading}
               >
-                Usage{" "}
-                {sortConfig.key === "average_percentage" &&
-                  (sortConfig.direction === "asc" ? "↑" : "↓")}
+                Usage{' '}
+                {sortConfig.key === 'average_percentage' &&
+                  (sortConfig.direction === 'asc' ? '↑' : '↓')}
               </button>
               <button
-                className={sortConfig.key === "total_size" ? "active" : ""}
-                onClick={() => handleSort("total_size")}
+                className={sortConfig.key === 'total_size' ? 'active' : ''}
+                onClick={() => handleSort('total_size')}
                 disabled={isLoading}
               >
-                Size{" "}
-                {sortConfig.key === "total_size" &&
-                  (sortConfig.direction === "asc" ? "↑" : "↓")}
+                Size{' '}
+                {sortConfig.key === 'total_size' &&
+                  (sortConfig.direction === 'asc' ? '↑' : '↓')}
               </button>
               <button
-                className={`${showTotalSize ? "active" : ""}`}
+                className={`${showTotalSize ? 'active' : ''}`}
                 onClick={() => handleShowTotalSize(!showTotalSize)}
                 disabled={isLoading}
               >
-                {showTotalSize ? "Total Size" : "Avg Size"}
+                {showTotalSize ? 'Total Size' : 'Avg Size'}
               </button>
               <button
-                className={`${showTechRadarOnly ? "active" : ""}`}
+                className={`${showTechRadarOnly ? 'active' : ''}`}
                 onClick={() => setShowTechRadarOnly(!showTechRadarOnly)}
                 disabled={isLoading}
               >
@@ -435,8 +447,8 @@ function Statistics({
               {sortedAndFilteredLanguages.map(([language, stats]) => {
                 const status = getTechnologyStatus(language);
                 return (
-                  <div 
-                    key={language} 
+                  <div
+                    key={language}
                     className={`language-card ${status && status !== 'review' && status !== 'ignore' ? status : ''} ${status && status !== 'review' && status !== 'ignore' ? 'clickable' : ''}`}
                     onClick={() => handleLanguageClick(language)}
                     onMouseEnter={() => setHoveredLanguage(language)}
@@ -445,19 +457,30 @@ function Statistics({
                     <h2>{language}</h2>
                     <div className="language-stats">
                       <p>
-                        <strong>{formatNumberWithCommas(stats.repo_count)}</strong> repos
+                        <strong>
+                          {formatNumberWithCommas(stats.repo_count)}
+                        </strong>{' '}
+                        repos
                       </p>
                       <p>
-                        <strong>{stats.average_percentage.toFixed(1)}%</strong> avg usage
+                        <strong>{stats.average_percentage.toFixed(1)}%</strong>{' '}
+                        avg usage
                       </p>
                       <p>
-                        <strong>{(() => {
-                          const bytes = showTotalSize ? stats.total_size : (stats.total_size / stats.repo_count);
-                          const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
-                          if (bytes === 0) return '0 B';
-                          const i = Math.floor(Math.log(bytes) / Math.log(1024));
-                          return `${formatNumberWithCommas((bytes / Math.pow(1024, i)).toFixed(1))} ${sizes[i]}`;
-                        })()}</strong> {showTotalSize ? 'total' : 'avg'} size
+                        <strong>
+                          {(() => {
+                            const bytes = showTotalSize
+                              ? stats.total_size
+                              : stats.total_size / stats.repo_count;
+                            const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+                            if (bytes === 0) return '0 B';
+                            const i = Math.floor(
+                              Math.log(bytes) / Math.log(1024)
+                            );
+                            return `${formatNumberWithCommas((bytes / Math.pow(1024, i)).toFixed(1))} ${sizes[i]}`;
+                          })()}
+                        </strong>{' '}
+                        {showTotalSize ? 'total' : 'avg'} size
                       </p>
                     </div>
                   </div>

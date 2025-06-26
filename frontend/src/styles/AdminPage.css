@@ -370,7 +370,7 @@
 }
 
 /* Custom checkbox styling */
-.tech-table input[type="checkbox"] {
+.tech-table input[type='checkbox'] {
   width: 14px;
   height: 14px;
   border-radius: 3px;
@@ -687,7 +687,7 @@
   cursor: pointer;
 }
 
-.radio-options input[type="radio"] {
+.radio-options input[type='radio'] {
   width: 16px;
   height: 16px;
   margin: 0;
@@ -929,7 +929,6 @@
   background-color: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
 }
-
 
 .similarity-threshold-controls {
   display: flex;

@@ -128,7 +128,6 @@
   background: hsl(var(--card));
 }
 
-
 .user-profile-sidebar.collapsed {
   padding: 8px;
   justify-content: center;
@@ -170,12 +169,12 @@
     padding: 8px 12px;
     margin: 0 8px;
   }
-  
+
   .user-email {
     max-width: 100px;
   }
-  
+
   .user-profile-dropdown .user-email {
     max-width: 100px;
   }
-} 
+}

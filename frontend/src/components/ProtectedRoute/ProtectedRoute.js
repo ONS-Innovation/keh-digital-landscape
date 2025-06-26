@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useData } from "../../contexts/dataContext";
-import AccessDenied from "../AccessDenied/AccessDenied";
-import Header from "../Header/Header";
+import React, { useEffect, useState } from 'react';
+import { useData } from '../../contexts/dataContext';
+import AccessDenied from '../AccessDenied/AccessDenied';
+import Header from '../Header/Header';
 
 /**
  * ProtectedRoute component that checks user permissions before rendering content
@@ -27,13 +27,13 @@ const ProtectedRoute = ({ children, requiredRoles, pageName }) => {
         } else {
           // Check if user has any of the required roles
           const userGroups = userData.user.groups;
-          const hasRequiredRole = requiredRoles.some((role) =>
+          const hasRequiredRole = requiredRoles.some(role =>
             userGroups.includes(role)
           );
           setHasAccess(hasRequiredRole);
         }
       } catch (error) {
-        console.error("Failed to check user access:", error);
+        console.error('Failed to check user access:', error);
         setHasAccess(false);
       } finally {
         setIsLoading(false);
