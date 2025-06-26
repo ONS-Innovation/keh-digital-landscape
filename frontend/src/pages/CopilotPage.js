@@ -154,6 +154,7 @@ function CopilotDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [availableTeams, setAvailableTeams] = useState([]);
   const [isTeamLoading, setIsTeamLoading] = useState(false);
+  const [teamSlug, setTeamSlug] = useState(null);
 
   const data = getDashboardData();
 
@@ -377,6 +378,9 @@ function CopilotDashboard() {
             </div>
             ) : (
             <div>
+              {teamSlug && (
+                  <p className="header-text">Viewing Data for Team: {teamSlug}</p>
+              )}
               <button id="return-to-selection" className="view-data-button"
                 onClick={() => {
                   setIsSelectingTeam(true);
@@ -473,6 +477,7 @@ function CopilotDashboard() {
                       tableContext="Copilot Team Selection"
                       onViewDataClick={(slug) => {
                         fetchTeamData(slug);
+                        setTeamSlug(slug);
                         setIsSelectingTeam(false);
                       }
                       }
