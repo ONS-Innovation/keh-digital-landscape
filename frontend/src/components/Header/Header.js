@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
-import MenuDropdown from "../MenuDropdown/MenuDropdown";
-import HelpModal from "./HelpModal";
-import ThemeToggle from "../ThemeToggle/ThemeToggle";
-import "../../styles/components/Header.css";
-import Logo from "../../assets/logo.png";
-import { IoClose, IoSearch } from "react-icons/io5";
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import MenuDropdown from '../MenuDropdown/MenuDropdown';
+import HelpModal from './HelpModal';
+import ThemeToggle from '../ThemeToggle/ThemeToggle';
+import '../../styles/components/Header.css';
+import Logo from '../../assets/logo.png';
+import { IoClose, IoSearch } from 'react-icons/io5';
 
 /**
  * Header component for the Tech Radar application.
@@ -25,7 +25,7 @@ import { IoClose, IoSearch } from "react-icons/io5";
  * @param {boolean} props.hideSearch - Whether to hide the search bar.
  */
 function Header({
-  searchTerm = "",
+  searchTerm = '',
   onSearchChange = () => {},
   searchResults = [],
   onSearchResultClick = () => {},
@@ -37,33 +37,33 @@ function Header({
   const location = useLocation();
   const [showHelpModal, setShowHelpModal] = useState(false);
   const searchInputRef = useRef(null);
-  const [shortcutKey, setShortcutKey] = useState("⌘");
+  const [shortcutKey, setShortcutKey] = useState('⌘');
 
   useEffect(() => {
     // More reliable OS detection
     const userAgent = navigator.userAgent.toLowerCase();
     const isMac = /macintosh|macintel|macppc|mac68k|darwin/i.test(userAgent);
-    setShortcutKey(isMac ? "⌘" : "CTRL");
+    setShortcutKey(isMac ? '⌘' : 'CTRL');
   }, []);
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = e => {
       // Check for Cmd+K (Mac) or Ctrl+K (Windows/Linux)
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
         searchInputRef.current?.focus();
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   /**
    * Clears the search term.
    */
   const clearSearch = () => {
-    onSearchChange("");
+    onSearchChange('');
   };
 
   const handleSetShowHelpModal = () => {
@@ -73,19 +73,19 @@ function Header({
   // Get search placeholder based on current route
   const getSearchPlaceholder = () => {
     switch (location.pathname) {
-      case "/projects":
-        return "Search projects...";
-      case "/statistics":
-        return "Search languages...";
+      case '/projects':
+        return 'Search projects...';
+      case '/statistics':
+        return 'Search languages...';
       default:
-        return "Search technologies...";
+        return 'Search technologies...';
     }
   };
 
   // Only show search results dropdown on radar page
   const shouldShowSearchResults = () => {
     return (
-      location.pathname === "/radar" &&
+      location.pathname === '/radar' &&
       searchResults &&
       searchResults.length > 0
     );
@@ -98,10 +98,10 @@ function Header({
           src={Logo}
           alt="Logo"
           className="logo"
-          onClick={() => navigate("/")}
-          style={{ cursor: "pointer" }}
+          onClick={() => navigate('/')}
+          style={{ cursor: 'pointer' }}
         />
-        <h1 onClick={() => navigate("/")} style={{ cursor: "pointer" }}>
+        <h1 onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
           Digital Landscape
         </h1>
       </div>
@@ -114,7 +114,7 @@ function Header({
               type="text"
               placeholder={getSearchPlaceholder()}
               value={searchTerm}
-              onChange={(e) => onSearchChange(e.target.value)}
+              onChange={e => onSearchChange(e.target.value)}
               className="search-input"
             />
             {searchTerm ? (
@@ -128,7 +128,7 @@ function Header({
             )}
             {shouldShowSearchResults() && (
               <div className="search-results">
-                {searchResults.map((result) => (
+                {searchResults.map(result => (
                   <div
                     key={result.id || result.Project || result.title}
                     className="search-result-item"

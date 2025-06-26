@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   IoArrowUpOutline,
   IoArrowDownOutline,
@@ -6,15 +6,15 @@ import {
   IoGridOutline,
   IoChevronDownOutline,
   IoChevronUpOutline,
-} from "react-icons/io5";
+} from 'react-icons/io5';
 import {
   FaSortAmountDownAlt,
   FaSortAmountUpAlt,
   FaEdit,
   FaCheck,
   FaTimes,
-} from "react-icons/fa";
-import { MarkdownText } from "../../utilities/markdownRenderer";
+} from 'react-icons/fa';
+import { MarkdownText } from '../../utilities/markdownRenderer';
 
 const InfoBox = ({
   isAdmin = false,
@@ -31,21 +31,21 @@ const InfoBox = ({
   onEditCancel,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedTitle, setEditedTitle] = useState("");
-  const [editedCategory, setEditedCategory] = useState("");
+  const [editedTitle, setEditedTitle] = useState('');
+  const [editedCategory, setEditedCategory] = useState('');
   const [isDragging, setIsDragging] = useState(false);
   const [dragPosition, setDragPosition] = useState(initialPosition);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [localTitle, setLocalTitle] = useState(selectedItem?.title || "");
+  const [localTitle, setLocalTitle] = useState(selectedItem?.title || '');
   const [localCategory, setLocalCategory] = useState(
-    selectedItem?.description || ""
+    selectedItem?.description || ''
   );
   const [showProjects, setShowProjects] = useState(true);
 
-  const handleMouseDown = (e) => {
+  const handleMouseDown = e => {
     e.stopPropagation(); // Prevent event from bubbling to parent
     setIsDragging(true);
-    const infoBox = e.currentTarget.closest(".info-box");
+    const infoBox = e.currentTarget.closest('.info-box');
     const infoBoxRect = infoBox.getBoundingClientRect();
     const clickX = e.clientX - infoBoxRect.left;
     const clickY = e.clientY - infoBoxRect.top;
@@ -56,29 +56,29 @@ const InfoBox = ({
     });
   };
 
-  const formatTimelineDate = (date) => {
+  const formatTimelineDate = date => {
     const dateObj = new Date(date);
     const day = dateObj.getDate();
     const suffix =
       day % 10 === 1 && day !== 11
-        ? "st"
+        ? 'st'
         : day % 10 === 2 && day !== 12
-          ? "nd"
+          ? 'nd'
           : day % 10 === 3 && day !== 13
-            ? "rd"
-            : "th";
+            ? 'rd'
+            : 'th';
 
     return dateObj
-      .toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
+      .toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
       })
       .replace(/\d+/, day + suffix);
   };
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
+    const handleMouseMove = e => {
       if (isDragging) {
         setDragPosition({
           x: e.clientX - dragOffset.x,
@@ -92,13 +92,13 @@ const InfoBox = ({
     };
 
     if (isDragging) {
-      document.addEventListener("mousemove", handleMouseMove);
-      document.addEventListener("mouseup", handleMouseUp);
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
     }
 
     return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
     };
   }, [isDragging, dragOffset]);
 
@@ -124,8 +124,8 @@ const InfoBox = ({
 
   const handleCancelEdit = () => {
     setIsEditing(false);
-    setEditedTitle("");
-    setEditedCategory("");
+    setEditedTitle('');
+    setEditedCategory('');
     if (onEditCancel) onEditCancel();
   };
 
@@ -141,17 +141,17 @@ const InfoBox = ({
       <div
         className="info-box"
         style={{
-          position: "fixed",
+          position: 'fixed',
           left: dragPosition.x,
           top: dragPosition.y,
-          transform: "none",
+          transform: 'none',
           boxShadow: isDragging
-            ? "0 4px 10px 0 hsl(var(--foreground) / 0.1)"
-            : "none",
-          minHeight: "100px",
-          justifyContent: "center",
-          resize: "none",
-          cursor: "grab",
+            ? '0 4px 10px 0 hsl(var(--foreground) / 0.1)'
+            : 'none',
+          minHeight: '100px',
+          justifyContent: 'center',
+          resize: 'none',
+          cursor: 'grab',
         }}
         onMouseDown={handleMouseDown}
       >
@@ -169,17 +169,17 @@ const InfoBox = ({
     <div
       className="info-box"
       style={{
-        position: "fixed",
+        position: 'fixed',
         left: dragPosition.x,
         top: dragPosition.y,
-        transform: "none",
+        transform: 'none',
         boxShadow: isDragging
-          ? "0 4px 10px 0 hsl(var(--foreground) / 0.1)"
-          : "none",
-        resize: "both",
-        overflow: "auto",
-        maxWidth: "90vw",
-        maxHeight: "80vh",
+          ? '0 4px 10px 0 hsl(var(--foreground) / 0.1)'
+          : 'none',
+        resize: 'both',
+        overflow: 'auto',
+        maxWidth: '90vw',
+        maxHeight: '80vh',
       }}
     >
       <button className="info-box-close" onClick={onClose}>
@@ -198,12 +198,12 @@ const InfoBox = ({
             <input
               type="text"
               value={editedTitle}
-              onChange={(e) => setEditedTitle(e.target.value)}
+              onChange={e => setEditedTitle(e.target.value)}
               className="edit-title-input"
             />
             <select
               value={editedCategory}
-              onChange={(e) => setEditedCategory(e.target.value)}
+              onChange={e => setEditedCategory(e.target.value)}
               className="edit-category-select"
             >
               <option value="Languages">Languages</option>
@@ -263,7 +263,7 @@ const InfoBox = ({
           <button
             className="timeline-sort-button"
             onClick={() => setTimelineAscending(!timelineAscending)}
-            title={timelineAscending ? "Newest first" : "Oldest first"}
+            title={timelineAscending ? 'Newest first' : 'Oldest first'}
           >
             {timelineAscending ? (
               <FaSortAmountDownAlt size={12} />
@@ -279,14 +279,14 @@ const InfoBox = ({
         {[...selectedItem.timeline]
           .reverse()
           .slice()
-          [timelineAscending ? "reverse" : "slice"]()
+          [timelineAscending ? 'reverse' : 'slice']()
           .map((timelineItem, index, array) => (
             <div
               key={timelineItem.date + timelineItem.ringId + index}
               className="timeline-item"
             >
               <div
-                className={`timeline-node ${timelineItem.ringId.toLowerCase()} ${timelineItem === selectedTimelineItem ? "active" : ""}`}
+                className={`timeline-node ${timelineItem.ringId.toLowerCase()} ${timelineItem === selectedTimelineItem ? 'active' : ''}`}
                 onClick={() =>
                   setSelectedTimelineItem(
                     timelineItem === selectedTimelineItem ? null : timelineItem
@@ -310,7 +310,7 @@ const InfoBox = ({
       {selectedTimelineItem && (
         <div className="info-box-timeline-item">
           <span className="info-box-timeline-item-title">
-            Review {" - "}
+            Review {' - '}
             {formatTimelineDate(selectedTimelineItem.date)}
           </span>
           <div className="timeline-description">
@@ -318,7 +318,7 @@ const InfoBox = ({
           </div>
           {selectedTimelineItem.author && (
             <span className="timeline-author">
-              {" "}
+              {' '}
               by {selectedTimelineItem.author}
             </span>
           )}
@@ -330,9 +330,9 @@ const InfoBox = ({
           <div className="info-box-projects-header">
             <h4>
               <strong>
-                {projectsForTech.length}{" "}
-                {projectsForTech.length === 1 ? "project" : "projects"}
-              </strong>{" "}
+                {projectsForTech.length}{' '}
+                {projectsForTech.length === 1 ? 'project' : 'projects'}
+              </strong>{' '}
               using this technology:
             </h4>
             <button

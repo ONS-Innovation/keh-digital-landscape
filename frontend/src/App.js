@@ -1,14 +1,14 @@
-import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import Radar from "./pages/RadarPage";
-import Statistics from "./pages/StatisticsPage";
-import Home from "./pages/HomePage";
-import Projects from "./pages/ProjectsPage";
-import ReviewDashboard from "./pages/ReviewPage";
-import AdminPage from "./pages/AdminPage";
-import Layout from "./components/Layout/Layout";
-import CopilotDashboard from "./pages/CopilotPage";
-import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Radar from './pages/RadarPage';
+import Statistics from './pages/StatisticsPage';
+import Home from './pages/HomePage';
+import Projects from './pages/ProjectsPage';
+import ReviewDashboard from './pages/ReviewPage';
+import AdminPage from './pages/AdminPage';
+import Layout from './components/Layout/Layout';
+import CopilotDashboard from './pages/CopilotPage';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
 const App = () => {
   return (
@@ -23,7 +23,7 @@ const App = () => {
           path="/review/dashboard"
           element={
             <ProtectedRoute
-              requiredRoles={["reviewer"]}
+              requiredRoles={['reviewer']}
               pageName="Review Dashboard"
             >
               <ReviewDashboard />
@@ -34,7 +34,7 @@ const App = () => {
           path="/admin/dashboard"
           element={
             <ProtectedRoute
-              requiredRoles={["admin"]}
+              requiredRoles={['admin']}
               pageName="Admin Dashboard"
             >
               <AdminPage />

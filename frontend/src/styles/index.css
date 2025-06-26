@@ -46,7 +46,7 @@
 
     --header-height: 60px;
     --info-box: #e5edf2;
-    --info-box-border: #0e5888
+    --info-box-border: #0e5888;
   }
 
   .dark {
@@ -94,14 +94,13 @@
   }
 }
 
-
 body {
   margin: 0;
   padding: 0;
 }
 
 body {
-  font-family: "Geist", sans-serif;
+  font-family: 'Geist', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: hsl(var(--background));
@@ -111,5 +110,5 @@ body {
 }
 
 button {
-  font-family: "Geist", sans-serif;
+  font-family: 'Geist', sans-serif;
 }

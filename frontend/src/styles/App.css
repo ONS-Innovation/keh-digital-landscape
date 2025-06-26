@@ -92,7 +92,6 @@ body {
   font-size: 30px;
 }
 
-
 /* Ensure quadrant labels are above other elements */
 .quadrant-labels {
   pointer-events: all;
@@ -100,7 +99,7 @@ body {
 }
 
 /* Reset pointer events for other SVG elements */
-circle, 
+circle,
 line {
   pointer-events: none;
 }
@@ -212,7 +211,7 @@ line {
 }
 
 /* Enhanced keyboard accessibility for scrollable lists */
-.quadrant-list ul[tabindex="0"] {
+.quadrant-list ul[tabindex='0'] {
   position: relative;
 }
 
@@ -457,7 +456,7 @@ text {
   }
 
   .radar-container::after {
-    content: "Scroll to view full radar";
+    content: 'Scroll to view full radar';
     position: absolute;
     bottom: 132px;
     left: 50%;
@@ -582,7 +581,6 @@ text {
   font-weight: 500 !important;
 }
 
-
 .timeline-author {
   color: hsl(var(--foreground));
   font-size: 10px;
@@ -634,13 +632,13 @@ text {
   text-decoration: underline;
 }
 
-.info-box-timeline-item p{
+.info-box-timeline-item p {
   margin-bottom: 0 !important;
   margin-top: 4px;
   color: hsl(var(--foreground));
 }
 
-.info-box-timeline-item span{
+.info-box-timeline-item span {
   color: hsl(var(--foreground));
   font-size: 14px;
   font-weight: 400;
@@ -793,7 +791,6 @@ text {
   z-index: 1001;
 }
 
-
 .info-box-ring {
   display: inline-block;
   padding: 2px 12px;
@@ -861,7 +858,6 @@ text {
   outline: none; /* Remove default outline */
 }
 
-
 .quadrant-list ul:focus {
   outline: 1px solid hsl(var(--primary));
   outline-offset: 1px; /* Add a small offset */
@@ -872,7 +868,6 @@ text {
   outline: 1px solid hsl(var(--primary));
   outline-offset: 1px; /* Add a small offset */
 }
-
 
 /* Ensure column headers have visual distinction */
 /* This style is applied when the ul itself is focused */
@@ -1150,7 +1145,7 @@ text {
 
 /* Add back the tooltip arrow */
 .tooltip::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 100%;
   left: 50%;
@@ -1263,7 +1258,6 @@ text {
   overflow-y: auto;
   text-wrap: nowrap;
 }
-
 
 .timeline-node.active {
   border: 1px solid hsl(var(--primary));

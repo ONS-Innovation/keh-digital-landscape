@@ -1,82 +1,94 @@
-import React, { useMemo, useRef, useEffect } from "react";
-import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
-import { AgGridReact } from "ag-grid-react";
-import { formatNumberWithCommas } from "../../../utilities/getCommaSeparated";
+import React, { useMemo, useRef, useEffect } from 'react';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { AgGridReact } from 'ag-grid-react';
+import { formatNumberWithCommas } from '../../../utilities/getCommaSeparated';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-function TableBreakdown({ data, idField, idHeader, columns, headerMap, computedFields, customCellRenderers = {}, tableContext = "" }) {
-    const gridRef = useRef();
-    const containerRef = useRef();
+function TableBreakdown({
+  data,
+  idField,
+  idHeader,
+  columns,
+  headerMap,
+  computedFields,
+  customCellRenderers = {},
+  tableContext = '',
+}) {
+  const gridRef = useRef();
+  const containerRef = useRef();
 
-    const defaultColDef = useMemo(() => ({
+  const defaultColDef = useMemo(
+    () => ({
       sortable: true,
       filter: true,
-      cellStyle: { textAlign: "left" },
+      cellStyle: { textAlign: 'left' },
       flex: 1,
-    }), []);
-    
-    const rowData = useMemo(() => {
-      return Object.entries(data).map(([id, stats]) => ({
-        [idField]: id || "(unknown)",
-        ...stats,
-        ...(computedFields ? computedFields(stats) : {}),
-      }));
-    }, [data, idField, computedFields]);
+    }),
+    []
+  );
 
-    const colDefs = useMemo(() => {
-      if (!rowData.length) return [];
+  const rowData = useMemo(() => {
+    return Object.entries(data).map(([id, stats]) => ({
+      [idField]: id || '(unknown)',
+      ...stats,
+      ...(computedFields ? computedFields(stats) : {}),
+    }));
+  }, [data, idField, computedFields]);
 
-      const keys = [idField, ...columns];
-      return keys.map((key) => ({
-        field: key,
-        headerName: key === idField ? idHeader : headerMap[key] || key,
-        valueFormatter: !customCellRenderers[key]
-          ? key.toLowerCase().includes("rate")
-            ? (params) => `${(params.value * 100).toFixed(1)}%`
-            : (params) =>
-                typeof params.value === "number"
-                  ? formatNumberWithCommas(params.value)
-                  : params.value
-          : undefined,
-        cellRenderer: customCellRenderers[key] || undefined,
-      }));
-    }, [rowData, idField, idHeader, columns, headerMap, customCellRenderers]);
+  const colDefs = useMemo(() => {
+    if (!rowData.length) return [];
 
-    // Generate unique aria-label based on context
-    const generateAriaLabel = () => {
-      if (tableContext) {
-        return `${tableContext} - ${idHeader || 'data'} table`;
-      }
-      return `Data table for ${idHeader || 'data'}`;
-    };
+    const keys = [idField, ...columns];
+    return keys.map(key => ({
+      field: key,
+      headerName: key === idField ? idHeader : headerMap[key] || key,
+      valueFormatter: !customCellRenderers[key]
+        ? key.toLowerCase().includes('rate')
+          ? params => `${(params.value * 100).toFixed(1)}%`
+          : params =>
+              typeof params.value === 'number'
+                ? formatNumberWithCommas(params.value)
+                : params.value
+        : undefined,
+      cellRenderer: customCellRenderers[key] || undefined,
+    }));
+  }, [rowData, idField, idHeader, columns, headerMap, customCellRenderers]);
 
-    return (
-      <div 
-        ref={containerRef}
-        style={{ height: 300}}
-        role="region"
-        aria-label={generateAriaLabel()}
-        tabIndex="0"
-      >
-        <AgGridReact
-          ref={gridRef}
-          rowData={rowData}
-          columnDefs={colDefs}
-          defaultColDef={defaultColDef}
-          pagination={true}
-          paginationPageSize={20}
-          onFirstDataRendered={(params) => {
-            params.api.ensureIndexVisible(0);
-          }}
-          getRowId={(params) => params.data[idField]}
-          domLayout="normal"
-          navigateToNextCell={(params) => {
-            return params.nextCellPosition;
-          }}
-        />
-      </div>
-    );
-  }  
+  // Generate unique aria-label based on context
+  const generateAriaLabel = () => {
+    if (tableContext) {
+      return `${tableContext} - ${idHeader || 'data'} table`;
+    }
+    return `Data table for ${idHeader || 'data'}`;
+  };
+
+  return (
+    <div
+      ref={containerRef}
+      style={{ height: 300 }}
+      role="region"
+      aria-label={generateAriaLabel()}
+      tabIndex="0"
+    >
+      <AgGridReact
+        ref={gridRef}
+        rowData={rowData}
+        columnDefs={colDefs}
+        defaultColDef={defaultColDef}
+        pagination={true}
+        paginationPageSize={20}
+        onFirstDataRendered={params => {
+          params.api.ensureIndexVisible(0);
+        }}
+        getRowId={params => params.data[idField]}
+        domLayout="normal"
+        navigateToNextCell={params => {
+          return params.nextCellPosition;
+        }}
+      />
+    </div>
+  );
+}
 
 export default TableBreakdown;

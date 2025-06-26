@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -7,9 +7,9 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend
-} from "recharts";
-import { formatNumberWithCommas } from "../../../utilities/getCommaSeparated";
+  Legend,
+} from 'recharts';
+import { formatNumberWithCommas } from '../../../utilities/getCommaSeparated';
 
 const EngagedUsersGraph = ({ data }) => {
   return (
@@ -26,11 +26,11 @@ const EngagedUsersGraph = ({ data }) => {
             dataKey="date"
             interval={data.length - 2}
             tickLine={false}
-            axisLine={{ stroke: "#f5f5f5" }}
+            axisLine={{ stroke: '#f5f5f5' }}
           />
           <Tooltip
-            wrapperStyle={{ color: "black" }}
-            formatter={(value) => formatNumberWithCommas(value)}
+            wrapperStyle={{ color: 'black' }}
+            formatter={value => formatNumberWithCommas(value)}
           />
           <Legend verticalAlign="top" align="left" height={36} />
           <Bar
@@ -45,10 +45,10 @@ const EngagedUsersGraph = ({ data }) => {
           <YAxis
             tickLine={false}
             yAxisId="left"
-            axisLine={{ stroke: "#f5f5f5" }}
-            domain={[0, "dataMax + 5"]}
+            axisLine={{ stroke: '#f5f5f5' }}
+            domain={[0, 'dataMax + 5']}
             tickCount={5}
-            tickFormatter={(value) => formatNumberWithCommas(value)}
+            tickFormatter={value => formatNumberWithCommas(value)}
           />
         </ComposedChart>
       </ResponsiveContainer>

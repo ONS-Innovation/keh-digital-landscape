@@ -3,11 +3,11 @@
  * - *italic* text
  * - **bold** text
  * - [link text](url) links
- * 
+ *
  * @param {string} text - The markdown text to render
  * @returns {string} - HTML string with basic markdown formatting applied
  */
-export const renderSimpleMarkdown = (text) => {
+export const renderSimpleMarkdown = text => {
   if (!text || typeof text !== 'string') {
     return text || '';
   }
@@ -16,7 +16,10 @@ export const renderSimpleMarkdown = (text) => {
 
   html = html.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+  html = html.replace(
+    /\[([^\]]+)\]\(([^)]+)\)/g,
+    '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
+  );
 
   html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
 
@@ -33,7 +36,7 @@ export const renderSimpleMarkdown = (text) => {
 
 /**
  * React component wrapper for rendering markdown with dangerouslySetInnerHTML
- * 
+ *
  * @param {Object} props - Component props
  * @param {string} props.text - The markdown text to render
  * @param {string} props.className - Optional CSS class name
@@ -41,11 +44,8 @@ export const renderSimpleMarkdown = (text) => {
  */
 export const MarkdownText = ({ text, className = '' }) => {
   const html = renderSimpleMarkdown(text);
-  
+
   return (
-    <span 
-      className={className}
-      dangerouslySetInnerHTML={{ __html: html }}
-    />
+    <span className={className} dangerouslySetInnerHTML={{ __html: html }} />
   );
-}; 
+};

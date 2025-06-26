@@ -1,9 +1,9 @@
-import React from "react";
-import { IoCheckmarkSharp, IoChevronForward } from "react-icons/io5";
+import React from 'react';
+import { IoCheckmarkSharp, IoChevronForward } from 'react-icons/io5';
 
 /**
  * FilterGroup component - A reusable filter group with an accordion toggle and checkboxes
- * 
+ *
  * @param {Object} props - Component props
  * @param {string} props.title - Title of the filter group
  * @param {string} props.sectionKey - The key used to identify this section in state
@@ -21,7 +21,7 @@ const FilterGroup = ({
   toggleSection,
   items,
   selectedItems = [],
-  onItemChange
+  onItemChange,
 }) => {
   return (
     <div className="filter-group">
@@ -31,12 +31,12 @@ const FilterGroup = ({
       >
         <span>{title}</span>
         <IoChevronForward
-          className={`accordion-icon ${isExpanded ? "expanded" : ""}`}
+          className={`accordion-icon ${isExpanded ? 'expanded' : ''}`}
         />
       </div>
       {isExpanded && (
         <div className="filter-checkbox-group">
-          {items.map((item) => (
+          {items.map(item => (
             <label key={item} className="filter-checkbox-label">
               <div className="custom-checkbox">
                 {selectedItems.includes(item) && (
@@ -58,4 +58,4 @@ const FilterGroup = ({
   );
 };
 
-export default FilterGroup; 
+export default FilterGroup;

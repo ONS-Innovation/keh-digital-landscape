@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useData } from "../contexts/dataContext";
-import Header from "../components/Header/Header";
-import Changelog from "../components/HomePage/Changelog";
-import RecentBanners from "../components/HomePage/RecentBanners";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useData } from '../contexts/dataContext';
+import Header from '../components/Header/Header';
+import Changelog from '../components/HomePage/Changelog';
+import RecentBanners from '../components/HomePage/RecentBanners';
 import {
   TbEditCircle,
   TbUserShield,
   TbUsers,
   TbChartBar,
   TbHelp,
-} from "react-icons/tb";
-import { MdOutlineRadar } from "react-icons/md";
-import { VscCopilot } from "react-icons/vsc";
-import "../styles/HomePage.css";
+} from 'react-icons/tb';
+import { MdOutlineRadar } from 'react-icons/md';
+import { VscCopilot } from 'react-icons/vsc';
+import '../styles/HomePage.css';
 
 /**
  * HomePage component for displaying the home page.
@@ -24,9 +24,9 @@ function HomePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const navCards = document.querySelectorAll(".nav-card");
+    const navCards = document.querySelectorAll('.nav-card');
     if (navCards.length % 2 !== 0) {
-      navCards[navCards.length - 1].classList.add("odd-last-child");
+      navCards[navCards.length - 1].classList.add('odd-last-child');
     }
   }, []);
 
@@ -47,7 +47,7 @@ function HomePage() {
           </div>
 
           <div className="navigation-cards">
-            <div className="nav-card" onClick={() => navigate("/radar")}>
+            <div className="nav-card" onClick={() => navigate('/radar')}>
               <div className="nav-card-header">
                 <MdOutlineRadar />
                 <h2>Tech Radar</h2>
@@ -58,7 +58,7 @@ function HomePage() {
               </p>
             </div>
 
-            <div className="nav-card" onClick={() => navigate("/statistics")}>
+            <div className="nav-card" onClick={() => navigate('/statistics')}>
               <div className="nav-card-header">
                 <TbChartBar />
                 <h2>Statistics</h2>
@@ -69,7 +69,7 @@ function HomePage() {
               </p>
             </div>
 
-            <div className="nav-card" onClick={() => navigate("/projects")}>
+            <div className="nav-card" onClick={() => navigate('/projects')}>
               <div className="nav-card-header">
                 <TbUsers />
                 <h2>Projects</h2>

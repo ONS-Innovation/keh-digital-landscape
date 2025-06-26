@@ -50,8 +50,8 @@
   margin-right: 16px;
 }
 
-@media (max-width:800px){
-  .header-left h1{
+@media (max-width: 800px) {
+  .header-left h1 {
     display: none;
   }
 
@@ -117,7 +117,6 @@
 .search-clear svg {
   margin-top: 2px;
 }
-
 
 .search-icon {
   color: hsl(var(--muted-foreground));
@@ -203,10 +202,11 @@
     gap: 16px;
   }
 
-  .desktop-nav button, .desktop-nav a {
+  .desktop-nav button,
+  .desktop-nav a {
     background: none;
     border: none;
-    color: hsl(var(--foreground) / .75);
+    color: hsl(var(--foreground) / 0.75);
     font-size: 14px;
     font-weight: 500;
     padding: 0;
@@ -216,18 +216,20 @@
     text-decoration: none;
   }
 
-  .desktop-nav button:hover, .desktop-nav a:hover{
-    color: hsl(var(--foreground) / .5);
+  .desktop-nav button:hover,
+  .desktop-nav a:hover {
+    color: hsl(var(--foreground) / 0.5);
   }
 
-  .desktop-nav button.active, .desktop-nav a.active {
+  .desktop-nav button.active,
+  .desktop-nav a.active {
     color: hsl(var(--foreground));
     text-decoration: underline;
     text-underline-offset: 8px;
-    text-decoration-style:solid;
+    text-decoration-style: solid;
     text-decoration-thickness: 2px;
 
-    text-decoration-color: hsl(var(--foreground) / .5);
+    text-decoration-color: hsl(var(--foreground) / 0.5);
   }
 
   .mobile-menu {

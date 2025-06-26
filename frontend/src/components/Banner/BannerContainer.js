@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import Banner from "./Banner";
-import { useData } from "../../contexts/dataContext";
+import React, { useEffect, useState } from 'react';
+import Banner from './Banner';
+import { useData } from '../../contexts/dataContext';
 
 /**
  * Container component that fetches and displays banners for a specific page.
- * 
+ *
  * @param {Object} props - Component props
  * @param {string} props.page - The page name ('radar', 'statistics', or 'projects')
  * @returns {JSX.Element} The BannerContainer component
@@ -54,4 +54,4 @@ const BannerContainer = ({ page }) => {
   );
 };
 
-export default BannerContainer; 
+export default BannerContainer;

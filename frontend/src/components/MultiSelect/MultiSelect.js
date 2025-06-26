@@ -1,22 +1,22 @@
-import React, { useState, useRef, useEffect } from "react";
-import { IoClose } from "react-icons/io5";
-import "../../styles/components/MultiSelect.css";
+import React, { useState, useRef, useEffect } from 'react';
+import { IoClose } from 'react-icons/io5';
+import '../../styles/components/MultiSelect.css';
 
 const MultiSelect = ({
   options,
   value,
   onChange,
-  placeholder = "Select...",
+  placeholder = 'Select...',
   isDisabled = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const containerRef = useRef(null);
   const inputRef = useRef(null);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = event => {
       if (
         containerRef.current &&
         !containerRef.current.contains(event.target)
@@ -25,8 +25,8 @@ const MultiSelect = ({
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const handleInputClick = () => {
@@ -34,26 +34,26 @@ const MultiSelect = ({
     inputRef.current?.focus();
   };
 
-  const handleOptionClick = (option) => {
-    const isSelected = value.some((v) => v.value === option.value);
+  const handleOptionClick = option => {
+    const isSelected = value.some(v => v.value === option.value);
     let newValue;
     if (isSelected) {
-      newValue = value.filter((v) => v.value !== option.value);
+      newValue = value.filter(v => v.value !== option.value);
     } else {
       newValue = [...value, option];
     }
     onChange(newValue);
-    setSearchTerm("");
+    setSearchTerm('');
     inputRef.current?.focus();
   };
 
   const handleRemoveValue = (optionValue, e) => {
     e.stopPropagation();
-    const newValue = value.filter((v) => v.value !== optionValue);
+    const newValue = value.filter(v => v.value !== optionValue);
     onChange(newValue);
   };
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = event => {
     if (event.key === 'Escape') {
       setIsOpen(false);
       inputRef.current?.focus();
@@ -61,7 +61,9 @@ const MultiSelect = ({
       setIsOpen(true);
       event.preventDefault();
     } else if (event.key === 'ArrowDown' && isOpen) {
-      const firstOption = dropdownRef.current?.querySelector('.multi-select-option');
+      const firstOption = dropdownRef.current?.querySelector(
+        '.multi-select-option'
+      );
       if (firstOption) {
         firstOption.focus();
         event.preventDefault();
@@ -94,22 +96,22 @@ const MultiSelect = ({
     }
   };
 
-  const filteredOptions = options.filter((option) =>
+  const filteredOptions = options.filter(option =>
     option.label.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className={`multi-select`} ref={containerRef} >
-      <div 
-        className={`multi-select-control ${isOpen ? "active" : ""}`} 
+    <div className={`multi-select`} ref={containerRef}>
+      <div
+        className={`multi-select-control ${isOpen ? 'active' : ''}`}
         onClick={handleInputClick}
       >
         <div className="multi-select-values">
-          {value.map((v) => (
+          {value.map(v => (
             <div key={v.value} className="multi-select-value">
               {v.label}
-              <button 
-                onClick={(e) => handleRemoveValue(v.value, e)}
+              <button
+                onClick={e => handleRemoveValue(v.value, e)}
                 aria-label={`Remove ${v.label}`}
               >
                 <IoClose size={14} />
@@ -119,10 +121,10 @@ const MultiSelect = ({
           <input
             ref={inputRef}
             className="multi-select-input"
-            value={searchTerm || ""}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            value={searchTerm || ''}
+            onChange={e => setSearchTerm(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={value.length === 0 ? placeholder : ""}
+            placeholder={value.length === 0 ? placeholder : ''}
             disabled={isDisabled}
             type="text"
             aria-label="Search options"
@@ -135,7 +137,7 @@ const MultiSelect = ({
         </div>
       </div>
       {isOpen && filteredOptions.length > 0 && (
-        <div 
+        <div
           ref={dropdownRef}
           id="multi-select-dropdown"
           className="multi-select-dropdown"
@@ -143,16 +145,16 @@ const MultiSelect = ({
           aria-label="Available options"
           tabIndex="0"
         >
-          {filteredOptions.map((option) => (
+          {filteredOptions.map(option => (
             <div
               key={option.label + option.value}
               className={`multi-select-option ${
-                value.some((v) => v.value === option.value) ? "selected" : ""
+                value.some(v => v.value === option.value) ? 'selected' : ''
               }`}
               onClick={() => handleOptionClick(option)}
-              onKeyDown={(e) => handleOptionKeyDown(e, option)}
+              onKeyDown={e => handleOptionKeyDown(e, option)}
               role="option"
-              aria-selected={value.some((v) => v.value === option.value)}
+              aria-selected={value.some(v => v.value === option.value)}
               tabIndex="0"
             >
               {option.label}

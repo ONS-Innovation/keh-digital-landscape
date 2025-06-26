@@ -82,21 +82,21 @@
   color: hsl(0, 100%, 65%);
 }
 
-:root[class~="dark"] .banner-info {
+:root[class~='dark'] .banner-info {
   background-color: hsl(210, 50%, 20%);
   color: hsl(210, 100%, 90%);
 }
 
-:root[class~="dark"] .banner-warning {
+:root[class~='dark'] .banner-warning {
   background-color: hsl(45, 50%, 20%);
   color: hsl(45, 100%, 90%);
 }
 
-:root[class~="dark"] .banner-error {
+:root[class~='dark'] .banner-error {
   background-color: hsl(0, 50%, 20%);
   color: hsl(0, 100%, 90%);
 }
 
-:root[class~="dark"] .banner-close-btn:hover {
+:root[class~='dark'] .banner-close-btn:hover {
   background-color: rgba(255, 255, 255, 0.1);
-} 
+}

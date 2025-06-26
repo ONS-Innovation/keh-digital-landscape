@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import "../../../styles/CoPilotPage.css";
+import React, { useMemo } from 'react';
+import '../../../styles/CoPilotPage.css';
 import {
   PieChart as RechartsPieChart,
   Pie,
@@ -7,23 +7,25 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-} from "recharts";
+} from 'recharts';
 
 const entries = 7;
 
 const colourPalette = [
-    "hsl(var(--chart-1))",
-    "hsl(var(--chart-2))",
-    "hsl(var(--chart-3))",
-    "hsl(var(--chart-4))",
-    "hsl(var(--chart-5))",
-    "hsl(var(--chart-6))",
-    "hsl(var(--chart-7))",
-  ];
+  'hsl(var(--chart-1))',
+  'hsl(var(--chart-2))',
+  'hsl(var(--chart-3))',
+  'hsl(var(--chart-4))',
+  'hsl(var(--chart-5))',
+  'hsl(var(--chart-6))',
+  'hsl(var(--chart-7))',
+];
 
-const PieChart = ({ engagedUsers, title = "User Engagement"}) => {
+const PieChart = ({ engagedUsers, title = 'User Engagement' }) => {
   const data = useMemo(() => {
-    const filteredEntries = Object.entries(engagedUsers).filter(([key]) => key.toLowerCase() !== "unknown");
+    const filteredEntries = Object.entries(engagedUsers).filter(
+      ([key]) => key.toLowerCase() !== 'unknown'
+    );
     const sortedEntries = filteredEntries.sort((a, b) => b[1] - a[1]);
     const topEntries = sortedEntries.slice(0, entries);
     const otherEntries = sortedEntries.slice(entries);
@@ -35,15 +37,15 @@ const PieChart = ({ engagedUsers, title = "User Engagement"}) => {
       name: label,
       value: parseFloat(((count / total) * 100).toFixed(1)),
       count,
-      color: colourPalette[index % colourPalette.length]
+      color: colourPalette[index % colourPalette.length],
     }));
 
     if (otherTotal > 0) {
       pieData.push({
-        name: "other",
+        name: 'other',
         value: parseFloat(((otherTotal / total) * 100).toFixed(1)),
         count: otherTotal,
-        color: "#fd79a8"
+        color: '#fd79a8',
       });
     }
 
@@ -68,9 +70,9 @@ const PieChart = ({ engagedUsers, title = "User Engagement"}) => {
             isAnimationActive={true}
           >
             {data.map((entry, index) => (
-              <Cell 
-                key={`cell-${index}`} 
-                fill={entry.color} 
+              <Cell
+                key={`cell-${index}`}
+                fill={entry.color}
                 aria-label={`${entry.name}: ${entry.value}% with ${entry.count} entries`}
               />
             ))}

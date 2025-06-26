@@ -1,7 +1,7 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { TbLock, TbHome, TbUserX, TbInfoCircle } from "react-icons/tb";
-import "../../styles/components/AccessDenied.css";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { TbLock, TbHome, TbUserX, TbInfoCircle } from 'react-icons/tb';
+import '../../styles/components/AccessDenied.css';
 
 /**
  * AccessDenied component shown when user doesn't have required permissions
@@ -31,7 +31,7 @@ const AccessDenied = ({
         <h1 className="access-denied-title">Access Denied</h1>
 
         <p className="access-denied-message">
-          You don&apos;t have permission to access the{" "}
+          You don&apos;t have permission to access the{' '}
           <strong>{pageName}</strong> page.
         </p>
 
@@ -51,9 +51,9 @@ const AccessDenied = ({
             <div className="info-item">
               <TbInfoCircle size={20} />
               <span>
-                Your roles:{" "}
+                Your roles:{' '}
                 {userGroups.length > 0 ? (
-                  <span className="user-groups">{userGroups.join(", ")}</span>
+                  <span className="user-groups">{userGroups.join(', ')}</span>
                 ) : (
                   <span className="no-groups">No roles assigned</span>
                 )}
@@ -85,7 +85,7 @@ const AccessDenied = ({
           {!isGuest && userGroups.length > 0 && (
             <div className="insufficient-roles-notice">
               <p>
-                Your current role{userGroups.length > 1 ? "s" : ""}{" "}
+                Your current role{userGroups.length > 1 ? 's' : ''}{' '}
                 {userGroups.length > 1 ? "don't" : "doesn't"} have access to
                 this page.
               </p>
