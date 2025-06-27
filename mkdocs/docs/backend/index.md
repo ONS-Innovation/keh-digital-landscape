@@ -117,6 +117,11 @@ Located in `routes/copilot.js`, these provide GitHub Copilot metrics:
 - **GET `/org/live`** - Get Copilot organisation live usage data
 - **GET `/org/historic`** - Get Copilot organisation historic usage data
 - **GET `/seats`** - Get Copilot seat information
+- **GET `/team/live`** - Get Copilot live usage data for a specific team in the organisation
+- **GET `/teams`** - Get all teams the user is a member of in the organisation
+- **GET `/team/seats`** - Get Copilot seat information filtered by a specific team in the organisation
+- **POST `/github/oauth/token`** - Exchange GitHub OAuth code for access token
+- **GET `/github/oauth/login`** - Redirect to GitHub OAuth login
 
 ## Services
 
