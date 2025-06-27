@@ -81,6 +81,7 @@
 .inactivity-button {
   background: hsl(var(--muted));
   border: 1px solid hsl(var(--border));
+  color: hsl(var(--foreground));
   padding: 5px 10px;
   margin-left: 5px;
   border-radius: var(--radius);
