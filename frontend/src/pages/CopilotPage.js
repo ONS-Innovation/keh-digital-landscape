@@ -425,7 +425,6 @@ function CopilotDashboard() {
                     </p>
                   )}
                   <button
-                    id="return-to-selection"
                     className="view-data-button"
                     onClick={() => {
                       setIsSelectingTeam(true);

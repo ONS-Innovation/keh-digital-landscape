@@ -115,13 +115,6 @@
   font-weight: 600;
 }
 
-#return-to-selection {
-  font-weight: 600;
-  display: flex;
-  flex-direction: row;
-  cursor: pointer;
-}
-
 #slider {
   width: 50%;
 }
@@ -331,7 +324,7 @@
   display: flex;
   align-items: center;
   gap: 0.5em;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .avatar-image {
