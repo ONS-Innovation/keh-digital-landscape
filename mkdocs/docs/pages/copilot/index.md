@@ -1,0 +1,47 @@
+# Copilot Usage Dashboard
+
+The Copilot dashboard allows users to analyse GitHub Copilot usage statistics across the organisation and within individual teams.
+
+## Features
+
+### Organisation vs Team View
+Switch between organisation-wide and team-specific usage data using the tabs at the top of the page.
+
+### Live and Historic Data
+Toggle between live usage metrics and historic trends (aggregated by day, week, month, or year).
+
+### Team Selection  
+When in "Team Usage" mode, authenticated users can select a team they belong to from a list. The dashboard then displays usage data for that team.
+
+### Date Range Filtering
+Use the dual range slider to filter live data by a custom date range. The slider automatically adjusts to the available data range.
+
+### Seat Data Active User Filtering
+Adjust the inactivity threshold, measured by number of days, to see active/inactive breakdowns for users with Copilot licenses based on their recent activity.
+
+### Authentication
+Users must authenticate with GitHub to view and select their teams. The dashboard displays a GitHub login button if the user is not authenticated or their session has expired.
+
+## Usage
+
+### Select Scope
+- Choose between viewing data for the whole organisation or for a specific team. On dashboard load, organisation scope is selected by default.
+
+### Authenticate
+- If you select "Team Usage" scope and are not authenticated, you will be prompted to log in with GitHub to see your teams.
+
+### Pick a Team:
+- Select a team from the list to view its Copilot usage metrics.
+
+### View Data:
+- Use the "Live" and "Historic" view mode toggles to switch between recent and historical trends.
+- Adjust the dual range date range slider to focus on specific periods.
+- If viewing "Historic", change the "View Dates By" option to aggregate historic data by day, week, month, or year.
+
+## Use Cases
+
+### Organisation Admins:
+- Track Copilot adoption and engagement across all teams.
+- Assess seat usage and identify inactive users for license management.
+### Team Leads:
+- Monitor how their team is using Copilot and identify trends.
