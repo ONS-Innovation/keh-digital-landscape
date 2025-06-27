@@ -57,7 +57,7 @@ make test-admin
 make test-review
 ```
 
-3. **CoPilot API tests** - CoPilot endpoints:
+3. **Copilot API tests** - Copilot endpoints:
 ```bash
 make test-copilot
 ```
@@ -105,7 +105,7 @@ The tests cover these main endpoint groups:
 | `test_main.py` | `/api/*` | Core API endpoints (health, CSV, JSON, repository) |
 | `test_admin.py` | `/admin/api/*` | Admin API endpoints for banner management |
 | `test_review.py` | `/review/api/*` | Review API endpoints for tech radar updates |
-| `test_copilot.py` | `/api/*` | CoPilot API endpoints |
+| `test_copilot.py` | `/api/*` | Copilot API endpoints |
 
 ## Making changes to the tests
 

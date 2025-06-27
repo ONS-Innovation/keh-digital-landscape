@@ -391,22 +391,22 @@ function HelpModal({ show, onClose }) {
         };
       case '/copilot':
         return {
-          title: 'CoPilot Dashboard',
+          title: 'Copilot Dashboard',
           content: (
             <div className="help-modal-body">
               {githubPagesLink()}
               <h1>Guide</h1>
               <span>
-                The Copilot dashboard visualises CoPilot usage data across ONS
+                The Copilot dashboard visualises Copilot usage data across ONS
                 Digital. Here&apos;s how to use it:
               </span>
               <ul className="help-modal-list">
                 <li>
-                  Click &quot;Organisation Usage&quot; to view CoPilot usage
+                  Click &quot;Organisation Usage&quot; to view Copilot usage
                   across the ONS Digital organisation.
                 </li>
                 <li>
-                  Click &quot;Team Usage&quot; to view CoPilot usage for a
+                  Click &quot;Team Usage&quot; to view Copilot usage for a
                   specific team within ONS Digital. You must have permissions to
                   view this team.
                 </li>

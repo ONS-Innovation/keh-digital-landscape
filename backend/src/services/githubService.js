@@ -38,6 +38,33 @@ class GitHubService {
   }
 
   /**
+   * Get GitHub Copilot team metrics
+   * @param {string} teamSlug - The slug of the team to fetch metrics for
+   * @returns {Promise<Object>} Team metrics data
+   */
+  async getCopilotTeamMetrics(teamSlug) {
+    try {
+      const octokit = await getAppAndInstallation();
+
+      const response = await octokit.request(
+        `GET /orgs/${this.org}/teams/${teamSlug}/copilot/metrics`,
+        {
+          headers: {
+            'X-GitHub-Api-Version': '2022-11-28',
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      logger.error('GitHub API error while fetching Copilot team metrics:', {
+        error: error.message,
+      });
+      throw error;
+    }
+  }
+
+  /**
    * Get GitHub Copilot seat data with pagination
    * @returns {Promise<Array>} Array of all seats
    */
@@ -68,6 +95,68 @@ class GitHubService {
       return allSeats;
     } catch (error) {
       logger.error('GitHub API error while fetching Copilot seats:', {
+        error: error.message,
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Get team members for a specific team in the organisation
+   * @param {string} teamSlug - The slug of the team to fetch members for
+   * @returns {Promise<Array>} Array of team members with login, name, and url
+   */
+  async getTeamMembers(teamSlug) {
+    try {
+      const octokit = await getAppAndInstallation();
+
+      const response = await octokit.request(
+        `GET /orgs/${this.org}/teams/${teamSlug}/members`,
+        {
+          headers: {
+            'X-GitHub-Api-Version': '2022-11-28',
+          },
+          per_page: 100,
+        }
+      );
+
+      // Only return login, name, and url for each member
+      return response.data || [];
+    } catch (error) {
+      logger.error('GitHub API error while fetching team members:', {
+        error: error.message,
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Get teams the authenticated user is a member of in the organisation
+   * @param {string} userToken - GitHub access token
+   * @returns {Promise<Array>} Array of teams the user is a member of in the organisation
+   */
+  async getUserTeams(userToken) {
+    const { Octokit } = await import('@octokit/rest');
+
+    try {
+      const octokit = new Octokit({ auth: userToken });
+
+      const response = await octokit.request(`GET /user/teams`, {
+        headers: {
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+        per_page: 100,
+      });
+
+      // Only return slug, name, description, and url for each team
+      return (response.data || []).map(team => ({
+        slug: team.slug,
+        name: team.name,
+        description: team.description,
+        url: team.html_url,
+      }));
+    } catch (error) {
+      logger.error("GitHub API error while fetching user's teams:", {
         error: error.message,
       });
       throw error;
