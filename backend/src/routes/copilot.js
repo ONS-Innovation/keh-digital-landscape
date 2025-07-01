@@ -12,10 +12,10 @@ const router = express.Router();
  */
 router.get('/auth/status', (req, res) => {
   const userToken = req.cookies?.githubUserToken;
-  res.json({ 
+  res.json({
     authenticated: !!userToken,
     hasToken: !!userToken,
-    cookieCount: Object.keys(req.cookies || {}).length 
+    cookieCount: Object.keys(req.cookies || {}).length,
   });
 });
 
@@ -190,7 +190,7 @@ router.post('/github/oauth/token', async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
       path: '/',
     };
-    
+
     res.cookie('githubUserToken', tokenData.access_token, cookieOptions);
 
     res.json({ success: true });

@@ -25,7 +25,7 @@ export const fetchOrgSeatData = async () => {
  * @param {string} teamSlug - The team slug to filter seats by
  * @returns {Promise<Array>} - Array of team seats
  */
-export const fetchTeamSeatData = async (teamSlug) => {
+export const fetchTeamSeatData = async teamSlug => {
   if (!teamSlug) {
     console.error('Team slug is required to fetch team seats');
     return [];

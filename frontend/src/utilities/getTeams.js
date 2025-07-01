@@ -32,7 +32,11 @@ export const fetchUserTeams = async () => {
     });
 
     if (!response.ok) {
-      console.error('Failed to fetch teams:', response.status, response.statusText);
+      console.error(
+        'Failed to fetch teams:',
+        response.status,
+        response.statusText
+      );
       return [];
     }
 
@@ -68,7 +72,7 @@ export const exchangeCodeForToken = async code => {
     }
 
     const data = await response.json();
-    
+
     return data.success;
   } catch (error) {
     console.error('Error exchanging code:', error);

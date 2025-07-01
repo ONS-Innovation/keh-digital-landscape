@@ -22,7 +22,7 @@ import {
   fetchUserTeams,
   loginWithGitHub,
   logoutUser,
-  checkAuthStatus
+  checkAuthStatus,
 } from '../utilities/getTeams';
 import TableBreakdown from '../components/Copilot/Breakdowns/TableBreakdown';
 import { FaArrowLeft } from 'react-icons/fa';
@@ -282,12 +282,11 @@ function CopilotDashboard() {
     };
 
     const authenticateGitHubUser = async () => {
-      
       // Exchange code for token (this will set httpOnly cookie)
       if (code) {
         try {
           const success = await exchangeCodeForToken(code);
-          
+
           if (!success) {
             console.error('Failed to exchange code for token');
             return;
