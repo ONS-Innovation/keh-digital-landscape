@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Header from '../components/Header/Header';
 import LiveDashboard from '../components/Copilot/Dashboards/LiveDashboard';
-import HistoricDashboard from '../components/CoPilot/Dashboards/HistoricDashboard';
+import HistoricDashboard from '../components/Copilot/Dashboards/HistoricDashboard';
 import {
   filterInactiveUsers,
   fetchTeamSeatData,
@@ -24,7 +24,6 @@ import {
   logoutUser,
   checkAuthStatus,
 } from '../utilities/getTeams';
-import TableBreakdown from '../components/Copilot/Breakdowns/TableBreakdown';
 import { FaArrowLeft } from 'react-icons/fa';
 import { TbLogout } from 'react-icons/tb';
 import '../styles/components/MultiSelect.css';
