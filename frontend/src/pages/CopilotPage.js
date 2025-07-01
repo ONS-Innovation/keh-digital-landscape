@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Header from '../components/Header/Header';
 import LiveDashboard from '../components/Copilot/Dashboards/LiveDashboard';
 import HistoricDashboard from '../components/CoPilot/Dashboards/HistoricDashboard';
@@ -25,8 +26,13 @@ import TableBreakdown from '../components/Copilot/Breakdowns/TableBreakdown';
 import { FaArrowLeft } from 'react-icons/fa';
 import '../styles/components/MultiSelect.css';
 import BannerTabs from '../components/PageBanner/BannerTabs';
+import { BannerContainer } from '../components/Banner';
 
 function CopilotDashboard() {
+  const navigate = useNavigate();
+  const { scope: urlScope } = useParams();
+  const [searchParams] = useSearchParams();
+
   const initialiseDateRange = data => {
     let end = data[data.length - 1]?.date
       ? new Date(data[data.length - 1].date)
@@ -52,7 +58,7 @@ function CopilotDashboard() {
     return diffDays;
   };
 
-  const fetchTeamData = async slug => {
+  const fetchTeamData = useCallback(async slug => {
     setIsTeamLoading(true);
 
     const liveUsage = await fetchTeamLiveUsageData(slug);
@@ -76,7 +82,7 @@ function CopilotDashboard() {
     });
 
     setIsTeamLoading(false);
-  };
+  }, []);
 
   const getDashboardData = () => {
     if (viewMode === 'live' && scope === 'organisation') return liveOrgData;
@@ -173,8 +179,67 @@ function CopilotDashboard() {
   const [availableTeams, setAvailableTeams] = useState([]);
   const [isTeamLoading, setIsTeamLoading] = useState(false);
   const [teamSlug, setTeamSlug] = useState(null);
+  const [isInitialised, setIsInitialised] = useState(false);
 
   const data = getDashboardData();
+
+  /**
+   * Update URL based on current state
+   */
+  const updateURL = useCallback(() => {
+    if (!isInitialised) return; // Don't update URL during initialisation
+
+    if (scope === 'organisation') {
+      const filterParam = viewMode === 'live' ? 'live' : 'historic';
+      navigate(`/copilot/org?f=${filterParam}`, { replace: true });
+    } else if (scope === 'team' && teamSlug && !isSelectingTeam) {
+      navigate(`/copilot/team?t=${teamSlug}`, { replace: true });
+    } else if (scope === 'team' && isSelectingTeam) {
+      navigate('/copilot/team', { replace: true });
+    }
+  }, [navigate, scope, viewMode, teamSlug, isSelectingTeam, isInitialised]);
+
+  /**
+   * Initialise state from URL parameters
+   */
+  useEffect(() => {
+    if (urlScope === 'org') {
+      setScope('organisation');
+      const filterParam = searchParams.get('f');
+      if (filterParam === 'historic') {
+        setViewMode('historic');
+      } else {
+        setViewMode('live');
+      }
+    } else if (urlScope === 'team') {
+      setScope('team');
+      const teamParam = searchParams.get('t');
+      if (teamParam) {
+        setTeamSlug(teamParam);
+        setIsSelectingTeam(false);
+        // Fetch team data if we have a team slug from URL
+        if (teamParam !== teamSlug) {
+          fetchTeamData(teamParam);
+        }
+      } else {
+        setIsSelectingTeam(true);
+      }
+    } else if (!urlScope) {
+      // Default to organisation live view
+      setScope('organisation');
+      setViewMode('live');
+    }
+
+    // Mark as initialized after processing URL parameters
+    setIsInitialised(true);
+  }, [urlScope, searchParams, teamSlug, fetchTeamData]);
+
+  /**
+   * Update URL when relevant state changes
+   */
+  useEffect(() => {
+    updateURL();
+  }, [updateURL]);
 
   /**
    * Trigger data filter upon slider completion
@@ -213,6 +278,7 @@ function CopilotDashboard() {
     const tab = params.get('fromTab');
     if (tab === 'team') {
       setScope('team');
+      setIsSelectingTeam(true);
     }
     const fetchLiveAndSeatsData = async () => {
       setIsLiveLoading(true);
@@ -392,24 +458,29 @@ function CopilotDashboard() {
           activeTab={scope}
           onTabChange={() => {
             setViewMode('live'); // TODO: Add team historic data support
-            setScope(scope =>
-              scope === 'organisation' ? 'team' : 'organisation'
-            );
+            setScope(prevScope => {
+              const newScope =
+                prevScope === 'organisation' ? 'team' : 'organisation';
+              if (newScope === 'team') {
+                setIsSelectingTeam(true);
+                setTeamSlug(null);
+              }
+              return newScope;
+            });
           }}
         />
         <div className="admin-container" tabIndex="0">
           {!isSelectingTeam && (
             <>
-              {teamSlug && (
+              {teamSlug && scope === 'team' && (
                 <div className="dashboard-header">
-                  <h2 style={{ margin: '0 0 16px 0' }}>
-                    Team: {teamSlug}
-                  </h2>
+                  <h2 style={{ margin: '0 0 16px 0' }}>Team: {teamSlug}</h2>
 
                   <button
                     className="view-data-button"
                     onClick={() => {
                       setIsSelectingTeam(true);
+                      setTeamSlug(null);
                       const { start, end } = initialiseDateRange(data.allUsage);
                       setStartDate(start);
                       setEndDate(end);
@@ -566,6 +637,9 @@ function CopilotDashboard() {
           )}
         </div>
       </div>
+      <BannerContainer
+        page={scope === 'organisation' ? 'copilot/org' : 'copilot/team'}
+      />
     </>
   );
 }

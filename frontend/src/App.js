@@ -42,6 +42,7 @@ const App = () => {
           }
         />
         <Route path="/copilot" element={<CopilotDashboard />} />
+        <Route path="/copilot/:scope" element={<CopilotDashboard />} />
       </Routes>
     </Layout>
   );
