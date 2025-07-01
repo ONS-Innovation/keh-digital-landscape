@@ -57,10 +57,33 @@ make test-admin
 make test-review
 ```
 
-3. **Copilot API tests** - Copilot endpoints:
+4. **Copilot API tests** - Copilot endpoints:
 ```bash
 make test-copilot
 ```
+
+### Authentication for Tests
+
+Some Copilot API endpoints require authentication. To test these endpoints, you need to provide a GitHub token and team slug:
+
+1. Get a GitHub token:
+   - Go to http://localhost:3000/copilot/team
+   - Click "Login with GitHub" and complete the authentication
+   - Open Chrome DevTools > Application tab > Cookies
+   - Find the `githubUserToken` cookie and copy its value
+
+2. Set the environment variables:
+```bash
+export TEST_GITHUBUSERTOKEN="your_github_token"
+export TEST_GITHUBTEAM="your_team_slug"  # defaults to "keh-dev" if not set
+```
+
+3. Run the Copilot tests:
+```bash
+make test-copilot
+```
+
+Tests that require authentication will be skipped if the token is not provided.
 
 ### Running a Specific Test
 
@@ -76,6 +99,7 @@ For example:
 python3 -m pytest src/test_main.py::test_health_check -v
 python3 -m pytest src/test_admin.py::test_admin_banner_update -v
 python3 -m pytest src/test_review.py::test_tech_radar_update_valid_structure -v
+python3 -m pytest src/test_copilot.py::test_auth_status_with_token -v
 ```
 
 Ensure tests are passing before committing.
@@ -105,7 +129,7 @@ The tests cover these main endpoint groups:
 | `test_main.py` | `/api/*` | Core API endpoints (health, CSV, JSON, repository) |
 | `test_admin.py` | `/admin/api/*` | Admin API endpoints for banner management |
 | `test_review.py` | `/review/api/*` | Review API endpoints for tech radar updates |
-| `test_copilot.py` | `/api/*` | Copilot API endpoints |
+| `test_copilot.py` | `/copilot/api/*` | Copilot API endpoints (some require authentication) |
 
 ## Making changes to the tests
 
