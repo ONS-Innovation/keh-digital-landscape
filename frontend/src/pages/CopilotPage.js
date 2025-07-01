@@ -488,7 +488,7 @@ function CopilotDashboard() {
                     }}
                     aria-label={`Return to team selection`}
                   >
-                    <FaArrowLeft />
+                    <FaArrowLeft size={10}/>
                     Return to Team Selection
                   </button>
                 </div>

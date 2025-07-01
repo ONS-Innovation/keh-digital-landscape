@@ -31,7 +31,7 @@ export const getCellRenderers = onViewDataClick => ({
           onClick={() => onViewDataClick(data.slug)}
           aria-label={`View data for ${data.name}`}
         >
-          View <FaArrowRight />
+          View <FaArrowRight size={10}/>
         </button>
       </div>
     ) : null,
