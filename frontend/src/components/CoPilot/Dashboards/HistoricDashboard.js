@@ -19,9 +19,9 @@ function HistoricDashboard({ scope, data, isLoading, viewDatesBy }) {
   return (
     <div className="copilot-dashboard">
       <p className="disclaimer-banner">
-        If grouping by day, engagement graphs will show the number of
-        unique users per day. If grouping by week, month or year, the graphs
-        will display the sum of those unique users for the period.
+        If grouping by day, engagement graphs will show the number of unique
+        users per day. If grouping by week, month or year, the graphs will
+        display the sum of those unique users for the period.
       </p>
       <h1 className="title">IDE Code Completions</h1>
       {isLoading ? (

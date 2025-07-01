@@ -25,12 +25,12 @@
   padding: 8px 12px;
   border-radius: var(--radius);
   box-sizing: border-box;
-  width: fit-content
+  width: fit-content;
 }
 
 :root[class~='dark'] .disclaimer-banner {
-    background-color: hsl(210, 50%, 20%);
-    color: hsl(210, 100%, 90%);
+  background-color: hsl(210, 50%, 20%);
+  color: hsl(210, 100%, 90%);
 }
 
 .copilot-dashboard h1 {
@@ -102,7 +102,6 @@
   line-height: 1;
   transition: all 0.2s ease;
   min-width: 36px;
-  min-height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;

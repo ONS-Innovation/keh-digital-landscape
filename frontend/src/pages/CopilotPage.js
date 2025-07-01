@@ -488,7 +488,7 @@ function CopilotDashboard() {
                     }}
                     aria-label={`Return to team selection`}
                   >
-                    <FaArrowLeft size={10}/>
+                    <FaArrowLeft size={10} />
                     Return to Team Selection
                   </button>
                 </div>
@@ -577,16 +577,16 @@ function CopilotDashboard() {
                 <div>
                   {availableTeams && availableTeams.length > 0 ? (
                     <div className="teams-grid">
-                      {availableTeams.map((team) => (
+                      {availableTeams.map(team => (
                         <div key={team.slug} className="team-card">
                           <div className="team-card-content">
                             <h3 className="team-card-name">{team.name}</h3>
                             <p className="team-card-description">
                               {team.description || 'No description available'}
                             </p>
-                            <a 
-                              href={team.url} 
-                              target="_blank" 
+                            <a
+                              href={team.url}
+                              target="_blank"
                               rel="noopener noreferrer"
                               className="team-card-link"
                             >
@@ -610,7 +610,8 @@ function CopilotDashboard() {
                   ) : (
                     <p>
                       No teams available. Please ensure you are a member of at
-                      least one team in the organisation with more than 5 active Copilot licenses.
+                      least one team in the organisation with more than 5 active
+                      Copilot licenses.
                     </p>
                   )}
                 </div>
