@@ -114,10 +114,12 @@
 
 .header-text {
   font-weight: 600;
+  margin-top: 0;
 }
 
 #slider {
-  width: 50%;
+  width: 100%;
+  max-width: 500px;
 }
 
 #slider-end {
@@ -126,7 +128,7 @@
 
 .dashboard-header {
   display: flex;
-  flex-direction: row;
+  justify-content: space-between;
   gap: 10%;
 }
 
@@ -313,19 +315,36 @@
 .custom-cell {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   height: 100%;
 }
 
 .view-data-button {
-  color: #007bff;
-  background: none;
-  border: none;
+  background: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  padding: 4px 12px;
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--border));
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  height: 27px;
+  box-shadow: 0 2px 0 hsl(var(--border));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   display: flex;
   align-items: center;
-  gap: 0.5em;
-  font-weight: 600;
+  justify-content: center;
+  gap: 4px;
+}
+
+.view-data-button:hover {
+  background: hsl(var(--secondary));
+  border-color: hsl(var(--border));
+  box-shadow: none;
+  transform: translateY(2px);
 }
 
 .avatar-image {

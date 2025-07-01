@@ -24,6 +24,7 @@ import {
 import TableBreakdown from '../components/Copilot/Breakdowns/TableBreakdown';
 import { FaArrowLeft } from 'react-icons/fa';
 import '../styles/components/MultiSelect.css';
+import BannerTabs from '../components/PageBanner/BannerTabs';
 
 function CopilotDashboard() {
   const initialiseDateRange = data => {
@@ -398,32 +399,13 @@ function CopilotDashboard() {
         />
         <div className="admin-container" tabIndex="0">
           {!isSelectingTeam && (
-            <div className="dashboard-header">
-              {scope === 'organisation' ? ( // TODO: Add team historic data support
-                <div>
-                  <p className="header-text">View Data Type</p>
-                  <div className="banner-type-selector">
-                    <div
-                      className={`banner-type-option ${viewMode === 'live' ? 'selected' : ''}`}
-                      onClick={() => setViewMode('live')}
-                    >
-                      Live
-                    </div>
-                    <div
-                      className={`banner-type-option ${viewMode === 'historic' ? 'selected' : ''}`}
-                      onClick={() => setViewMode('historic')}
-                    >
-                      Historic
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div>
-                  {teamSlug && (
-                    <p className="header-text">
-                      Viewing Data for Team: {teamSlug}
-                    </p>
-                  )}
+            <>
+              {teamSlug && (
+                <div className="dashboard-header">
+                  <h2 style={{ margin: '0 0 16px 0' }}>
+                    Team: {teamSlug}
+                  </h2>
+
                   <button
                     className="view-data-button"
                     onClick={() => {
@@ -436,76 +418,90 @@ function CopilotDashboard() {
                     aria-label={`Return to team selection`}
                   >
                     <FaArrowLeft />
-                    <p>Return to Team Selection</p>
+                    Return to Team Selection
                   </button>
                 </div>
               )}
-              {viewMode === 'live' ? (
-                <div id="slider">
-                  <p className="header-text">Filter Live Data Range</p>
-                  {isLiveLoading || isTeamLoading ? (
-                    <p>Loading dates...</p>
-                  ) : (
-                    <div>
-                      <p>Start: {startDate}</p>
-                      <Slider
-                        range
-                        min={1}
-                        max={getEndSliderValue(data.allUsage)}
-                        value={sliderValues}
-                        onChange={updateSlider}
-                        onChangeComplete={handleSliderCompletion}
-                        allowCross={false}
-                        ariaLabelForHandle={[
-                          'Start date selector',
-                          'End date selector',
-                        ]}
-                        ariaValueTextFormatterForHandle={(value, index) => {
-                          const usage = data?.allUsage;
-                          if (!usage?.length)
-                            return `${index === 0 ? 'Start' : 'End'} date: Unknown`;
+              <div className="dashboard-header">
+                {viewMode === 'live' ? (
+                  <div id="slider">
+                    <p className="header-text">Filter Live Data Range</p>
+                    {isLiveLoading || isTeamLoading ? (
+                      <p>Loading dates...</p>
+                    ) : (
+                      <div>
+                        <p>Start: {startDate}</p>
+                        <Slider
+                          range
+                          min={1}
+                          max={getEndSliderValue(data.allUsage)}
+                          value={sliderValues}
+                          onChange={updateSlider}
+                          onChangeComplete={handleSliderCompletion}
+                          allowCross={false}
+                          ariaLabelForHandle={[
+                            'Start date selector',
+                            'End date selector',
+                          ]}
+                          ariaValueTextFormatterForHandle={(value, index) => {
+                            const usage = data?.allUsage;
+                            if (!usage?.length)
+                              return `${index === 0 ? 'Start' : 'End'} date: Unknown`;
 
-                          const totalRange = getEndSliderValue(usage);
-                          const date = new Date();
-                          date.setDate(date.getDate() - totalRange - 1 + value);
+                            const totalRange = getEndSliderValue(usage);
+                            const date = new Date();
+                            date.setDate(
+                              date.getDate() - totalRange - 1 + value
+                            );
 
-                          if (isNaN(date.getTime()))
-                            return `${index === 0 ? 'Start' : 'End'} date: Invalid`;
+                            if (isNaN(date.getTime()))
+                              return `${index === 0 ? 'Start' : 'End'} date: Invalid`;
 
-                          return `${index === 0 ? 'Start' : 'End'} date: ${date.toISOString().slice(0, 10)}`;
-                        }}
-                      />
-                      <p id="slider-end">End: {endDate}</p>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div>
-                  <p className="header-text">View Dates By</p>
-                  <div className="date-selector">
-                    <select
-                      value={viewDatesBy}
-                      onChange={e => setViewDatesBy(e.target.value)}
-                      disabled={isHistoricLoading}
-                      aria-label="View Dates By"
-                    >
-                      {dateOptions.map(option => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
+                            return `${index === 0 ? 'Start' : 'End'} date: ${date.toISOString().slice(0, 10)}`;
+                          }}
+                        />
+                        <p id="slider-end">End: {endDate}</p>
+                      </div>
+                    )}
                   </div>
-                </div>
-              )}
-            </div>
+                ) : (
+                  <div>
+                    <p className="header-text">View Dates By</p>
+                    <div className="date-selector">
+                      <select
+                        value={viewDatesBy}
+                        onChange={e => setViewDatesBy(e.target.value)}
+                        disabled={isHistoricLoading}
+                        aria-label="View Dates By"
+                      >
+                        {dateOptions.map(option => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                )}
+                {scope === 'organisation' && (
+                  <div>
+                    <BannerTabs
+                      tabs={[
+                        { id: 'live', label: 'Live' },
+                        { id: 'historic', label: 'Historic' },
+                      ]}
+                      activeTab={viewMode}
+                      onTabChange={setViewMode}
+                    />
+                  </div>
+                )}
+              </div>
+            </>
           )}
           <div></div>
           {scope === 'team' && isSelectingTeam ? (
             <>
-              <div className="header-text">
-                <p>Select Team to View</p>
-              </div>
+              <p className="header-text">Select Team to View</p>
               {isAuthenticated ? (
                 <div>
                   {availableTeams && availableTeams.length > 0 ? (
