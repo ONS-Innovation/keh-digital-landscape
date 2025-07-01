@@ -21,9 +21,12 @@ import {
   exchangeCodeForToken,
   fetchUserTeams,
   loginWithGitHub,
+  logoutUser,
+  checkAuthStatus
 } from '../utilities/getTeams';
 import TableBreakdown from '../components/Copilot/Breakdowns/TableBreakdown';
 import { FaArrowLeft } from 'react-icons/fa';
+import { TbLogout } from 'react-icons/tb';
 import '../styles/components/MultiSelect.css';
 import BannerTabs from '../components/PageBanner/BannerTabs';
 import { BannerContainer } from '../components/Banner';
@@ -67,10 +70,7 @@ function CopilotDashboard() {
     setStartDate(start);
     setEndDate(end);
     setSliderValues([1, getEndSliderValue(liveUsage)]);
-    const teamSeats = await fetchTeamSeatData(
-      localStorage.getItem('userToken'),
-      slug
-    );
+    const teamSeats = await fetchTeamSeatData(slug);
     const activeTeamSeats = filterInactiveUsers(teamSeats, startDate);
 
     setLiveTeamData({
@@ -252,13 +252,9 @@ function CopilotDashboard() {
    * Set states from API data
    */
   useEffect(() => {
-    //Handle GitHub login redirect
-    const params = new URLSearchParams(window.location.search);
-    const tab = params.get('fromTab');
-    if (tab === 'team') {
-      setScope('team');
-      setIsSelectingTeam(true);
-    }
+    const code = searchParams.get('code');
+    const fromTab = searchParams.get('fromTab');
+
     const fetchLiveAndSeatsData = async () => {
       setIsLiveLoading(true);
       setIsSeatsLoading(true);
@@ -284,28 +280,18 @@ function CopilotDashboard() {
       setIsLiveLoading(false);
       setIsSeatsLoading(false);
     };
-    fetchLiveAndSeatsData();
-  }, []);
-
-  /**
-   * Authenticate user with GitHub and fetch teams if authenticated
-   */
-  useEffect(() => {
-    const code = new URLSearchParams(window.location.search).get('code');
 
     const authenticateGitHubUser = async () => {
-      const existingToken = localStorage.getItem('userToken');
-
-      // Exchange code for token
-      if (code && !existingToken) {
+      
+      // Exchange code for token (this will set httpOnly cookie)
+      if (code) {
         try {
-          const token = await exchangeCodeForToken(code);
-          if (!token) {
+          const success = await exchangeCodeForToken(code);
+          
+          if (!success) {
             console.error('Failed to exchange code for token');
             return;
           }
-
-          localStorage.setItem('userToken', token);
 
           // Remove code from URL after use
           const url = new URL(window.location);
@@ -315,35 +301,29 @@ function CopilotDashboard() {
           console.error('OAuth token exchange failed', err);
           return;
         }
+      } else {
+        console.log('No OAuth code found, checking existing authentication');
       }
-
-      // Validate token with GitHub
-      const token = localStorage.getItem('userToken');
-      if (token) {
-        try {
-          const res = await fetch('https://api.github.com/user', {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-
-          if (res.status === 200) {
-            setIsAuthenticated(true);
-            const teams = await fetchUserTeams(token);
-            if (teams && teams.length > 0) {
-              setAvailableTeams(teams);
-            }
-          } else if (res.status === 401) {
-            console.warn('GitHub token invalid. Clearing.');
-            localStorage.removeItem('userToken');
-            setIsAuthenticated(false);
-          } else {
-            console.error('Unexpected token validation response', res.status);
+      try {
+        const isAuthenticated = await checkAuthStatus();
+        if (isAuthenticated) {
+          setIsAuthenticated(true);
+          const teams = await fetchUserTeams();
+          console.log('Teams fetched:', teams?.length || 0);
+          if (teams && teams.length >= 0) {
+            setAvailableTeams(teams);
           }
-        } catch (err) {
-          console.error('Failed to validate GitHub token', err);
+        } else {
+          console.log('User is not authenticated');
+          setIsAuthenticated(false);
         }
+      } catch (err) {
+        console.error('Failed to check authentication status:', err);
+        setIsAuthenticated(false);
       }
     };
 
+    fetchLiveAndSeatsData();
     authenticateGitHubUser();
   }, []);
 
@@ -422,6 +402,19 @@ function CopilotDashboard() {
     setEndDate(end);
     setSliderValues([1, getEndSliderValue(data.allUsage)]);
   }, [scope]);
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      setIsAuthenticated(false);
+      setAvailableTeams([]);
+      setTeamSlug(null);
+      setIsSelectingTeam(true);
+      navigate('/copilot/team', { replace: true });
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
+  };
 
   return (
     <>
@@ -558,7 +551,22 @@ function CopilotDashboard() {
           <div></div>
           {scope === 'team' && isSelectingTeam ? (
             <>
-              <p className="header-text">Select a Team to View</p>
+              <div className="team-selection-header">
+                <p className="header-text" style={{ margin: '0' }}>
+                  Select a Team to View
+                </p>
+                {isAuthenticated && (
+                  <button
+                    type="button"
+                    className="github-logout-button"
+                    onClick={handleLogout}
+                    aria-label="Logout from GitHub"
+                  >
+                    <TbLogout size={14} />
+                    Logout
+                  </button>
+                )}
+              </div>
               {isAuthenticated ? (
                 <div>
                   {availableTeams && availableTeams.length > 0 ? (

@@ -6,6 +6,20 @@ const githubService = require('../services/githubService');
 const router = express.Router();
 
 /**
+ * Endpoint for testing cookie authentication
+ * @route GET /copilot/api/auth/status
+ * @returns {Object} Authentication status
+ */
+router.get('/auth/status', (req, res) => {
+  const userToken = req.cookies?.githubUserToken;
+  res.json({ 
+    authenticated: !!userToken,
+    hasToken: !!userToken,
+    cookieCount: Object.keys(req.cookies || {}).length 
+  });
+});
+
+/**
  * Endpoint for fetching Copilot organisation usage data from the Github API.
  * @route GET /copilot/api/org/live
  * @returns {Object} Organisation usage JSON data
@@ -83,13 +97,11 @@ router.get('/seats', async (req, res) => {
  * Endpoint for fetching teams the authenticated user is a member of in the organisation from the GitHub API.
  * @route GET /copilot/api/teams
  * @returns {Object} Copilot teams JSON data
+ * @throws {Error} 401 - If user token is missing
  * @throws {Error} 500 - If fetching fails
  */
 router.get('/teams', async (req, res) => {
-  const authHeader = req.headers.authorization;
-  const userToken = authHeader?.startsWith('Bearer ')
-    ? authHeader.split(' ')[1]
-    : null;
+  const userToken = req.cookies?.githubUserToken;
 
   if (!userToken) {
     return res.status(401).json({ error: 'Missing GitHub user token' });
@@ -135,7 +147,7 @@ router.get('/team/seats', async (req, res) => {
 /**
  * Endpoint for exchanging GitHub OAuth code for access token.
  * @route POST /copilot/api/github/oauth/token
- * @returns {Object} Access token JSON data
+ * @returns {Object} Success response
  * @throws {Error} 400 - If code is missing or exchange fails
  */
 router.post('/github/oauth/token', async (req, res) => {
@@ -170,12 +182,37 @@ router.post('/github/oauth/token', async (req, res) => {
         .json({ error: tokenData.error_description || tokenData.error });
     }
 
-    // Return the access token to frontend
-    res.json({ access_token: tokenData.access_token });
+    // Set the access token as an httpOnly cookie with detailed logging
+    const cookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      path: '/',
+    };
+    
+    res.cookie('githubUserToken', tokenData.access_token, cookieOptions);
+
+    res.json({ success: true });
   } catch (error) {
     logger.error('Error exchanging code for token:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
+});
+
+/**
+ * Endpoint for logging out and clearing the user token cookie.
+ * @route POST /copilot/api/github/oauth/logout
+ * @returns {Object} Success response
+ */
+router.post('/github/oauth/logout', (req, res) => {
+  res.clearCookie('githubUserToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+  });
+  res.json({ success: true });
 });
 
 /**

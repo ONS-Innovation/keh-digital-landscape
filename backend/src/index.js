@@ -5,6 +5,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const logger = require('./config/logger');
 const {
   generalApiLimiter,
@@ -25,7 +26,9 @@ const port = process.env.PORT || 5001;
 
 app.use(
   cors({
-    origin: '*',
+    origin: process.env.NODE_ENV === 'production' 
+      ? [process.env.FRONTEND_URL] 
+      : ['http://localhost:3000', 'http://127.0.0.1:3000'],
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: [
       'Content-Type',
@@ -33,10 +36,13 @@ app.use(
       'x-amzn-oidc-data',
       'x-amzn-oidc-accesstoken',
     ],
+    credentials: true,
+    optionsSuccessStatus: 200,
   })
 );
 
 app.use(express.json());
+app.use(cookieParser());
 
 // Apply rate limiting middleware before mounting routes
 // Note: Health endpoint has its own rate limiter applied directly in the route

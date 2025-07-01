@@ -1,21 +1,38 @@
 /**
+ * Check if user is authenticated by testing cookie presence
+ * @returns {Promise<boolean>} Authentication status
+ */
+export const checkAuthStatus = async () => {
+  try {
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
+    const response = await fetch(`${backendUrl}/copilot/api/auth/status`, {
+      credentials: 'include',
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data.authenticated;
+    }
+    return false;
+  } catch (error) {
+    console.error('Error checking auth status:', error);
+    return false;
+  }
+};
+
+/**
  * Fetch Github teams the authenticated user is a member of in the organisation
  * @returns {Promise<Array>} Array of teams
  */
-export const fetchUserTeams = async token => {
-  if (!token) {
-    console.error('Failed to obtain access token');
-    return [];
-  }
+export const fetchUserTeams = async () => {
   try {
     const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
     const response = await fetch(`${backendUrl}/copilot/api/teams`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      credentials: 'include',
     });
 
     if (!response.ok) {
+      console.error('Failed to fetch teams:', response.status, response.statusText);
       return [];
     }
 
@@ -30,7 +47,7 @@ export const fetchUserTeams = async token => {
 /**
  * Exchange GitHub OAuth code for access token
  * @param {string} code - The OAuth code received from GitHub
- * @returns {Promise<string|null>} Access token or null if failed
+ * @returns {Promise<boolean>} Success status
  */
 export const exchangeCodeForToken = async code => {
   try {
@@ -40,20 +57,44 @@ export const exchangeCodeForToken = async code => {
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ code }),
       }
     );
 
     if (!response.ok) {
       console.error('Failed to exchange code for token:', response.statusText);
-      return null;
+      return false;
     }
 
     const data = await response.json();
-    return data.access_token;
+    
+    return data.success;
   } catch (error) {
     console.error('Error exchanging code:', error);
-    return null;
+    return false;
+  }
+};
+
+/**
+ * Logout user and clear the authentication cookie
+ * @returns {Promise<boolean>} Success status
+ */
+export const logoutUser = async () => {
+  try {
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
+    const response = await fetch(
+      `${backendUrl}/copilot/api/github/oauth/logout`,
+      {
+        method: 'POST',
+        credentials: 'include',
+      }
+    );
+
+    return response.ok;
+  } catch (error) {
+    console.error('Error logging out:', error);
+    return false;
   }
 };
 

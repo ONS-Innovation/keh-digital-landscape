@@ -471,3 +471,41 @@
     grid-template-columns: 1fr;
   }
 }
+
+.team-selection-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.github-logout-button {
+  background: hsl(var(--primary));
+  border: 1px solid hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  padding: 4px 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.github-logout-button:hover {
+  background: hsl(var(--destructive) / 0.9);
+  border-color: hsl(var(--destructive) / 0.9);
+}
+
+.github-logout-button:focus {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+.github-logout-button:active {
+  transform: scale(0.95);
+}

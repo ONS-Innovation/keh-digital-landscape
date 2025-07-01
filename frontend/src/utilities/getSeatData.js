@@ -22,10 +22,10 @@ export const fetchOrgSeatData = async () => {
 /**
  * Fetch Copilot seat data filtered by provided team slug
  *
- * @param {string} token - The GitHub user token
- * @returns {Promise<Array>} - Array of teams
+ * @param {string} teamSlug - The team slug to filter seats by
+ * @returns {Promise<Array>} - Array of team seats
  */
-export const fetchTeamSeatData = async (token, teamSlug) => {
+export const fetchTeamSeatData = async (teamSlug) => {
   if (!teamSlug) {
     console.error('Team slug is required to fetch team seats');
     return [];
@@ -35,7 +35,7 @@ export const fetchTeamSeatData = async (token, teamSlug) => {
     const response = await fetch(
       `${backendUrl}/copilot/api/team/seats?teamSlug=${teamSlug}`,
       {
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: 'include',
       }
     );
     if (!response.ok) {
