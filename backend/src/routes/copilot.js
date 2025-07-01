@@ -11,12 +11,20 @@ const router = express.Router();
  * @returns {Object} Authentication status
  */
 router.get('/auth/status', (req, res) => {
-  const userToken = req.cookies?.githubUserToken;
-  res.json({
-    authenticated: !!userToken,
-    hasToken: !!userToken,
-    cookieCount: Object.keys(req.cookies || {}).length,
-  });
+  try {
+    const userToken = req.cookies.githubUserToken;
+    if (!userToken) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
+    res.json({
+      authenticated: !!userToken,
+      hasToken: !!userToken,
+      cookieCount: Object.keys(req.cookies || {}).length,
+    });
+  } catch (error) {
+    logger.error('Error fetching auth status:', { error: error.message });
+    res.status(500).json({ error: error.message });
+  }
 });
 
 /**
@@ -60,6 +68,7 @@ router.get('/org/historic', async (req, res) => {
  * @param {string} teamSlug - The slug of the team to fetch metrics for
  * @returns {Object} Team live metrics JSON data
  * @throws {Error} 400 - If team slug is missing
+ * @throws {Error} 401 - If authentication is missing
  * @throws {Error} 500 - If fetching fails
  */
 router.get('/team/live', async (req, res) => {
@@ -68,8 +77,13 @@ router.get('/team/live', async (req, res) => {
     return res.status(400).json({ error: 'Missing team slug' });
   }
 
+  const userToken = req.cookies?.githubUserToken;
+  if (!userToken) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+
   try {
-    const data = await githubService.getCopilotTeamMetrics(teamSlug);
+    const data = await githubService.getCopilotTeamMetrics(teamSlug, userToken);
     res.json(data);
   } catch (error) {
     logger.error('GitHub API error:', { error: error.message });
@@ -122,16 +136,22 @@ router.get('/teams', async (req, res) => {
  * @param {string} teamSlug - The slug of the team to fetch seats for
  * @returns {Object} Copilot team seats JSON data
  * @throws {Error} 400 - If team slug is missing
+ * @throws {Error} 401 - If authentication is missing
  * @throws {Error} 500 - If fetching fails
  */
 router.get('/team/seats', async (req, res) => {
   const { teamSlug } = req.query;
   if (!teamSlug) return res.status(400).json({ error: 'Missing team slug' });
 
+  const userToken = req.cookies?.githubUserToken;
+  if (!userToken) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+
   try {
     const [allSeats, members] = await Promise.all([
       githubService.getCopilotSeats(),
-      githubService.getTeamMembers(teamSlug),
+      githubService.getTeamMembers(teamSlug, userToken),
     ]);
 
     const memberIds = new Set(members.map(m => m.id));

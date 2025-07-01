@@ -40,11 +40,17 @@ class GitHubService {
   /**
    * Get GitHub Copilot team metrics
    * @param {string} teamSlug - The slug of the team to fetch metrics for
+   * @param {string} userToken - GitHub access token
    * @returns {Promise<Object>} Team metrics data
    */
-  async getCopilotTeamMetrics(teamSlug) {
+  async getCopilotTeamMetrics(teamSlug, userToken) {
+    if (!userToken) {
+      throw new Error('Authentication required to access team metrics');
+    }
+
     try {
-      const octokit = await getAppAndInstallation();
+      const { Octokit } = await import('@octokit/rest');
+      const octokit = new Octokit({ auth: userToken });
 
       const response = await octokit.request(
         `GET /orgs/${this.org}/teams/${teamSlug}/copilot/metrics`,
@@ -106,9 +112,10 @@ class GitHubService {
    * @param {string} teamSlug - The slug of the team to fetch members for
    * @returns {Promise<Array>} Array of team members with login, name, and url
    */
-  async getTeamMembers(teamSlug) {
+  async getTeamMembers(teamSlug, userToken) {
     try {
-      const octokit = await getAppAndInstallation();
+      const { Octokit } = await import('@octokit/rest');
+      const octokit = new Octokit({ auth: userToken });
 
       const response = await octokit.request(
         `GET /orgs/${this.org}/teams/${teamSlug}/members`,
@@ -136,9 +143,9 @@ class GitHubService {
    * @returns {Promise<Array>} Array of teams the user is a member of in the organisation
    */
   async getUserTeams(userToken) {
-    const { Octokit } = await import('@octokit/rest');
-
     try {
+      const { Octokit } = await import('@octokit/rest');
+
       const octokit = new Octokit({ auth: userToken });
 
       const response = await octokit.request(`GET /user/teams`, {
