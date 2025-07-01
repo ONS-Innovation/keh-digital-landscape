@@ -211,14 +211,18 @@ Tests retrieving live Copilot organisation usage data:
 
 ::: testing.backend.src.test_copilot.test_org_live_get
 
+::: testing.backend.src.test_copilot.test_org_live_get_with_auth
+
 #### Live Team Data Retrieval
 Tests retrieving live Copilot team usage data:
 
-::: testing.backend.test_copilot.test_team_live_get
+::: testing.backend.src.test_copilot.test_team_live_get
 
-::: testing.backend.test_copilot.test_team_live_get_invalid_slug
+::: testing.backend.src.test_copilot.test_team_live_get_with_auth
 
-::: testing.backend.test_copilot.test_team_live_get_missing_slug
+::: testing.backend.src.test_copilot.test_team_live_get_invalid_slug
+
+::: testing.backend.src.test_copilot.test_team_live_get_missing_slug
 
 #### Historic Organisation Data Retrieval
 Tests retrieving historic Copilot organisation usage data:
@@ -233,11 +237,11 @@ Tests retrieving Copilot seat data for the organisation:
 #### Team Seat Data Retrieval
 Tests retrieving Copilot seat data for a team within the organisation:
 
-::: testing.backend.test_copilot.test_team_seats_get
+::: testing.backend.src.test_copilot.test_team_seats_get
 
-::: testing.backend.test_copilot.test_team_seats_get_invalid_slug
+::: testing.backend.src.test_copilot.test_team_seats_get_invalid_slug
 
-::: testing.backend.test_copilot.test_team_seats_get_missing_slug
+::: testing.backend.src.test_copilot.test_team_seats_get_missing_slug
 
 ### Banner Endpoints
 
