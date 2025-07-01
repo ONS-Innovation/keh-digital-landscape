@@ -558,7 +558,7 @@ function CopilotDashboard() {
           <div></div>
           {scope === 'team' && isSelectingTeam ? (
             <>
-              <p className="header-text">Select Team to View</p>
+              <p className="header-text">Select a Team to View</p>
               {isAuthenticated ? (
                 <div>
                   {availableTeams && availableTeams.length > 0 ? (
