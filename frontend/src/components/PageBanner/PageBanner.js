@@ -1,5 +1,5 @@
-import React from 'react';
 import '../../styles/components/PageBanner.css';
+import BannerTabs from './BannerTabs';
 
 function PageBanner({ title, description, tabs, activeTab, onTabChange }) {
   return (
@@ -10,17 +10,7 @@ function PageBanner({ title, description, tabs, activeTab, onTabChange }) {
           <span>{description}</span>
         </div>
       </div>
-      <div className="banner-tabs">
-        {tabs.map(tab => (
-          <div
-            key={tab.id}
-            className={`banner-tab ${activeTab === tab.id ? 'active' : ''}`}
-            onClick={() => onTabChange(tab.id)}
-          >
-            {tab.label}
-          </div>
-        ))}
-      </div>
+      <BannerTabs tabs={tabs} activeTab={activeTab} onTabChange={onTabChange} />
     </div>
   );
 }
