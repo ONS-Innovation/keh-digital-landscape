@@ -17,9 +17,20 @@
   max-width: 100%;
 }
 
-.disclaimer {
-  padding-top: 20px;
-  font-size: 15px;
+.disclaimer-banner {
+  background-color: hsl(210, 100%, 97%);
+  border: 1px solid hsl(210, 100%, 50%);
+  color: hsl(210, 100%, 20%);
+  margin-bottom: 0;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  box-sizing: border-box;
+  width: fit-content
+}
+
+:root[class~='dark'] .disclaimer-banner {
+    background-color: hsl(210, 50%, 20%);
+    color: hsl(210, 100%, 90%);
 }
 
 .copilot-dashboard h1 {

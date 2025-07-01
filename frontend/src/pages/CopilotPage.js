@@ -610,7 +610,7 @@ function CopilotDashboard() {
                   ) : (
                     <p>
                       No teams available. Please ensure you are a member of at
-                      least one team in the organisation.
+                      least one team in the organisation with more than 5 active Copilot licenses.
                     </p>
                   )}
                 </div>
@@ -625,6 +625,11 @@ function CopilotDashboard() {
                   </button>
                 </div>
               )}
+              <p className="disclaimer-banner">
+                The GitHub API does not return Copilot team usage data if there
+                are fewer than 5 members with Copilot licenses. This may result
+                in only seat statistics being viewable on the dashboard.
+              </p>
             </>
           ) : viewMode === 'live' ? (
             <LiveDashboard
