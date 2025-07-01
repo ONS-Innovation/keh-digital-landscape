@@ -353,9 +353,111 @@
   border-radius: 50%;
 }
 
+/* Team selection grid */
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.team-card {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 160px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px 0 hsl(var(--border) / 0.1);
+}
+
+.team-card:hover {
+  box-shadow: 0 4px 12px 0 hsl(var(--border) / 0.15);
+  border-color: hsl(var(--primary) / 0.3);
+}
+
+.team-card-content {
+  flex-grow: 1;
+  margin-bottom: 12px;
+}
+
+.team-card-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin: 0 0 8px 0;
+}
+
+.team-card-description {
+  color: hsl(var(--muted-foreground));
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 0 0 12px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.team-card-link {
+  color: hsl(var(--primary));
+  text-underline-offset: 1px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.team-card-link:hover {
+  color: hsl(var(--primary) / 0.8);
+  text-decoration: underline;
+}
+
+.team-card-button {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border: none;
+  border-radius: var(--radius);
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.team-card-button:hover {
+  background: hsl(var(--primary) / 0.9);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px 0 hsl(var(--primary) / 0.25);
+}
+
+.team-card-button:focus {
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: 2px;
+  background: hsl(var(--primary) / 0.9);
+}
+
+.team-card-button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
 @media (max-width: 1024px) {
   .seat-breakdown {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .teams-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .teams-grid {
+    grid-template-columns: 1fr;
   }
 }

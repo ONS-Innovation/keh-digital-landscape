@@ -576,25 +576,36 @@ function CopilotDashboard() {
               {isAuthenticated ? (
                 <div>
                   {availableTeams && availableTeams.length > 0 ? (
-                    <div>
-                      <TableBreakdown
-                        data={availableTeams}
-                        columns={['name', 'description', 'url', 'viewData']}
-                        idField="slug"
-                        idHeader="Team Slug"
-                        headerMap={{
-                          name: 'Name',
-                          description: 'Description',
-                          url: 'URL',
-                          viewData: 'View Data',
-                        }}
-                        tableContext="Copilot Team Selection"
-                        onViewDataClick={slug => {
-                          fetchTeamData(slug);
-                          setTeamSlug(slug);
-                          setIsSelectingTeam(false);
-                        }}
-                      />
+                    <div className="teams-grid">
+                      {availableTeams.map((team) => (
+                        <div key={team.slug} className="team-card">
+                          <div className="team-card-content">
+                            <h3 className="team-card-name">{team.name}</h3>
+                            <p className="team-card-description">
+                              {team.description || 'No description available'}
+                            </p>
+                            <a 
+                              href={team.url} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="team-card-link"
+                            >
+                              View on GitHub
+                            </a>
+                          </div>
+                          <button
+                            className="team-card-button"
+                            onClick={() => {
+                              fetchTeamData(team.slug);
+                              setTeamSlug(team.slug);
+                              setIsSelectingTeam(false);
+                            }}
+                            aria-label={`View data for ${team.name} team`}
+                          >
+                            View Data
+                          </button>
+                        </div>
+                      ))}
                     </div>
                   ) : (
                     <p>

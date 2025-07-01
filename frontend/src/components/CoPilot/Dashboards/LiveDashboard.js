@@ -58,8 +58,8 @@ function LiveDashboard({
   return (
     <div className="copilot-dashboard">
       {scope === 'team' && (
-        <p className="disclaimer">
-          Note: The GitHub API does not return Copilot team usage data if there
+        <p className="disclaimer-banner">
+          The GitHub API does not return Copilot team usage data if there
           are fewer than 5 members with Copilot licenses. This may result in
           only seat statistics being viewable on the dashboard.
         </p>
