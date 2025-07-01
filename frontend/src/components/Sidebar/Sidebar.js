@@ -52,6 +52,7 @@ const Sidebar = () => {
       label: 'Copilot',
       icon: <VscCopilot />,
       isLink: true,
+      hasChildren: true,
     },
   ];
 
@@ -76,7 +77,7 @@ const Sidebar = () => {
         <Link
           key={item.path}
           to={item.path}
-          className={`sidebar-link ${location.pathname === item.path ? 'active' : ''}`}
+          className={`sidebar-link ${item.hasChildren ? (location.pathname.includes(item.path) ? 'active' : '') : location.pathname === item.path ? 'active' : ''}`}
           aria-label={item.label}
         >
           <span className="sidebar-icon">{item.icon}</span>
