@@ -60,13 +60,20 @@ http://localhost:3000/copilot/team
 
 ```bash
 export TEST_GITHUBUSERTOKEN="your-generated-token"
-make test
+export TEST_GITHUBTEAM="your-team-slug"
 ```
 
 Alternatively, you can create a `.env` file in the `testing/frontend` directory with:
 
-```
+```bash
 TEST_GITHUBUSERTOKEN=your-generated-token
+TEST_GITHUBTEAM=your-team-slug
+```
+
+9. Run the tests:
+
+```bash
+make test
 ```
 
 Routes that require authentication are marked with `"authenticated": "githubUserToken"` in `test-config.json`.
