@@ -519,6 +519,19 @@ const ProjectModal = ({
                   </div>
                 )}
 
+                {project.Project_Dependencies && (
+                  <div className="detail-section">
+                    <h4>Project Dependencies</h4>
+                    <ul>
+                      {project.Project_Dependencies.map((dependency, index) => (
+                        <li key={index}>
+                          <strong>{dependency.name}:</strong> {dependency.description}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
                 {project.Documentation && (
                   <div className="detail-section">
                     <h4>Documentation</h4>
