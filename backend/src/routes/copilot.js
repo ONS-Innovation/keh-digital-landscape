@@ -181,8 +181,8 @@ router.post('/github/oauth/token', async (req, res) => {
       code,
       redirect_uri:
         process.env.NODE_ENV === 'production'
-          ? `https://${process.env.FRONTEND_URL}/copilot?fromTab=team`
-          : `http://localhost:3000/copilot?fromTab=team`,
+          ? `https://${process.env.FRONTEND_URL}/copilot/team`
+          : `http://localhost:3000/copilot/team`,
       scope: 'user:email read:org',
     });
 
@@ -250,8 +250,8 @@ router.get('/github/oauth/login', (req, res) => {
       client_id: process.env.GITHUB_APP_CLIENT_ID,
       redirect_uri:
         process.env.NODE_ENV === 'production'
-          ? `https://${process.env.FRONTEND_URL}/copilot?fromTab=team`
-          : `http://localhost:3000/copilot?fromTab=team`,
+          ? `https://${process.env.FRONTEND_URL}/copilot/team`
+          : `http://localhost:3000/copilot/team`,
       scope: 'user:email read:org',
     });
 
