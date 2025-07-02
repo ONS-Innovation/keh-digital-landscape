@@ -49,8 +49,18 @@ class GitHubService {
     }
 
     try {
-      const { Octokit } = await import('@octokit/rest');
-      const octokit = new Octokit({ auth: userToken });
+      // First verify the user is a member of the team using their user token
+      const userTeams = await this.getUserTeams(userToken);
+
+      // Check if the user is a member of the requested team
+      const isTeamMember = userTeams.some(team => team.slug === teamSlug);
+
+      if (!isTeamMember) {
+        throw new Error(`User is not a member of the team: ${teamSlug}`);
+      }
+
+      // Now use the app installation token to access the Copilot metrics
+      const octokit = await getAppAndInstallation();
 
       const response = await octokit.request(
         `GET /orgs/${this.org}/teams/${teamSlug}/copilot/metrics`,
@@ -110,12 +120,27 @@ class GitHubService {
   /**
    * Get team members for a specific team in the organisation
    * @param {string} teamSlug - The slug of the team to fetch members for
+   * @param {string} userToken - GitHub access token for verification
    * @returns {Promise<Array>} Array of team members with login, name, and url
    */
   async getTeamMembers(teamSlug, userToken) {
+    if (!userToken) {
+      throw new Error('Authentication required to access team members');
+    }
+
     try {
-      const { Octokit } = await import('@octokit/rest');
-      const octokit = new Octokit({ auth: userToken });
+      // First verify the user is a member of the team using their user token
+      const userTeams = await this.getUserTeams(userToken);
+
+      // Check if the user is a member of the requested team
+      const isTeamMember = userTeams.some(team => team.slug === teamSlug);
+
+      if (!isTeamMember) {
+        throw new Error(`User is not a member of the team: ${teamSlug}`);
+      }
+
+      // Now use the app installation token to access the team members
+      const octokit = await getAppAndInstallation();
 
       const response = await octokit.request(
         `GET /orgs/${this.org}/teams/${teamSlug}/members`,

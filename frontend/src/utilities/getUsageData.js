@@ -44,7 +44,10 @@ export const fetchTeamLiveUsageData = async teamSlug => {
   try {
     const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
     const response = await fetch(
-      `${backendUrl}/copilot/api/team/live?teamSlug=${teamSlug}`
+      `${backendUrl}/copilot/api/team/live?teamSlug=${teamSlug}`,
+      {
+        credentials: 'include',
+      }
     );
     if (!response.ok) {
       return null;
