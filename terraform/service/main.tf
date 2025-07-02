@@ -73,6 +73,10 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
           value = "https://${local.service_url}"
         },
         {
+          name  = "NODE_ENV",
+          value = "production"
+        },
+        {
           name  = "AWS_REGION",
           value = var.region
         },
