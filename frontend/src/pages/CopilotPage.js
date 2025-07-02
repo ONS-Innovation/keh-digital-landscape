@@ -421,6 +421,18 @@ function CopilotDashboard() {
     }
   };
 
+  // Function to convert team name to hexadecimal color
+  const stringToHexColor = str => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    // Convert to hex and ensure it's always 6 characters
+    const color = Math.abs(hash).toString(16).substring(0, 6);
+    return `#${'0'.repeat(6 - color.length)}${color}`;
+  };
+
   return (
     <>
       <Header hideSearch={true} />
@@ -579,7 +591,15 @@ function CopilotDashboard() {
                       {availableTeams.map(team => (
                         <div key={team.slug} className="team-card">
                           <div className="team-card-content">
-                            <h3 className="team-card-name">{team.name}</h3>
+                            <div className="team-name-container">
+                              <div
+                                className="team-color-circle"
+                                style={{
+                                  backgroundColor: stringToHexColor(team.name),
+                                }}
+                              ></div>
+                              <h3 className="team-card-name">{team.name}</h3>
+                            </div>
                             <p className="team-card-description">
                               {team.description || 'No description available'}
                             </p>
