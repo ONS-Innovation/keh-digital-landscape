@@ -209,7 +209,7 @@ router.post('/github/oauth/token', async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      maxAge: 3 * 60 * 60 * 1000, // 3 hours
       path: '/',
     };
 
