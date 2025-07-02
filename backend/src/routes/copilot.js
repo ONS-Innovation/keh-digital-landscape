@@ -165,6 +165,7 @@ router.get('/team/seats', async (req, res) => {
 /**
  * Endpoint for exchanging GitHub OAuth code for access token.
  * @route POST /copilot/api/github/oauth/token
+ * @param {string} req.body.code - GitHub OAuth code received from the client
  * @returns {Object} Success response
  * @throws {Error} 400 - If code is missing or exchange fails
  */
