@@ -17,9 +17,7 @@ router.get('/auth/status', (req, res) => {
       return res.status(401).json({ error: 'Authentication required' });
     }
     res.json({
-      authenticated: !!userToken,
-      hasToken: !!userToken,
-      cookieCount: Object.keys(req.cookies || {}).length,
+      authenticated: !!userToken
     });
   } catch (error) {
     logger.error('Error fetching auth status:', { error: error.message });

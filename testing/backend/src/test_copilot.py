@@ -44,7 +44,6 @@ def test_auth_status_with_token():
     assert response.status_code == 200
     data = response.json()
     assert data["authenticated"] is True
-    assert data["hasToken"] is True
 
 def test_org_live_get():
     """Test the copilot org live get endpoint.
