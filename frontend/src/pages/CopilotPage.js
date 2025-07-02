@@ -29,6 +29,7 @@ import { TbLogout } from 'react-icons/tb';
 import '../styles/components/MultiSelect.css';
 import BannerTabs from '../components/PageBanner/BannerTabs';
 import { BannerContainer } from '../components/Banner';
+import { toast } from 'react-hot-toast';
 
 function CopilotDashboard() {
   const navigate = useNavigate();
@@ -64,6 +65,10 @@ function CopilotDashboard() {
     setIsTeamLoading(true);
 
     const liveUsage = await fetchTeamLiveUsageData(slug);
+    if (!liveUsage) {
+      toast.error('You do not have permission to view this team');
+      return;
+    }
 
     const { start, end } = initialiseDateRange(liveUsage);
     setStartDate(start);
@@ -80,6 +85,9 @@ function CopilotDashboard() {
       activeSeatData: activeTeamSeats,
     });
 
+    // Ensure we're showing the team data view
+    setIsSelectingTeam(false);
+    setTeamSlug(slug);
     setIsTeamLoading(false);
   };
 
@@ -186,21 +194,22 @@ function CopilotDashboard() {
    * Initialise state from URL parameters (only runs once on component mount)
    */
   useEffect(() => {
-    const currentUrlScope = window.location.pathname.split('/')[2]; // Get scope from pathname
-    const currentParams = new URLSearchParams(window.location.search);
+    const pathParts = window.location.pathname.split('/');
+    const currentUrlScope = pathParts[2]; // Get scope from pathname
 
     if (currentUrlScope === 'org') {
       setScope('organisation');
-      const filterParam = currentParams.get('f');
-      if (filterParam === 'historic') {
+      const viewMode = pathParts[3];
+      if (viewMode === 'historic') {
         setViewMode('historic');
       } else {
         setViewMode('live');
       }
     } else if (currentUrlScope === 'team') {
       setScope('team');
-      const teamParam = currentParams.get('t');
+      const teamParam = pathParts[3];
       if (teamParam) {
+        console.log('Loading team data for:', teamParam);
         setTeamSlug(teamParam);
         setIsSelectingTeam(false);
         // Fetch team data if we have a team slug from URL
@@ -212,10 +221,10 @@ function CopilotDashboard() {
       // Default to organisation live view
       setScope('organisation');
       setViewMode('live');
-      navigate('/copilot/org?f=live', { replace: true });
+      navigate('/copilot/org/live', { replace: true });
     }
 
-    // Mark as initialized after processing URL parameters
+    // Mark as initialised after processing URL parameters
     setIsInitialised(true);
   }, []); // Empty dependency array - only run once on mount
 
@@ -252,7 +261,6 @@ function CopilotDashboard() {
    */
   useEffect(() => {
     const code = searchParams.get('code');
-    const fromTab = searchParams.get('fromTab');
 
     const fetchLiveAndSeatsData = async () => {
       setIsLiveLoading(true);
@@ -307,12 +315,10 @@ function CopilotDashboard() {
         if (isAuthenticated) {
           setIsAuthenticated(true);
           const teams = await fetchUserTeams();
-          console.log('Teams fetched:', teams?.length || 0);
           if (teams && teams.length >= 0) {
             setAvailableTeams(teams);
           }
         } else {
-          console.log('User is not authenticated');
           setIsAuthenticated(false);
         }
       } catch (err) {
@@ -391,7 +397,8 @@ function CopilotDashboard() {
   useEffect(() => {
     if (scope === 'organisation') {
       setIsSelectingTeam(false);
-    } else if (scope === 'team') {
+    } else if (scope === 'team' && !teamSlug) {
+      // Only set to true if we don't have a team slug
       setIsSelectingTeam(true);
     }
     //Reset start and end dates when switching scopes
@@ -399,7 +406,7 @@ function CopilotDashboard() {
     setStartDate(start);
     setEndDate(end);
     setSliderValues([1, getEndSliderValue(data.allUsage)]);
-  }, [scope]);
+  }, [scope, teamSlug]);
 
   const handleLogout = async () => {
     try {
@@ -436,7 +443,7 @@ function CopilotDashboard() {
                 setTeamSlug(null);
                 navigate('/copilot/team', { replace: true });
               } else {
-                navigate('/copilot/org?f=live', { replace: true });
+                navigate('/copilot/org/live', { replace: true });
               }
               return newScope;
             });
@@ -538,7 +545,7 @@ function CopilotDashboard() {
                       activeTab={viewMode}
                       onTabChange={mode => {
                         setViewMode(mode);
-                        navigate(`/copilot/org?f=${mode}`, { replace: true });
+                        navigate(`/copilot/org/${mode}`, { replace: true });
                       }}
                     />
                   </div>
@@ -591,7 +598,7 @@ function CopilotDashboard() {
                               fetchTeamData(team.slug);
                               setTeamSlug(team.slug);
                               setIsSelectingTeam(false);
-                              navigate(`/copilot/team?t=${team.slug}`, {
+                              navigate(`/copilot/team/${team.slug}`, {
                                 replace: true,
                               });
                             }}
