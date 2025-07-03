@@ -84,22 +84,31 @@ function LiveDashboard({
       ) : (
         <div>
           <h3>Acceptances and Acceptance Rate By Day</h3>
-          <AcceptanceGraph data={completions?.perGroupedPeriod ?? 0} />
+          {completions?.perGroupedPeriod && (
+            <AcceptanceGraph data={completions?.perGroupedPeriod} />
+          )}
           <h3>Engaged Users By Day</h3>
-          <EngagedUsersGraph data={completions?.perGroupedPeriod ?? 0} />
+          {completions?.perGroupedPeriod && (
+            <EngagedUsersGraph data={completions?.perGroupedPeriod} />
+          )}
           <div className="copilot-charts-container">
+            {completions?.engagedUsersByLanguage && (
             <PieChart
-              engagedUsers={completions?.engagedUsersByLanguage ?? 0}
-              title={'Engaged Users by Language'}
-            />
-            <PieChart
-              engagedUsers={completions?.engagedUsersByEditor ?? 0}
-              title={'Engaged Users by Editor'}
-            />
+                engagedUsers={completions?.engagedUsersByLanguage}
+                title={'Engaged Users by Language'}
+              />
+            )}
+            {completions?.engagedUsersByEditor && (
+              <PieChart
+                engagedUsers={completions?.engagedUsersByEditor}
+                title={'Engaged Users by Editor'}
+              />
+            )}
           </div>
           <h3>Language Breakdown</h3>
-          <TableBreakdown
-            data={completions?.languageBreakdown ?? 0}
+          {completions?.languageBreakdown && (
+            <TableBreakdown
+              data={completions?.languageBreakdown}
             idField="language"
             idHeader="Language"
             tableContext="IDE Code Completions Language Breakdown"
@@ -125,9 +134,10 @@ function LiveDashboard({
                 : 0,
               lineAcceptanceRate: stats.linesSuggested
                 ? stats.linesAccepted / stats.linesSuggested
-                : 0,
-            })}
-          />
+                  : 0,
+              })}
+            />
+          )}
         </div>
       )}
 
@@ -150,16 +160,21 @@ function LiveDashboard({
       ) : (
         <div className="copilot-chat-container">
           <h3>Engaged Users By Day</h3>
-          <EngagedUsersGraph data={chats?.perGroupedPeriod ?? 0} />
+          {chats?.perGroupedPeriod && (
+            <EngagedUsersGraph data={chats?.perGroupedPeriod} />
+          )}
           <div className="copilot-charts-container">
-            <PieChart
-              engagedUsers={chats?.engagedUsersByEditor ?? 0}
-              title={'Engaged Users by Editor'}
-            />
+            {chats?.engagedUsersByEditor && (
+              <PieChart
+                engagedUsers={chats?.engagedUsersByEditor}
+                title={'Engaged Users by Editor'}
+              />
+            )}
           </div>
           <h3>Editor Breakdown</h3>
-          <TableBreakdown
-            data={chats?.editorBreakdown ?? 0}
+          {chats?.editorBreakdown && (
+            <TableBreakdown
+              data={chats?.editorBreakdown}
             idField="editor"
             idHeader="Editor"
             tableContext="Copilot Chat Editor Breakdown"
@@ -179,9 +194,10 @@ function LiveDashboard({
             }}
             computedFields={stats => ({
               insertionRate: stats.chats ? stats.insertions / stats.chats : 0,
-              copyRate: stats.chats ? stats.copies / stats.chats : 0,
-            })}
-          />
+                copyRate: stats.chats ? stats.copies / stats.chats : 0,
+              })}
+            />
+          )}
         </div>
       )}
 
