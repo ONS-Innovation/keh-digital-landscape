@@ -67,7 +67,9 @@ function CopilotDashboard() {
     const liveUsage = await fetchTeamLiveUsageData(slug);
     if (!liveUsage) {
       toast.error('You do not have permission to view this team');
-      return;
+      setTeamSlug(null);
+      navigate('/copilot/team', { replace: true });
+      return null;
     }
 
     const { start, end } = initialiseDateRange(liveUsage);
