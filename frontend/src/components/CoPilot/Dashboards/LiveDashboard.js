@@ -93,7 +93,7 @@ function LiveDashboard({
           )}
           <div className="copilot-charts-container">
             {completions?.engagedUsersByLanguage && (
-            <PieChart
+              <PieChart
                 engagedUsers={completions?.engagedUsersByLanguage}
                 title={'Engaged Users by Language'}
               />
@@ -109,31 +109,31 @@ function LiveDashboard({
           {completions?.languageBreakdown && (
             <TableBreakdown
               data={completions?.languageBreakdown}
-            idField="language"
-            idHeader="Language"
-            tableContext="IDE Code Completions Language Breakdown"
-            columns={[
-              'suggestions',
-              'acceptances',
-              'acceptanceRate',
-              'linesSuggested',
-              'linesAccepted',
-              'lineAcceptanceRate',
-            ]}
-            headerMap={{
-              suggestions: 'Suggestions',
-              acceptances: 'Acceptances',
-              acceptanceRate: 'Acceptance Rate',
-              linesSuggested: 'Lines of Code Suggested',
-              linesAccepted: 'Lines of Code Accepted',
-              lineAcceptanceRate: 'Line Acceptance Rate',
-            }}
-            computedFields={stats => ({
-              acceptanceRate: stats.suggestions
-                ? stats.acceptances / stats.suggestions
-                : 0,
-              lineAcceptanceRate: stats.linesSuggested
-                ? stats.linesAccepted / stats.linesSuggested
+              idField="language"
+              idHeader="Language"
+              tableContext="IDE Code Completions Language Breakdown"
+              columns={[
+                'suggestions',
+                'acceptances',
+                'acceptanceRate',
+                'linesSuggested',
+                'linesAccepted',
+                'lineAcceptanceRate',
+              ]}
+              headerMap={{
+                suggestions: 'Suggestions',
+                acceptances: 'Acceptances',
+                acceptanceRate: 'Acceptance Rate',
+                linesSuggested: 'Lines of Code Suggested',
+                linesAccepted: 'Lines of Code Accepted',
+                lineAcceptanceRate: 'Line Acceptance Rate',
+              }}
+              computedFields={stats => ({
+                acceptanceRate: stats.suggestions
+                  ? stats.acceptances / stats.suggestions
+                  : 0,
+                lineAcceptanceRate: stats.linesSuggested
+                  ? stats.linesAccepted / stats.linesSuggested
                   : 0,
               })}
             />
@@ -175,25 +175,25 @@ function LiveDashboard({
           {chats?.editorBreakdown && (
             <TableBreakdown
               data={chats?.editorBreakdown}
-            idField="editor"
-            idHeader="Editor"
-            tableContext="Copilot Chat Editor Breakdown"
-            columns={[
-              'chats',
-              'insertions',
-              'insertionRate',
-              'copies',
-              'copyRate',
-            ]}
-            headerMap={{
-              chats: 'Chats',
-              insertions: 'Insertions',
-              insertionRate: 'Insertion Rate',
-              copies: 'Copies',
-              copyRate: 'Copy Rate',
-            }}
-            computedFields={stats => ({
-              insertionRate: stats.chats ? stats.insertions / stats.chats : 0,
+              idField="editor"
+              idHeader="Editor"
+              tableContext="Copilot Chat Editor Breakdown"
+              columns={[
+                'chats',
+                'insertions',
+                'insertionRate',
+                'copies',
+                'copyRate',
+              ]}
+              headerMap={{
+                chats: 'Chats',
+                insertions: 'Insertions',
+                insertionRate: 'Insertion Rate',
+                copies: 'Copies',
+                copyRate: 'Copy Rate',
+              }}
+              computedFields={stats => ({
+                insertionRate: stats.chats ? stats.insertions / stats.chats : 0,
                 copyRate: stats.chats ? stats.copies / stats.chats : 0,
               })}
             />
