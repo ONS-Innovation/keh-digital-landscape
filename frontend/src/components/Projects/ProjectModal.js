@@ -519,19 +519,6 @@ const ProjectModal = ({
                   </div>
                 )}
 
-                {project.Project_Dependencies && (
-                  <div className="detail-section">
-                    <h4>Project Dependencies</h4>
-                    <p>
-                      {project.Project_Dependencies.map((dependency, index) => (
-                        <span key={index}>
-                          <strong>{dependency.name}:</strong> {dependency.description}
-                        </span>
-                      ))}
-                    </p>
-                  </div>
-                )}
-
                 {project.Documentation && (
                   <div className="detail-section">
                     <h4>Documentation</h4>
@@ -552,6 +539,20 @@ const ProjectModal = ({
                   <div className="detail-section">
                     <h4>Description</h4>
                     <p>{project.Description}</p>
+                  </div>
+                )}
+
+                {/* Project Dependencies styled to match Project Details text */}
+                {Array.isArray(project.Project_Dependencies) && project.Project_Dependencies.length > 0 && (
+                  <div className="detail-section">
+                    <h4>Project Dependencies</h4>
+                    <ul style={{ margin: 0, paddingLeft: '1.2em' }}>
+                      {project.Project_Dependencies.map((dependency, index) => (
+                        <p key={index} style={{ fontSize: '14px', lineHeight: 1.5, color: 'inherit', marginBottom: '4px' }}>
+                          {dependency.name}: {dependency.description}
+                        </p>
+                      ))}
+                    </ul>
                   </div>
                 )}
               </div>
