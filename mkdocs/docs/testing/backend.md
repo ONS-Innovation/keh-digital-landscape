@@ -11,7 +11,7 @@ The backend tests are implemented in the `testing/backend/` directory using the 
 - `test_main.py` - Tests for core API endpoints
 - `test_admin.py` - Tests for admin API endpoints
 - `test_review.py` - Tests for review API endpoints
-- `test_copilot.py` - Tests for CoPilot API endpoints
+- `test_copilot.py` - Tests for Copilot API endpoints
 
 ### Base Configuration
 
@@ -48,7 +48,7 @@ make test-admin
 # Run only review API tests
 make test-review
 
-# Run only CoPilot API tests
+# Run only Copilot API tests
 make test-copilot
 ```
 
@@ -202,24 +202,46 @@ Tests validation of banner deletion requests:
 
 ::: testing.backend.src.test_admin.test_admin_banner_delete_invalid
 
-### CoPilot API Tests
+### Copilot API Tests
 
-These tests are located in `test_copilot.py` and verify the CoPilot API endpoints.
+These tests are located in `test_copilot.py` and verify the Copilot API endpoints.
 
 #### Live Organisation Data Retrieval
-Tests retrieving live CoPilot organisation usage data:
+Tests retrieving live Copilot organisation usage data:
 
 ::: testing.backend.src.test_copilot.test_org_live_get
 
+::: testing.backend.src.test_copilot.test_org_live_get_with_auth
+
+#### Live Team Data Retrieval
+Tests retrieving live Copilot team usage data:
+
+::: testing.backend.src.test_copilot.test_team_live_get
+
+::: testing.backend.src.test_copilot.test_team_live_get_with_auth
+
+::: testing.backend.src.test_copilot.test_team_live_get_invalid_slug
+
+::: testing.backend.src.test_copilot.test_team_live_get_missing_slug
+
 #### Historic Organisation Data Retrieval
-Tests retrieving historic CoPilot organisation usage data:
+Tests retrieving historic Copilot organisation usage data:
 
 ::: testing.backend.src.test_copilot.test_org_historic_get
 
 #### Organisation Seat Data Retrieval
-Tests retrieving CoPilot seat data:
+Tests retrieving Copilot seat data for the organisation:
 
 ::: testing.backend.src.test_copilot.test_seats_get
+
+#### Team Seat Data Retrieval
+Tests retrieving Copilot seat data for a team within the organisation:
+
+::: testing.backend.src.test_copilot.test_team_seats_get
+
+::: testing.backend.src.test_copilot.test_team_seats_get_invalid_slug
+
+::: testing.backend.src.test_copilot.test_team_seats_get_missing_slug
 
 ### Banner Endpoints
 

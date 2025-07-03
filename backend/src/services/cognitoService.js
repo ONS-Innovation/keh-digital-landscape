@@ -15,18 +15,30 @@ let cognitoVerifier;
 if (process.env.NODE_ENV === 'development') {
   logger.info('Authentication disabled for local development');
 } else {
-  verifier = AlbJwtVerifier.create({
-    albArn: process.env.ALB_ARN,
-    issuer: `https://cognito-idp.${process.env.AWS_REGION}.amazonaws.com/${process.env.COGNITO_USER_POOL_ID || ''}`,
-    clientId: process.env.COGNITO_USER_POOL_CLIENT_ID || '',
-  });
+  // Only initialise verifiers in production
+  if (
+    process.env.ALB_ARN &&
+    process.env.COGNITO_USER_POOL_ID &&
+    process.env.COGNITO_USER_POOL_CLIENT_ID
+  ) {
+    verifier = AlbJwtVerifier.create({
+      albArn: process.env.ALB_ARN,
+      issuer: `https://cognito-idp.${process.env.AWS_REGION}.amazonaws.com/${process.env.COGNITO_USER_POOL_ID}`,
+      clientId: process.env.COGNITO_USER_POOL_CLIENT_ID,
+    });
 
-  cognitoVerifier = CognitoJwtVerifier.create({
-    tokenUse: 'access', // access tokens contain groups
-    userPoolId: process.env.COGNITO_USER_POOL_ID || '',
-    clientId: process.env.COGNITO_USER_POOL_CLIENT_ID || '',
-  });
+    cognitoVerifier = CognitoJwtVerifier.create({
+      tokenUse: 'access', // access tokens contain groups
+      userPoolId: process.env.COGNITO_USER_POOL_ID,
+      clientId: process.env.COGNITO_USER_POOL_CLIENT_ID,
+    });
+  } else {
+    logger.warn(
+      'AWS configuration missing, authentication will not work in production'
+    );
+  }
 }
+
 // Check if authentication should be disabled (for local development)
 const isAuthDisabled = () => process.env.NODE_ENV === 'development';
 

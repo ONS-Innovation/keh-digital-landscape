@@ -42,10 +42,21 @@
       "url": "/copilot",
       "testing": []
     },
-    "/copilot?": {
+    "/copilot/org?f=live": {
+      "name": "copilot-live",
+      "url": "/copilot/org?f=live",
+      "testing": []
+    },
+    "/copilot/org?f=historic": {
       "name": "copilot-historic",
-      "url": "/copilot",
-      "testing": [".banner-type-option:has-text('Historic')"]
+      "url": "/copilot/org?f=historic",
+      "testing": []
+    },
+    "/copilot/team": {
+      "name": "copilot-team",
+      "url": "/copilot/team",
+      "testing": [".team-card-button:has-text('View Data')"],
+      "authenticated": "githubUserToken"
     }
   },
   "global_settings": {

@@ -22,6 +22,40 @@ fs.mkdirSync(REPORTS_DIR, { recursive: true });
 fs.mkdirSync(path.join(REPORTS_DIR, 'JSON'), { recursive: true });
 
 /**
+ * Sets authentication cookies for routes that require them
+ * @param {Object} context - Playwright browser context
+ * @param {string} pageUrl - URL of the page being tested
+ * @param {Object} pageConfig - Configuration for the page
+ */
+async function setupAuthentication(context, pageUrl, pageConfig) {
+  // If the page requires authentication
+  if (pageConfig.authenticated) {
+    const cookieName = pageConfig.authenticated;
+    const cookieValue = process.env[`TEST_${cookieName.toUpperCase()}`];
+    
+    if (!cookieValue) {
+      console.warn(`Warning: Authentication required for ${pageUrl} but TEST_${cookieName.toUpperCase()} environment variable is not set.`);
+      return;
+    }
+    
+    console.log(`Setting authentication cookie '${cookieName}' for ${pageUrl}`);
+    
+    // Set the authentication cookie
+    await context.addCookies([
+      {
+        name: cookieName,
+        value: cookieValue,
+        domain: new URL(config.global_settings.base_url).hostname,
+        path: '/',
+        httpOnly: true,
+        secure: false, // Set to true for production with HTTPS
+        sameSite: 'Lax'
+      }
+    ]);
+  }
+}
+
+/**
  * Performs interactive testing by clicking specified elements
  * @param {Object} page - Playwright page object
  * @param {Array} testingElements - Array of selectors to click
@@ -62,6 +96,9 @@ async function performInteractiveTesting(page, testingElements, settings) {
   for (const pageConfig of pages) {
     const { name, url, testing } = pageConfig;
     console.log(`Testing ${url}`);
+
+    // Set up authentication if needed before navigating to the page
+    await setupAuthentication(context, url, pageConfig);
 
     await page.goto(`${settings.base_url}${url}`);
     await page.waitForLoadState('domcontentloaded');

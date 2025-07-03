@@ -69,6 +69,14 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
       ],
       environment = [
         {
+          name  = "FRONTEND_URL",
+          value = "https://${local.service_url}"
+        },
+        {
+          name  = "NODE_ENV",
+          value = "production"
+        },
+        {
           name  = "AWS_REGION",
           value = var.region
         },
@@ -89,43 +97,47 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
           value = var.api_s3_bucket_name
         },
         {
-          name = "GITHUB_APP_ID",
+          name  = "GITHUB_APP_ID",
           value = var.github_app_id
         },
         {
-          name = "GITHUB_APP_CLIENT_ID",
+          name  = "GITHUB_APP_CLIENT_ID",
           value = var.github_app_client_id
         },
         {
-          name = "AWS_SECRET_NAME",
+          name  = "GITHUB_APP_CLIENT_SECRET",
+          value = var.github_app_client_secret
+        },
+        {
+          name  = "AWS_SECRET_NAME",
           value = var.aws_secret_name
         },
         {
-          name = "GITHUB_ORG",
+          name  = "GITHUB_ORG",
           value = var.github_org,
         },
         {
-          name = "COPILOT_BUCKET_NAME",
+          name  = "COPILOT_BUCKET_NAME",
           value = var.copilot_bucket_name
         },
         {
-          name = "ALB_ARN",
+          name  = "ALB_ARN",
           value = data.terraform_remote_state.ecs_infrastructure.outputs.application_lb_arn
         },
         {
-          name = "COGNITO_USER_POOL_ID",
+          name  = "COGNITO_USER_POOL_ID",
           value = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_id
         },
         {
-          name = "COGNITO_USER_POOL_CLIENT_ID",
+          name  = "COGNITO_USER_POOL_CLIENT_ID",
           value = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_client_id
         },
         {
-          name = "COGNITO_USER_POOL_DOMAIN",
+          name  = "COGNITO_USER_POOL_DOMAIN",
           value = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_domain
         },
         {
-          name = "SIGN_OUT_URL",
+          name  = "SIGN_OUT_URL",
           value = data.terraform_remote_state.ecs_auth.outputs.cognito_user_pool_sign_out_urls[0]
         }
       ],
@@ -155,14 +167,14 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
     }
   ])
   execution_role_arn       = "arn:aws:iam::${var.aws_account_id}:role/ecsTaskExecutionRole"
-  task_role_arn           = aws_iam_role.ecs_task_role.arn
+  task_role_arn            = aws_iam_role.ecs_task_role.arn
   requires_compatibilities = ["FARGATE"]
-  network_mode            = "awsvpc"
-  cpu                     = var.service_cpu
-  memory                  = var.service_memory
+  network_mode             = "awsvpc"
+  cpu                      = var.service_cpu
+  memory                   = var.service_memory
   runtime_platform {
     operating_system_family = "LINUX"
-    cpu_architecture       = "X86_64"
+    cpu_architecture        = "X86_64"
   }
 }
 

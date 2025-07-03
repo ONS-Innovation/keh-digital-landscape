@@ -19,7 +19,7 @@ The service relies on:
 
 ## Methods
 
-### `getCopilotMetrics()`
+### `getCopilotOrgMetrics()`
 
 Retrieves comprehensive GitHub Copilot metrics for the organisation.
 
@@ -34,10 +34,75 @@ More information on the response structure can be found [here](https://docs.gith
 const githubService = require('./githubService');
 
 try {
-  const metrics = await githubService.getCopilotMetrics();
+  const metrics = await githubService.getCopilotOrgMetrics();
   console.log(`Total Copilot seats: ${metrics.seat_breakdown.total}`);
 } catch (error) {
   console.error('Failed to retrieve Copilot metrics:', error);
+}
+```
+
+### `getCopilotTeamMetrics(teamSlug)`
+Retrieves GitHub Copilot metrics for a team in the organisation.
+
+**Returns:** Promise resolving to Copilot metrics object
+
+**GitHub API Response:**
+
+More information on the response structure can be found [here](https://docs.github.com/en/rest/copilot/copilot-metrics?apiVersion=2022-11-28#get-copilot-metrics-for-a-team).
+
+**Example:**
+```javascript
+const githubService = require('./githubService');
+const teamSlug = req.query.teamSlug;
+
+try {
+  const metrics = await githubService.getCopilotTeamMetrics(teamSlug);
+  console.log(`Total Copilot seats for team: ${metrics.seat_breakdown.total}`);
+} catch (error) {
+  console.error('Failed to retrieve Copilot metrics for team:', error);
+}
+```
+
+### `getTeamMembers(teamSlug)`
+Retrieves members of a specific team.
+
+**Returns:** Promise resolving to an array of team members with login, name, and url
+
+**GitHub API Response:**
+
+More information on the response structure can be found [here](https://docs.github.com/en/rest/teams/members?apiVersion=2022-11-28#list-team-members).
+
+**Example:**
+```javascript
+const githubService = require('./githubService');
+const teamSlug = req.query.teamSlug;
+
+try {
+  const members = await githubService.getTeamMembers(teamSlug);
+  console.log(`Team members of ${teamSlug}: ${members}`);
+} catch (error) {
+  console.error('Failed to retrieve team members:', error);
+}
+```
+
+### `getUserTeams(userToken)`
+Retrieves teams the authenticated user is a member of in the organisation.
+
+**Returns:** Promise resolving to an array of teams
+
+**GitHub API Response:**
+
+More information on the response structure can be found [here](https://docs.github.com/en/rest/teams/teams?apiVersion=2022-11-28#list-teams-for-the-authenticated-user).
+
+**Example:**
+```javascript
+const githubService = require('./githubService');
+
+try {
+  const userTeams = await githubService.getUserTeams(userToken);
+  console.log(`User teams: ${userTeams}`);
+} catch (error) {
+  console.error('Failed to retrieve user teams:', error);
 }
 ```
 
@@ -149,7 +214,7 @@ const githubService = require('../services/githubService');
 
 async function getCopilotSummary() {
   try {
-    const metrics = await githubService.getCopilotMetrics();
+    const metrics = await githubService.getCopilotOrgMetrics();
     const seats = await githubService.getCopilotSeats();
     
     return {

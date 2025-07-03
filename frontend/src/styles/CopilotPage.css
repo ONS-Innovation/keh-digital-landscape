@@ -17,9 +17,20 @@
   max-width: 100%;
 }
 
-.disclaimer {
-  padding-top: 20px;
-  font-size: 15px;
+.disclaimer-banner {
+  background-color: hsl(210, 100%, 97%);
+  border: 1px solid hsl(210, 100%, 50%);
+  color: hsl(210, 100%, 20%);
+  margin-bottom: 0;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  box-sizing: border-box;
+  width: fit-content;
+}
+
+:root[class~='dark'] .disclaimer-banner {
+  background-color: hsl(210, 50%, 20%);
+  color: hsl(210, 100%, 90%);
 }
 
 .copilot-dashboard h1 {
@@ -81,6 +92,7 @@
 .inactivity-button {
   background: hsl(var(--muted));
   border: 1px solid hsl(var(--border));
+  color: hsl(var(--foreground));
   padding: 5px 10px;
   margin-left: 5px;
   border-radius: var(--radius);
@@ -90,7 +102,6 @@
   line-height: 1;
   transition: all 0.2s ease;
   min-width: 36px;
-  min-height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -113,10 +124,12 @@
 
 .header-text {
   font-weight: 600;
+  margin-top: 0;
 }
 
 #slider {
-  width: 50%;
+  width: 100%;
+  max-width: 500px;
 }
 
 #slider-end {
@@ -125,7 +138,7 @@
 
 .dashboard-header {
   display: flex;
-  flex-direction: row;
+  justify-content: space-between;
   gap: 10%;
 }
 
@@ -309,9 +322,204 @@
   background-color: hsl(var(--muted));
 }
 
+.custom-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+}
+
+.view-data-button {
+  background: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  padding: 4px 12px;
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--border));
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  height: 27px;
+  box-shadow: 0 2px 0 hsl(var(--border));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.view-data-button:hover {
+  background: hsl(var(--secondary));
+  border-color: hsl(var(--border));
+  box-shadow: none;
+  transform: translateY(2px);
+}
+
+.avatar-image {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+/* Team selection grid */
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.team-card {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 160px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px 0 hsl(var(--border) / 0.1);
+}
+
+.team-card:hover {
+  box-shadow: 0 4px 12px 0 hsl(var(--border) / 0.15);
+  border-color: hsl(var(--primary) / 0.3);
+}
+
+.team-card-content {
+  flex-grow: 1;
+  margin-bottom: 12px;
+}
+
+.team-name-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.team-color-circle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.team-card-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin: 0;
+}
+
+.team-card-description {
+  color: hsl(var(--muted-foreground));
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 0 0 12px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.team-card-link {
+  color: hsl(var(--primary));
+  text-underline-offset: 1px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.team-card-link:hover {
+  color: hsl(var(--primary) / 0.8);
+  text-decoration: underline;
+}
+
+.team-card-button {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border: none;
+  border-radius: var(--radius);
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.team-card-button:hover {
+  background: hsl(var(--primary) / 0.9);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px 0 hsl(var(--primary) / 0.25);
+}
+
+.team-card-button:focus {
+  outline: 1px solid hsl(var(--primary));
+  outline-offset: 2px;
+  background: hsl(var(--primary) / 0.9);
+}
+
+.team-card-button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
 @media (max-width: 1024px) {
   .seat-breakdown {
     flex-direction: column;
     align-items: flex-start;
   }
+
+  .teams-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .teams-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.team-selection-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.github-logout-button {
+  background: hsl(var(--primary));
+  border: 1px solid hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  padding: 4px 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.github-logout-button:hover {
+  background: hsl(var(--primary) / 0.9);
+  border-color: hsl(var(--primary) / 0.9);
+}
+
+.github-logout-button:focus {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+.github-logout-button:active {
+  transform: scale(0.95);
 }

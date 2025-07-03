@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../../styles/components/Statistics.css';
 import SkeletonStatCard from '../../Statistics/Skeletons/SkeletonStatCard';
-import '../../../styles/CoPilotPage.css';
+import '../../../styles/CopilotPage.css';
 import AcceptanceGraph from '../Breakdowns/AcceptanceGraph';
 import EngagedUsersGraph from '../Breakdowns/EngagedUsersGraph';
 import PieChart from '../Breakdowns/PieChart';
@@ -18,10 +18,10 @@ function HistoricDashboard({ scope, data, isLoading, viewDatesBy }) {
 
   return (
     <div className="copilot-dashboard">
-      <p className="disclaimer">
-        Note: If grouping by day, engagement graphs will show the number of
-        unique users per day. If grouping by week, month or year, the graphs
-        will display the sum of those unique users for the period.
+      <p className="disclaimer-banner">
+        If grouping by day, engagement graphs will show the number of unique
+        users per day. If grouping by week, month or year, the graphs will
+        display the sum of those unique users for the period.
       </p>
       <h1 className="title">IDE Code Completions</h1>
       {isLoading ? (
@@ -100,7 +100,7 @@ function HistoricDashboard({ scope, data, isLoading, viewDatesBy }) {
         </div>
       )}
 
-      <h1 className="title">CoPilot Chat</h1>
+      <h1 className="title">Copilot Chat</h1>
       {isLoading ? (
         <div className="copilot-chat-grid">
           <SkeletonStatCard />
@@ -141,7 +141,7 @@ function HistoricDashboard({ scope, data, isLoading, viewDatesBy }) {
             data={chats?.editorBreakdown ?? 0}
             idField="editor"
             idHeader="Editor"
-            tableContext="Historic CoPilot Chat Editor Breakdown"
+            tableContext="Historic Copilot Chat Editor Breakdown"
             columns={[
               'chats',
               'insertions',
