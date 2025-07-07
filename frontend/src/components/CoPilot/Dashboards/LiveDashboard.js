@@ -83,60 +83,66 @@ function LiveDashboard({
         <h3>Loading live data...</h3>
       ) : (
         <div>
-          <h3>Acceptances and Acceptance Rate By Day</h3>
-          {completions?.perGroupedPeriod && (
-            <AcceptanceGraph data={completions?.perGroupedPeriod} />
+          {completions?.perGroupedPeriod.length > 0 && (
+            <div>
+              <h3>Acceptances and Acceptance Rate By Day</h3>
+              <AcceptanceGraph data={completions?.perGroupedPeriod} />
+            </div>
           )}
-          <h3>Engaged Users By Day</h3>
-          {completions?.perGroupedPeriod && (
-            <EngagedUsersGraph data={completions?.perGroupedPeriod} />
+          {completions?.perGroupedPeriod.length > 0 && (
+            <div>
+              <h3>Engaged Users By Day</h3>
+              <EngagedUsersGraph data={completions?.perGroupedPeriod} />
+            </div>
           )}
           <div className="copilot-charts-container">
-            {completions?.engagedUsersByLanguage && (
+            {completions?.engagedUsersByLanguage.length > 0 && (
               <PieChart
                 engagedUsers={completions?.engagedUsersByLanguage}
                 title={'Engaged Users by Language'}
               />
             )}
-            {completions?.engagedUsersByEditor && (
+            {completions?.engagedUsersByEditor.length > 0 && (
               <PieChart
                 engagedUsers={completions?.engagedUsersByEditor}
                 title={'Engaged Users by Editor'}
               />
             )}
           </div>
-          <h3>Language Breakdown</h3>
-          {completions?.languageBreakdown && (
-            <TableBreakdown
-              data={completions?.languageBreakdown}
-              idField="language"
-              idHeader="Language"
-              tableContext="IDE Code Completions Language Breakdown"
-              columns={[
-                'suggestions',
-                'acceptances',
-                'acceptanceRate',
-                'linesSuggested',
-                'linesAccepted',
-                'lineAcceptanceRate',
-              ]}
-              headerMap={{
-                suggestions: 'Suggestions',
-                acceptances: 'Acceptances',
-                acceptanceRate: 'Acceptance Rate',
-                linesSuggested: 'Lines of Code Suggested',
-                linesAccepted: 'Lines of Code Accepted',
-                lineAcceptanceRate: 'Line Acceptance Rate',
-              }}
-              computedFields={stats => ({
-                acceptanceRate: stats.suggestions
-                  ? stats.acceptances / stats.suggestions
-                  : 0,
-                lineAcceptanceRate: stats.linesSuggested
-                  ? stats.linesAccepted / stats.linesSuggested
-                  : 0,
-              })}
-            />
+          {completions?.languageBreakdown.length > 0 && (
+            <div>
+              <h3>Language Breakdown</h3>
+              <TableBreakdown
+                data={completions?.languageBreakdown}
+                idField="language"
+                idHeader="Language"
+                tableContext="IDE Code Completions Language Breakdown"
+                columns={[
+                  'suggestions',
+                  'acceptances',
+                  'acceptanceRate',
+                  'linesSuggested',
+                  'linesAccepted',
+                  'lineAcceptanceRate',
+                ]}
+                headerMap={{
+                  suggestions: 'Suggestions',
+                  acceptances: 'Acceptances',
+                  acceptanceRate: 'Acceptance Rate',
+                  linesSuggested: 'Lines of Code Suggested',
+                  linesAccepted: 'Lines of Code Accepted',
+                  lineAcceptanceRate: 'Line Acceptance Rate',
+                }}
+                computedFields={stats => ({
+                  acceptanceRate: stats.suggestions
+                    ? stats.acceptances / stats.suggestions
+                    : 0,
+                  lineAcceptanceRate: stats.linesSuggested
+                    ? stats.linesAccepted / stats.linesSuggested
+                    : 0,
+                })}
+              />
+            </div>
           )}
         </div>
       )}
@@ -159,44 +165,50 @@ function LiveDashboard({
         <h3>Loading live data...</h3>
       ) : (
         <div className="copilot-chat-container">
-          <h3>Engaged Users By Day</h3>
-          {chats?.perGroupedPeriod && (
-            <EngagedUsersGraph data={chats?.perGroupedPeriod} />
+          {chats?.perGroupedPeriod.length > 0 && (
+            <div>
+              <h3>Engaged Users By Day</h3>
+              <EngagedUsersGraph data={chats?.perGroupedPeriod} />
+            </div>
           )}
           <div className="copilot-charts-container">
-            {chats?.engagedUsersByEditor && (
+            {chats?.engagedUsersByEditor.length > 0 && (
               <PieChart
                 engagedUsers={chats?.engagedUsersByEditor}
                 title={'Engaged Users by Editor'}
               />
             )}
           </div>
-          <h3>Editor Breakdown</h3>
-          {chats?.editorBreakdown && (
-            <TableBreakdown
-              data={chats?.editorBreakdown}
-              idField="editor"
-              idHeader="Editor"
-              tableContext="Copilot Chat Editor Breakdown"
-              columns={[
-                'chats',
-                'insertions',
-                'insertionRate',
-                'copies',
-                'copyRate',
-              ]}
-              headerMap={{
-                chats: 'Chats',
-                insertions: 'Insertions',
-                insertionRate: 'Insertion Rate',
-                copies: 'Copies',
-                copyRate: 'Copy Rate',
-              }}
-              computedFields={stats => ({
-                insertionRate: stats.chats ? stats.insertions / stats.chats : 0,
-                copyRate: stats.chats ? stats.copies / stats.chats : 0,
-              })}
-            />
+          {chats?.editorBreakdown.length > 0 && (
+            <div>
+              <h3>Editor Breakdown</h3>
+              <TableBreakdown
+                data={chats?.editorBreakdown}
+                idField="editor"
+                idHeader="Editor"
+                tableContext="Copilot Chat Editor Breakdown"
+                columns={[
+                  'chats',
+                  'insertions',
+                  'insertionRate',
+                  'copies',
+                  'copyRate',
+                ]}
+                headerMap={{
+                  chats: 'Chats',
+                  insertions: 'Insertions',
+                  insertionRate: 'Insertion Rate',
+                  copies: 'Copies',
+                  copyRate: 'Copy Rate',
+                }}
+                computedFields={stats => ({
+                  insertionRate: stats.chats
+                    ? stats.insertions / stats.chats
+                    : 0,
+                  copyRate: stats.chats ? stats.copies / stats.chats : 0,
+                })}
+              />
+            </div>
           )}
         </div>
       )}
