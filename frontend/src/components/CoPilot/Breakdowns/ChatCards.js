@@ -12,42 +12,40 @@ import { formatNumberWithCommas } from '../../../utilities/getCommaSeparated';
 function ChatCards({ chats, prefix, divider = 1 }) {
   return (
     <div className="copilot-chat-grid">
-      {chats?.totalChats > 0 && (
-        <div className="stat-card">
-          <h2>{prefix} Chats</h2>
-          <p>
-            {formatNumberWithCommas(Math.round(chats.totalChats / divider))}
-          </p>
-        </div>
-      )}
-      {chats?.totalInsertions > 0 && (
-        <div className="stat-card">
-          <h2>{prefix} Insertions</h2>
-          <p>
-            {formatNumberWithCommas(
-              Math.round(chats.totalInsertions / divider)
-            )}
-          </p>
-        </div>
-      )}
-      {prefix !== 'Average' && chats?.insertionRate > 0 && (
+      <div className="stat-card">
+        <h2>{prefix} Chats</h2>
+        <p>
+          {formatNumberWithCommas(
+            Math.round((chats?.totalChats ?? 0) / divider)
+          )}
+        </p>
+      </div>
+      <div className="stat-card">
+        <h2>{prefix} Insertions</h2>
+        <p>
+          {formatNumberWithCommas(
+            Math.round((chats?.totalInsertions ?? 0) / divider)
+          )}
+        </p>
+      </div>
+      {prefix !== 'Average' && (
         <div className="stat-card">
           <h2>{prefix} Insertion Rate</h2>
-          <p>{getPercentage(chats.insertionRate)}</p>
+          <p>{getPercentage(chats?.insertionRate ?? 0)}</p>
         </div>
       )}
-      {chats?.totalCopies > 0 && (
-        <div className="stat-card">
-          <h2>{prefix} Copies</h2>
-          <p>
-            {formatNumberWithCommas(Math.round(chats.totalCopies / divider))}
-          </p>
-        </div>
-      )}
-      {prefix !== 'Average' && chats?.copyRate > 0 && (
+      <div className="stat-card">
+        <h2>{prefix} Copies</h2>
+        <p>
+          {formatNumberWithCommas(
+            Math.round((chats?.totalCopies ?? 0) / divider)
+          )}
+        </p>
+      </div>
+      {prefix !== 'Average' && (
         <div className="stat-card">
           <h2>{prefix} Copy Rate</h2>
-          <p>{getPercentage(chats.copyRate)}</p>
+          <p>{getPercentage(chats?.copyRate ?? 0)}</p>
         </div>
       )}
     </div>

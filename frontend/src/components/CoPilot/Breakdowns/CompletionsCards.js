@@ -13,56 +13,50 @@ function CompletionsCards({ completions, prefix, divider = 1 }) {
   return (
     <div>
       <div className={`copilot-grid${prefix === 'Average' ? '-average' : ''}`}>
-        {completions?.totalSuggestions > 0 && (
-          <div className="stat-card">
-            <h2>{prefix} Suggestions</h2>
-            <p>
-              {formatNumberWithCommas(
-                Math.round(completions.totalSuggestions / divider)
-              )}
-            </p>
-          </div>
-        )}
-        {completions?.totalAcceptances > 0 && (
-          <div className="stat-card">
-            <h2>{prefix} Acceptances</h2>
-            <p>
-              {formatNumberWithCommas(
-                Math.round(completions.totalAcceptances / divider)
-              )}
-            </p>
-          </div>
-        )}
-        {prefix !== 'Average' && completions?.acceptanceRate > 0 && (
+        <div className="stat-card">
+          <h2>{prefix} Suggestions</h2>
+          <p>
+            {formatNumberWithCommas(
+              Math.round((completions?.totalSuggestions ?? 0) / divider)
+            )}
+          </p>
+        </div>
+        <div className="stat-card">
+          <h2>{prefix} Acceptances</h2>
+          <p>
+            {formatNumberWithCommas(
+              Math.round((completions?.totalAcceptances ?? 0) / divider)
+            )}
+          </p>
+        </div>
+        {prefix !== 'Average' && (
           <div className="stat-card">
             <h2>{prefix} Acceptance Rate</h2>
-            <p>{getPercentage(completions.acceptanceRate / divider)}</p>
+            <p>{getPercentage(completions?.acceptanceRate ?? 0 / divider)}</p>
           </div>
         )}
-        {completions?.totalLinesSuggested > 0 && (
-          <div className="stat-card">
-            <h2>{prefix} Lines of Code Suggested</h2>
-            <p>
-              {formatNumberWithCommas(
-                Math.round(completions.totalLinesSuggested / divider)
-              )}
-            </p>
-          </div>
-        )}
-        {completions?.totalLinesAccepted > 0 && (
-          <div className="stat-card">
-            <h2>{prefix} Lines of Code Accepted</h2>
-            <p>
-              {formatNumberWithCommas(
-                Math.round(completions.totalLinesAccepted / divider)
-              )}
-            </p>
-          </div>
-        )}
-        {prefix !== 'Average' && completions?.lineAcceptanceRate > 0 && (
+        <div className="stat-card">
+          <h2>{prefix} Lines of Code Suggested</h2>
+          <p>
+            {formatNumberWithCommas(
+              Math.round((completions?.totalLinesSuggested ?? 0) / divider)
+            )}
+          </p>
+        </div>
+        <div className="stat-card">
+          <h2>{prefix} Lines of Code Accepted</h2>
+          <p>
+            {formatNumberWithCommas(
+              Math.round((completions?.totalLinesAccepted ?? 0) / divider)
+            )}
+          </p>
+        </div>
+        {prefix !== 'Average' && (
           <div className="stat-card">
             <h2>{prefix} Line Acceptance Rate</h2>
-            <p>{getPercentage(completions.lineAcceptanceRate / divider)}</p>
+            <p>
+              {getPercentage(completions?.lineAcceptanceRate ?? 0 / divider)}
+            </p>
           </div>
         )}
       </div>
