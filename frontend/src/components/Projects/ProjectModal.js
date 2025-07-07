@@ -543,8 +543,7 @@ const ProjectModal = ({
                 )}
 
                 {/* Project Dependencies styled to match Project Details text */}
-                {Array.isArray(project.Project_Dependencies) &&
-                  project.Project_Dependencies.length > 0 && (
+                {project.Project_Dependencies.length > 0 && (
                     <div className="detail-section">
                       <h4>Project Dependencies</h4>
                       <ul style={{ margin: 0, paddingLeft: '1.2em' }}>

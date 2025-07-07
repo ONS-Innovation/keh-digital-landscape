@@ -47,11 +47,7 @@ function transformProjectToCSVFormat(project) {
     Programme_Short: project.details[0]?.programme_short_name || '',
     Description: project.details[0]?.project_description || '',
     Stage: project.stage || '',
-    Project_Dependencies: Array.isArray(
-      project.details[0]?.project_dependencies
-    )
-      ? project.details[0].project_dependencies
-      : [],
+    Project_Dependencies: project.details[0]?.project_dependencies || [],
     Developed: developed,
     Technical_Contact: technicalContact,
     Delivery_Manager: deliveryManager,

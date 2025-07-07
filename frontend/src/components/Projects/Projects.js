@@ -954,12 +954,11 @@ const Projects = ({
                             {project.Stage}
                           </div>
                         )}
-                        {Array.isArray(project.Project_Dependencies) &&
-                          project.Project_Dependencies.length > 0 && (
-                            <div
-                              className="project-badge project-dependencies-badge"
-                              title={project.Project_Dependencies.map(
-                                dep => dep.name
+                        {project.Project_Dependencies.length > 0 && (
+                          <div
+                            className="project-badge project-dependencies-badge"
+                            title={project.Project_Dependencies.map(
+                              dep => dep.name
                               ).join(', ')}
                             >
                               {project.Project_Dependencies.length} Dependencies
