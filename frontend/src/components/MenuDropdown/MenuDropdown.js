@@ -101,7 +101,7 @@ function MenuDropdown({ setShowHelpModal }) {
               className={location.pathname === '/copilot' ? 'active' : ''}
             >
               <VscCopilot size={16} />
-              CoPilot
+              Copilot
             </button>
           </div>
 

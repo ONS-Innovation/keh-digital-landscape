@@ -1,9 +1,9 @@
 /**
- * Fetch CoPilot seat data from Github API
+ * Fetch Copilot seat data from Github API
  *
  * @returns {Promise<Object>} - The seat data
  */
-export const fetchSeatData = async () => {
+export const fetchOrgSeatData = async () => {
   try {
     const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
     const response = await fetch(`${backendUrl}/copilot/api/seats`);
@@ -16,6 +16,38 @@ export const fetchSeatData = async () => {
   } catch (error) {
     console.error('Error fetching seat data:', error);
     return null;
+  }
+};
+
+/**
+ * Fetch Copilot seat data filtered by provided team slug
+ *
+ * @param {string} teamSlug - The team slug to filter seats by
+ * @returns {Promise<Array>} - Array of team seats
+ */
+export const fetchTeamSeatData = async teamSlug => {
+  if (!teamSlug) {
+    console.error('Team slug is required to fetch team seats');
+    return [];
+  }
+  try {
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
+    const response = await fetch(
+      `${backendUrl}/copilot/api/team/seats?teamSlug=${teamSlug}`,
+      {
+        credentials: 'include',
+      }
+    );
+    if (!response.ok) {
+      console.error('Failed to fetch team seats:', response.statusText);
+      return [];
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching team seats:', error);
+    return [];
   }
 };
 
