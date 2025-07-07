@@ -96,54 +96,59 @@ function LiveDashboard({
             </div>
           )}
           <div className="copilot-charts-container">
-            {completions?.engagedUsersByLanguage.length > 0 && (
-              <PieChart
-                engagedUsers={completions?.engagedUsersByLanguage}
-                title={'Engaged Users by Language'}
-              />
-            )}
-            {completions?.engagedUsersByEditor.length > 0 && (
-              <PieChart
-                engagedUsers={completions?.engagedUsersByEditor}
-                title={'Engaged Users by Editor'}
-              />
-            )}
+            {completions &&
+              Object.keys(completions.engagedUsersByLanguage || {}).length >
+                0 && (
+                <PieChart
+                  engagedUsers={completions?.engagedUsersByLanguage}
+                  title={'Engaged Users by Language'}
+                />
+              )}
+            {completions &&
+              Object.keys(completions.engagedUsersByEditor || {}).length >
+                0 && (
+                <PieChart
+                  engagedUsers={completions?.engagedUsersByEditor}
+                  title={'Engaged Users by Editor'}
+                />
+              )}
           </div>
-          {completions?.languageBreakdown.length > 0 && (
-            <div>
-              <h3>Language Breakdown</h3>
-              <TableBreakdown
-                data={completions?.languageBreakdown}
-                idField="language"
-                idHeader="Language"
-                tableContext="IDE Code Completions Language Breakdown"
-                columns={[
-                  'suggestions',
-                  'acceptances',
-                  'acceptanceRate',
-                  'linesSuggested',
-                  'linesAccepted',
-                  'lineAcceptanceRate',
-                ]}
-                headerMap={{
-                  suggestions: 'Suggestions',
-                  acceptances: 'Acceptances',
-                  acceptanceRate: 'Acceptance Rate',
-                  linesSuggested: 'Lines of Code Suggested',
-                  linesAccepted: 'Lines of Code Accepted',
-                  lineAcceptanceRate: 'Line Acceptance Rate',
-                }}
-                computedFields={stats => ({
-                  acceptanceRate: stats.suggestions
-                    ? stats.acceptances / stats.suggestions
-                    : 0,
-                  lineAcceptanceRate: stats.linesSuggested
-                    ? stats.linesAccepted / stats.linesSuggested
-                    : 0,
-                })}
-              />
-            </div>
-          )}
+          {completions &&
+            Object.keys(completions.languageBreakdown || {}).length > 0 && (
+              <div>
+                <h3>Language Breakdown</h3>
+                <TableBreakdown
+                  data={completions?.languageBreakdown}
+                  idField="language"
+                  idHeader="Language"
+                  tableContext="IDE Code Completions Language Breakdown"
+                  columns={[
+                    'suggestions',
+                    'acceptances',
+                    'acceptanceRate',
+                    'linesSuggested',
+                    'linesAccepted',
+                    'lineAcceptanceRate',
+                  ]}
+                  headerMap={{
+                    suggestions: 'Suggestions',
+                    acceptances: 'Acceptances',
+                    acceptanceRate: 'Acceptance Rate',
+                    linesSuggested: 'Lines of Code Suggested',
+                    linesAccepted: 'Lines of Code Accepted',
+                    lineAcceptanceRate: 'Line Acceptance Rate',
+                  }}
+                  computedFields={stats => ({
+                    acceptanceRate: stats.suggestions
+                      ? stats.acceptances / stats.suggestions
+                      : 0,
+                    lineAcceptanceRate: stats.linesSuggested
+                      ? stats.linesAccepted / stats.linesSuggested
+                      : 0,
+                  })}
+                />
+              </div>
+            )}
         </div>
       )}
 
@@ -172,14 +177,15 @@ function LiveDashboard({
             </div>
           )}
           <div className="copilot-charts-container">
-            {chats?.engagedUsersByEditor.length > 0 && (
-              <PieChart
-                engagedUsers={chats?.engagedUsersByEditor}
-                title={'Engaged Users by Editor'}
-              />
-            )}
+            {chats &&
+              Object.keys(chats.engagedUsersByEditor || {}).length > 0 && (
+                <PieChart
+                  engagedUsers={chats?.engagedUsersByEditor}
+                  title={'Engaged Users by Editor'}
+                />
+              )}
           </div>
-          {chats?.editorBreakdown.length > 0 && (
+          {chats && Object.keys(chats.editorBreakdown || {}).length > 0 && (
             <div>
               <h3>Editor Breakdown</h3>
               <TableBreakdown
