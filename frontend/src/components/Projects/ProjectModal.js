@@ -541,34 +541,50 @@ const ProjectModal = ({
                     <p>{project.Description}</p>
                   </div>
                 )}
-
-                {/* Project Dependencies styled to match Project Details text */}
-                {project.Project_Dependencies.length > 0 && (
-                    <div className="detail-section">
-                      <h4>Project Dependencies</h4>
-                      <ul style={{ margin: 0, paddingLeft: '1.2em' }}>
-                        {project.Project_Dependencies.map(
-                          (dependency, index) => (
-                            <p
-                              key={index}
-                              style={{
-                                fontSize: '14px',
-                                lineHeight: 1.5,
-                                color: 'inherit',
-                                marginBottom: '4px',
-                              }}
-                            >
-                              {dependency.name}: {dependency.description}
-                            </p>
-                          )
-                        )}
-                      </ul>
-                    </div>
-                  )}
               </div>
             )}
           </div>
         </div>
+
+        {/* Project Dependencies section as its own block above Repositories, now collapsible */}
+        {project.Project_Dependencies && project.Project_Dependencies.length > 0 && (
+          <div className="project-accordion-item">
+            <div
+              className="accordion-header"
+              onClick={() => setExpandedItems(prev => ({
+                ...prev,
+                dependencies: !prev.dependencies,
+              }))}
+              style={{ cursor: 'pointer' }}
+            >
+              <h3>Project Dependencies</h3>
+              <span
+                className={`accordion-icon ${expandedItems.dependencies ? 'expanded' : ''}`}
+              >
+                <IoChevronDown />
+              </span>
+            </div>
+            {expandedItems.dependencies && (
+              <div className="accordion-content">
+                <ul style={{ margin: 0, paddingLeft: '1.2em' }}>
+                  {project.Project_Dependencies.map((dependency, index) => (
+                    <li
+                      key={index}
+                      style={{
+                        fontSize: '14px',
+                        lineHeight: 1.5,
+                        color: 'inherit',
+                        marginBottom: '4px',
+                      }}
+                    >
+                      <strong>{dependency.name}</strong>: {dependency.description}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
 
         {renderRepoInfo()}
 
