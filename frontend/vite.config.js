@@ -1,10 +1,9 @@
 import { defineConfig } from 'vite';
-import ClosePlugin from './vite-plugin-close';
 import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), ClosePlugin()],
+  plugins: [react()],
   esbuild: {
     loader: 'jsx',
     include: /src\/.*\.[jt]sx?$/,
