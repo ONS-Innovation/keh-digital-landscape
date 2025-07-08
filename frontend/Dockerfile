@@ -16,7 +16,7 @@ RUN npm ci --legacy-peer-deps
 COPY . .
 
 # Build the app
-RUN npm run build
+RUN npm run build --debug
 
 # ---- Run Stage ----
 FROM node:18-slim
