@@ -36,22 +36,54 @@ function HelpModal({ show, onClose }) {
 
   if (!shouldRender) return null;
 
+  /**
+   * githubPagesLink function returns a link to the Digital Landscape documentation.
+   *
+   * @returns {Object} - A span element with a link to the Digital Landscape documentation.
+   */
   const githubPagesLink = () => {
     return (
-      <span>
-        {' '}
-        To view more detailed information about the Digital Landscape, view this
-        documentation:
-        <br />{' '}
-        <a
-          href="https://ons-innovation.github.io/keh-digital-landscape/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Digital Landscape Documentation
-        </a>
-        .
-      </span>
+      <>
+        <span>
+          {' '}
+          To view more detailed information about the Digital Landscape, view
+          this{' '}
+          <a
+            href="https://ons-innovation.github.io/keh-digital-landscape/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            documentation
+          </a>
+          .
+        </span>
+        <br />
+      </>
+    );
+  };
+
+  /**
+   * submissionRepoLink function returns a link to the Tech Radar submission documentation.
+   *
+   * @returns {Object} - A span element with a link to the Tech Radar submission documentation.
+   */
+  const submissionRepoLink = () => {
+    return (
+      <>
+        <span>
+          {' '}
+          To learn how to submit a technology to the Tech Radar, view this{' '}
+          <a
+            href="https://github.com/ONSdigital/software-engineer-community/tree/62ed0cce1175ab1874041bae9a3ccf4aa67a096d/Software%20Engineering%20Principles_Policies_Guidelines_Templates_Plans%20and%20more/tech-radar-submissions"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            repository
+          </a>
+          .
+        </span>
+        <br />
+      </>
     );
   };
 
@@ -68,6 +100,7 @@ function HelpModal({ show, onClose }) {
           content: (
             <div className="help-modal-body">
               {githubPagesLink()}
+              {submissionRepoLink()}
               <h1>Guide</h1>
               <span>
                 The Tech Radar is a visual representation of our technology
@@ -424,6 +457,7 @@ function HelpModal({ show, onClose }) {
           content: (
             <div className="help-modal-body">
               {githubPagesLink()}
+              {submissionRepoLink()}
               <span>
                 Welcome to our platform. Use the navigation menu to explore
                 different sections.
