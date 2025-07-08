@@ -47,14 +47,14 @@ function HelpModal({ show, onClose }) {
         <span>
           {' '}
           To view more detailed information about the Digital Landscape, view
-          this documentation:
-          <br />{' '}
+          this
+          {' '}
           <a
             href="https://ons-innovation.github.io/keh-digital-landscape/"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Digital Landscape Documentation
+            documentation
           </a>
           .
         </span>
@@ -74,14 +74,13 @@ function HelpModal({ show, onClose }) {
         <span>
           {' '}
           To learn how to submit a technology to the Tech Radar, view this
-          documentation:
-          <br />{' '}
+          {' '}
           <a
             href="https://github.com/ONSdigital/software-engineer-community/tree/62ed0cce1175ab1874041bae9a3ccf4aa67a096d/Software%20Engineering%20Principles_Policies_Guidelines_Templates_Plans%20and%20more/tech-radar-submissions"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Tech Radar Submission Documentation
+            repository
           </a>
           .
         </span>
