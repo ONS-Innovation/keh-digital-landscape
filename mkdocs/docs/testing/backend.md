@@ -11,7 +11,7 @@ The backend tests are implemented in the `testing/backend/` directory using the 
 - `test_main.py` - Tests for core API endpoints
 - `test_admin.py` - Tests for admin API endpoints
 - `test_review.py` - Tests for review API endpoints
-- `test_copilot.py` - Tests for CoPilot API endpoints
+- `test_copilot.py` - Tests for Copilot API endpoints
 
 ### Base Configuration
 
@@ -48,7 +48,7 @@ make test-admin
 # Run only review API tests
 make test-review
 
-# Run only CoPilot API tests
+# Run only Copilot API tests
 make test-copilot
 ```
 
@@ -201,25 +201,95 @@ Tests deleting banner messages:
 Tests validation of banner deletion requests:
 
 ::: testing.backend.src.test_admin.test_admin_banner_delete_invalid
+### Copilot API Tests
 
-### CoPilot API Tests
+These tests are located in `test_copilot.py` and verify the GitHub Copilot API endpoints.
 
-These tests are located in `test_copilot.py` and verify the CoPilot API endpoints.
+#### Authentication Tests
+Tests authentication handling for the API:
+
+::: testing.backend.src.test_copilot.test_auth_status_no_token
+
+::: testing.backend.src.test_copilot.test_auth_status_with_token
 
 #### Live Organisation Data Retrieval
-Tests retrieving live CoPilot organisation usage data:
+Tests retrieving live Copilot organisation usage data:
 
 ::: testing.backend.src.test_copilot.test_org_live_get
 
+This test verifies:
+- Successful retrieval of organisation-wide Copilot usage metrics
+- Response structure contains date, active users, engaged users and IDE metrics
+- All data fields have correct types
+
+#### Live Team Data Retrieval
+Tests retrieving live Copilot team usage data:
+
+::: testing.backend.src.test_copilot.test_team_live_get_no_auth
+
+::: testing.backend.src.test_copilot.test_team_live_get_invalid_token
+
+::: testing.backend.src.test_copilot.test_team_live_get_with_auth
+
+::: testing.backend.src.test_copilot.test_team_live_get_invalid_slug
+
+::: testing.backend.src.test_copilot.test_team_live_get_missing_slug
+
+These tests verify:
+- Authentication is required for team data access
+- Invalid tokens are handled appropriately
+- Successful retrieval of team-specific usage metrics
+- Error handling for invalid team slugs
+- Validation of required parameters
+
 #### Historic Organisation Data Retrieval
-Tests retrieving historic CoPilot organisation usage data:
+Tests retrieving historic Copilot organisation usage data:
 
 ::: testing.backend.src.test_copilot.test_org_historic_get
 
+This test verifies:
+- Successful retrieval of historical organisation-wide metrics
+- Response structure matches live data format
+- All data fields have correct types
+
 #### Organisation Seat Data Retrieval
-Tests retrieving CoPilot seat data:
+Tests retrieving Copilot seat data for the organisation:
 
 ::: testing.backend.src.test_copilot.test_seats_get
+
+This test verifies:
+- Successful retrieval of organisation-wide seat allocation
+- Response contains creation dates, assignees and activity timestamps
+- All data fields have correct types
+
+#### Team Seat Data Retrieval
+Tests retrieving Copilot seat data for teams:
+
+::: testing.backend.src.test_copilot.test_team_seats_get_no_auth
+
+::: testing.backend.src.test_copilot.test_team_seats_get_with_auth
+
+::: testing.backend.src.test_copilot.test_team_seats_get_invalid_slug
+
+::: testing.backend.src.test_copilot.test_team_seats_get_missing_slug
+
+These tests verify:
+- Authentication is required for team seat data access
+- Successful retrieval of team-specific seat allocation
+- Error handling for invalid team slugs
+- Validation of required parameters
+
+#### Team Listing
+Tests retrieving available teams:
+
+::: testing.backend.src.test_copilot.test_teams_get_no_auth
+
+::: testing.backend.src.test_copilot.test_teams_get_with_auth
+
+These tests verify:
+- Authentication is required for team listing
+- Successful retrieval of available teams
+- Response contains team slugs, names and URLs
 
 ### Banner Endpoints
 

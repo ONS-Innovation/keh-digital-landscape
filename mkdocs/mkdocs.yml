@@ -121,8 +121,7 @@ plugins:
   - mkdocstrings:
       handlers:
         python:
-          paths:
-            - [..]
+          paths: ".."
 
 extra_css:
   - stylesheets/extra.css

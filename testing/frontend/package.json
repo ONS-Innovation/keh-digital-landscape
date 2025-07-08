@@ -1,6 +1,14 @@
 {
-  "devDependencies": {
-    "@axe-core/playwright": "^4.10.1",
-    "playwright": "^1.52.0"
+  "name": "accessibility-testing",
+  "version": "1.0.0",
+  "description": "Accessibility testing for the ONS Digital Landscape app",
+  "main": "test.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "@axe-core/playwright": "^4.8.5",
+    "playwright": "^1.42.1",
+    "dotenv": "^16.4.5"
   }
 }

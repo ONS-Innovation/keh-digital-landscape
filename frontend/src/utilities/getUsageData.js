@@ -40,6 +40,27 @@ export const fetchOrgHistoricUsageData = async () => {
   }
 };
 
+export const fetchTeamLiveUsageData = async teamSlug => {
+  try {
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
+    const response = await fetch(
+      `${backendUrl}/copilot/api/team/live?teamSlug=${teamSlug}`,
+      {
+        credentials: 'include',
+      }
+    );
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching team usage data:', error);
+    return null;
+  }
+};
+
 /**
  * Filter usage data based on start and end date
  *

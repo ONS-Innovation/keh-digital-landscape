@@ -34,6 +34,49 @@ For an easier to read version of the whole app scan, see the `report.html` and `
 
 To view examples of the layout, see `/testing/example_reports` where a `report.html` and `report.md` are generated.
 
+### Testing authenticated routes
+
+Some routes require authentication (like `/copilot/team`). For these routes, you need to provide a GitHub token as an environment variable.
+
+1. Go to the copilot team page:
+
+```http
+http://localhost:3000/copilot/team
+```
+
+2. Click the "Login with GitHub" button.
+
+3. You will be redirected to the GitHub login page. Login with your GitHub account.
+
+4. You will be redirected back to the copilot team page.
+
+5. Open Chrome DevTools and navigate to the "Application" tab.
+
+6. Under "Cookies", find the "githubUserToken" cookie.
+
+7. Copy the `value` of the cookie, beginning with `ghu_`.
+
+8. Set the environment variable before running tests:
+
+```bash
+export TEST_GITHUBUSERTOKEN="your-generated-token"
+export TEST_GITHUBTEAM="your-team-slug"
+```
+
+Alternatively, you can create a `.env` file in the `testing/frontend` directory with:
+
+```bash
+TEST_GITHUBUSERTOKEN=your-generated-token
+TEST_GITHUBTEAM=your-team-slug
+```
+
+9. Run the tests:
+
+```bash
+make test
+```
+
+Routes that require authentication are marked with `"authenticated": "githubUserToken"` in `test-config.json`.
 
 ### Testing specific tags
 

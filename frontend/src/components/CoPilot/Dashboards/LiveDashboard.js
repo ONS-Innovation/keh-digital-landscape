@@ -1,13 +1,12 @@
 import React from 'react';
 import '../../../styles/components/Statistics.css';
 import SkeletonStatCard from '../../Statistics/Skeletons/SkeletonStatCard';
-import '../../../styles/CoPilotPage.css';
+import '../../../styles/CopilotPage.css';
 import AcceptanceGraph from '../Breakdowns/AcceptanceGraph';
 import EngagedUsersGraph from '../Breakdowns/EngagedUsersGraph';
 import PieChart from '../Breakdowns/PieChart';
 import TableBreakdown from '../Breakdowns/TableBreakdown';
 import { getFormattedTime } from '../../../utilities/getFormattedTime';
-import { getCellRenderers } from '../../../utilities/getCellRenderers';
 import CompletionsCards from '../Breakdowns/CompletionsCards';
 import ChatCards from '../Breakdowns/ChatCards';
 
@@ -58,6 +57,13 @@ function LiveDashboard({
 
   return (
     <div className="copilot-dashboard">
+      {scope === 'team' && (
+        <p className="disclaimer-banner">
+          The GitHub API does not return Copilot team usage data if there are
+          fewer than 5 members with Copilot licenses. This may result in only
+          seat statistics being viewable on the dashboard.
+        </p>
+      )}
       <h1 className="title">IDE Code Completions</h1>
       {isLiveLoading ? (
         <div className="copilot-grid">
@@ -77,55 +83,76 @@ function LiveDashboard({
         <h3>Loading live data...</h3>
       ) : (
         <div>
-          <h3>Acceptances and Acceptance Rate By Day</h3>
-          <AcceptanceGraph data={completions?.perGroupedPeriod ?? 0} />
-          <h3>Engaged Users By Day</h3>
-          <EngagedUsersGraph data={completions?.perGroupedPeriod ?? 0} />
+          {completions?.perGroupedPeriod.length > 0 && (
+            <div>
+              <h3>Acceptances and Acceptance Rate By Day</h3>
+              <AcceptanceGraph data={completions?.perGroupedPeriod} />
+            </div>
+          )}
+          {completions?.perGroupedPeriod.length > 0 && (
+            <div>
+              <h3>Engaged Users By Day</h3>
+              <EngagedUsersGraph data={completions?.perGroupedPeriod} />
+            </div>
+          )}
           <div className="copilot-charts-container">
-            <PieChart
-              engagedUsers={completions?.engagedUsersByLanguage ?? 0}
-              title={'Engaged Users by Language'}
-            />
-            <PieChart
-              engagedUsers={completions?.engagedUsersByEditor ?? 0}
-              title={'Engaged Users by Editor'}
-            />
+            {completions &&
+              Object.keys(completions.engagedUsersByLanguage || {}).length >
+                0 && (
+                <PieChart
+                  engagedUsers={completions?.engagedUsersByLanguage}
+                  title={'Engaged Users by Language'}
+                />
+              )}
+            {completions &&
+              Object.keys(completions.engagedUsersByEditor || {}).length >
+                0 && (
+                <PieChart
+                  engagedUsers={completions?.engagedUsersByEditor}
+                  title={'Engaged Users by Editor'}
+                />
+              )}
           </div>
-          <h3>Language Breakdown</h3>
-          <TableBreakdown
-            data={completions?.languageBreakdown ?? 0}
-            idField="language"
-            idHeader="Language"
-            tableContext="IDE Code Completions Language Breakdown"
-            columns={[
-              'suggestions',
-              'acceptances',
-              'acceptanceRate',
-              'linesSuggested',
-              'linesAccepted',
-              'lineAcceptanceRate',
-            ]}
-            headerMap={{
-              suggestions: 'Suggestions',
-              acceptances: 'Acceptances',
-              acceptanceRate: 'Acceptance Rate',
-              linesSuggested: 'Lines of Code Suggested',
-              linesAccepted: 'Lines of Code Accepted',
-              lineAcceptanceRate: 'Line Acceptance Rate',
-            }}
-            computedFields={stats => ({
-              acceptanceRate: stats.suggestions
-                ? stats.acceptances / stats.suggestions
-                : 0,
-              lineAcceptanceRate: stats.linesSuggested
-                ? stats.linesAccepted / stats.linesSuggested
-                : 0,
-            })}
-          />
+          {completions &&
+            Object.keys(completions.languageBreakdown || {}).length > 0 && (
+              <div>
+                <h3>Language Breakdown</h3>
+                <TableBreakdown
+                  data={completions?.languageBreakdown}
+                  idField="language"
+                  idHeader="Language"
+                  tableContext="IDE Code Completions Language Breakdown"
+                  columns={[
+                    'suggestions',
+                    'acceptances',
+                    'acceptanceRate',
+                    'linesSuggested',
+                    'linesAccepted',
+                    'lineAcceptanceRate',
+                  ]}
+                  headerMap={{
+                    suggestions: 'Suggestions',
+                    acceptances: 'Acceptances',
+                    acceptanceRate: 'Acceptance Rate',
+                    linesSuggested: 'Lines of Code Suggested',
+                    linesAccepted: 'Lines of Code Accepted',
+                    lineAcceptanceRate: 'Line Acceptance Rate',
+                  }}
+                  computedFields={stats => ({
+                    acceptanceRate: stats.suggestions
+                      ? stats.acceptances / stats.suggestions
+                      : 0,
+                    lineAcceptanceRate: stats.linesSuggested
+                      ? stats.linesAccepted / stats.linesSuggested
+                      : 0,
+                  })}
+                />
+              </div>
+            )}
         </div>
       )}
 
-      <h1 className="title">CoPilot Chat</h1>
+      <h1 className="title">Copilot Chat</h1>
       {isLiveLoading ? (
         <div className="copilot-chat-grid">
           <SkeletonStatCard />
@@ -143,39 +170,52 @@ function LiveDashboard({
         <h3>Loading live data...</h3>
       ) : (
         <div className="copilot-chat-container">
-          <h3>Engaged Users By Day</h3>
-          <EngagedUsersGraph data={chats?.perGroupedPeriod ?? 0} />
+          {chats?.perGroupedPeriod.length > 0 && (
+            <div>
+              <h3>Engaged Users By Day</h3>
+              <EngagedUsersGraph data={chats?.perGroupedPeriod} />
+            </div>
+          )}
           <div className="copilot-charts-container">
-            <PieChart
-              engagedUsers={chats?.engagedUsersByEditor ?? 0}
-              title={'Engaged Users by Editor'}
-            />
+            {chats &&
+              Object.keys(chats.engagedUsersByEditor || {}).length > 0 && (
+                <PieChart
+                  engagedUsers={chats?.engagedUsersByEditor}
+                  title={'Engaged Users by Editor'}
+                />
+              )}
           </div>
-          <h3>Editor Breakdown</h3>
-          <TableBreakdown
-            data={chats?.editorBreakdown ?? 0}
-            idField="editor"
-            idHeader="Editor"
-            tableContext="CoPilot Chat Editor Breakdown"
-            columns={[
-              'chats',
-              'insertions',
-              'insertionRate',
-              'copies',
-              'copyRate',
-            ]}
-            headerMap={{
-              chats: 'Chats',
-              insertions: 'Insertions',
-              insertionRate: 'Insertion Rate',
-              copies: 'Copies',
-              copyRate: 'Copy Rate',
-            }}
-            computedFields={stats => ({
-              insertionRate: stats.chats ? stats.insertions / stats.chats : 0,
-              copyRate: stats.chats ? stats.copies / stats.chats : 0,
-            })}
-          />
+          {chats && Object.keys(chats.editorBreakdown || {}).length > 0 && (
+            <div>
+              <h3>Editor Breakdown</h3>
+              <TableBreakdown
+                data={chats?.editorBreakdown}
+                idField="editor"
+                idHeader="Editor"
+                tableContext="Copilot Chat Editor Breakdown"
+                columns={[
+                  'chats',
+                  'insertions',
+                  'insertionRate',
+                  'copies',
+                  'copyRate',
+                ]}
+                headerMap={{
+                  chats: 'Chats',
+                  insertions: 'Insertions',
+                  insertionRate: 'Insertion Rate',
+                  copies: 'Copies',
+                  copyRate: 'Copy Rate',
+                }}
+                computedFields={stats => ({
+                  insertionRate: stats.chats
+                    ? stats.insertions / stats.chats
+                    : 0,
+                  copyRate: stats.chats ? stats.copies / stats.chats : 0,
+                })}
+              />
+            </div>
+          )}
         </div>
       )}
 
@@ -245,7 +285,6 @@ function LiveDashboard({
                   github: 'GitHub Profile',
                   lastActivity: 'Last Activity',
                 }}
-                customCellRenderers={getCellRenderers()}
               />
             </div>
             <div className="seat-breakdown-item">
@@ -269,7 +308,6 @@ function LiveDashboard({
                   github: 'GitHub Profile',
                   lastActivity: 'Last Activity',
                 }}
-                customCellRenderers={getCellRenderers()}
               />
             </div>
           </div>
