@@ -5,6 +5,7 @@ WORKDIR /app
 # Add build argument for backend URL
 ARG VITE_BACKEND_URL
 ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 
 # Copy package files first
 COPY package*.json ./
@@ -16,7 +17,7 @@ RUN npm ci --legacy-peer-deps
 COPY . .
 
 # Build the app
-RUN NODE_OPTIONS=--max-old-space-size=4096 npm run build --debug
+RUN npm run build --debug
 
 # ---- Run Stage ----
 FROM node:18-slim
