@@ -87,12 +87,78 @@ function HelpModal({ show, onClose }) {
     );
   };
 
+  const copilotPage = () => {
+    return (
+      <>
+        <h1>Guide</h1>
+        <span>
+          The Copilot dashboard visualises Copilot usage data across ONS
+          Digital. Here&apos;s how to use it:
+          <br />
+        </span>
+        <ul className="help-modal-list">
+          <li>
+            Click &quot;Organisation Usage&quot; to view Copilot usage across
+            the ONS Digital organisation. You can view live and historic data.
+          </li>
+          <li>
+            Click &quot;Team Usage&quot; to view Copilot usage for a specific
+            team within ONS Digital. You must have permissions to view this
+            team. You can view only live data.
+          </li>
+        </ul>
+        <ul className="help-modal-list">
+          <li>
+            On the live page you can slide the slider to change the start and
+            end date of the data.
+          </li>
+          <li>
+            On the historic page you can view dates by certain time ranges.
+            These are:
+            <ul className="help-modal-list">
+              <li>By day</li>
+              <li>By week</li>
+              <li>By month</li>
+              <li>By year</li>
+            </ul>
+            The data only backdates to 19th Jan 2025 due to GitHub API limits.
+          </li>
+        </ul>
+        <span>
+          The seat information at the bottom of the page displays the users of
+          the organisation or team using Copilot. The right table shows the
+          users that have not used Copilot within a certain threshold. This
+          defaults to 28 days but you can adjust this by clicking the negative
+          or positive button to increase or decrease the threshold.
+          <br />
+        </span>
+        <span>
+          The team usage page requires a GitHub login to view the data. Once
+          logged in, if you are apart of a team that has 5 or more active
+          licenses then your team will show and you can view the data. If your
+          team has less than 5 active licenses then it will not be displayed.
+        </span>
+      </>
+    );
+  };
+
   /**
    * getModalContent function returns the content for the help modal based on the current pathname.
    *
    * @returns {Object} - An object containing the title and content for the help modal.
    */
   const getModalContent = () => {
+    if (location.pathname.startsWith('/copilot/team')) {
+      return {
+        title: 'Copilot Dashboard',
+        content: (
+          <div className="help-modal-body">
+            {githubPagesLink()}
+            {copilotPage()}
+          </div>
+        ),
+      };
+    }
     switch (location.pathname) {
       case '/radar':
         return {
@@ -422,32 +488,14 @@ function HelpModal({ show, onClose }) {
             </div>
           ),
         };
-      case '/copilot':
+      case '/copilot/org/live':
+      case '/copilot/org/historic':
         return {
           title: 'Copilot Dashboard',
           content: (
             <div className="help-modal-body">
               {githubPagesLink()}
-              <h1>Guide</h1>
-              <span>
-                The Copilot dashboard visualises Copilot usage data across ONS
-                Digital. Here&apos;s how to use it:
-              </span>
-              <ul className="help-modal-list">
-                <li>
-                  Click &quot;Organisation Usage&quot; to view Copilot usage
-                  across the ONS Digital organisation.
-                </li>
-                <li>
-                  Click &quot;Team Usage&quot; to view Copilot usage for a
-                  specific team within ONS Digital. You must have permissions to
-                  view this team.
-                </li>
-                <li>
-                  Switch between &quot;live&quot; and &quot;historic&quot; data
-                  to view real-time usage or historical trends.
-                </li>
-              </ul>
+              {copilotPage()}
             </div>
           ),
         };
