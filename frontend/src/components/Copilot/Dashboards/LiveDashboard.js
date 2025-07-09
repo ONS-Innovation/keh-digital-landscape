@@ -64,7 +64,6 @@ function LiveDashboard({
           seat statistics being viewable on the dashboard.
         </p>
       )}
-      <h1 className="title">IDE Code Completions</h1>
       {isLiveLoading ? (
         <div className="copilot-grid">
           <SkeletonStatCard />
@@ -75,9 +74,12 @@ function LiveDashboard({
           <SkeletonStatCard />
         </div>
       ) : (
-        <div>
-          <CompletionsCards completions={completions} prefix={'Total'} />
-        </div>
+        completions.length > 0 && (
+          <div>
+            <h1 className="title">IDE Code Completions</h1>
+            <CompletionsCards completions={completions} prefix={'Total'} />
+          </div>
+        )
       )}
       {isLiveLoading ? (
         <h3>Loading live data...</h3>
@@ -95,24 +97,24 @@ function LiveDashboard({
               <EngagedUsersGraph data={completions?.perGroupedPeriod} />
             </div>
           )}
-          <div className="copilot-charts-container">
-            {completions &&
-              Object.keys(completions.engagedUsersByLanguage || {}).length >
-                0 && (
+          {completions &&
+            ((Object.keys(completions.engagedUsersByLanguage || {}).length > 0) ||
+             (Object.keys(completions.engagedUsersByEditor || {}).length > 0)) && (
+            <div className="copilot-charts-container">
+              {Object.keys(completions.engagedUsersByLanguage || {}).length > 0 && (
                 <PieChart
                   engagedUsers={completions?.engagedUsersByLanguage}
                   title={'Engaged Users by Language'}
                 />
               )}
-            {completions &&
-              Object.keys(completions.engagedUsersByEditor || {}).length >
-                0 && (
+              {Object.keys(completions.engagedUsersByEditor || {}).length > 0 && (
                 <PieChart
                   engagedUsers={completions?.engagedUsersByEditor}
                   title={'Engaged Users by Editor'}
                 />
               )}
-          </div>
+            </div>
+          )}
           {completions &&
             Object.keys(completions.languageBreakdown || {}).length > 0 && (
               <div>
@@ -152,20 +154,25 @@ function LiveDashboard({
         </div>
       )}
 
-      <h1 className="title">Copilot Chat</h1>
-      {isLiveLoading ? (
-        <div className="copilot-chat-grid">
-          <SkeletonStatCard />
-          <SkeletonStatCard />
-          <SkeletonStatCard />
-          <SkeletonStatCard />
-          <SkeletonStatCard />
-        </div>
-      ) : (
-        <div>
-          <ChatCards chats={chats} prefix={'Total'} />
-        </div>
+      {chats && chats.perGroupedPeriod.length > 0 && (
+        <>
+          <h1 className="title">Copilot Chat</h1>
+          {isLiveLoading ? (
+            <div className="copilot-chat-grid">
+              <SkeletonStatCard />
+              <SkeletonStatCard />
+              <SkeletonStatCard />
+              <SkeletonStatCard />
+              <SkeletonStatCard />
+            </div>
+          ) : (
+            <div>
+              <ChatCards chats={chats} prefix={'Total'} />
+            </div>
+          )}
+        </>
       )}
+
       {isLiveLoading ? (
         <h3>Loading live data...</h3>
       ) : (
@@ -176,15 +183,17 @@ function LiveDashboard({
               <EngagedUsersGraph data={chats?.perGroupedPeriod} />
             </div>
           )}
-          <div className="copilot-charts-container">
-            {chats &&
-              Object.keys(chats.engagedUsersByEditor || {}).length > 0 && (
+
+          {chats &&
+            Object.keys(chats.engagedUsersByEditor || {}).length > 0 && (
+              <div className="copilot-charts-container">
                 <PieChart
                   engagedUsers={chats?.engagedUsersByEditor}
                   title={'Engaged Users by Editor'}
                 />
-              )}
-          </div>
+              </div>
+            )}
+
           {chats && Object.keys(chats.editorBreakdown || {}).length > 0 && (
             <div>
               <h3>Editor Breakdown</h3>

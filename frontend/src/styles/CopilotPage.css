@@ -21,7 +21,6 @@
   background-color: hsl(210, 100%, 97%);
   border: 1px solid hsl(210, 100%, 50%);
   color: hsl(210, 100%, 20%);
-  margin-bottom: 0;
   padding: 8px 12px;
   border-radius: var(--radius);
   box-sizing: border-box;
