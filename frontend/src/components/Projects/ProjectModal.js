@@ -566,9 +566,9 @@ const ProjectModal = ({
             </div>
             {expandedItems.dependencies && (
               <div className="accordion-content">
-                <ul style={{ margin: 0, paddingLeft: '1.2em' }}>
+                <p style={{ margin: 0 }}>
                   {project.Project_Dependencies.map((dependency, index) => (
-                    <li
+                    <p
                       key={index}
                       style={{
                         fontSize: '14px',
@@ -577,10 +577,10 @@ const ProjectModal = ({
                         marginBottom: '4px',
                       }}
                     >
-                      <strong>{dependency.name}</strong>: {dependency.description}
-                    </li>
+                      <>{dependency.name}</>: {dependency.description}
+                    </p>
                   ))}
-                </ul>
+                </p>
               </div>
             )}
           </div>
