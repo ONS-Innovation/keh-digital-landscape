@@ -488,8 +488,15 @@
 .team-selection-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 16px;
+}
+
+.copilot-admin-badge {
+  font-size: 12px;
+  color: hsl(var(--primary));
+  margin: 4px 0 0 0;
+  font-weight: 500;
 }
 
 .github-logout-button {

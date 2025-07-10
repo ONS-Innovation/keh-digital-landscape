@@ -74,7 +74,7 @@ function LiveDashboard({
           <SkeletonStatCard />
         </div>
       ) : (
-        completions.length > 0 && (
+        completions?.length > 0 && (
           <div>
             <h1 className="title">IDE Code Completions</h1>
             <CompletionsCards completions={completions} prefix={'Total'} />
@@ -98,23 +98,26 @@ function LiveDashboard({
             </div>
           )}
           {completions &&
-            ((Object.keys(completions.engagedUsersByLanguage || {}).length > 0) ||
-             (Object.keys(completions.engagedUsersByEditor || {}).length > 0)) && (
-            <div className="copilot-charts-container">
-              {Object.keys(completions.engagedUsersByLanguage || {}).length > 0 && (
-                <PieChart
-                  engagedUsers={completions?.engagedUsersByLanguage}
-                  title={'Engaged Users by Language'}
-                />
-              )}
-              {Object.keys(completions.engagedUsersByEditor || {}).length > 0 && (
-                <PieChart
-                  engagedUsers={completions?.engagedUsersByEditor}
-                  title={'Engaged Users by Editor'}
-                />
-              )}
-            </div>
-          )}
+            (Object.keys(completions.engagedUsersByLanguage || {}).length > 0 ||
+              Object.keys(completions.engagedUsersByEditor || {}).length >
+                0) && (
+              <div className="copilot-charts-container">
+                {Object.keys(completions.engagedUsersByLanguage || {}).length >
+                  0 && (
+                  <PieChart
+                    engagedUsers={completions?.engagedUsersByLanguage}
+                    title={'Engaged Users by Language'}
+                  />
+                )}
+                {Object.keys(completions.engagedUsersByEditor || {}).length >
+                  0 && (
+                  <PieChart
+                    engagedUsers={completions?.engagedUsersByEditor}
+                    title={'Engaged Users by Editor'}
+                  />
+                )}
+              </div>
+            )}
           {completions &&
             Object.keys(completions.languageBreakdown || {}).length > 0 && (
               <div>
