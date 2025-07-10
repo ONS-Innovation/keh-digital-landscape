@@ -1,11 +1,11 @@
 # ---- Build Stage ----
-FROM node:24-slim AS builder
+FROM node:24-alpine AS builder
 WORKDIR /app
 
 # Add build argument for backend URL
 ARG VITE_BACKEND_URL
 ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
-ENV NODE_OPTIONS="--max-old-space-size=4096"
+ENV NODE_OPTIONS="--max-old-space-size=2048"
 
 # Copy package files first
 COPY package*.json ./
