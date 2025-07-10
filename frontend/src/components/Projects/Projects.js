@@ -954,16 +954,6 @@ const Projects = ({
                             {project.Stage}
                           </div>
                         )}
-                        {project.Project_Dependencies.length > 0 && (
-                          <div
-                            className="project-badge project-dependencies-badge"
-                            title={project.Project_Dependencies.map(
-                              dep => dep.name
-                              ).join(', ')}
-                            >
-                              {project.Project_Dependencies.length} Dependencies
-                            </div>
-                          )}
                       </span>
                       {(project.Programme || project.Programme_Short) && (
                         <span className="programme-name-full">
@@ -1042,6 +1032,16 @@ const Projects = ({
                           className={`project-badge arch-${mainArchitecture.toLowerCase().replace(/ /g, '-')}`}
                         >
                           {mainArchitecture}
+                        </div>
+                      )}
+                      {project.Project_Dependencies.length > 0 && (
+                        <div
+                          className="project-badge project-dependencies-badge"
+                          title={project.Project_Dependencies.map(
+                            dep => dep.name
+                          ).join(', ')}
+                        >
+                          {project.Project_Dependencies.length} Dependencies
                         </div>
                       )}
                     </div>
