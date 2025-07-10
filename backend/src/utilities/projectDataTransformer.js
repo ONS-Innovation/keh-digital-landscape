@@ -42,7 +42,8 @@ function transformProjectToCSVFormat(project, reverseDependencyMap = {}) {
       : project.developed[0];
 
   // Get project name for reverse dependency lookup
-  const projectName = project.details[0]?.name || project.details[0]?.short_name || '';
+  const projectName =
+    project.details[0]?.name || project.details[0]?.short_name || '';
   const listedAsDependency = reverseDependencyMap[projectName] || [];
 
   // Transform to match desired CSV structure
@@ -122,7 +123,8 @@ function buildReverseDependencyMap(projects) {
   const reverseDependencyMap = {};
 
   projects.forEach(project => {
-    const projectName = project.details[0]?.name || project.details[0]?.short_name || '';
+    const projectName =
+      project.details[0]?.name || project.details[0]?.short_name || '';
     const dependencies = project.details[0]?.project_dependencies || [];
 
     dependencies.forEach(dependency => {
@@ -133,7 +135,7 @@ function buildReverseDependencyMap(projects) {
         }
         reverseDependencyMap[dependencyName].push({
           name: projectName,
-          description: dependency.description || ''
+          description: dependency.description || '',
         });
       }
     });
@@ -150,9 +152,11 @@ function buildReverseDependencyMap(projects) {
 function transformProjectsToCSVFormat(projects) {
   // Build reverse dependency map first
   const reverseDependencyMap = buildReverseDependencyMap(projects);
-  
+
   // Transform each project with the reverse dependency information
-  return projects.map(project => transformProjectToCSVFormat(project, reverseDependencyMap));
+  return projects.map(project =>
+    transformProjectToCSVFormat(project, reverseDependencyMap)
+  );
 }
 
 module.exports = {
