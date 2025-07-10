@@ -2,7 +2,6 @@ const express = require('express');
 const s3Service = require('../services/s3Service');
 const logger = require('../config/logger');
 const {
-  transformProjectToCSVFormat,
   transformProjectsToCSVFormat,
 } = require('../utilities/projectDataTransformer');
 const { healthCheckLimiter } = require('../config/rateLimiter');
