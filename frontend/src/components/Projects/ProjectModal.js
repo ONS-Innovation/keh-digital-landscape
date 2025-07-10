@@ -547,45 +547,77 @@ const ProjectModal = ({
           </div>
         </div>
 
-        {/* Project Dependencies section as its own block above Repositories, now collapsible */}
-        {project.Project_Dependencies && project.Project_Dependencies.length > 0 && (
-          <div className="project-accordion-item">
-            <div
-              className="accordion-header"
-              onClick={() => setExpandedItems(prev => ({
-                ...prev,
-                dependencies: !prev.dependencies,
-              }))}
-              style={{ cursor: 'pointer' }}
-            >
-              <h3>Project Dependencies</h3>
-              <span
-                className={`accordion-icon ${expandedItems.dependencies ? 'expanded' : ''}`}
+        {/* Project Dependencies and Reversed Dependencies side by side */}
+        <div style={{ display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
+          {/* Project Dependencies */}
+          {project.Project_Dependencies && project.Project_Dependencies.length > 0 && (
+            <div className="project-accordion-item" style={{ flex: 1 }}>
+              <div
+                className="accordion-header"
+                onClick={() => setExpandedItems(prev => ({
+                  ...prev,
+                  dependencies: !prev.dependencies,
+                }))}
+                style={{ cursor: 'pointer' }}
               >
-                <IoChevronDown />
-              </span>
-            </div>
-            {expandedItems.dependencies && (
-              <div className="accordion-content">
-                <p style={{ margin: 0 }}>
-                  {project.Project_Dependencies.map((dependency, index) => (
-                    <p
-                      key={index}
-                      style={{
-                        fontSize: '14px',
-                        lineHeight: 1.5,
-                        color: 'inherit',
-                        marginBottom: '4px',
-                      }}
-                    >
-                      <>{dependency.name}</>: {dependency.description}
-                    </p>
-                  ))}
-                </p>
+                <h3>Project Dependencies</h3>
+                <span
+                  className={`accordion-icon ${expandedItems.dependencies ? 'expanded' : ''}`}
+                >
+                  <IoChevronDown />
+                </span>
               </div>
-            )}
-          </div>
-        )}
+              {expandedItems.dependencies && (
+                <div className="accordion-content">
+                  <div>
+                    {project.Project_Dependencies.map((dependency, index) => (
+                      <p
+                        key={index}
+                        style={{ fontSize: '14px', lineHeight: 1.5, color: 'inherit', marginBottom: '4px' }}
+                      >
+                        <>{dependency.name}</>: {dependency.description}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {project.Listed_As_Project_Dependency && project.Listed_As_Project_Dependency.length > 0 && (
+            <div className="project-accordion-item" style={{ flex: 1 }}>
+              <div
+                className="accordion-header"
+                onClick={() => setExpandedItems(prev => ({
+                  ...prev,
+                  dependentProjects: !prev.dependentProjects,
+                }))}
+                style={{ cursor: 'pointer' }}
+              >
+                <h3>Dependent Projects</h3>
+                <span
+                  className={`accordion-icon ${expandedItems.dependentProjects ? 'expanded' : ''}`}
+                >
+                  <IoChevronDown />
+                </span>
+              </div>
+              {expandedItems.dependentProjects && (
+                <div className="accordion-content">
+                  <div>
+                    {project.Listed_As_Project_Dependency.map((dep, idx) => (
+                      <p
+                        key={idx}
+                        style={{ fontSize: '14px', lineHeight: 1.5, color: 'inherit', marginBottom: '4px' }}
+                      >
+                        <>{dep.name}</>: {dep.description}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
         {renderRepoInfo()}
 

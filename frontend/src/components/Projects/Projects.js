@@ -1044,6 +1044,17 @@ const Projects = ({
                           {project.Project_Dependencies.length} Dependencies
                         </div>
                       )}
+                      {project.Listed_As_Project_Dependency.length > 0 && (
+                        <div
+                          className="project-badge project-dependencies-badge"
+                          title={project.Listed_As_Project_Dependency.map(
+                            dep => dep.name
+                          ).join(', ')}
+                        >
+                          {project.Listed_As_Project_Dependency.length} Listed As Project Dependency
+                        </div>
+                      )}
+                      
                     </div>
 
                     <div className="technology-distribution">
