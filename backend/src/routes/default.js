@@ -3,6 +3,7 @@ const s3Service = require('../services/s3Service');
 const logger = require('../config/logger');
 const {
   transformProjectToCSVFormat,
+  transformProjectsToCSVFormat,
 } = require('../utilities/projectDataTransformer');
 const { healthCheckLimiter } = require('../config/rateLimiter');
 
@@ -21,8 +22,8 @@ router.get('/csv', async (req, res) => {
       'new_project_data.json'
     );
 
-    // Transform JSON data to CSV format using the utility function
-    const transformedData = jsonData.projects.map(transformProjectToCSVFormat);
+    // Transform JSON data to CSV format using the utility function that handles reverse dependencies
+    const transformedData = transformProjectsToCSVFormat(jsonData.projects);
 
     res.json(transformedData);
   } catch (error) {
