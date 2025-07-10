@@ -1051,10 +1051,10 @@ const Projects = ({
                             dep => dep.name
                           ).join(', ')}
                         >
-                          {project.Listed_As_Project_Dependency.length} Listed As Project Dependency
+                          {project.Listed_As_Project_Dependency.length} Listed
+                          As Project Dependency
                         </div>
                       )}
-                      
                     </div>
 
                     <div className="technology-distribution">
