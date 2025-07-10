@@ -29,7 +29,8 @@ const ProjectModal = ({
   const [expandedItems, setExpandedItems] = useState({
     projectDetails: true,
     repositories: true,
-    dependencies: true
+    dependencies: true,
+    dependentProjects: true, // Ensure Dependent Projects is open by default
   });
   const [expandedGroups, setExpandedGroups] = useState({});
   const getTechnologyStatus = useTechnologyStatus();

@@ -1046,7 +1046,7 @@ const Projects = ({
                       )}
                       {project.Listed_As_Project_Dependency.length > 0 && (
                         <div
-                          className="project-badge project-dependencies-badge"
+                          className="project-badge listed-as-dependency-badge"
                           title={project.Listed_As_Project_Dependency.map(
                             dep => dep.name
                           ).join(', ')}
