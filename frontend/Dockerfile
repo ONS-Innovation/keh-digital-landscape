@@ -1,5 +1,5 @@
 # ---- Build Stage ----
-FROM node:18-slim AS builder
+FROM node:24-slim AS builder
 WORKDIR /app
 
 # Add build argument for backend URL
@@ -20,7 +20,7 @@ COPY . .
 RUN npm run build --debug
 
 # ---- Run Stage ----
-FROM node:18-slim
+FROM node:24-slim
 WORKDIR /app
 
 # Install serve for production
