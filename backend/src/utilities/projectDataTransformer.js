@@ -1,9 +1,10 @@
 /**
  * Transforms a project object from the raw JSON format to the CSV format.
  * @param {Object} project - The raw project data object
+ * @param {Object} reverseDependencyMap - Map of project names to projects that depend on them
  * @returns {Object} The transformed project data in CSV format
  */
-function transformProjectToCSVFormat(project) {
+function transformProjectToCSVFormat(project, reverseDependencyMap = {}) {
   // Find technical contact with ONS email
   const technicalContactUser = project.user.find(
     u =>
@@ -39,6 +40,12 @@ function transformProjectToCSVFormat(project) {
     project.developed[1] != ''
       ? `${project.developed[0]} with ${project.developed.slice(1).join(', ')}`
       : project.developed[0];
+
+  // Get project name for reverse dependency lookup
+  const projectName =
+    project.details[0]?.name || project.details[0]?.short_name || '';
+  const listedAsDependency = reverseDependencyMap[projectName] || [];
+
   // Transform to match desired CSV structure
   return {
     Project: project.details[0]?.name || '',
@@ -47,6 +54,8 @@ function transformProjectToCSVFormat(project) {
     Programme_Short: project.details[0]?.programme_short_name || '',
     Description: project.details[0]?.project_description || '',
     Stage: project.stage || '',
+    Project_Dependencies: project.details[0]?.project_dependencies || [],
+    Listed_As_Project_Dependency: listedAsDependency,
     Developed: developed,
     Technical_Contact: technicalContact,
     Delivery_Manager: deliveryManager,
@@ -105,6 +114,53 @@ function transformProjectToCSVFormat(project) {
   };
 }
 
+/**
+ * Builds a reverse dependency map showing which projects depend on each project
+ * @param {Array} projects - Array of all project objects
+ * @returns {Object} Map where keys are project names and values are arrays of projects that depend on them
+ */
+function buildReverseDependencyMap(projects) {
+  const reverseDependencyMap = {};
+
+  projects.forEach(project => {
+    const projectName =
+      project.details[0]?.name || project.details[0]?.short_name || '';
+    const dependencies = project.details[0]?.project_dependencies || [];
+
+    dependencies.forEach(dependency => {
+      const dependencyName = dependency.name;
+      if (dependencyName) {
+        if (!reverseDependencyMap[dependencyName]) {
+          reverseDependencyMap[dependencyName] = [];
+        }
+        reverseDependencyMap[dependencyName].push({
+          name: projectName,
+          description: dependency.description || '',
+        });
+      }
+    });
+  });
+
+  return reverseDependencyMap;
+}
+
+/**
+ * Transforms all projects to CSV format with reverse dependency information
+ * @param {Array} projects - Array of all project objects
+ * @returns {Array} Array of transformed project data with dependency information
+ */
+function transformProjectsToCSVFormat(projects) {
+  // Build reverse dependency map first
+  const reverseDependencyMap = buildReverseDependencyMap(projects);
+
+  // Transform each project with the reverse dependency information
+  return projects.map(project =>
+    transformProjectToCSVFormat(project, reverseDependencyMap)
+  );
+}
+
 module.exports = {
   transformProjectToCSVFormat,
+  transformProjectsToCSVFormat,
+  buildReverseDependencyMap,
 };
