@@ -964,14 +964,6 @@ const Projects = ({
                               {project.Project_Dependencies.length} Dependencies
                             </div>
                           )}
-                        {/* Debug: Show if Project_Dependencies is not an array or is empty */}
-                        {!Array.isArray(project.Project_Dependencies) &&
-                          project.Project_Dependencies && (
-                            <div style={{ color: 'red', fontSize: '0.8em' }}>
-                              Dependencies data invalid:{' '}
-                              {JSON.stringify(project.Project_Dependencies)}
-                            </div>
-                          )}
                       </span>
                       {(project.Programme || project.Programme_Short) && (
                         <span className="programme-name-full">
