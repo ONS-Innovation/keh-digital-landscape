@@ -134,9 +134,10 @@ function HelpModal({ show, onClose }) {
         </span>
         <span>
           The team usage page requires a GitHub login to view the data. Once
-          logged in, you can view your team's data. For teams with less than 5
-          active licenses, only seat data will be displayed. For teams with 5 or
-          more active licenses, both usage metrics and seat data will be shown.
+          logged in, you can view your team&apos;s data. For teams with less than
+          5 active licenses, only seat data will be displayed. For teams with 5
+          or more active licenses, both usage metrics and seat data will be
+          shown.
         </span>
       </>
     );
