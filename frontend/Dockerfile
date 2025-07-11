@@ -17,6 +17,7 @@ RUN npm ci --legacy-peer-deps
 COPY . .
 
 # Build the app
+ENV DEBUG=true
 RUN npm run build
 
 # ---- Run Stage ----
