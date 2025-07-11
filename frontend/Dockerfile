@@ -1,17 +1,18 @@
 # ---- Build Stage ----
-FROM node:24-slim AS builder
+FROM node:24-alpine AS builder
 WORKDIR /app
 
 # Add build argument for backend URL
 ARG VITE_BACKEND_URL
 ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
-ENV NODE_OPTIONS="--max-old-space-size=2048"
+ENV NODE_OPTIONS="--max-old-space-size=512"
 
-# Copy package files first
-COPY package*.json ./
+# Copy dependency files first
+COPY package.json package-lock.json ./
 
 # Install dependencies with production flag
-RUN npm install --legacy-peer-deps --prefer-offline
+# RUN npm install --legacy-peer-deps --prefer-offline
+RUN echo "Starting npm install: $(date)" && npm install --legacy-peer-deps --prefer-offline && echo "Finished npm install: $(date)"
 
 # Copy the rest of the app files
 COPY . .
