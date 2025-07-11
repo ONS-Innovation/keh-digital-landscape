@@ -127,16 +127,16 @@ function HelpModal({ show, onClose }) {
         <span>
           The seat information at the bottom of the page displays the users of
           the organisation or team using Copilot. The right table shows the
-          users that have not used Copilot within a certain threshold. This
+          users that have not used Copilot for a certain number of days. This
           defaults to 28 days but you can adjust this by clicking the negative
-          or positive button to increase or decrease the threshold.
+          or positive button to increase or decrease the number of days.
           <br />
         </span>
         <span>
           The team usage page requires a GitHub login to view the data. Once
-          logged in, if you are apart of a team that has 5 or more active
-          licenses then your team will show and you can view the data. If your
-          team has less than 5 active licenses only seat data will be displayed.
+          logged in, you can view your team's data. For teams with less than 5
+          active licenses, only seat data will be displayed. For teams with 5 or
+          more active licenses, both usage metrics and seat data will be shown.
         </span>
       </>
     );
