@@ -1,5 +1,5 @@
 # ---- Build Stage ----
-FROM node:24-alpine AS builder
+FROM node:24-slim AS builder
 WORKDIR /app
 
 # Add build argument for backend URL
@@ -11,7 +11,7 @@ ENV NODE_OPTIONS="--max-old-space-size=2048"
 COPY package*.json ./
 
 # Install dependencies with production flag
-RUN npm ci --legacy-peer-deps
+RUN npm install --legacy-peer-deps --prefer-offline
 
 # Copy the rest of the app files
 COPY . .
