@@ -32,7 +32,8 @@ function Statistics({
     key: 'repo_count',
     direction: 'descending',
   });
-  const [searchQuery, setSearchQuery] = useState(searchTerm);
+
+  const searchQuery = searchTerm;
   const [isFiltersVisible, setIsFiltersVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState('all');
   const [hoveredLanguage, setHoveredLanguage] = useState(null);
