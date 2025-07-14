@@ -5,7 +5,6 @@ import Header from '../components/Header/Header';
 import { toast } from 'react-hot-toast';
 import { useData } from '../contexts/dataContext';
 import { BannerContainer } from '../components/Banner';
-import { useTechnologyStatus } from '../utilities/getTechnologyStatus';
 
 /**
  * StatisticsPage component for displaying the statistics page.
@@ -201,20 +200,8 @@ function StatisticsPage() {
     setCurrentRepoView(repoView);
   };
 
-  // Use our custom hook instead of local implementation
-  const getTechnologyStatus = useTechnologyStatus();
-
   const handleTechClick = tech => {
-    const status = getTechnologyStatus(tech);
-
-    if (status && status !== 'review' && status !== 'ignore') {
-      navigate('/radar', { state: { selectedTech: tech } });
-    } else {
-      toast.error(
-        `Cannot view ${tech} details as it does not have a Radar entry.`,
-        { duration: 6000 }
-      );
-    }
+    navigate('/radar', { state: { selectedTech: tech } });
   };
 
   const handleProjectsChange = repositories => {
@@ -228,41 +215,11 @@ function StatisticsPage() {
     setSelectedRepositories(allRepoUrls);
   };
 
-  const getFilteredLanguages = () => {
-    if (!statsData) return [];
-
-    const languageStats = statsData.language_statistics_unarchived || {};
-    const languages = Object.entries(languageStats)
-      .filter(([language]) => {
-        return language.toLowerCase().includes(searchTerm.toLowerCase());
-      })
-      .map(([language, stats]) => ({
-        language,
-        ...stats,
-      }));
-
-    return languages;
-  };
-
-  const filteredLanguages = getFilteredLanguages();
-
-  // Convert filtered languages to search results format
-  // This is used for the search results in the header
-  // Must have a title property to be displayed in the search results modal
-
-  const searchResultsList = [];
-
-  filteredLanguages.forEach(language => {
-    searchResultsList.push({ title: language.language });
-  });
-
   return (
     <>
       <Header
         searchTerm={searchTerm}
         onSearchChange={value => setSearchTerm(value)}
-        searchResults={searchTerm ? searchResultsList : []}
-        onSearchResultClick={result => handleTechClick(result.title)}
       />
       <BannerContainer page="statistics" />
       <div className="statistics-page">
