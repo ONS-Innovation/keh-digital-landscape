@@ -212,9 +212,11 @@ function StatisticsPage() {
 
     if (status && status !== 'review' && status !== 'ignore') {
       navigate('/radar', { state: { selectedTech: tech } });
-    }
-    else {
-      toast.error(`Cannot view ${tech} details as it does not have a Radar entry.`, { duration: 6000 });
+    } else {
+      toast.error(
+        `Cannot view ${tech} details as it does not have a Radar entry.`,
+        { duration: 6000 }
+      );
     }
   };
 
@@ -252,9 +254,9 @@ function StatisticsPage() {
   // Must have a title property to be displayed in the search results modal
 
   const searchResultsList = [];
-  
+
   filteredLanguages.forEach(language => {
-    searchResultsList.push({"title": language.language});
+    searchResultsList.push({ title: language.language });
   });
 
   return (
