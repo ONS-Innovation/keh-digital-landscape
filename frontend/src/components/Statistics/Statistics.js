@@ -33,7 +33,6 @@ function Statistics({
     direction: 'descending',
   });
 
-  const searchQuery = searchTerm;
   const [isFiltersVisible, setIsFiltersVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState('all');
   const [hoveredLanguage, setHoveredLanguage] = useState(null);
@@ -41,6 +40,8 @@ function Statistics({
   const [repoView, setRepoView] = useState('unarchived'); // 'unarchived', 'archived', 'total'
   const [selectedProjects, setSelectedProjects] = useState([]);
   const [showTotalSize, setShowTotalSize] = useState(false);
+
+  const searchQuery = searchTerm;
 
   const dateOptions = [
     { value: 'all', label: 'All Time' },
