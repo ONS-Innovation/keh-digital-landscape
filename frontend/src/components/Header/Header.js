@@ -85,8 +85,7 @@ function Header({
   // Only show search results dropdown on radar page
   const shouldShowSearchResults = () => {
     return (
-      (location.pathname === '/radar') |
-        (location.pathname === '/statistics') &&
+      (location.pathname === '/radar') &&
       searchResults &&
       searchResults.length > 0
     );
