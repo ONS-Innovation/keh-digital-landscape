@@ -5,6 +5,7 @@ import Header from '../components/Header/Header';
 import { toast } from 'react-hot-toast';
 import { useData } from '../contexts/dataContext';
 import { BannerContainer } from '../components/Banner';
+import { useTechnologyStatus } from '../utilities/getTechnologyStatus';
 
 /**
  * StatisticsPage component for displaying the statistics page.
@@ -200,8 +201,21 @@ function StatisticsPage() {
     setCurrentRepoView(repoView);
   };
 
+  // Use our custom hook instead of local implementation
+  const getTechnologyStatus = useTechnologyStatus();
+
   const handleTechClick = tech => {
-    navigate('/radar', { state: { selectedTech: tech } });
+    const status = getTechnologyStatus(tech);
+
+    console.log('Clicked technology:', tech);
+    console.log('Technology status:', status);
+
+    if (status && status !== 'review' && status !== 'ignore') {
+      navigate('/radar', { state: { selectedTech: tech } });
+    }
+    else {
+      toast.error(`Cannot view ${tech} details as it does not have a Radar entry.`, { duration: 6000 });
+    }
   };
 
   const handleProjectsChange = repositories => {
