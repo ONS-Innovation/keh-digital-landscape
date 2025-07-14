@@ -233,13 +233,23 @@ function StatisticsPage() {
 
   const filteredLanguages = getFilteredLanguages();
 
+  // Convert filtered languages to search results format
+  // This is used for the search results in the header
+  // Must have a title property to be displayed in the search results modal
+
+  const searchResultsList = [];
+  
+  filteredLanguages.forEach(language => {
+    searchResultsList.push({"title": language.language});
+  });
+
   return (
     <>
       <Header
         searchTerm={searchTerm}
         onSearchChange={value => setSearchTerm(value)}
-        searchResults={[]}
-        onSearchResultClick={result => handleTechClick(result.language)}
+        searchResults={searchTerm ? searchResultsList : []}
+        onSearchResultClick={result => handleTechClick(result.title)}
       />
       <BannerContainer page="statistics" />
       <div className="statistics-page">
