@@ -33,7 +33,6 @@ function Statistics({
     direction: 'descending',
   });
 
-  const [isFiltersVisible, setIsFiltersVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState('all');
   const [hoveredLanguage, setHoveredLanguage] = useState(null);
   const [showTechRadarOnly, setShowTechRadarOnly] = useState(false);
