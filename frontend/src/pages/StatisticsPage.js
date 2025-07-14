@@ -207,9 +207,6 @@ function StatisticsPage() {
   const handleTechClick = tech => {
     const status = getTechnologyStatus(tech);
 
-    console.log('Clicked technology:', tech);
-    console.log('Technology status:', status);
-
     if (status && status !== 'review' && status !== 'ignore') {
       navigate('/radar', { state: { selectedTech: tech } });
     } else {
