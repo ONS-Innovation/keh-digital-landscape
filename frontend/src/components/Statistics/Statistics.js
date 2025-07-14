@@ -32,8 +32,7 @@ function Statistics({
     key: 'repo_count',
     direction: 'descending',
   });
-  const [searchQuery, setSearchQuery] = useState(searchTerm);
-  const [isFiltersVisible, setIsFiltersVisible] = useState(false);
+
   const [selectedDate, setSelectedDate] = useState('all');
   const [hoveredLanguage, setHoveredLanguage] = useState(null);
   const [showTechRadarOnly, setShowTechRadarOnly] = useState(false);
@@ -139,7 +138,7 @@ function Statistics({
     let filtered = Object.entries(languageStats).filter(([language]) => {
       const matchesSearch = language
         .toLowerCase()
-        .includes(searchQuery.toLowerCase());
+        .includes(searchTerm.toLowerCase());
 
       if (showTechRadarOnly) {
         const status = getTechnologyStatus(language);
@@ -176,7 +175,7 @@ function Statistics({
     return filtered;
   }, [
     getCurrentLanguageStats,
-    searchQuery,
+    searchTerm,
     sortConfig,
     getTechnologyStatus,
     showTechRadarOnly,

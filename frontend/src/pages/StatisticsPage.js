@@ -215,31 +215,11 @@ function StatisticsPage() {
     setSelectedRepositories(allRepoUrls);
   };
 
-  const getFilteredLanguages = () => {
-    if (!statsData) return [];
-
-    const languageStats = statsData.language_statistics_unarchived || {};
-    const languages = Object.entries(languageStats)
-      .filter(([language]) => {
-        return language.toLowerCase().includes(searchTerm.toLowerCase());
-      })
-      .map(([language, stats]) => ({
-        language,
-        ...stats,
-      }));
-
-    return languages;
-  };
-
-  const filteredLanguages = getFilteredLanguages();
-
   return (
     <>
       <Header
         searchTerm={searchTerm}
         onSearchChange={value => setSearchTerm(value)}
-        searchResults={[]}
-        onSearchResultClick={result => handleTechClick(result.language)}
       />
       <BannerContainer page="statistics" />
       <div className="statistics-page">
