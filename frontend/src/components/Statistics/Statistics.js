@@ -41,8 +41,6 @@ function Statistics({
   const [selectedProjects, setSelectedProjects] = useState([]);
   const [showTotalSize, setShowTotalSize] = useState(false);
 
-  const searchQuery = searchTerm;
-
   const dateOptions = [
     { value: 'all', label: 'All Time' },
     { value: '1', label: 'Last Month' },
@@ -141,7 +139,7 @@ function Statistics({
     let filtered = Object.entries(languageStats).filter(([language]) => {
       const matchesSearch = language
         .toLowerCase()
-        .includes(searchQuery.toLowerCase());
+        .includes(searchTerm.toLowerCase());
 
       if (showTechRadarOnly) {
         const status = getTechnologyStatus(language);
@@ -178,7 +176,7 @@ function Statistics({
     return filtered;
   }, [
     getCurrentLanguageStats,
-    searchQuery,
+    searchTerm,
     sortConfig,
     getTechnologyStatus,
     showTechRadarOnly,
