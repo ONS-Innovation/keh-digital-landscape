@@ -584,7 +584,22 @@ const ProjectModal = ({
                             marginBottom: '4px',
                           }}
                         >
-                          <>{dependency.name}</>: {dependency.description}
+                          <span
+                            className="project-link"
+                            style={{ cursor: 'pointer', textDecoration: 'underline', textDecorationStyle: 'dotted', textUnderlineOffset: '2px' }}
+                            onClick={() => {
+                              if (typeof onTechClick === 'function') {
+                                onTechClick(dependency.name);
+                              }
+                              if (typeof onClose === 'function') {
+                                onClose();
+                              }
+                            }}
+                            title={`View project: ${dependency.name}`}
+                          >
+                            {dependency.name}
+                          </span>
+                          {dependency.description ? `: ${dependency.description}` : ''}
                         </p>
                       ))}
                     </div>
@@ -626,7 +641,22 @@ const ProjectModal = ({
                             marginBottom: '4px',
                           }}
                         >
-                          <>{dep.name}</>: {dep.description}
+                          <span
+                            className="project-link"
+                            style={{ cursor: 'pointer', textDecoration: 'underline', textDecorationStyle: 'dotted', textUnderlineOffset: '2px' }}
+                            onClick={() => {
+                              if (typeof onTechClick === 'function') {
+                                onTechClick(dep.name);
+                              }
+                              if (typeof onClose === 'function') {
+                                onClose();
+                              }
+                            }}
+                            title={`View project: ${dep.name}`}
+                          >
+                            {dep.name}
+                          </span>
+                          {dep.description ? `: ${dep.description}` : ''}
                         </p>
                       ))}
                     </div>
