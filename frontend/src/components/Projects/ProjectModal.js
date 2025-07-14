@@ -648,9 +648,6 @@ const ProjectModal = ({
                               if (typeof onTechClick === 'function') {
                                 onTechClick(dep.name);
                               }
-                              if (typeof onClose === 'function') {
-                                onClose();
-                              }
                             }}
                             title={`View project: ${dep.name}`}
                           >
