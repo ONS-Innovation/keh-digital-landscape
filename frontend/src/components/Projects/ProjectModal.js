@@ -586,7 +586,12 @@ const ProjectModal = ({
                         >
                           <span
                             className="project-link"
-                            style={{ cursor: 'pointer', textDecoration: 'underline', textDecorationStyle: 'dotted', textUnderlineOffset: '2px' }}
+                            style={{
+                              cursor: 'pointer',
+                              textDecoration: 'underline',
+                              textDecorationStyle: 'dotted',
+                              textUnderlineOffset: '2px',
+                            }}
                             onClick={() => {
                               if (typeof onTechClick === 'function') {
                                 onTechClick(dependency.name);
@@ -599,7 +604,9 @@ const ProjectModal = ({
                           >
                             {dependency.name}
                           </span>
-                          {dependency.description ? `: ${dependency.description}` : ''}
+                          {dependency.description
+                            ? `: ${dependency.description}`
+                            : ''}
                         </p>
                       ))}
                     </div>
@@ -643,7 +650,12 @@ const ProjectModal = ({
                         >
                           <span
                             className="project-link"
-                            style={{ cursor: 'pointer', textDecoration: 'underline', textDecorationStyle: 'dotted', textUnderlineOffset: '2px' }}
+                            style={{
+                              cursor: 'pointer',
+                              textDecoration: 'underline',
+                              textDecorationStyle: 'dotted',
+                              textUnderlineOffset: '2px',
+                            }}
                             onClick={() => {
                               if (typeof onTechClick === 'function') {
                                 onTechClick(dep.name);
