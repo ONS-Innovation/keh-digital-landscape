@@ -1,7 +1,7 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: Digital Landscape
+  name: keh-digital-landscape
   description: "An internally developed Digital Landscape platform that presents the organisation’s repositories, projects, technology stack and GitHub Copilot usage."
   annotations:
     github.com/project-slug: ONS-Innovation/keh-digital-landscape
