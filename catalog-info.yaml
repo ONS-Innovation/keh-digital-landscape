@@ -11,4 +11,4 @@ metadata:
 spec:
   type: website
   lifecycle: production
-  owner: "group:default/keh-dev"
+  owner: "group:default/Spotify-Backstage-Trial-Team"
