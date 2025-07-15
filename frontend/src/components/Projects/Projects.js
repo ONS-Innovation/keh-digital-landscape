@@ -53,8 +53,12 @@ const Projects = ({
   onRefresh,
   searchTerm,
   setSearchTerm,
+  selectedProject,
+  isModalOpen,
+  onModalClose,
+  onTechOrProjectClick,
+  renderTechnologyList,
 }) => {
-  const [internalSearchTerm, setInternalSearchTerm] = useState('');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [sortField, setSortField] = useState('name');
@@ -75,8 +79,6 @@ const Projects = ({
     architecture: false,
   });
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const filterRef = useRef(null);
   const sortRef = useRef(null);
   const searchInputRef = useRef(null);
@@ -608,19 +610,6 @@ const Projects = ({
       ...prev,
       [section]: !prev[section],
     }));
-  };
-
-  // Handler for both technology and project clicks
-  const handleTechOrProjectClick = name => {
-    const normalizedName = name.trim().toLowerCase();
-    const foundProject = projectsData.find(
-      p => p.Project && p.Project.trim().toLowerCase() === normalizedName
-    );
-    console.log('Found project:', foundProject);
-    if (foundProject) {
-      setSelectedProject(foundProject);
-      setIsModalOpen(true);
-    }
   };
 
   if (!isOpen) return null;
@@ -1162,13 +1151,13 @@ const Projects = ({
             <div className="projects-empty-state">No projects found</div>
           )}
         </div>
-        {isModalOpen && selectedProject && (
+        {isModalOpen && (
           <ProjectModal
             isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
+            onClose={onModalClose}
             project={selectedProject}
+            onTechClick={onTechOrProjectClick}
             renderTechnologyList={renderTechnologyList}
-            onTechClick={handleTechOrProjectClick}
           />
         )}
       </div>
