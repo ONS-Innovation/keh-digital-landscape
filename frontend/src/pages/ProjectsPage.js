@@ -33,7 +33,6 @@ function ProjectsPage() {
         setProjectsData(csvData);
         setRadarData(techData);
       } catch (error) {
-        console.error(error);
         toast.error('Unexpected error occurred.');
       }
     };
@@ -47,8 +46,11 @@ function ProjectsPage() {
    * @param {Object} project - The project object to handle the click for.
    */
   const handleProjectClick = project => {
-    setSelectedProject(project);
-    setIsProjectModalOpen(true);
+    setIsProjectModalOpen(false);
+    setTimeout(() => {
+      setSelectedProject(project);
+      setIsProjectModalOpen(true);
+    }, 0);
   };
 
   /**
@@ -60,7 +62,7 @@ function ProjectsPage() {
       setProjectsData(newData);
       toast.success('Data refreshed successfully.');
     } catch (error) {
-      console.error('Error refreshing data:', error);
+      toast.error('Error refreshing data.');
     }
   };
 
@@ -78,6 +80,23 @@ function ProjectsPage() {
 
     if (entry) {
       navigate('/radar', { state: { selectedTech: tech } });
+    }
+  };
+
+  /**
+   * handleDependencyClick function handles dependency project clicks.
+   *
+   * @param {string} dependencyName - The name of the dependency project.
+   */
+  const handleDependencyClick = dependencyName => {
+    const normalizedName = dependencyName.trim().toLowerCase();
+    const foundProject = projectsData?.find(
+      p => p.Project && p.Project.trim().toLowerCase() === normalizedName
+    );
+    if (foundProject) {
+      handleProjectClick(foundProject);
+    } else {
+      toast.error('Project not found for dependency: ' + dependencyName);
     }
   };
 
@@ -149,6 +168,11 @@ function ProjectsPage() {
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           getTechnologyStatus={getTechnologyStatus}
+          selectedProject={selectedProject}
+          isModalOpen={isProjectModalOpen}
+          onModalClose={() => setIsProjectModalOpen(false)}
+          onTechOrProjectClick={handleDependencyClick}
+          renderTechnologyList={renderTechnologyList}
         />
         {isProjectModalOpen && (
           <ProjectModal
@@ -156,7 +180,7 @@ function ProjectsPage() {
             onClose={() => setIsProjectModalOpen(false)}
             project={selectedProject}
             renderTechnologyList={renderTechnologyList}
-            onTechClick={handleTechClick}
+            onTechClick={handleDependencyClick}
             getTechnologyStatus={getTechnologyStatus}
           />
         )}

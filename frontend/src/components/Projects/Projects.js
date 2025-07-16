@@ -31,6 +31,7 @@ import {
   ARCHITECTURE_CATEGORIES,
   CATEGORY_COLOURS,
 } from '../../constants/projectConstants';
+import ProjectModal from './ProjectModal';
 
 /**
  * Projects component for displaying a list of projects.
@@ -52,8 +53,12 @@ const Projects = ({
   onRefresh,
   searchTerm,
   setSearchTerm,
+  selectedProject,
+  isModalOpen,
+  onModalClose,
+  onTechOrProjectClick,
+  renderTechnologyList,
 }) => {
-  const [internalSearchTerm, setInternalSearchTerm] = useState('');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [sortField, setSortField] = useState('name');
@@ -1034,6 +1039,27 @@ const Projects = ({
                           {mainArchitecture}
                         </div>
                       )}
+                      {project.Project_Dependencies.length > 0 && (
+                        <div
+                          className="project-badge project-dependencies-badge"
+                          title={project.Project_Dependencies.map(
+                            dep => dep.name
+                          ).join(', ')}
+                        >
+                          {project.Project_Dependencies.length} Dependencies
+                        </div>
+                      )}
+                      {project.Listed_As_Project_Dependency.length > 0 && (
+                        <div
+                          className="project-badge listed-as-dependency-badge"
+                          title={project.Listed_As_Project_Dependency.map(
+                            dep => dep.name
+                          ).join(', ')}
+                        >
+                          {project.Listed_As_Project_Dependency.length} Listed
+                          As Project Dependency
+                        </div>
+                      )}
                     </div>
 
                     <div className="technology-distribution">
@@ -1125,6 +1151,15 @@ const Projects = ({
             <div className="projects-empty-state">No projects found</div>
           )}
         </div>
+        {isModalOpen && (
+          <ProjectModal
+            isOpen={isModalOpen}
+            onClose={onModalClose}
+            project={selectedProject}
+            onTechClick={onTechOrProjectClick}
+            renderTechnologyList={renderTechnologyList}
+          />
+        )}
       </div>
     </>
   );
