@@ -43,18 +43,11 @@ async function checkCopilotAdminStatus(userToken) {
       try {
         const copilotBucketName =
           process.env.COPILOT_BUCKET_NAME || 'sdp-dev-copilot-usage-dashboard';
-        const copilotTeamSlugs = await s3Service.getObject(
+        copilotTeams = await s3Service.getObject(
           copilotBucketName,
           'copilot_teams.json'
         );
 
-        // Copilot lambda needs changing to get full team data
-        copilotTeams = copilotTeamSlugs.map(slug => ({
-          slug: slug,
-          name: slug, // Use slug as name since we dont have the full team data
-          description: null,
-          url: `https://github.com/orgs/${process.env.GITHUB_ORG || 'ONSdigital'}/teams/${slug}`,
-        }));
       } catch (error) {
         logger.warn('Could not fetch copilot_teams.json from S3:', {
           error: error.message,
