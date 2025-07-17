@@ -12,3 +12,4 @@ spec:
   type: website
   lifecycle: production
   owner: "group:default/Spotify-Backstage-Trial-Team"
+  system: "system:default/keh-system"
