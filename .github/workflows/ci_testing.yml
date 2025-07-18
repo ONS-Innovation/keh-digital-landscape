@@ -17,6 +17,8 @@ concurrency:
 
 jobs:
   test:
+    permissions:
+      contents: read
     name: Backend Lint
     runs-on: ubuntu-22.04
     defaults:
