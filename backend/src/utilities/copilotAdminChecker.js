@@ -47,7 +47,6 @@ async function checkCopilotAdminStatus(userToken) {
           copilotBucketName,
           'copilot_teams.json'
         );
-
       } catch (error) {
         logger.warn('Could not fetch copilot_teams.json from S3:', {
           error: error.message,
