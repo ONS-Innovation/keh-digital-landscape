@@ -74,7 +74,7 @@ The Tech Radar JSON endpoint test verifies that the radar configuration data is 
 
 #### Basic Statistics
 
-Tests the default behavior with no filters:
+Tests the default behaviour with no filters:
 
 ::: testing.backend.src.test_main.test_json_endpoint_no_params
 
