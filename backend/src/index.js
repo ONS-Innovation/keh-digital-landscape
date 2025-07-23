@@ -6,6 +6,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 const logger = require('./config/logger');
 const {
   generalApiLimiter,
@@ -25,6 +26,20 @@ const app = express();
 const port = process.env.PORT || 5001;
 
 app.use(
+  compression({
+    filter: (req, res) => {
+      if (
+        req.headers['cache-control'] &&
+        req.headers['cache-control'].includes('no-transform')
+      ) {
+        return false;
+      }
+      return compression.filter(req, res);
+    },
+  })
+);
+
+app.use(
   cors({
     origin:
       process.env.NODE_ENV === 'production'
@@ -42,7 +57,24 @@ app.use(
   })
 );
 
-app.use(express.json());
+// Increase JSON payload size limit to handle large tech radar entries with extensive timeline descriptions
+// Set to 10MB to accommodate large reasoning text in timeline entries (base radar is ~126KB)
+app.use(
+  express.json({
+    limit: '10mb',
+    parameterLimit: 50000,
+    extended: true,
+  })
+);
+
+app.use(
+  express.urlencoded({
+    limit: '10mb',
+    extended: true,
+    parameterLimit: 50000,
+  })
+);
+
 app.use(cookieParser());
 
 // Apply rate limiting middleware before mounting routes
@@ -59,7 +91,7 @@ process.on('uncaughtException', error => {
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-  logger.error('Unhandled Rejection:', { promise, reason });
+  logger.error('Unhandled Rejection at:', { promise, reason });
 });
 
 /**
@@ -67,5 +99,9 @@ process.on('unhandledRejection', (reason, promise) => {
  * It logs a message to the console when the server is running.
  */
 app.listen(port, () => {
-  logger.info(`Backend server running on port ${port}`);
+  logger.info(`Backend server running on port ${port}`, {
+    nodeEnv: process.env.NODE_ENV,
+    bodyLimit: '10MB',
+    compressionEnabled: true,
+  });
 });
