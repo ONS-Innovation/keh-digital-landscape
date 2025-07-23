@@ -10,6 +10,7 @@
     "@octokit/core": "^6.1.5",
     "@octokit/rest": "^22.0.0",
     "aws-jwt-verify": "^5.1.0",
+    "compression": "^1.7.4",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
