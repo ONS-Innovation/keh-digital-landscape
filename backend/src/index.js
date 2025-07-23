@@ -35,9 +35,7 @@ app.use(
         return false;
       }
       return compression.filter(req, res);
-    },
-    level: 6,
-    threshold: 1024,
+    }
   })
 );
 
