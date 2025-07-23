@@ -189,6 +189,7 @@ function CopilotDashboard() {
   const [isTeamLoading, setIsTeamLoading] = useState(false);
   const [teamSlug, setTeamSlug] = useState(null);
   const [isInitialised, setIsInitialised] = useState(false);
+  const [isCopilotAdmin, setIsCopilotAdmin] = useState(false);
 
   const data = getDashboardData();
 
@@ -316,9 +317,10 @@ function CopilotDashboard() {
         const isAuthenticated = await checkAuthStatus();
         if (isAuthenticated) {
           setIsAuthenticated(true);
-          const teams = await fetchUserTeams();
-          if (teams && teams.length >= 0) {
-            setAvailableTeams(teams);
+          const teamsData = await fetchUserTeams();
+          if (teamsData && teamsData.teams && teamsData.teams.length >= 0) {
+            setAvailableTeams(teamsData.teams);
+            setIsCopilotAdmin(teamsData.isAdmin);
           }
         } else {
           setIsAuthenticated(false);
@@ -415,6 +417,7 @@ function CopilotDashboard() {
       await logoutUser();
       setIsAuthenticated(false);
       setAvailableTeams([]);
+      setIsCopilotAdmin(false);
       setTeamSlug(null);
       setIsSelectingTeam(true);
       navigate('/copilot/team', { replace: true });
@@ -571,9 +574,16 @@ function CopilotDashboard() {
           {scope === 'team' && isSelectingTeam ? (
             <>
               <div className="team-selection-header">
-                <p className="header-text" style={{ margin: '0' }}>
-                  Select a Team to View
-                </p>
+                <div>
+                  <p className="header-text" style={{ margin: '0' }}>
+                    Select a Team to View
+                  </p>
+                  {isCopilotAdmin && (
+                    <p className="copilot-admin-badge">
+                      Copilot Admin - You can view all configured teams
+                    </p>
+                  )}
+                </div>
                 {isAuthenticated && (
                   <button
                     type="button"
@@ -633,9 +643,9 @@ function CopilotDashboard() {
                     </div>
                   ) : (
                     <p>
-                      No teams available. Please ensure you are a member of at
-                      least one team in the organisation with more than 5 active
-                      Copilot licenses.
+                      {isCopilotAdmin
+                        ? 'No teams available. Please ensure the copilot_teams.json file is configured with team names in S3.'
+                        : 'No teams available. Please ensure you are a member of at least one team in the organisation with more than 5 active Copilot licenses.'}
                     </p>
                   )}
                 </div>
@@ -651,9 +661,9 @@ function CopilotDashboard() {
                 </div>
               )}
               <p className="disclaimer-banner">
-                The GitHub API does not return Copilot team usage data if there
-                are fewer than 5 members with Copilot licenses. This may result
-                in only seat statistics being viewable on the dashboard.
+                {isCopilotAdmin
+                  ? 'As a Copilot Admin, you can view any valid team. The GitHub API does not return Copilot team usage data if there are fewer than 5 members with Copilot licenses.'
+                  : 'The GitHub API does not return Copilot team usage data if there are fewer than 5 members with Copilot licenses. This may result in only seat statistics being viewable on the dashboard.'}
               </p>
             </>
           ) : viewMode === 'live' ? (
