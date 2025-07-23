@@ -25,16 +25,20 @@ const userRoutes = require('./routes/user');
 const app = express();
 const port = process.env.PORT || 5001;
 
-app.use(compression({
-  filter: (req, res) => {
-    if (req.headers['cache-control'] && req.headers['cache-control'].includes('no-transform')) {
-      return false;
-    }
-    return compression.filter(req, res);
-  },
-  level: 6,
-  threshold: 1024
-}));
+app.use(
+  compression({
+    filter: (req, res) => {
+      if (
+        req.headers['cache-control'] &&
+        req.headers['cache-control'].includes('no-transform')
+      ) {
+        return false;
+      }
+      return compression.filter(req, res);
+    },
+    threshold: 1024,
+  })
+);
 
 app.use(
   cors({
@@ -56,17 +60,21 @@ app.use(
 
 // Increase JSON payload size limit to handle large tech radar entries with extensive timeline descriptions
 // Set to 10MB to accommodate large reasoning text in timeline entries (base radar is ~126KB)
-app.use(express.json({ 
-  limit: '10mb',
-  parameterLimit: 50000,
-  extended: true
-}));
+app.use(
+  express.json({
+    limit: '10mb',
+    parameterLimit: 50000,
+    extended: true,
+  })
+);
 
-app.use(express.urlencoded({ 
-  limit: '10mb', 
-  extended: true,
-  parameterLimit: 50000
-}));
+app.use(
+  express.urlencoded({
+    limit: '10mb',
+    extended: true,
+    parameterLimit: 50000,
+  })
+);
 
 app.use(cookieParser());
 
@@ -95,6 +103,6 @@ app.listen(port, () => {
   logger.info(`Backend server running on port ${port}`, {
     nodeEnv: process.env.NODE_ENV,
     bodyLimit: '10MB',
-    compressionEnabled: true
+    compressionEnabled: true,
   });
 });
