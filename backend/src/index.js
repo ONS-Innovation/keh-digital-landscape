@@ -78,37 +78,6 @@ app.use('/review/api', adminApiLimiter, reviewRoutes);
 app.use('/copilot/api', externalApiLimiter, copilotRoutes);
 app.use('/user/api', userApiLimiter, userRoutes);
 
-// Enhanced error handling for payload size issues
-app.use((error, req, res, next) => {
-  if (error instanceof SyntaxError && error.status === 400 && 'body' in error) {
-    logger.error('JSON parsing error:', { 
-      error: error.message, 
-      url: req.url,
-      method: req.method,
-      contentLength: req.get('content-length')
-    });
-    return res.status(400).json({ 
-      error: 'Invalid JSON payload',
-      message: 'The request contains malformed JSON data'
-    });
-  }
-  
-  if (error.type === 'entity.too.large') {
-    logger.error('Payload too large:', { 
-      url: req.url,
-      method: req.method,
-      contentLength: req.get('content-length'),
-      limit: '10MB'
-    });
-    return res.status(413).json({ 
-      error: 'Payload too large',
-      message: 'The request payload exceeds the maximum allowed size of 10MB'
-    });
-  }
-  
-  next(error);
-});
-
 // Error handling
 process.on('uncaughtException', error => {
   logger.error('Uncaught Exception:', { error });
