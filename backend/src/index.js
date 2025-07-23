@@ -35,7 +35,7 @@ app.use(
         return false;
       }
       return compression.filter(req, res);
-    }
+    },
   })
 );
 
