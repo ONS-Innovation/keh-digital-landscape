@@ -3,6 +3,8 @@
  * - *italic* text
  * - **bold** text
  * - [link text](url) links
+ * - # h1 and ## h2 headers
+ * - Line breaks (preserves multiple consecutive line breaks)
  *
  * @param {string} text - The markdown text to render
  * @returns {string} - HTML string with basic markdown formatting applied
@@ -14,22 +16,28 @@ export const renderSimpleMarkdown = text => {
 
   let html = text;
 
+  // Escape HTML characters
   html = html.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+  // Handle links
   html = html.replace(
     /\[([^\]]+)\]\(([^)]+)\)/g,
     '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
   );
 
+  // Handle bold text
   html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
 
+  // Handle italic text
   html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
 
   // Handle headers - ## h2 first, then # h1 to avoid conflicts
-  html = html.replace(/^## (.+)$/gm, '<h2 class="markdown-h2">$1</h2>');
-  html = html.replace(/^# (.+)$/gm, '<h1 class="markdown-h1">$1</h1>');
+  // Also remove the newline that follows headers to prevent extra spacing
+  html = html.replace(/^## (.+)(\n|$)/gm, '<h2 class="markdown-h2">$1</h2>');
+  html = html.replace(/^# (.+)(\n|$)/gm, '<h1 class="markdown-h1">$1</h1>');
 
-  html = html.replace(/\n/g, '<p> </p>');
+  // Handle line breaks - preserve all newlines as <br> tags
+  html = html.replace(/\n/g, '<br>');
 
   return html;
 };
