@@ -57,5 +57,5 @@ terraform apply \
 -var "s3_bucket_name=${s3_bucket_name}" \
 -var "api_s3_bucket_name=${api_s3_bucket_name}" \
 -var "container_ver=${tag}" \
--var "container_ver_backend=${tag}"
+-var "container_ver_backend=${tag}" \
 -auto-approve
