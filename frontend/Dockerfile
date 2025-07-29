@@ -16,7 +16,7 @@ RUN npm ci --legacy-peer-deps
 COPY . .
 
 # Build the app
-RUN npm run build
+RUN NODE_OPTIONS=--max-old-space-size=4096 npm run build
 
 # ---- Run Stage ----
 FROM node:18-slim
