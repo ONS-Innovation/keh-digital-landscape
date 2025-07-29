@@ -41,6 +41,8 @@ cd resource-repo/terraform/service
 
 terraform init -backend-config=env/${env}/backend-${env}.tfbackend -reconfigure
 
+# The following terraform-apply may need to change if the environment variables change
+
 terraform apply \
 -var "aws_account_id=$aws_account_id" \
 -var "aws_access_key_id=$aws_access_key_id" \
