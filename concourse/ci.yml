@@ -33,6 +33,8 @@ jobs:
         args:
         - -cx
         - |
+          apk add --no-cache aws-cli podman jq iptables curl
+
           export repo_name=((repo_name))
           if [[ "((env))" == "prod" ]]; then
             tag=$(curl "https://api.github.com/repos/ONS-Innovation/keh-tech-audit-tool-api/releases" | jq -r '.[0].tag_name')
@@ -63,7 +65,7 @@ jobs:
         args:
         - -cx
         - |
-          export repo_name=((repo_name))
+          apk add --no-cache jq curl
           if [[ "((env))" == "prod" ]]; then
             tag=$(curl "https://api.github.com/repos/ONS-Innovation/keh-tech-audit-tool-api/releases" | jq -r '.[0].tag_name')
             export tag
