@@ -35,7 +35,8 @@ jobs:
         - |
           export repo_name=((repo_name))
           if [[ "((env))" == "prod" ]]; then
-            export tag=v$(cat release/version)
+            tag=$(curl "https://api.github.com/repos/ONS-Innovation/keh-tech-audit-tool-api/releases" | jq -r '.[0].tag_name')
+            export tag
           else
             export tag=((tag))
           fi
@@ -64,7 +65,8 @@ jobs:
         - |
           export repo_name=((repo_name))
           if [[ "((env))" == "prod" ]]; then
-            export tag=v$(cat release/version)
+            tag=$(curl "https://api.github.com/repos/ONS-Innovation/keh-tech-audit-tool-api/releases" | jq -r '.[0].tag_name')
+            export tag
           else 
             export tag=((tag))
           fi
