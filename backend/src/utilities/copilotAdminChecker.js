@@ -29,6 +29,7 @@ async function checkCopilotAdminStatus(userToken) {
       return {
         isAdmin: false,
         teams: userTeams,
+        userTeamSlugs: userTeamSlugs,
       };
     }
 
@@ -58,12 +59,14 @@ async function checkCopilotAdminStatus(userToken) {
       return {
         isAdmin: true,
         teams: copilotTeams,
+        userTeamSlugs: userTeamSlugs,
       };
     } else {
       // User is not admin, return their regular teams
       return {
         isAdmin: false,
         teams: userTeams,
+        userTeamSlugs: userTeamSlugs,
       };
     }
   } catch (error) {

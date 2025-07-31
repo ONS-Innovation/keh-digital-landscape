@@ -529,3 +529,8 @@
 .github-logout-button:active {
   transform: scale(0.95);
 }
+
+.member-team {
+  border: 1px solid hsl(var(--primary));
+  box-shadow: 0 0 4px hsl(var(--primary));
+}

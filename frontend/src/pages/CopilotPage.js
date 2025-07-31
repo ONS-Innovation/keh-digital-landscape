@@ -190,6 +190,7 @@ function CopilotDashboard() {
   const [teamSlug, setTeamSlug] = useState(null);
   const [isInitialised, setIsInitialised] = useState(false);
   const [isCopilotAdmin, setIsCopilotAdmin] = useState(false);
+  const [userTeamSlugs, setUserTeamSlugs] = useState([]);
 
   const data = getDashboardData();
 
@@ -321,6 +322,8 @@ function CopilotDashboard() {
           if (teamsData && teamsData.teams && teamsData.teams.length >= 0) {
             setAvailableTeams(teamsData.teams);
             setIsCopilotAdmin(teamsData.isAdmin);
+            setUserTeamSlugs(teamsData.userTeamSlugs || []);
+            console.log('userTeamSlugs', teamsData);
           }
         } else {
           setIsAuthenticated(false);
@@ -418,6 +421,7 @@ function CopilotDashboard() {
       setIsAuthenticated(false);
       setAvailableTeams([]);
       setIsCopilotAdmin(false);
+      setUserTeamSlugs([]);
       setTeamSlug(null);
       setIsSelectingTeam(true);
       navigate('/copilot/team', { replace: true });
@@ -580,7 +584,18 @@ function CopilotDashboard() {
                   </p>
                   {isCopilotAdmin && (
                     <p className="copilot-admin-badge">
-                      Copilot Admin - You can view all configured teams
+                      You are a Copilot Admin - you can view all configured
+                      teams. Teams with the{' '}
+                      <span
+                        className="member-team"
+                        style={{
+                          padding: '0 4px',
+                          borderRadius: '4px',
+                        }}
+                      >
+                        special border
+                      </span>{' '}
+                      are teams you are a member of.
                     </p>
                   )}
                 </div>
@@ -601,7 +616,10 @@ function CopilotDashboard() {
                   {availableTeams && availableTeams.length > 0 ? (
                     <div className="teams-grid">
                       {availableTeams.map(team => (
-                        <div key={team.slug} className="team-card">
+                        <div
+                          key={team.slug}
+                          className={`team-card ${userTeamSlugs.includes(team.slug) ? 'member-team' : ''}`}
+                        >
                           <div className="team-card-content">
                             <div className="team-name-container">
                               <div

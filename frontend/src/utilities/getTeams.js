@@ -37,13 +37,14 @@ export const fetchUserTeams = async () => {
         response.status,
         response.statusText
       );
-      return { teams: [], isAdmin: false };
+      return { teams: [], isAdmin: false, userTeamSlugs: [] };
     }
 
     const data = await response.json();
     return {
       teams: data.teams || [],
       isAdmin: data.isAdmin || false,
+      userTeamSlugs: data.userTeamSlugs || [],
     };
   } catch (error) {
     console.error('Error fetching teams:', error);

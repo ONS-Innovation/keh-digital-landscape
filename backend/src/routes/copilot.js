@@ -164,6 +164,7 @@ router.get('/teams', async (req, res) => {
     res.json({
       teams: adminStatus.teams,
       isAdmin: adminStatus.isAdmin,
+      userTeamSlugs: adminStatus.userTeamSlugs,
     });
   } catch (error) {
     logger.error('GitHub API error:', { error: error.message });
