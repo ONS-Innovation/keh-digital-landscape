@@ -213,7 +213,6 @@ function CopilotDashboard() {
       setScope('team');
       const teamParam = pathParts[3];
       if (teamParam) {
-        console.log('Loading team data for:', teamParam);
         setTeamSlug(teamParam);
         setIsSelectingTeam(false);
         // Fetch team data if we have a team slug from URL
@@ -323,7 +322,6 @@ function CopilotDashboard() {
             setAvailableTeams(teamsData.teams);
             setIsCopilotAdmin(teamsData.isAdmin);
             setUserTeamSlugs(teamsData.userTeamSlugs || []);
-            console.log('userTeamSlugs', teamsData);
           }
         } else {
           setIsAuthenticated(false);
