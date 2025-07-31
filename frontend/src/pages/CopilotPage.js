@@ -589,8 +589,8 @@ function CopilotDashboard() {
                       <span
                         className="member-team"
                         style={{
-                          padding: '0 4px',
-                          borderRadius: '4px',
+                          padding: '0 8px',
+                          borderRadius: '8px',
                         }}
                       >
                         special border
@@ -619,6 +619,8 @@ function CopilotDashboard() {
                         <div
                           key={team.slug}
                           className={`team-card ${userTeamSlugs.includes(team.slug) ? 'member-team' : ''}`}
+                          aria-label={`Your team ${team.name}`}
+                          tabIndex="0"
                         >
                           <div className="team-card-content">
                             <div className="team-name-container">
@@ -638,6 +640,7 @@ function CopilotDashboard() {
                               target="_blank"
                               rel="noopener noreferrer"
                               className="team-card-link"
+                              aria-label={`View ${team.name} on GitHub`}
                             >
                               View on GitHub
                             </a>
@@ -652,7 +655,7 @@ function CopilotDashboard() {
                                 replace: true,
                               });
                             }}
-                            aria-label={`View data for ${team.name} team`}
+                            aria-label={`View data for ${team.name} team data`}
                           >
                             View Data
                           </button>
