@@ -21,8 +21,11 @@ export const checkAuthStatus = async () => {
 };
 
 /**
- * Fetch teams the authenticated user can view (user teams or copilot admin teams)
- * @returns {Promise<Object>} Object containing teams array and isAdmin boolean
+ * Fetch teams the authenticated user can view (user teams or Copilot admin teams)
+ * @returns {Promise<Object>} Object containing:
+ *   - teams: Array of team objects the user can view
+ *   - isAdmin: Boolean indicating if the user is a Copilot admin
+ *   - userTeamSlugs: Array of team slugs the user is a member of
  */
 export const fetchUserTeams = async () => {
   try {
@@ -48,7 +51,7 @@ export const fetchUserTeams = async () => {
     };
   } catch (error) {
     console.error('Error fetching teams:', error);
-    return { teams: [], isAdmin: false };
+    return { teams: [], isAdmin: false, userTeamSlugs: [] };
   }
 };
 
