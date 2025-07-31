@@ -21,7 +21,6 @@
   background-color: hsl(210, 100%, 97%);
   border: 1px solid hsl(210, 100%, 50%);
   color: hsl(210, 100%, 20%);
-  margin-bottom: 0;
   padding: 8px 12px;
   border-radius: var(--radius);
   box-sizing: border-box;
@@ -489,8 +488,15 @@
 .team-selection-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 16px;
+}
+
+.copilot-admin-badge {
+  font-size: 12px;
+  color: hsl(var(--primary));
+  margin: 4px 0 0 0;
+  font-weight: 500;
 }
 
 .github-logout-button {
@@ -522,4 +528,9 @@
 
 .github-logout-button:active {
   transform: scale(0.95);
+}
+
+.member-team {
+  border: 1px solid hsl(var(--primary));
+  box-shadow: 0 0 4px hsl(var(--primary));
 }

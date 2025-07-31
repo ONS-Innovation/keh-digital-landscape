@@ -194,6 +194,64 @@ class GitHubService {
       throw error;
     }
   }
+
+  /**
+   * Get GitHub Copilot team metrics as admin (using app installation)
+   * @param {string} teamSlug - The slug of the team to fetch metrics for
+   * @returns {Promise<Object>} Team metrics data
+   */
+  async getCopilotTeamMetricsAsAdmin(teamSlug) {
+    try {
+      const octokit = await getAppAndInstallation();
+
+      const response = await octokit.request(
+        `GET /orgs/${this.org}/teams/${teamSlug}/copilot/metrics`,
+        {
+          headers: {
+            'X-GitHub-Api-Version': '2022-11-28',
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      logger.error(
+        'GitHub API error while fetching Copilot team metrics as admin:',
+        {
+          error: error.message,
+        }
+      );
+      throw error;
+    }
+  }
+
+  /**
+   * Get team members as admin (using app installation)
+   * @param {string} teamSlug - The slug of the team to fetch members for
+   * @returns {Promise<Array>} Array of team members
+   */
+  async getTeamMembersAsAdmin(teamSlug) {
+    try {
+      const octokit = await getAppAndInstallation();
+
+      const response = await octokit.request(
+        `GET /orgs/${this.org}/teams/${teamSlug}/members`,
+        {
+          headers: {
+            'X-GitHub-Api-Version': '2022-11-28',
+          },
+          per_page: 100,
+        }
+      );
+
+      return response.data || [];
+    } catch (error) {
+      logger.error('GitHub API error while fetching team members as admin:', {
+        error: error.message,
+      });
+      throw error;
+    }
+  }
 }
 
 // Export a singleton instance

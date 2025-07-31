@@ -5,16 +5,12 @@ repo_name: Digital Landscape
 nav:
   - Home: index.md
   - Pages:
-    - Tech Radar: 
-      - Overview: pages/radar/index.md
-    - Projects:
-      - Overview: pages/projects/index.md
-    - Statistics:
-      - Overview: pages/statistics/index.md
-    - Review:
-      - Overview: pages/review/index.md
-    - Admin:
-      - Overview: pages/admin/index.md
+    - Tech Radar: pages/radar/index.md
+    - Projects: pages/projects/index.md
+    - Statistics: pages/statistics/index.md
+    - Review: pages/review/index.md
+    - Admin: pages/admin/index.md
+    - Copilot: pages/copilot/index.md
   - Backend:
     - Overview: backend/index.md
     - Services:

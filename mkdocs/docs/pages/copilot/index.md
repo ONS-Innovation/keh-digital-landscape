@@ -13,6 +13,15 @@ Toggle between live usage metrics and historic trends (aggregated by day, week, 
 ### Team Selection  
 When in "Team Usage" mode, authenticated users can select a team they belong to from a list. The dashboard then displays usage data for that team.
 
+Teams that you are a member of are highlighted with a special border to help you quickly identify your own teams.
+
+### Copilot Admin Access
+Users who are members of teams listed in the `admin_teams.json` configuration file have Copilot admin privileges. These users can:
+
+- View usage data for all configured teams in the organisation, not just their own teams
+- Access team metrics regardless of team membership
+- See a "Copilot Admin" badge indicating their elevated access level
+
 ### Date Range Filtering
 Use the dual range slider to filter live data by a custom date range. The slider automatically adjusts to the available data range.
 
@@ -32,6 +41,7 @@ Users must authenticate with GitHub to view and select their teams. The dashboar
 
 ### Pick a Team:
 - Select a team from the list to view its Copilot usage metrics.
+- Teams you are a member of will be highlighted with a special border.
 
 ### View Data:
 - Use the "Live" and "Historic" view mode toggles to switch between recent and historical trends.
@@ -42,6 +52,12 @@ Users must authenticate with GitHub to view and select their teams. The dashboar
 
 ### Organisation Admins:
 - Track Copilot adoption and engagement across all teams.
-- Assess seat usage and identify inactive users for license management.
+- Assess seat usage and identify inactive users for licence management.
+
+### Copilot Admins:
+- Access usage data for all configured teams across the organisation.
+- Monitor team performance and identify areas for improvement.
+- Support team leads with data-driven insights.
+
 ### Team Leads:
 - Monitor how their team is using Copilot and identify trends.

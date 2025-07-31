@@ -189,6 +189,8 @@ function CopilotDashboard() {
   const [isTeamLoading, setIsTeamLoading] = useState(false);
   const [teamSlug, setTeamSlug] = useState(null);
   const [isInitialised, setIsInitialised] = useState(false);
+  const [isCopilotAdmin, setIsCopilotAdmin] = useState(false);
+  const [userTeamSlugs, setUserTeamSlugs] = useState([]);
 
   const data = getDashboardData();
 
@@ -316,9 +318,12 @@ function CopilotDashboard() {
         const isAuthenticated = await checkAuthStatus();
         if (isAuthenticated) {
           setIsAuthenticated(true);
-          const teams = await fetchUserTeams();
-          if (teams && teams.length >= 0) {
-            setAvailableTeams(teams);
+          const teamsData = await fetchUserTeams();
+          if (teamsData && teamsData.teams && teamsData.teams.length >= 0) {
+            setAvailableTeams(teamsData.teams);
+            setIsCopilotAdmin(teamsData.isAdmin);
+            setUserTeamSlugs(teamsData.userTeamSlugs || []);
+            console.log('userTeamSlugs', teamsData);
           }
         } else {
           setIsAuthenticated(false);
@@ -415,6 +420,8 @@ function CopilotDashboard() {
       await logoutUser();
       setIsAuthenticated(false);
       setAvailableTeams([]);
+      setIsCopilotAdmin(false);
+      setUserTeamSlugs([]);
       setTeamSlug(null);
       setIsSelectingTeam(true);
       navigate('/copilot/team', { replace: true });
@@ -571,9 +578,27 @@ function CopilotDashboard() {
           {scope === 'team' && isSelectingTeam ? (
             <>
               <div className="team-selection-header">
-                <p className="header-text" style={{ margin: '0' }}>
-                  Select a Team to View
-                </p>
+                <div>
+                  <p className="header-text" style={{ margin: '0' }}>
+                    Select a Team to View
+                  </p>
+                  {isCopilotAdmin && (
+                    <p className="copilot-admin-badge">
+                      You are a Copilot Admin - you can view all configured
+                      teams. Teams with the{' '}
+                      <span
+                        className="member-team"
+                        style={{
+                          padding: '0 8px',
+                          borderRadius: '8px',
+                        }}
+                      >
+                        special border
+                      </span>{' '}
+                      are teams you are a member of.
+                    </p>
+                  )}
+                </div>
                 {isAuthenticated && (
                   <button
                     type="button"
@@ -591,7 +616,12 @@ function CopilotDashboard() {
                   {availableTeams && availableTeams.length > 0 ? (
                     <div className="teams-grid">
                       {availableTeams.map(team => (
-                        <div key={team.slug} className="team-card">
+                        <div
+                          key={team.slug}
+                          className={`team-card ${userTeamSlugs.includes(team.slug) ? 'member-team' : ''}`}
+                          aria-label={`Your team ${team.name}`}
+                          tabIndex="0"
+                        >
                           <div className="team-card-content">
                             <div className="team-name-container">
                               <div
@@ -610,6 +640,7 @@ function CopilotDashboard() {
                               target="_blank"
                               rel="noopener noreferrer"
                               className="team-card-link"
+                              aria-label={`View ${team.name} on GitHub`}
                             >
                               View on GitHub
                             </a>
@@ -624,7 +655,7 @@ function CopilotDashboard() {
                                 replace: true,
                               });
                             }}
-                            aria-label={`View data for ${team.name} team`}
+                            aria-label={`View data for ${team.name} team data`}
                           >
                             View Data
                           </button>
@@ -633,9 +664,9 @@ function CopilotDashboard() {
                     </div>
                   ) : (
                     <p>
-                      No teams available. Please ensure you are a member of at
-                      least one team in the organisation with more than 5 active
-                      Copilot licenses.
+                      {isCopilotAdmin
+                        ? 'No teams available. Please ensure the copilot_teams.json file is configured with team names in S3.'
+                        : 'No teams available. Please ensure you are a member of at least one team in the organisation with more than 5 active Copilot licenses.'}
                     </p>
                   )}
                 </div>
@@ -651,9 +682,9 @@ function CopilotDashboard() {
                 </div>
               )}
               <p className="disclaimer-banner">
-                The GitHub API does not return Copilot team usage data if there
-                are fewer than 5 members with Copilot licenses. This may result
-                in only seat statistics being viewable on the dashboard.
+                {isCopilotAdmin
+                  ? 'As a Copilot Admin, you can view any valid team. The GitHub API does not return Copilot team usage data if there are fewer than 5 members with Copilot licenses.'
+                  : 'The GitHub API does not return Copilot team usage data if there are fewer than 5 members with Copilot licenses. This may result in only seat statistics being viewable on the dashboard.'}
               </p>
             </>
           ) : viewMode === 'live' ? (

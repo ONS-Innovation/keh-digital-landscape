@@ -2,6 +2,7 @@ const logger = require('../config/logger');
 const express = require('express');
 const s3Service = require('../services/s3Service');
 const githubService = require('../services/githubService');
+const { checkCopilotAdminStatus } = require('../utilities/copilotAdminChecker');
 
 const router = express.Router();
 
@@ -81,8 +82,21 @@ router.get('/team/live', async (req, res) => {
   }
 
   try {
-    const data = await githubService.getCopilotTeamMetrics(teamSlug, userToken);
-    res.json(data);
+    // Check if user is copilot admin
+    const adminStatus = await checkCopilotAdminStatus(userToken);
+
+    if (adminStatus.isAdmin) {
+      // Copilot admin can view any team, use app installation
+      const data = await githubService.getCopilotTeamMetricsAsAdmin(teamSlug);
+      res.json(data);
+    } else {
+      // Regular user, check team membership
+      const data = await githubService.getCopilotTeamMetrics(
+        teamSlug,
+        userToken
+      );
+      res.json(data);
+    }
   } catch (error) {
     logger.error('GitHub API error:', { error: error.message });
     res.status(500).json({ error: error.message });
@@ -106,7 +120,33 @@ router.get('/seats', async (req, res) => {
 });
 
 /**
- * Endpoint for fetching teams the authenticated user is a member of in the organisation from the GitHub API.
+ * Endpoint for checking if the authenticated user is a copilot admin
+ * @route GET /copilot/api/admin/status
+ * @returns {Object} Copilot admin status and available teams
+ * @throws {Error} 401 - If user token is missing
+ * @throws {Error} 500 - If checking fails
+ */
+router.get('/admin/status', async (req, res) => {
+  const userToken = req.cookies?.githubUserToken;
+
+  if (!userToken) {
+    return res.status(401).json({ error: 'Missing GitHub user token' });
+  }
+
+  try {
+    const adminStatus = await checkCopilotAdminStatus(userToken);
+    res.json(adminStatus);
+  } catch (error) {
+    logger.error('Error checking copilot admin status:', {
+      error: error.message,
+    });
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * Endpoint for fetching teams the authenticated user can view.
+ * Returns user's teams if they're not a copilot admin, or copilot teams if they are.
  * @route GET /copilot/api/teams
  * @returns {Object} Copilot teams JSON data
  * @throws {Error} 401 - If user token is missing
@@ -120,8 +160,12 @@ router.get('/teams', async (req, res) => {
   }
 
   try {
-    const teams = await githubService.getUserTeams(userToken);
-    res.json(teams);
+    const adminStatus = await checkCopilotAdminStatus(userToken);
+    res.json({
+      teams: adminStatus.teams,
+      isAdmin: adminStatus.isAdmin,
+      userTeamSlugs: adminStatus.userTeamSlugs,
+    });
   } catch (error) {
     logger.error('GitHub API error:', { error: error.message });
     res.status(500).json({ error: error.message });
@@ -147,9 +191,14 @@ router.get('/team/seats', async (req, res) => {
   }
 
   try {
+    // Check if user is copilot admin
+    const adminStatus = await checkCopilotAdminStatus(userToken);
+
     const [allSeats, members] = await Promise.all([
       githubService.getCopilotSeats(),
-      githubService.getTeamMembers(teamSlug, userToken),
+      adminStatus.isAdmin
+        ? githubService.getTeamMembersAsAdmin(teamSlug)
+        : githubService.getTeamMembers(teamSlug, userToken),
     ]);
 
     const memberIds = new Set(members.map(m => m.id));
