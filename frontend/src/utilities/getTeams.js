@@ -49,11 +49,6 @@ export const fetchUserTeams = async () => {
       isAdmin: data.isAdmin || false,
       userTeamSlugs: data.userTeamSlugs || [],
     };
-    return {
-      teams: data.teams || [],
-      isAdmin: data.isAdmin || false,
-      userTeamSlugs: data.userTeamSlugs || [],
-    };
   } catch (error) {
     console.error('Error fetching teams:', error);
     return { teams: [], isAdmin: false, userTeamSlugs: [] };
