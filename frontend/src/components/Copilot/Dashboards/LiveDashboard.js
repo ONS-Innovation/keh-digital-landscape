@@ -74,7 +74,7 @@ function LiveDashboard({
           <SkeletonStatCard />
         </div>
       ) : (
-        completions?.length > 0 && (
+        Object.keys(completions || {}).length > 0 && (
           <div>
             <h1 className="title">IDE Code Completions</h1>
             <CompletionsCards completions={completions} prefix={'Total'} />
