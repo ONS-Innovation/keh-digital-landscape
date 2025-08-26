@@ -196,9 +196,10 @@ function CopilotDashboard() {
   // Filter listed available teams based on search term
   const filteredAvailableTeams = useMemo(() => {
     if (!searchTerm) return availableTeams;
-    return availableTeams.filter(team =>
-      team.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      team.description.toLowerCase().includes(searchTerm.toLowerCase())
+    return availableTeams.filter(
+      team =>
+        team.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        team.description.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [availableTeams, searchTerm]);
 
@@ -452,7 +453,7 @@ function CopilotDashboard() {
 
   return (
     <>
-      <Header 
+      <Header
         hideSearch={!(scope === 'team')}
         searchTerm={searchTerm}
         onSearchChange={value => setSearchTerm(value)}
