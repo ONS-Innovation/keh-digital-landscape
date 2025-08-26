@@ -191,6 +191,15 @@ function CopilotDashboard() {
   const [isInitialised, setIsInitialised] = useState(false);
   const [isCopilotAdmin, setIsCopilotAdmin] = useState(false);
   const [userTeamSlugs, setUserTeamSlugs] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // Filter listed available teams based on search term
+  const filteredAvailableTeams = useMemo(() => {
+    if (!searchTerm) return availableTeams;
+    return availableTeams.filter(team =>
+      team.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [availableTeams, searchTerm]);
 
   const data = getDashboardData();
 
@@ -443,7 +452,9 @@ function CopilotDashboard() {
   return (
     <>
       <Header 
-        hideSearch={!(scope === 'team')} 
+        hideSearch={!(scope === 'team')}
+        searchTerm={searchTerm}
+        onSearchChange={value => setSearchTerm(value)}
       />
       <div className="admin-page">
         <PageBanner
@@ -615,7 +626,7 @@ function CopilotDashboard() {
                 <div>
                   {availableTeams && availableTeams.length > 0 ? (
                     <div className="teams-grid">
-                      {availableTeams.map(team => (
+                      {filteredAvailableTeams.map(team => (
                         <div
                           key={team.slug}
                           className={`team-card ${userTeamSlugs.includes(team.slug) ? 'member-team' : ''}`}
