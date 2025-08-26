@@ -6,16 +6,12 @@ import React, {
   useRef,
 } from 'react';
 import {
-  IoSearch,
-  IoClose,
   IoOptions,
   IoChevronDown,
   IoChevronUp,
   IoRefresh,
   IoFilter,
   IoTrash,
-  IoCheckmarkSharp,
-  IoChevronForward,
 } from 'react-icons/io5';
 import SkeletonStatCard from '../Statistics/Skeletons/SkeletonStatCard';
 import PieChart from './PieChart';
@@ -43,7 +39,6 @@ import ProjectModal from './ProjectModal';
  * @param {Function} props.getTechnologyStatus - Function to get technology status.
  * @param {Function} props.onRefresh - Function to refresh the projects data.
  * @param {string} props.searchTerm - The search term to filter projects.
- * @param {Function} props.setSearchTerm - Function to update the search term.
  */
 const Projects = ({
   isOpen,
@@ -52,14 +47,12 @@ const Projects = ({
   getTechnologyStatus,
   onRefresh,
   searchTerm,
-  setSearchTerm,
   selectedProject,
   isModalOpen,
   onModalClose,
   onTechOrProjectClick,
   renderTechnologyList,
 }) => {
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [sortField, setSortField] = useState('name');
   const [sortDirection, setSortDirection] = useState('asc');
@@ -81,7 +74,6 @@ const Projects = ({
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const filterRef = useRef(null);
   const sortRef = useRef(null);
-  const searchInputRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = event => {

@@ -15,7 +15,6 @@ function StatisticsPage() {
   const navigate = useNavigate();
   const [statsData, setStatsData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isProjectsModalOpen, setIsProjectsModalOpen] = useState(false);
   const [projectsData, setProjectsData] = useState(null);
   const [selectedRepositories, setSelectedRepositories] = useState([]);
   const [currentDate, setCurrentDate] = useState(null);
@@ -231,7 +230,6 @@ function StatisticsPage() {
           projectsData={projectsData}
           onProjectsChange={handleProjectsChange}
           searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
         />
       </div>
     </>
