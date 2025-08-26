@@ -63,6 +63,7 @@ terraform.rc
 site/*
 
 */.env
+.env
 
 .pytest_cache
 terraform/service/highest_priority.txt
