@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import MenuDropdown from '../MenuDropdown/MenuDropdown';
 import HelpModal from './HelpModal';
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
@@ -77,6 +77,8 @@ function Header({
         return 'Search projects...';
       case '/statistics':
         return 'Search languages...';
+      case '/copilot/team':
+        return 'Search teams...';
       default:
         return 'Search technologies...';
     }

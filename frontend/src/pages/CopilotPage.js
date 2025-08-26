@@ -442,7 +442,9 @@ function CopilotDashboard() {
 
   return (
     <>
-      <Header hideSearch={true} />
+      <Header 
+        hideSearch={!(scope === 'team')} 
+      />
       <div className="admin-page">
         <PageBanner
           title="Copilot Usage Dashboard"
