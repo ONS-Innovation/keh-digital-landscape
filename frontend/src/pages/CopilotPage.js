@@ -197,7 +197,8 @@ function CopilotDashboard() {
   const filteredAvailableTeams = useMemo(() => {
     if (!searchTerm) return availableTeams;
     return availableTeams.filter(team =>
-      team.name.toLowerCase().includes(searchTerm.toLowerCase())
+      team.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      team.description.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [availableTeams, searchTerm]);
 
