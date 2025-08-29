@@ -3,13 +3,15 @@ name: CI Backend Testing
 
 on:
   push:
-    branches: [main]
+    branches: ['**']
     paths:
       - 'testing/backend/**'
+      - 'testing/frontend/**'
   pull_request:
-    branches: [main]
+    branches: ['**']
     paths:
       - 'testing/backend/**'
+      - 'testing/frontend/**'
 
 concurrency:
   group: "${{ github.head_ref || github.ref }}-${{ github.workflow }}"
@@ -46,3 +48,22 @@ jobs:
 
       - name: Run linting
         run: make lint
+  ui-frontend-test:
+    name: Frontend Tests
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: testing/frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Playwright tests
+        run: npx playwright install && npx playwright test
