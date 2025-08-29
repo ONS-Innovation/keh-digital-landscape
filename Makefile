@@ -6,6 +6,11 @@ dev:
 	@trap 'kill %1 %2' SIGINT; \
 	make frontend & make backend & wait
 
+dev-ci:
+    cd frontend && npm start &
+    cd backend && export NODE_ENV=development && npm run dev &
+    wait
+
 frontend:
 	cd frontend && npm start
 
