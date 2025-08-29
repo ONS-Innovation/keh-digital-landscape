@@ -65,8 +65,5 @@ jobs:
       - name: Start app in background
         run: make dev-ci &
 
-      - name: Install wait-on and wait for app to be ready
-        run: npm install --save-dev wait-on && npx wait-on http://localhost:3000
-
       - name: Run Playwright tests
         run: cd testing/frontend && npm install && npx playwright install && npx playwright test
