@@ -7,8 +7,8 @@ dev:
 	make frontend & make backend & wait
 
 dev-ci:
-    cd frontend && npm start &
-    cd backend && export NODE_ENV=development && npm run dev &
+    cd frontend && npm start
+    cd backend && export NODE_ENV=development && npm run dev
     wait
 
 frontend:
