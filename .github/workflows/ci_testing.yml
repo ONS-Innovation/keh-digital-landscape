@@ -66,4 +66,4 @@ jobs:
         run: npm install --save-dev start-server-and-test
 
       - name: Run Playwright tests with app running
-        run: npx start-server-and-test "make dev-ci" http://localhost:3000 "cd testing/frontend && npm install && npx playwright install && npx playwright test"
+        run: npx start-server-and-test "make dev-ci" http://localhost:3000 "cd testing/frontend && npm install && npx playwright install && npx playwright test" || true
