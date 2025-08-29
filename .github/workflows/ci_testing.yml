@@ -62,8 +62,8 @@ jobs:
       - name: Install dependencies
         run: make install-dev
 
-      - name: Start the app
-        run: make dev
+      - name: Install start-server-and-test
+        run: npm install --save-dev start-server-and-test
 
-      - name: Run Playwright tests
-        run: cd testing/frontent && npx playwright install && npx playwright test
+      - name: Run Playwright tests with app running
+        run: npx start-server-and-test "make dev" http://localhost:3000 "cd testing/frontend && npx playwright install && npx playwright test"
