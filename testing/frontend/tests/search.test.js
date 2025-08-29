@@ -1,5 +1,6 @@
 import { test, expect } from 'playwright/test';
 
+// Data
 const teamsDummyData = {
   frontend : {
     slug: 'frontend',
@@ -9,6 +10,7 @@ const teamsDummyData = {
   } ,
 }
 
+// Function to intercept and mock the API call
 const interceptAPICall = async({ page }) => {
   // Intercept and mock the teams API response with teamsDummyData
   await page.route('**/copilot/api/teams', async route => {
@@ -50,6 +52,7 @@ const interceptAPICall = async({ page }) => {
   await page.getByText('Team Usage').first().click();
 }
 
+// Test suite for searching teams
 test.describe('Teams search functionality with existing and non-existing teams', () => {
   test('search for frontend team (existing)', async ({ page }) => {
     // // Intercept and mock the teams API response
