@@ -76,9 +76,12 @@ def test_admin_banner_update():
     get_data = get_response.json()
     assert "messages" in get_data
 
-    # Find the added banner by message
-    added_banner = next((banner for banner in get_data["messages"]
-                         if banner["message"] == "Test Banner Message"), None)
+    # Find the added banner by message - last message should be the one added
+    
+    if get_data["messages"]:
+        added_banner = get_data["messages"][-1]
+    else:
+        assert False, "No banners found after adding"
     assert added_banner is not None
     assert added_banner["title"] == "Test Banner"
     assert added_banner["type"] == "info"

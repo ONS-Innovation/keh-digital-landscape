@@ -1,4 +1,4 @@
-# PlayWright & Axe-Core Testing
+# Playwright & Axe-Core Testing
 
 WCAG means the Web Content Accessibility Guidelines. By default, the tests run the latest version of WCAG2.0 and WCAG2.1. To run different tests, you can use specific tags when running with `node test.js {tag1} {tag2}`. You can view all compatible axe-core tags [here](https://www.deque.com/axe/core-documentation/api-documentation/#axecore-tags).
 
@@ -106,6 +106,14 @@ Download the extension from [here](https://chromewebstore.google.com/detail/axe-
 | axe DevTools Screenshot |
 | --- |
 | ![axe devtools extension](./axe-tools-screenshot.png) |
+
+## UI Tests
+
+With the application running, it is possible to run tests using Playwright. Mocked returns are used for the Github API calls.
+
+```bash
+make test-ui
+```
 
 ## Cleaning
 

@@ -7,5 +7,8 @@ test:
 test-all:
 	node test.js
 
+test-ui:
+	npx playwright test
+
 clean:
 	rm -rf reports
