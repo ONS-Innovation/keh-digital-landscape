@@ -7,7 +7,7 @@ dev:
 	make frontend & make backend & wait
 
 dev-ci:
-    make frontend & make backend & wait
+	make frontend & make backend & wait
 
 frontend:
 	cd frontend && npm start
