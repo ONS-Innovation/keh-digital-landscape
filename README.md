@@ -35,6 +35,7 @@ This tool aims to provide a visual representation of the digital landscape at ON
 **Copilot Page**
 - Displays both live and historical statistics on Copilot usage within ONS.
 - Statistics can be viewed organisation-wide or for a specific team.
+- On Team Usage view, it is possible to search for teams using the "Search teams" input within the header. 
 
 **Home Page:**
 - This is the homepage of the tool.
