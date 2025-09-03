@@ -2,16 +2,16 @@ import { test, expect } from 'playwright/test';
 
 // Data
 const teamsDummyData = {
-  frontend : {
+  frontend: {
     slug: 'frontend',
     name: 'Frontend Team',
-    description: 'UI devs', 
+    description: 'UI devs',
     url: 'https://github.com/orgs/our-org/teams/frontend'
-  } ,
+  },
 }
 
 // Function to intercept and mock the API call
-const interceptAPICall = async({ page }) => {
+const interceptAPICall = async ({ page }) => {
   // Intercept and mock the teams API response with teamsDummyData
   await page.route('**/copilot/api/teams', async route => {
     await route.fulfill({
@@ -19,10 +19,11 @@ const interceptAPICall = async({ page }) => {
       contentType: 'application/json',
       body: JSON.stringify({
         teams: [
-          { slug: teamsDummyData.frontend.slug, 
-            name: teamsDummyData.frontend.name, 
-            description: teamsDummyData.frontend.description, 
-            url: teamsDummyData.frontend.url 
+          {
+            slug: teamsDummyData.frontend.slug,
+            name: teamsDummyData.frontend.name,
+            description: teamsDummyData.frontend.description,
+            url: teamsDummyData.frontend.url
           },
         ],
         isAdmin: true,
@@ -60,10 +61,10 @@ test.describe('Teams search functionality with existing and non-existing teams',
 
     // Search for a team
     await page.fill('input[placeholder="Search teams..."]', 'Frontend');
-    
+
     // Assert the page title is correct
     await expect(page).toHaveTitle(/Digital Landscape - ONS/);
-    
+
     // Assert that the "Frontend Team" is visible
     await expect(page.getByText('Frontend Team')).toBeVisible();
 
@@ -82,14 +83,14 @@ test.describe('Teams search functionality with existing and non-existing teams',
   // To test for a non-existing team, we can search for "Backend" which is not in our mocked data teamsDummyData 
   test('search for backend team (non-existing) ', async ({ page }) => {
     // Intercept and mock the teams API response
-    await interceptAPICall({page});
+    await interceptAPICall({ page });
 
     // Search for a team
     await page.fill('input[placeholder="Search teams..."]', 'Backend');
-    
+
     // Assert the page title is correct
     await expect(page).toHaveTitle(/Digital Landscape - ONS/);
-    
+
     // Assert that the "Backend Team" is not visible
     await expect(page.getByText('Backend Team')).toHaveCount(0);
 
