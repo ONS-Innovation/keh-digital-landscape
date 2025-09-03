@@ -454,7 +454,7 @@ function CopilotDashboard() {
   return (
     <>
       <Header
-        hideSearch={!(scope === 'team')}
+        hideSearch={!(scope === 'team' && isSelectingTeam && isAuthenticated)}
         searchTerm={searchTerm}
         onSearchChange={value => setSearchTerm(value)}
       />
