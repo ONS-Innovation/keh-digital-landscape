@@ -109,7 +109,7 @@ Download the extension from [here](https://chromewebstore.google.com/detail/axe-
 
 ## UI Tests
 
-With the application running, it is possible to run tests using Playwright. Mocked returns are used for the Github API calls.
+With the application running, it is possible to run tests using Playwright. Mocked returns are used for the GitHub API calls.
 
 ```bash
 make test-ui
