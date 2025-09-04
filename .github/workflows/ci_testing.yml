@@ -1,15 +1,17 @@
 ---
-name: CI Backend Testing
+name: CI Testing
 
 on:
   push:
-    branches: [main]
+    branches: ['**']
     paths:
       - 'testing/backend/**'
+      - 'testing/frontend/**'
   pull_request:
-    branches: [main]
+    branches: ['**']
     paths:
       - 'testing/backend/**'
+      - 'testing/frontend/**'
 
 concurrency:
   group: "${{ github.head_ref || github.ref }}-${{ github.workflow }}"
@@ -46,3 +48,24 @@ jobs:
 
       - name: Run linting
         run: make lint
+  ui-frontend-test:
+    name: Frontend Tests
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      
+      - name: Install dependencies
+        run: make install-dev
+
+      - name: Start app in background
+        run: make dev-ci &
+
+      - name: Run Playwright tests
+        run: cd testing/frontend && make setup && make test-ui

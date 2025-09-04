@@ -1,9 +1,12 @@
-.PHONY: dev frontend backend install install-dev docker-build docker-up docker-down clean test logs ps setup lint lint-frontend lint-fix-frontend lint-backend lint-fix-backend format format-frontend format-backend format-check help
+.PHONY: dev dev-ci frontend backend install install-dev docker-build docker-up docker-down clean test logs ps setup lint lint-frontend lint-fix-frontend lint-backend lint-fix-backend format format-frontend format-backend format-check help
 
 # Development environment
 dev:
 	@echo "Starting frontend and backend in development mode..."
 	@trap 'kill %1 %2' SIGINT; \
+	make frontend & make backend & wait
+
+dev-ci:
 	make frontend & make backend & wait
 
 frontend:
@@ -92,6 +95,7 @@ format-check:
 help:
 	@echo "Available commands:"
 	@echo "  make dev          			- Run in development mode (uses dev.sh)"
+	@echo "  make dev-ci         		- Run in ci development mode without shell trap"
 	@echo "  make frontend     			- Run just the frontend"
 	@echo "  make backend      			- Run just the backend"
 	@echo " "
