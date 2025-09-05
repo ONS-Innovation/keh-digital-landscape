@@ -1,11 +1,11 @@
 .help-modal-overlay {
   position: fixed;
-  top: 0;           /* Add this */
-  left: 0;          /* Add this */
-  width: 100vw;     /* Add this */
-  height: 100vh;    /* Add this */
-  right: unset;     /* Remove right: 24px; */
-  bottom: unset;    /* Remove bottom: 0; */
+  top: 0;           
+  left: 0;          
+  width: 100vw;     
+  height: 100vh;    
+  right: unset;     
+  bottom: unset;    
   display: flex;
   align-items: center;
   justify-content: center;
