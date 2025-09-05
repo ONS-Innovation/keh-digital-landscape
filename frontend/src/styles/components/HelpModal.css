@@ -1,11 +1,11 @@
 .help-modal-overlay {
   position: fixed;
-  top: 0;           
-  left: 0;          
-  width: 100vw;     
-  height: 100vh;    
-  right: unset;     
-  bottom: unset;    
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  right: unset;
+  bottom: unset;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -104,7 +104,7 @@
   margin: 12px 0;
 }
 
-.help-modal-list > li {
+.help-modal-list>li {
   font-size: 14px;
   font-weight: 500;
   margin: 4px 0;
