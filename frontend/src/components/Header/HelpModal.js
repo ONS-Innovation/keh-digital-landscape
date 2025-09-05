@@ -121,7 +121,7 @@ function HelpModal({ show, onClose }) {
               <li>By month</li>
               <li>By year</li>
             </ul>
-            The data only backdates to 19th Jan 2025 due to GitHub API limits.
+            The data only backdates for up to 100 days prior due to GitHub API limits.
           </li>
         </ul>
         <span>
