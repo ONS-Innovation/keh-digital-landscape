@@ -39,6 +39,7 @@ const ReviewPage = () => {
   const [pendingNewTechnology, setPendingNewTechnology] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedDirectorate, setSelectedDirectorate] = useState('Digital Services');
   const [showAddTechnologyModal, setShowAddTechnologyModal] = useState(false);
   const [showMoveModal, setShowMoveModal] = useState(false);
   const [pendingMove, setPendingMove] = useState(null);
@@ -76,6 +77,12 @@ const ReviewPage = () => {
     { label: 'Frameworks', value: 'Frameworks' },
     { label: 'Supporting Tools', value: 'Supporting Tools' },
     { label: 'Infrastructure', value: 'Infrastructure' },
+  ];
+
+  const directorateOptions = [
+    'Digital Services',
+    'Data Science',
+    'DGO'
   ];
 
   useEffect(() => {
@@ -225,6 +232,7 @@ const ReviewPage = () => {
           date: now,
           description: moveDescription,
           author: currentUser?.user?.email || null,
+          directorate: selectedDirectorate,
         },
       ],
     };
@@ -417,6 +425,8 @@ const ReviewPage = () => {
       date: now,
       description: `Changed from ${selectedItem.title} (${selectedItem.description}) to ${editedTitle} (${editedCategory})`,
       author: currentUser?.user?.email || null,
+      // We don't need to put a directorate here as we don't want people to rename technologies per directorate
+      // directorate: selectedDirectorate,
     };
 
     // Update the item with new values and timeline
@@ -799,6 +809,19 @@ const ReviewPage = () => {
                     placeholder="Select categories..."
                   />
                 </div>
+                <div className="admin-filter-section">
+                  <label htmlFor="directorate-select" style={{ minWidth: '200px' }}><h2>Filter by Directorate</h2></label>
+                  <select
+                    value={selectedDirectorate}
+                    onChange={e => setSelectedDirectorate(e.target.value)}
+                    className="multi-select-control"
+                    aria-label="Select Directorate"
+                  >
+                    {directorateOptions.map(dir => (
+                      <option key={dir} value={dir}>{dir}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
               <div className="admin-actions">
                 <div>
@@ -1023,6 +1046,9 @@ const ReviewPage = () => {
                 {pendingMove.destList}
               </span>
             </p>
+            <p>
+              For the Directorate: <strong>{selectedDirectorate}</strong>
+            </p>
             <div className="admin-modal-field">
               <label>Description</label>
               <div className="markdown-editor">
@@ -1070,6 +1096,11 @@ const ReviewPage = () => {
                 Supports: # h1, ## h2, *italic*, **bold**, [link text](url)
               </small>
             </div>
+            <p>
+              <small>
+                <b>Please Note:</b> If a technology is moved for Digital Services, it will be moved for all directorates unless they have their own position.
+              </small>
+            </p>
             <div className="modal-buttons">
               <button
                 onClick={handleMoveConfirm}
