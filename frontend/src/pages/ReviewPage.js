@@ -56,6 +56,8 @@ const ReviewPage = () => {
   const [projectCountMap, setProjectCountMap] = useState({});
   const getTechnologyStatus = useTechnologyStatus();
 
+  const [highlightedTechnologies, setHighlightedTechnologies] = useState([]);
+
   // Fields to scan from CSV and their corresponding categories
   const fieldsToScan = {
     Language_Main: 'Languages',
@@ -129,14 +131,54 @@ const ReviewPage = () => {
       ignore: [],
     };
 
+    // Reset highlighted technologies before categorizing
+    setHighlightedTechnologies([]);
+
     radarEntries.forEach(entry => {
+      let selectedDirectorateTimeline = [];
+      let digitalServicesTimeline = [];
+
+      // Consider selected directorate when categorising
+      entry.timeline.forEach(t => {
+        const directorate = t.directorate || 'Digital Services';
+        if (directorate === selectedDirectorate) {
+          selectedDirectorateTimeline.push(t);
+        }
+        if (directorate === 'Digital Services') {
+          digitalServicesTimeline.push(t);
+        }
+      });
+
+      if (selectedDirectorateTimeline.length === 0) {
+        // If no timeline entries for selected directorate, fall back to Digital Services timeline
+        selectedDirectorateTimeline = digitalServicesTimeline;
+      } else {
+        // If there are directorate-specific entries, besides 'Digital Services',
+        // We should highlight these technologies to make them obvious to the user
+        if (selectedDirectorate !== 'Digital Services') {
+          setHighlightedTechnologies(prev => [...prev, entry.id]);
+        }
+      }
+
       const currentRing =
-        entry.timeline[entry.timeline.length - 1].ringId.toLowerCase();
+        selectedDirectorateTimeline[selectedDirectorateTimeline.length - 1].ringId.toLowerCase();
       categorized[currentRing].push(entry);
     });
 
     return categorized;
   };
+
+  // Re-categorise entries when selectedDirectorate changes
+  useEffect(() => {
+    if (!entries || !Object.values(entries).flat().length) return;
+    // Flatten all entries to get the original radarEntries
+    // In English, this combines all the lists within entries into a single array
+    // This is so it has the full list to re-categorise from
+    const allEntries = Object.values(entries).flat();
+    const categorized = categorizeEntries(allEntries);
+    setEntries(categorized);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDirectorate]);
 
   // Add this function to calculate ring movement
   const calculateRingMovement = (sourceRing, destRing) => {
@@ -721,6 +763,9 @@ const ReviewPage = () => {
                           selectedItem?.id === item.id
                             ? 'hsl(var(--accent))'
                             : undefined,
+                        border: highlightedTechnologies.includes(item.id)
+                          ? '2px solid var(--directorate-highlight)'
+                          : undefined,
                       }}
                     >
                       <div className="draggable-item-content">
@@ -859,6 +904,11 @@ const ReviewPage = () => {
                 </div>
               </div>
             </div>
+            <p>
+              <small>
+                <b>Note:</b> Highlighted technologies have a directorate-specific position, for example if Python is in Adopt only for Data Science, it will be <span style={{ border: '2px solid var(--directorate-highlight)', padding: '2px', borderRadius: '4px' }}>highlighted</span>.
+              </small>
+            </p>
           </div>
           <div className="admin-search-filter">
             {isLoading ? (

@@ -47,6 +47,8 @@
     --header-height: 60px;
     --info-box: #e5edf2;
     --info-box-border: #0e5888;
+
+    --directorate-highlight: gold;
   }
 
   .dark {
