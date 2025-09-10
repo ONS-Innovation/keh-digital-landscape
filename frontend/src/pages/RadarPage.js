@@ -57,6 +57,20 @@ function RadarPage() {
   const { getTechRadarData, getCsvData } = useData();
   const getTechnologyStatus = useTechnologyStatus();
 
+  const [selectedDirectorate, setSelectedDirectorate] = useState('Digital Services');
+
+  const directorateOptions = [
+    'Digital Services',
+    'Data Science',
+    'DGO'
+  ];
+
+  const directorateColourMap = {
+    'Digital Services': '#1f77b4', // Blue
+    'Data Science': '#ff7f0e', // Orange
+    'DGO': '#2ca02c', // Green
+  }
+
   /**
    * useEffect hook to fetch the tech radar data from S3.
    */
@@ -634,7 +648,7 @@ function RadarPage() {
           <InfoBox
             isAdmin={false}
             selectedItem={selectedBlip || lockedBlip}
-            initialPosition={{ x: 272, y: 80 }}
+            initialPosition={{ x: 272, y: 191 }}
             onClose={() => setIsInfoBoxVisible(false)}
             timelineAscending={timelineAscending}
             setTimelineAscending={setTimelineAscending}
@@ -645,8 +659,30 @@ function RadarPage() {
           />
         )}
 
+        <div className="radar-filter-container" style={{ background: `linear-gradient(to right, hsl(var(--background)), hsl(var(--background)) 20%, ${directorateColourMap[selectedDirectorate]})` }}>
+          <h2 style={{ margin: 0 }}>Filters</h2>
+          <div className="radar-filter-group">
+            <label htmlFor="directorate-select" style={{ paddingRight: '16px' }}>Directorate: </label>
+            <select
+              value={selectedDirectorate}
+              onChange={e => setSelectedDirectorate(e.target.value)}
+              className="multi-select-control"
+              aria-label="Select Directorate"
+            >
+              {directorateOptions.map(dir => (
+                <option key={dir} value={dir}>{dir}</option>
+              ))}
+            </select>
+          </div>
+
+          <div id="directorate-title" style={{ marginLeft: 'auto', fontWeight: 'bold', fontSize: '1.6em', color: 'hsl(var(--background-alt))', float: 'right'}}>
+            {selectedDirectorate}
+          </div>
+        </div>
+
         <div className="quadrant-lists">
           <div
+            id="top-left-quadrant"
             className={`quadrant-list top-left ${
               expandedQuadrants['4'] ? 'expanded' : 'collapsed'
             }`}

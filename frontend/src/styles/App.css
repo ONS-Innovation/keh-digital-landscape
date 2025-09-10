@@ -1365,3 +1365,17 @@ text {
   color: hsl(var(--foreground));
   background: hsl(var(--muted));
 }
+
+
+/* Tech Radar Filters Styling */
+.radar-filter-container {
+  padding: 16px;
+  margin-bottom: 16px;
+  background: hsl(var(--card));
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.radar-filter-group {
+  display: inline-flex;
+  align-items: center;
+}
