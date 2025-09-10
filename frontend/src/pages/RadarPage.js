@@ -91,6 +91,54 @@ function RadarPage() {
   }, [getCsvData]);
 
   /**
+   * Function to filter the timeline based on the selected directorate.
+   * 
+   * This works by filtering the timeline entries to only those that match the selected directorate.
+   * If no entries match the selected directorate, it falls back to entries from "Digital Services".
+   * 
+   * @param {Array} timeline - The timeline array of the technology entry.
+   * @return {Array} - The filtered timeline.
+   */
+  const getFilteredTimeline = (technology, timeline) => {
+    let filteredTimeline = [];
+    let digitalServicesTimeline = [];
+
+    timeline.forEach(entry => {
+      const directorate = entry.directorate || 'Digital Services';
+
+      if (directorate === selectedDirectorate) {
+        filteredTimeline.push(entry);
+      }
+      if (directorate === 'Digital Services') {
+        digitalServicesTimeline.push(entry);
+      }
+    });
+
+    if (filteredTimeline.length === 0) {
+      filteredTimeline = digitalServicesTimeline;
+    }
+
+    return filteredTimeline;
+  }
+
+  /**
+   * Function to get the most recent ring from the timeline, considering the selected directorate.
+   * 
+   * This function filters the timeline using the getFilteredTimeline function and then retrieves the most recent ring ID.
+   * 
+   * @param {Array} timeline - The timeline array of the technology entry.
+   * @return {string} - The most recent ring ID.
+   */
+  const getMostRecentRing = (technology, timeline) => {
+    
+    const filteredTimeline = getFilteredTimeline(technology, timeline);
+
+    // Get the most recent ring from the filtered timeline
+    const mostRecentRing = filteredTimeline[filteredTimeline.length - 1].ringId;
+    return mostRecentRing;
+  };
+
+  /**
    * useEffect hook to set the allBlips state with the blips array.
    */
   useEffect(() => {
@@ -230,8 +278,9 @@ function RadarPage() {
     const results = data.entries
       .filter(entry => {
         // Get the most recent timeline entry
-        const mostRecentRing =
-          entry.timeline[entry.timeline.length - 1].ringId.toLowerCase();
+        // const mostRecentRing =
+        //   entry.timeline[entry.timeline.length - 1].ringId.toLowerCase();
+        const mostRecentRing = getMostRecentRing(entry.name, entry.timeline);
 
         // Exclude entries where most recent ring is review or ignore
         if (mostRecentRing === 'review' || mostRecentRing === 'ignore') {
@@ -246,7 +295,7 @@ function RadarPage() {
       })
       .map(entry => ({
         ...entry,
-        timeline: entry.timeline,
+        timeline: getFilteredTimeline(entry.name, entry.timeline),
       }));
 
     setSearchResults(results);
@@ -502,8 +551,9 @@ function RadarPage() {
 
   const groupedEntries = data.entries.reduce((acc, entry) => {
     const quadrant = entry.quadrant;
-    const mostRecentRing =
-      entry.timeline[entry.timeline.length - 1].ringId.toLowerCase();
+    // const mostRecentRing =
+    //   entry.timeline[entry.timeline.length - 1].ringId.toLowerCase();
+    const mostRecentRing = getMostRecentRing(entry.name, entry.timeline);
 
     // Skip if the most recent timeline entry has ringId of "review" or "ignore"
     if (mostRecentRing === 'review' || mostRecentRing === 'ignore') return acc;
@@ -513,7 +563,7 @@ function RadarPage() {
 
     acc[quadrant][mostRecentRing].push({
       ...entry,
-      timeline: entry.timeline,
+      timeline: getFilteredTimeline(entry.name, entry.timeline),
     });
     return acc;
   }, {});
@@ -762,15 +812,15 @@ function RadarPage() {
                     }}
                     tabIndex="0"
                     role="listitem"
-                    aria-label={`${entry.title}, ${entry.timeline[entry.timeline.length - 1].ringId} ring`}
+                    aria-label={`${entry.title}, ${getMostRecentRing(entry.name, entry.timeline)} ring`}
                     style={{ cursor: 'pointer' }}
                   >
                     <span className="entry-number">{entry.number}.</span>
                     <span className="entry-title">{entry.title}</span>
                     <span
-                      className={`entry-ring ${entry.timeline[entry.timeline.length - 1].ringId.toLowerCase()}`}
+                      className={`entry-ring ${getMostRecentRing(entry.name, entry.timeline).toLowerCase()}`}
                     >
-                      {entry.timeline[entry.timeline.length - 1].ringId}
+                      {getMostRecentRing(entry.name, entry.timeline)}
                     </span>
                   </li>
                 ))}
@@ -853,15 +903,15 @@ function RadarPage() {
                   }}
                   tabIndex="0"
                   role="listitem"
-                  aria-label={`${entry.title}, ${entry.timeline[entry.timeline.length - 1].ringId} ring`}
+                  aria-label={`${entry.title}, ${getMostRecentRing(entry.name, entry.timeline)} ring`}
                   style={{ cursor: 'pointer' }}
                 >
                   <span className="entry-number">{entry.number}.</span>
                   <span className="entry-title">{entry.title}</span>
                   <span
-                    className={`entry-ring ${entry.timeline[entry.timeline.length - 1].ringId.toLowerCase()}`}
+                    className={`entry-ring ${getMostRecentRing(entry.name, entry.timeline).toLowerCase()}`}
                   >
-                    {entry.timeline[entry.timeline.length - 1].ringId}
+                    {getMostRecentRing(entry.name, entry.timeline)}
                   </span>
                 </li>
               ))}
@@ -1127,15 +1177,15 @@ function RadarPage() {
                   }}
                   tabIndex="0"
                   role="listitem"
-                  aria-label={`${entry.title}, ${entry.timeline[entry.timeline.length - 1].ringId} ring`}
+                  aria-label={`${entry.title}, ${getMostRecentRing(entry.name, entry.timeline)} ring`}
                   style={{ cursor: 'pointer' }}
                 >
                   <span className="entry-number">{entry.number}.</span>
                   <span className="entry-title">{entry.title}</span>
                   <span
-                    className={`entry-ring ${entry.timeline[entry.timeline.length - 1].ringId.toLowerCase()}`}
+                    className={`entry-ring ${getMostRecentRing(entry.name, entry.timeline).toLowerCase()}`}
                   >
-                    {entry.timeline[entry.timeline.length - 1].ringId}
+                    {getMostRecentRing(entry.name, entry.timeline)}
                   </span>
                 </li>
               ))}
@@ -1202,9 +1252,9 @@ function RadarPage() {
                   <span className="entry-number">{entry.number}.</span>
                   <span className="entry-title">{entry.title}</span>
                   <span
-                    className={`entry-ring ${entry.timeline[entry.timeline.length - 1].ringId.toLowerCase()}`}
+                    className={`entry-ring ${getMostRecentRing(entry.name, entry.timeline).toLowerCase()}`}
                   >
-                    {entry.timeline[entry.timeline.length - 1].ringId}
+                    {getMostRecentRing(entry.name, entry.timeline)}
                   </span>
                 </li>
               ))}
