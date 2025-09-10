@@ -732,6 +732,8 @@ function RadarPage() {
             setSelectedTimelineItem={setSelectedTimelineItem}
             projectsForTech={projectsForTech}
             handleProjectClick={handleProjectClick}
+            isHighlighted={getShouldBeHighlighted((selectedBlip || lockedBlip)?.timeline || [])}
+            selectedDirectorate={selectedDirectorate}
           />
         )}
 

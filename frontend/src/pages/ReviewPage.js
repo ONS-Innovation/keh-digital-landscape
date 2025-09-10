@@ -639,6 +639,8 @@ const ReviewPage = () => {
           handleConfirmEdit();
         }}
         onEditCancel={handleCancelEdit}
+        isHighlighted={highlightedTechnologies.includes(selectedItem.id)}
+        selectedDirectorate={selectedDirectorate}
       />
     );
   };
