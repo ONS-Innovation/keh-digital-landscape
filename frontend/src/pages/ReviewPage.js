@@ -87,6 +87,12 @@ const ReviewPage = () => {
     'DGO'
   ];
 
+  const directorateColourMap = {
+    'Digital Services': '#1f77b4', // Blue
+    'Data Science': '#ff7f0e', // Orange
+    'DGO': '#2ca02c', // Green
+  }
+
   useEffect(() => {
     const fetchAllData = async () => {
       try {
@@ -841,7 +847,7 @@ const ReviewPage = () => {
       />
       <div className="admin-page">
         <div className="admin-details">
-          <div className="admin-header-left">
+          <div className="admin-header-left" style={{ width: '100%', background: `linear-gradient(to right, hsl(var(--background)), hsl(var(--background)) 55%, ${directorateColourMap[selectedDirectorate]})` }}>
             <div className="admin-review-title">
               <h1>Reviewer Dashboard</h1>
             </div>
@@ -906,11 +912,16 @@ const ReviewPage = () => {
                 </div>
               </div>
             </div>
-            <p>
-              <small>
-                <b>Note:</b> Highlighted technologies have a directorate-specific position, for example if Python is in Adopt only for Data Science, it will be <span style={{ border: '2px solid var(--directorate-highlight)', padding: '2px', borderRadius: '4px' }}>highlighted</span>.
-              </small>
-            </p>
+            <div>
+              <div id="directorate-title" style={{ paddingRight: '16px', fontWeight: 'bold', fontSize: '1.6em', color: 'white', float: 'right'}}>
+                {selectedDirectorate}
+              </div>
+              <p style={{ float: 'left' }}>
+                <small>
+                  <b>Note:</b> Highlighted technologies have a directorate-specific position, for example if Python is in Adopt only for Data Science, it will be <span style={{ border: '2px solid var(--directorate-highlight)', padding: '2px', borderRadius: '4px' }}>highlighted</span>.
+                </small>
+              </p>
+            </div>
           </div>
           <div className="admin-search-filter">
             {isLoading ? (

@@ -753,7 +753,7 @@ function RadarPage() {
             </select>
           </div>
 
-          <div id="directorate-title" style={{ marginLeft: 'auto', fontWeight: 'bold', fontSize: '1.6em', color: 'hsl(var(--background-alt))', float: 'right'}}>
+          <div id="directorate-title" style={{ fontWeight: 'bold', fontSize: '1.6em', color: 'white', float: 'right'}}>
             {selectedDirectorate}
           </div>
         </div>
