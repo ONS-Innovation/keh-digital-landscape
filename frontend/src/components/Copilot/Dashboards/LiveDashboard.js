@@ -284,8 +284,12 @@ function LiveDashboard({
                     avatar: user.assignee.avatar_url,
                     username: user.assignee.login,
                     github: `https://github.com/${user.assignee.login}`,
-                    lastActivity: user.last_activity_at ? new Date(user.last_activity_at).getTime() : 0, // Use timestamp for sorting
-                    lastActivityDisplay: getFormattedTime(user.last_activity_at), // Use getFormattedTime to format the date and Display it
+                    lastActivity: user.last_activity_at
+                      ? new Date(user.last_activity_at).getTime()
+                      : 0, // Use timestamp for sorting
+                    lastActivityDisplay: getFormattedTime(
+                      user.last_activity_at
+                    ), // Use getFormattedTime to format the date and Display it
                   };
                   return acc;
                 }, {})}
@@ -308,8 +312,12 @@ function LiveDashboard({
                     avatar: user.assignee.avatar_url,
                     username: user.assignee.login,
                     github: `https://github.com/${user.assignee.login}`,
-                    lastActivity: user.last_activity_at ? new Date(user.last_activity_at).getTime() : 0, // Use timestamp for sorting
-                    lastActivityDisplay: getFormattedTime(user.last_activity_at), // Use getFormattedTime to format the date and Display it
+                    lastActivity: user.last_activity_at
+                      ? new Date(user.last_activity_at).getTime()
+                      : 0, // Use timestamp for sorting
+                    lastActivityDisplay: getFormattedTime(
+                      user.last_activity_at
+                    ), // Use getFormattedTime to format the date and Display it
                   };
                   return acc;
                 }, {})}
