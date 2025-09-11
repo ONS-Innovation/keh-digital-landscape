@@ -476,6 +476,11 @@ const ReviewPage = () => {
       links: [],
     };
 
+    // Add new technology to change list
+    if (!changedTechnologies.includes(newTechnology.trim())) {
+      setChangedTechnologies(prev => [{ technology: newTechnology.trim() }, ...prev]);
+    }
+
     setPendingNewTechnology(newEntry);
     setShowAddConfirmModal(true);
     setShowAddTechnologyModal(false);
@@ -1142,8 +1147,20 @@ const ReviewPage = () => {
               <ul className="change-list">
                 {changedTechnologies.map((change, index) => (
                   <li key={index}>
-                    {change.technology}: {change.from} &rarr; {change.to} (
-                    {change.directorate})
+                    {
+                      (change.from === undefined && change.to === undefined
+                        ? (
+                            <>
+                              {change.technology} (<span style={{ color: 'green', fontWeight: 'bold' }}>New</span>)
+                            </>
+                          )
+                        : (
+                            <>
+                              {change.technology}: {change.from} &rarr; {change.to} ({change.directorate})
+                            </>
+                          )
+                      )
+                    }
                   </li>
                 ))}
               </ul>
