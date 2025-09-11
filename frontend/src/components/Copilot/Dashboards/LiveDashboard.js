@@ -309,7 +309,7 @@ function LiveDashboard({
               <small
                 style={{ display: 'block', marginBottom: '8px', color: '#888' }}
               >
-                Users with the following date <b>1900-01-01 00:00</b> haven't
+                Users with the following date <b>1900-01-01 00:00</b> have not
                 used their license.
               </small>
               <TableBreakdown
