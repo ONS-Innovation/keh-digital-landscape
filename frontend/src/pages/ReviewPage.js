@@ -39,7 +39,8 @@ const ReviewPage = () => {
   const [pendingNewTechnology, setPendingNewTechnology] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [selectedDirectorate, setSelectedDirectorate] = useState('Digital Services');
+  const [selectedDirectorate, setSelectedDirectorate] =
+    useState('Digital Services');
   const [showAddTechnologyModal, setShowAddTechnologyModal] = useState(false);
   const [showMoveModal, setShowMoveModal] = useState(false);
   const [pendingMove, setPendingMove] = useState(null);
@@ -82,17 +83,13 @@ const ReviewPage = () => {
     { label: 'Infrastructure', value: 'Infrastructure' },
   ];
 
-  const directorateOptions = [
-    'Digital Services',
-    'Data Science',
-    'DGO'
-  ];
+  const directorateOptions = ['Digital Services', 'Data Science', 'DGO'];
 
   const directorateColourMap = {
     'Digital Services': '#1f77b4', // Blue
     'Data Science': '#ff7f0e', // Orange
-    'DGO': '#2ca02c', // Green
-  }
+    DGO: '#2ca02c', // Green
+  };
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -138,7 +135,10 @@ const ReviewPage = () => {
     }
   }, [projectsData, showProjectCount]);
 
-  const categorizeEntries = (radarEntries, inputDirectorate = selectedDirectorate) => {
+  const categorizeEntries = (
+    radarEntries,
+    inputDirectorate = selectedDirectorate
+  ) => {
     const categorized = {
       adopt: [],
       trial: [],
@@ -178,7 +178,9 @@ const ReviewPage = () => {
       }
 
       const currentRing =
-        selectedDirectorateTimeline[selectedDirectorateTimeline.length - 1].ringId.toLowerCase();
+        selectedDirectorateTimeline[
+          selectedDirectorateTimeline.length - 1
+        ].ringId.toLowerCase();
       categorized[currentRing].push(entry);
     });
 
@@ -303,25 +305,33 @@ const ReviewPage = () => {
 
     // Add movement to changedTechnologies if not already present
     if (!changedTechnologies.includes(item.title)) {
-      setChangedTechnologies(prev => [...prev, {
-        technology: item.title,
-        from: lastRing,
-        to: destList,
-        directorate: selectedDirectorate,
-      }]);
+      setChangedTechnologies(prev => [
+        ...prev,
+        {
+          technology: item.title,
+          from: lastRing,
+          to: destList,
+          directorate: selectedDirectorate,
+        },
+      ]);
     } else {
       // If already present, update the 'to' field
-      setChangedTechnologies(prev => prev.map(change => {
-        if (change.technology === item.title) {
-          return { ...change, to: destList };
-        }
-        return change;
-      }));
+      setChangedTechnologies(prev =>
+        prev.map(change => {
+          if (change.technology === item.title) {
+            return { ...change, to: destList };
+          }
+          return change;
+        })
+      );
     }
 
     // If the directorate is not Digital Services, we should highlight this technology
     // This is because it now has a directorate-specific position
-    if (selectedDirectorate !== 'Digital Services' && !highlightedTechnologies.includes(item.id)) {
+    if (
+      selectedDirectorate !== 'Digital Services' &&
+      !highlightedTechnologies.includes(item.id)
+    ) {
       setHighlightedTechnologies(prev => [...prev, item.id]);
     }
 
@@ -888,7 +898,13 @@ const ReviewPage = () => {
       />
       <div className="admin-page">
         <div className="admin-details">
-          <div className="admin-header-left" style={{ width: '100%', background: `linear-gradient(to right, hsl(var(--background)), hsl(var(--background)) 55%, ${directorateColourMap[selectedDirectorate]})` }}>
+          <div
+            className="admin-header-left"
+            style={{
+              width: '100%',
+              background: `linear-gradient(to right, hsl(var(--background)), hsl(var(--background)) 55%, ${directorateColourMap[selectedDirectorate]})`,
+            }}
+          >
             <div className="admin-review-title">
               <h1>Reviewer Dashboard</h1>
             </div>
@@ -904,7 +920,12 @@ const ReviewPage = () => {
                   />
                 </div>
                 <div className="admin-filter-section">
-                  <label htmlFor="directorate-select" style={{ minWidth: '200px' }}><h2>Filter by Directorate</h2></label>
+                  <label
+                    htmlFor="directorate-select"
+                    style={{ minWidth: '200px' }}
+                  >
+                    <h2>Filter by Directorate</h2>
+                  </label>
                   <select
                     value={selectedDirectorate}
                     onChange={e => setSelectedDirectorate(e.target.value)}
@@ -912,7 +933,9 @@ const ReviewPage = () => {
                     aria-label="Select Directorate"
                   >
                     {directorateOptions.map(dir => (
-                      <option key={dir} value={dir}>{dir}</option>
+                      <option key={dir} value={dir}>
+                        {dir}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -963,12 +986,33 @@ const ReviewPage = () => {
               </div>
             </div>
             <div>
-              <div id="directorate-title" style={{ paddingRight: '16px', fontWeight: 'bold', fontSize: '1.6em', color: 'white', float: 'right'}}>
+              <div
+                id="directorate-title"
+                style={{
+                  paddingRight: '16px',
+                  fontWeight: 'bold',
+                  fontSize: '1.6em',
+                  color: 'white',
+                  float: 'right',
+                }}
+              >
                 {selectedDirectorate}
               </div>
               <p style={{ float: 'left' }}>
                 <small>
-                  <b>Note:</b> Highlighted technologies have a directorate-specific position, for example if Python is in Adopt only for Data Science, it will be <span style={{ border: '2px solid var(--directorate-highlight)', padding: '2px', borderRadius: '4px' }}>highlighted</span>.
+                  <b>Note:</b> Highlighted technologies have a
+                  directorate-specific position, for example if Python is in
+                  Adopt only for Data Science, it will be{' '}
+                  <span
+                    style={{
+                      border: '2px solid var(--directorate-highlight)',
+                      padding: '2px',
+                      borderRadius: '4px',
+                    }}
+                  >
+                    highlighted
+                  </span>
+                  .
                 </small>
               </p>
             </div>
@@ -1224,7 +1268,9 @@ const ReviewPage = () => {
             </div>
             <p>
               <small>
-                <b>Please Note:</b> If a technology is moved for Digital Services, it will be moved for all directorates unless they have their own position.
+                <b>Please Note:</b> If a technology is moved for Digital
+                Services, it will be moved for all directorates unless they have
+                their own position.
               </small>
             </p>
             <div className="modal-buttons">

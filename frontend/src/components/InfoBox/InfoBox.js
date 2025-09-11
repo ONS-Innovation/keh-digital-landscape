@@ -167,9 +167,12 @@ const InfoBox = ({
     );
   }
 
-  const mostRecentRing = selectedItem.timeline[selectedItem.timeline.length - 1].ringId;
+  const mostRecentRing =
+    selectedItem.timeline[selectedItem.timeline.length - 1].ringId;
 
-  const positionMessage = isHighlighted ? `Moved specifically for ${selectedDirectorate}.` : 'Imported from Digital Services.';
+  const positionMessage = isHighlighted
+    ? `Moved specifically for ${selectedDirectorate}.`
+    : 'Imported from Digital Services.';
 
   return (
     <div
@@ -254,17 +257,13 @@ const InfoBox = ({
       </div>
       <div className="info-box-header">
         <p className="info-box-ring">{localCategory}</p>
-        <span
-          className={`info-box-ring ${mostRecentRing.toLowerCase()}`}
-        >
+        <span className={`info-box-ring ${mostRecentRing.toLowerCase()}`}>
           {mostRecentRing}
         </span>
       </div>
 
       {selectedDirectorate !== 'Digital Services' && (
-        <small style={{ marginTop: '4px' }}>
-          {positionMessage}
-        </small>
+        <small style={{ marginTop: '4px' }}>{positionMessage}</small>
       )}
 
       <div className="timeline-header">
