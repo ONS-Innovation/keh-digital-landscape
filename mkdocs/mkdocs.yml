@@ -5,71 +5,73 @@ repo_name: Digital Landscape
 nav:
   - Home: index.md
   - Pages:
-    - Tech Radar: pages/radar/index.md
-    - Projects: pages/projects/index.md
-    - Statistics: pages/statistics/index.md
-    - Review: pages/review/index.md
-    - Admin: pages/admin/index.md
-    - Copilot: pages/copilot/index.md
+      - Tech Radar: pages/radar/index.md
+      - Projects: pages/projects/index.md
+      - Statistics: pages/statistics/index.md
+      - Review: pages/review/index.md
+      - Admin: pages/admin/index.md
+      - Copilot: pages/copilot/index.md
   - Backend:
-    - Overview: backend/index.md
-    - Services:
-      - Cognito Service: backend/services/cognitoService.md
-      - S3 Service: backend/services/s3Service.md
-      - GitHub Service: backend/services/githubService.md
-      - Tech Radar Service: backend/services/techRadarService.md
-    - Utilities: backend/utilities.md
+      - Overview: backend/index.md
+      - Services:
+          - Cognito Service: backend/services/cognitoService.md
+          - S3 Service: backend/services/s3Service.md
+          - GitHub Service: backend/services/githubService.md
+          - Tech Radar Service: backend/services/techRadarService.md
+      - Utilities: backend/utilities.md
   - Contexts:
-    - Theme: contexts/themeContext.md
-    - Data: contexts/dataContext.md
-    - Banner: contexts/banner.md
+      - Theme: contexts/themeContext.md
+      - Data: contexts/dataContext.md
+      - Banner: contexts/banner.md
   - Components:
-    - Layout: components/layout/index.md
-    - Header:
-      - Header: components/header/index.md
-      - Help Modal: components/header/helpModal.md
-    - Sidebar: components/sidebar/index.md
-    - Homepage:
-      - Changelog: components/homepage/Changelog.md
-      - Recent Banners: components/homepage/RecentBanners.md
-    - Info Box: components/infoBox.md
-    - Projects:
-      - Projects: components/projects/index.md
-      - Project Modal: components/projects/projectModal.md
-      - Pie Chart: components/projects/pieChart.md
-      - Filter Group: components/projects/filterGroup.md
-    - MultiSelect: components/multiSelect.md
-    - Skeletons: components/skeletons.md
-    - Statistics: components/statistics.md
-    - Theme Toggle: components/themeToggle.md
-    - Admin:
-      - Technology Management: components/admin/techManagement.md
-      - Banner Management: components/admin/bannerManagement.md
+      - Layout: components/layout/index.md
+      - Header:
+          - Header: components/header/index.md
+          - Help Modal: components/header/helpModal.md
+      - Sidebar: components/sidebar/index.md
+      - Homepage:
+          - Changelog: components/homepage/Changelog.md
+          - Recent Banners: components/homepage/RecentBanners.md
+      - Info Box: components/infoBox.md
+      - Projects:
+          - Projects: components/projects/index.md
+          - Project Modal: components/projects/projectModal.md
+          - Pie Chart: components/projects/pieChart.md
+          - Filter Group: components/projects/filterGroup.md
+      - MultiSelect: components/multiSelect.md
+      - Skeletons: components/skeletons.md
+      - Statistics: components/statistics.md
+      - Theme Toggle: components/themeToggle.md
+      - Admin:
+          - Technology Management: components/admin/techManagement.md
+          - Banner Management: components/admin/bannerManagement.md
   - Utilities:
-    - Technology Status: utilities/technologyStatus.md
-    - Tech Radar Data: utilities/techRadarData.md
-    - Project Data: utilities/projectData.md
-    - Repository Data: utilities/repositoryData.md
+      - Technology Status: utilities/technologyStatus.md
+      - Tech Radar Data: utilities/techRadarData.md
+      - Project Data: utilities/projectData.md
+      - Repository Data: utilities/repositoryData.md
   - Constants:
-    - Project Constants: constants/projectConstants.md
+      - Project Constants: constants/projectConstants.md
   - Testing:
-    - Overview: testing/index.md
-    - Backend: testing/backend.md
-    - Accessibility: testing/accessibility.md
+      - Overview: testing/index.md
+      - Backend: testing/backend.md
+      - Accessibility: testing/accessibility.md
+  - Additional Notes:
+      - Multiple Directorates Support: additionalNotes/directorateSupport.md
   - MkDocs:
-    - Documentation: documentation.md
+      - Documentation: documentation.md
 theme:
   name: material
   language: en
   palette:
-    - media: "(prefers-color-scheme: light)"
+    - media: '(prefers-color-scheme: light)'
       scheme: default
       primary: white
       accent: white
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
-    - media: "(prefers-color-scheme: dark)"
+    - media: '(prefers-color-scheme: dark)'
       scheme: slate
       primary: black
       accent: black
@@ -117,7 +119,7 @@ plugins:
   - mkdocstrings:
       handlers:
         python:
-          paths: ".."
+          paths: '..'
 
 extra_css:
   - stylesheets/extra.css
