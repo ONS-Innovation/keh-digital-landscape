@@ -306,12 +306,6 @@ function LiveDashboard({
             </div>
             <div className="seat-breakdown-item">
               <h3>Inactive Users</h3>
-              <small
-                style={{ display: 'block', marginBottom: '8px', color: '#888' }}
-              >
-                Users with the following date <b>1900-01-01 00:00</b> have not
-                used their license.
-              </small>
               <TableBreakdown
                 data={inactiveUsers.reduce((acc, user, i) => {
                   acc[i] = {
@@ -338,6 +332,14 @@ function LiveDashboard({
                 }}
               />
             </div>
+          </div>
+          <div>
+            <p style={{ textAlign: 'center', marginTop: '16px' }}>
+              <small style={{ color: '#888' }}>
+                Users with a last activity of <b>1900-01-01 00:00</b> have{' '}
+                <b>not</b> used their license.
+              </small>
+            </p>
           </div>
         </div>
       )}
