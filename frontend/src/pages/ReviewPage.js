@@ -57,6 +57,7 @@ const ReviewPage = () => {
   const getTechnologyStatus = useTechnologyStatus();
 
   const [highlightedTechnologies, setHighlightedTechnologies] = useState([]);
+  const [changedTechnologies, setChangedTechnologies] = useState([]);
 
   // Fields to scan from CSV and their corresponding categories
   const fieldsToScan = {
@@ -116,6 +117,16 @@ const ReviewPage = () => {
     fetchAllData();
   }, [getUserData]);
 
+  // Recategorise entries when selectedDirectorate changes
+  // Because we are only categorising the existing data and not fetching the data from S3,
+  // Changes will persist until the page is reloaded, even if the user changes directorate multiple times
+  useEffect(() => {
+    const radarData = { entries: Object.values(entries).flat() };
+
+    const categorized = categorizeEntries(radarData.entries);
+    setEntries(categorized);
+  }, [selectedDirectorate]);
+
   // Update project counts when project data is loaded and counts are shown
   useEffect(() => {
     if (
@@ -127,7 +138,7 @@ const ReviewPage = () => {
     }
   }, [projectsData, showProjectCount]);
 
-  const categorizeEntries = radarEntries => {
+  const categorizeEntries = (radarEntries, inputDirectorate = selectedDirectorate) => {
     const categorized = {
       adopt: [],
       trial: [],
@@ -147,7 +158,7 @@ const ReviewPage = () => {
       // Consider selected directorate when categorising
       entry.timeline.forEach(t => {
         const directorate = t.directorate || 'Digital Services';
-        if (directorate === selectedDirectorate) {
+        if (directorate === inputDirectorate) {
           selectedDirectorateTimeline.push(t);
         }
         if (directorate === 'Digital Services') {
@@ -161,7 +172,7 @@ const ReviewPage = () => {
       } else {
         // If there are directorate-specific entries, besides 'Digital Services',
         // We should highlight these technologies to make them obvious to the user
-        if (selectedDirectorate !== 'Digital Services') {
+        if (inputDirectorate !== 'Digital Services') {
           setHighlightedTechnologies(prev => [...prev, entry.id]);
         }
       }
@@ -285,6 +296,35 @@ const ReviewPage = () => {
       ],
     };
 
+    // TODO: How do we deal with a technology that gets moved back to where Digital Services has it?
+    // Right now it will still be highlighted as it has a directorate-specific position
+    // Maybe get the most recent position for Digital Services and if it matches the current position, remove the highlight?
+    // This is fine for now but will be a problem if lots of tech has directorate-specific positions as they will get permanently highlighted
+
+    // Add movement to changedTechnologies if not already present
+    if (!changedTechnologies.includes(item.title)) {
+      setChangedTechnologies(prev => [...prev, {
+        technology: item.title,
+        from: lastRing,
+        to: destList,
+        directorate: selectedDirectorate,
+      }]);
+    } else {
+      // If already present, update the 'to' field
+      setChangedTechnologies(prev => prev.map(change => {
+        if (change.technology === item.title) {
+          return { ...change, to: destList };
+        }
+        return change;
+      }));
+    }
+
+    // If the directorate is not Digital Services, we should highlight this technology
+    // This is because it now has a directorate-specific position
+    if (selectedDirectorate !== 'Digital Services' && !highlightedTechnologies.includes(item.id)) {
+      setHighlightedTechnologies(prev => [...prev, item.id]);
+    }
+
     updatedEntries[destList] = [...updatedEntries[destList], updatedItem];
     setEntries(updatedEntries);
 
@@ -340,6 +380,7 @@ const ReviewPage = () => {
       }
 
       toast.success('Changes saved successfully!');
+      setChangedTechnologies([]);
     } catch (error) {
       console.error('Error saving changes:', error);
       toast.error('Failed to save changes. Please try again.');
@@ -876,40 +917,49 @@ const ReviewPage = () => {
                   </select>
                 </div>
               </div>
-              <div className="admin-actions">
-                <div>
-                  <h2> Reviewer Actions</h2>
-                </div>
-                <div className="buttons">
-                  <button
-                    className="admin-button"
-                    onClick={() => setShowAddTechnologyModal(true)}
-                    disabled={isLoading}
-                    title="Add Technology"
-                    aria-label="Add Technology"
-                  >
-                    Add Technology
-                  </button>
-                  <button
-                    className="admin-button"
-                    onClick={toggleProjectCount}
-                    title="Toggle Project Count"
-                    aria-label="Toggle Project Count"
-                  >
-                    {showProjectCount
-                      ? 'Hide Project Count'
-                      : 'Show Project Count'}
-                  </button>
-                  <button
-                    className="admin-button"
-                    onClick={handleSaveClick}
-                    disabled={isLoading}
-                    title="Save Changes"
-                    aria-label="Save Changes"
-                  >
-                    Save Changes
-                  </button>
-                </div>
+            </div>
+            <div className="admin-actions">
+              <div>
+                <h2> Reviewer Actions</h2>
+              </div>
+              <div className="buttons">
+                <button
+                  className="admin-button"
+                  onClick={() => setShowAddTechnologyModal(true)}
+                  disabled={isLoading}
+                  title="Add Technology"
+                  aria-label="Add Technology"
+                >
+                  Add Technology
+                </button>
+                <button
+                  className="admin-button"
+                  onClick={toggleProjectCount}
+                  title="Toggle Project Count"
+                  aria-label="Toggle Project Count"
+                >
+                  {showProjectCount
+                    ? 'Hide Project Count'
+                    : 'Show Project Count'}
+                </button>
+                <button
+                  className="admin-button"
+                  onClick={handleSaveClick}
+                  disabled={isLoading || changedTechnologies.length === 0}
+                  title="Save Changes"
+                  aria-label="Save Changes"
+                >
+                  Save Changes
+                </button>
+                <button
+                  className="admin-button"
+                  onClick={() => window.location.reload()}
+                  disabled={isLoading || changedTechnologies.length === 0}
+                  title="Revert Changes"
+                  aria-label="Revert Changes"
+                >
+                  Revert Changes
+                </button>
               </div>
             </div>
             <div>
@@ -1041,6 +1091,19 @@ const ReviewPage = () => {
             <h3>WARNING</h3>
             <p>Are you sure you want to save all changes to the Tech Radar?</p>
             <p>This action cannot be undone.</p>
+            <h3>Changes:</h3>
+            {changedTechnologies.length === 0 ? (
+              <p>No changes made.</p>
+            ) : (
+              <ul className="change-list">
+                {changedTechnologies.map((change, index) => (
+                  <li key={index}>
+                    {change.technology}: {change.from} &rarr; {change.to} (
+                    {change.directorate})
+                  </li>
+                ))}
+              </ul>
+            )}
             <div className="modal-buttons">
               <button
                 onClick={handleSaveConfirmModalYes}
