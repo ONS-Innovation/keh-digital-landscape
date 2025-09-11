@@ -9,7 +9,7 @@ export const getFormattedTime = isoString => {
   };
 
   if (!isoString) {
-    const no_activity = new Date('1770-07-01 13:30');
+    const no_activity = new Date('1900-01-01 00:00');
     return no_activity.toLocaleString('en-GB', options).replace(',', '');
   }
   const date = new Date(isoString);
