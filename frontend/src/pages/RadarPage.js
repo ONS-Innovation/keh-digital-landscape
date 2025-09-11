@@ -339,6 +339,7 @@ function RadarPage() {
 
     return projectsData.filter(project => {
       const allTechColumns = [
+        'Architectures',
         'Language_Main',
         'Language_Others',
         'Language_Frameworks',
@@ -372,9 +373,26 @@ function RadarPage() {
         const value = project[column];
         if (!value) return false;
 
-        return value
+        // Check for partial matches for AWS, Azure, and GCP (Google)
+        // This is due to services being named as technologies
+        // Other technologies require exact match
+        if (tech.includes("AWS") || tech.includes("Azure")) {
+          return value
+          .split(';')
+          .some(item => item.trim().toLowerCase().includes(tech.toLowerCase()));
+        } else if (tech.includes("GCP") || tech.includes("Google")) {
+          return value
+          .split(';')
+          .filter(item => {
+            const item_lowered = item.trim().toLowerCase();
+            return item_lowered.includes("google") || item_lowered.includes("gcp");
+          })
+          .some(item => item.trim().toLowerCase().includes(tech.toLowerCase()));
+        } else {
+          return value
           .split(';')
           .some(item => item.trim().toLowerCase() === tech.toLowerCase());
+        }
       });
     });
   };
