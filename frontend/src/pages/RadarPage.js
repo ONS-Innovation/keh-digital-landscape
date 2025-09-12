@@ -373,11 +373,10 @@ function RadarPage() {
         const value = project[column];
         if (!value) return false;
 
-        // Check for partial matches for AWS and GCP (Google)
+        // Check forAWS and GCP (Google) matches
         // This is due to services being named as technologies
         // Other technologies require exact match
-
-        if (tech.includes('AWS') || tech.includes('Amazon')) {
+        if (tech === 'AWS') {
           return value.split(';').some(item => {
             const item_lowered = item.trim().toLowerCase();
             return (
@@ -386,7 +385,7 @@ function RadarPage() {
           });
         }
 
-        if (tech.includes('GCP') || tech.includes('Google')) {
+        if (tech === 'GCP') {
           return value.split(';').some(item => {
             // Google services to exclude from GCP cloud consideration
             const excluded_gcp = ['google meet', 'google docs'];
