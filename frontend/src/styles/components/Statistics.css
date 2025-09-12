@@ -3,6 +3,16 @@
   color: #222 !important;
 }
 
+@media (prefers-color-scheme: light) {
+  .ag-picker-field-display {
+    color: #222 !important;
+  }
+  .ag-picker-field-icon .ag-icon {
+    color: #222 !important;
+    fill: #222 !important;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   .ag-picker-field-display {
     color: #efeaea !important;
@@ -10,16 +20,6 @@
   .ag-picker-field-icon .ag-icon {
     color: #efeaea !important;
     fill: #efeaea !important;
-  }
-}
-/* AG Grid picker field display contrast fix for both themes */
-.ag-picker-field-display {
-  color: #222 !important;
-}
-
-@media (prefers-color-scheme: dark) {
-  .ag-picker-field-display {
-    color: #efeaea !important;
   }
 }
 
