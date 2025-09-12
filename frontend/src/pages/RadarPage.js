@@ -389,9 +389,9 @@ function RadarPage() {
         if (tech.includes('GCP') || tech.includes('Google')) {
           return value.split(';').some(item => {
             // Google services to exclude from GCP cloud consideration
-            const excluded = ['google meet', 'google docs'];
+            const excluded_gcp = ['google meet', 'google docs'];
             const item_lowered = item.trim().toLowerCase();
-            if (excluded.includes(item_lowered)) return false;
+            if (excluded_gcp.includes(item_lowered)) return false;
             return (
               item_lowered.includes('google') || item_lowered.includes('gcp')
             );
