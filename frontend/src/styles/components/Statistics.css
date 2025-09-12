@@ -1,26 +1,50 @@
-/* AG Grid picker field display contrast fix for both themes */
-.ag-picker-field-display {
-  color: #222 !important;
-}
+/* 0) One variable to rule them all */
+:root { --picker-fg: #222; } /* light default */
 
-@media (prefers-color-scheme: light) {
-  .ag-picker-field-display {
-    color: #222 !important;
-  }
-  .ag-picker-field-icon .ag-icon {
-    color: #222 !important;
-    fill: #222 !important;
-  }
-}
+/* Dark by class (Tailwind-style) */
+html.dark { --picker-fg: #efeaea; }
 
+/* Dark by OS preference (when no .dark override) */
 @media (prefers-color-scheme: dark) {
-  .ag-picker-field-display {
-    color: #efeaea !important;
-  }
-  .ag-picker-field-icon .ag-icon {
-    color: #efeaea !important;
-    fill: #efeaea !important;
-  }
+  :root { --picker-fg: #efeaea; }
+}
+
+/* --- Apply to AG Grid picker + icon, any theme --- */
+[class*="ag-theme-"] .ag-picker-field-wrapper .ag-picker-field-display,
+[class*="ag-theme-"] .ag-picker-field-wrapper .ag-picker-field-icon .ag-icon {
+  color: var(--picker-fg) !important;
+  fill: currentColor !important;
+}
+
+/* Align AG Grid vars so internals don’t fight you */
+[class*="ag-theme-"] {
+  --ag-foreground-color: var(--picker-fg);
+  --ag-input-text-color: var(--picker-fg);
+  --ag-icon-color: var(--picker-fg);
+}
+
+/* If collapsed/disabled dims via opacity, undo it */
+.ag-picker-field-wrapper.ag-picker-collapsed,
+.ag-picker-field-wrapper.ag-picker-field-disabled { opacity: 1 !important; }
+
+/* --- HARD LIGHT OVERRIDE (wins even if a *-dark theme class lingers) --- */
+/* Place this AFTER the blocks above */
+html:not(.dark) [class*="ag-theme-"] .ag-picker-field-wrapper .ag-picker-field-display,
+html:not(.dark) [class*="ag-theme-"] .ag-picker-field-wrapper .ag-picker-field-icon .ag-icon {
+  color: #222 !important;
+  fill: currentColor !important;
+}
+
+/* Apply your unified color to ALL ag-icon spans */
+[class*="ag-theme-"] .ag-icon {
+  color: var(--picker-fg) !important;
+  fill: currentColor !important;
+}
+
+/* Special case: force filter icon in light mode */
+html:not(.dark) [class*="ag-theme-"] .ag-icon.ag-icon-filter {
+  color: #222 !important;
+  fill: currentColor !important;
 }
 
 .statistics-page {
