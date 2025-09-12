@@ -1,7 +1,28 @@
-/* Increase contrast for AG Grid picker field display */
+/* AG Grid picker field display contrast fix for both themes */
 .ag-picker-field-display {
-  color: #efeaea !important;
+  color: #222 !important;
 }
+
+@media (prefers-color-scheme: dark) {
+  .ag-picker-field-display {
+    color: #efeaea !important;
+  }
+  .ag-picker-field-icon .ag-icon {
+    color: #efeaea !important;
+    fill: #efeaea !important;
+  }
+}
+/* AG Grid picker field display contrast fix for both themes */
+.ag-picker-field-display {
+  color: #222 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .ag-picker-field-display {
+    color: #efeaea !important;
+  }
+}
+
 .statistics-page {
   width: 100%;
   height: 100%;
