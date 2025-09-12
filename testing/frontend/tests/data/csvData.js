@@ -1,3 +1,4 @@
+// Partial project data for testing purposes
 export const csvData = [
   {
     Project: 'AWS Project',

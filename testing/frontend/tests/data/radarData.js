@@ -1,3 +1,4 @@
+// Radar data used to draw the tech radar
 export const radarData = {
     title: 'ONS Tech Test Radar',
     entries: [

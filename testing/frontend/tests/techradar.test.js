@@ -1,6 +1,7 @@
 import { test, expect } from 'playwright/test';
 import { radarData } from './data/radarData';
 import { csvData } from './data/csvData';
+import { cloudBlipCases } from './data/cloudBlipCases';
 
 // Function to intercept and mock the API call
 const interceptAPICall = async ({ page }) => {
@@ -48,31 +49,6 @@ const interceptAPICall = async ({ page }) => {
   ]);
   await page.reload();
 };
-
-const cloudBlipCases = [
-  {
-    name: 'AWS',
-    blipNumber: '1',
-    heading: 'AWS',
-    projects: [
-      'AWS Project',
-      'Another Project - GCP and AWS services',
-      'AWS with GCP services',
-    ],
-    projectsCountText: '3 projects',
-  },
-  {
-    name: 'GCP',
-    blipNumber: '2',
-    heading: 'GCP',
-    projects: [
-      'GCP Project',
-      'Another Project - GCP and AWS services',
-      'AWS with GCP services',
-    ],
-    projectsCountText: '3 projects',
-  },
-];
 
 test.describe('Check projects available under cloud infrastructure', () => {
   for (const {
