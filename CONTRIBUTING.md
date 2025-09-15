@@ -26,14 +26,14 @@ terraform/
 testing/
 ```
 
-| Path            | Description                                         |
-| --------------- | --------------------------------------------------- |
-| `backend/`      | The Node.js Express API.                             |
-| `frontend/`     | The React.js frontend application.                   |
-| `concourse/`    | Concourse CI pipeline configurations and scripts.    |
-| `mkdocs/`       | Project documentation built with MkDocs.             |
-| `terraform/`    | Terraform configurations for infrastructure.        |
-| `testing/`      | Backend (PyTest) and frontend (Playwright) tests.    |
+| Path         | Description                                       |
+| ------------ | ------------------------------------------------- |
+| `backend/`   | The Node.js Express API.                          |
+| `frontend/`  | The React.js frontend application.                |
+| `concourse/` | Concourse CI pipeline configurations and scripts. |
+| `mkdocs/`    | Project documentation built with MkDocs.          |
+| `terraform/` | Terraform configurations for infrastructure.      |
+| `testing/`   | Backend (PyTest) and frontend (Playwright) tests. |
 
 ## Development
 
