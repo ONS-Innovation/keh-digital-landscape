@@ -1317,7 +1317,7 @@ text {
 }
 
 .timeline-node.ignore {
-  background: var(--color-bg-ignore);
+  background: hsl(var(--muted));
   color: hsl(var(--foreground));
 }
 
