@@ -140,7 +140,7 @@ Please squash your commits into a single commit when merging your pull request.
 Ensure the title of the pull request is descriptive, concise and follows the branch naming convention.
 
 ```bash
-TICKET-NUMBER-description
+TICKET-NUMBER - description
 ```
 
 e.g. `KEH-123 - Added new feature`
