@@ -7,14 +7,13 @@
   right: unset;
   bottom: unset;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-end;
+  justify-content: flex-end;
   z-index: 1000;
   box-sizing: border-box;
   pointer-events: none;
   opacity: 0;
   transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1);
-  background: rgba(0, 0, 0, 0.7);
 }
 
 .help-modal-overlay.show {
