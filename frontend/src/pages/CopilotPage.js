@@ -61,10 +61,15 @@ function CopilotDashboard() {
     return diffDays;
   };
 
+  // Cancellation ref for fetchTeamData
+  const fetchTeamDataCancelRef = React.useRef({ cancelled: false });
+
   const fetchTeamData = async slug => {
+    fetchTeamDataCancelRef.current.cancelled = false;
     setIsTeamLoading(true);
 
     const liveUsage = await fetchTeamLiveUsageData(slug);
+    if (fetchTeamDataCancelRef.current.cancelled) return;
     if (!liveUsage) {
       toast.error('You do not have permission to view this team');
       setTeamSlug(null);
@@ -77,6 +82,7 @@ function CopilotDashboard() {
     setEndDate(end);
     setSliderValues([1, getEndSliderValue(liveUsage)]);
     const teamSeats = await fetchTeamSeatData(slug);
+    if (fetchTeamDataCancelRef.current.cancelled) return;
     const activeTeamSeats = filterInactiveUsers(teamSeats, startDate);
 
     setLiveTeamData({
@@ -492,15 +498,17 @@ function CopilotDashboard() {
 
                   <button
                     className="view-data-button"
-                    onClick={() => {
-                      setIsSelectingTeam(true);
-                      setTeamSlug(null);
-                      navigate('/copilot/team', { replace: true });
-                      const { start, end } = initialiseDateRange(data.allUsage);
-                      setStartDate(start);
-                      setEndDate(end);
-                      setSliderValues([1, getEndSliderValue(data.allUsage)]);
-                    }}
+                      onClick={() => {
+                        // Cancel any in-flight fetchTeamData
+                        fetchTeamDataCancelRef.current.cancelled = true;
+                        setIsSelectingTeam(true);
+                        setTeamSlug(null);
+                        navigate('/copilot/team', { replace: true });
+                        const { start, end } = initialiseDateRange(data.allUsage);
+                        setStartDate(start);
+                        setEndDate(end);
+                        setSliderValues([1, getEndSliderValue(data.allUsage)]);
+                      }}
                     aria-label={`Return to team selection`}
                   >
                     <FaArrowLeft size={10} />
