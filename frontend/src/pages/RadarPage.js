@@ -397,6 +397,16 @@ function RadarPage() {
           });
         }
 
+        // Javascript and Typescript captured in one language in the radar
+        if (tech === 'Javascript/TypeScript') {
+          return value.split(';').some(item => {
+            const item_lowered = item.trim().toLowerCase();
+            return (
+              item_lowered === 'javascript' || item_lowered === 'typescript'
+            );
+          });
+        }
+
         return value
           .split(';')
           .some(item => item.trim().toLowerCase().includes(tech.toLowerCase()));
