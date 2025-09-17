@@ -1,3 +1,116 @@
+/* 0) One variable to rule them all */
+:root {
+  --picker-fg: #222;
+} /* light default */
+
+/* Dark by class (Tailwind-style) */
+html.dark {
+  --picker-fg: #efeaea;
+}
+
+/* Dark by OS preference (when no .dark override) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --picker-fg: #efeaea;
+  }
+}
+
+/* --- Apply to AG Grid picker + icon, any theme --- */
+[class*='ag-theme-'] .ag-picker-field-wrapper .ag-picker-field-display,
+[class*='ag-theme-'] .ag-picker-field-wrapper .ag-picker-field-icon .ag-icon {
+  color: var(--picker-fg) !important;
+  fill: currentColor !important;
+}
+
+/* Align AG Grid vars so internals don’t fight you */
+[class*='ag-theme-'] {
+  --ag-foreground-color: var(--picker-fg);
+  --ag-input-text-color: var(--picker-fg);
+  --ag-icon-color: var(--picker-fg);
+}
+
+/* If collapsed/disabled dims via opacity, undo it */
+.ag-picker-field-wrapper.ag-picker-collapsed,
+.ag-picker-field-wrapper.ag-picker-field-disabled {
+  opacity: 1 !important;
+}
+
+/* --- HARD LIGHT OVERRIDE (wins even if a *-dark theme class lingers) --- */
+/* Place this AFTER the blocks above */
+html:not(.dark)
+  [class*='ag-theme-']
+  .ag-picker-field-wrapper
+  .ag-picker-field-display,
+html:not(.dark)
+  [class*='ag-theme-']
+  .ag-picker-field-wrapper
+  .ag-picker-field-icon
+  .ag-icon {
+  color: #222 !important;
+  fill: currentColor !important;
+}
+
+/* Apply your unified color to ALL ag-icon spans */
+[class*='ag-theme-'] .ag-icon {
+  color: var(--picker-fg) !important;
+  fill: currentColor !important;
+}
+
+/* Special case: force filter icon in light mode */
+html:not(.dark) [class*='ag-theme-'] .ag-icon.ag-icon-filter {
+  color: #222 !important;
+  fill: currentColor !important;
+}
+
+/* Shared vars (you already have these; included for clarity) */
+:root {
+  --picker-fg: #222;
+} /* light default */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --picker-fg: #efeaea;
+  } /* dark */
+}
+
+/* AG inputs: text, caret, and placeholder */
+[class*='ag-theme-'] .ag-input-field-input,
+[class*='ag-theme-'] input.ag-input-field-input.ag-text-field-input {
+  color: var(--picker-fg) !important;
+  caret-color: var(--picker-fg) !important;
+  background-color: transparent; /* or set a solid bg if needed */
+}
+
+/* Placeholder */
+[class*='ag-theme-'] .ag-input-field-input::placeholder,
+[class*='ag-theme-']
+  input.ag-input-field-input.ag-text-field-input::placeholder {
+  color: var(--picker-fg) !important;
+  opacity: 0.6; /* make it lighter but still visible */
+}
+
+/* WebKit autofill can force white text; pin it */
+[class*='ag-theme-'] .ag-input-field-input:-webkit-autofill {
+  -webkit-text-fill-color: var(--picker-fg) !important;
+  caret-color: var(--picker-fg) !important;
+  /* Optional: keep background normal instead of yellow */
+  box-shadow: 0 0 0px 1000px transparent inset !important;
+}
+
+/* Some AG states dim inputs via opacity—undo if needed */
+[class*='ag-theme-'] .ag-input-field-input.ag-disabled,
+[class*='ag-theme-'] .ag-input-field-input[disabled] {
+  opacity: 1 !important;
+}
+
+/* HARD LIGHT OVERRIDE (handles stray dark classes elsewhere) */
+html:not(.dark) [class*='ag-theme-'] .ag-input-field-input,
+html:not(.dark)
+  [class*='ag-theme-']
+  input.ag-input-field-input.ag-text-field-input {
+  color: #222 !important;
+  -webkit-text-fill-color: #222 !important; /* beats autofill */
+}
+
 .statistics-page {
   width: 100%;
   height: 100%;
