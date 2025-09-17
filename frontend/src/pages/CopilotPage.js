@@ -498,17 +498,17 @@ function CopilotDashboard() {
 
                   <button
                     className="view-data-button"
-                      onClick={() => {
-                        // Cancel any in-flight fetchTeamData
-                        fetchTeamDataCancelRef.current.cancelled = true;
-                        setIsSelectingTeam(true);
-                        setTeamSlug(null);
-                        navigate('/copilot/team', { replace: true });
-                        const { start, end } = initialiseDateRange(data.allUsage);
-                        setStartDate(start);
-                        setEndDate(end);
-                        setSliderValues([1, getEndSliderValue(data.allUsage)]);
-                      }}
+                    onClick={() => {
+                      // Cancel any in-flight fetchTeamData
+                      fetchTeamDataCancelRef.current.cancelled = true;
+                      setIsSelectingTeam(true);
+                      setTeamSlug(null);
+                      navigate('/copilot/team', { replace: true });
+                      const { start, end } = initialiseDateRange(data.allUsage);
+                      setStartDate(start);
+                      setEndDate(end);
+                      setSliderValues([1, getEndSliderValue(data.allUsage)]);
+                    }}
                     aria-label={`Return to team selection`}
                   >
                     <FaArrowLeft size={10} />
