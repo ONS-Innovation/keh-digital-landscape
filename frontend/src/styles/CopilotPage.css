@@ -1,3 +1,100 @@
+:root {
+  --picker-fg: #222;
+}
+
+html.dark {
+  --picker-fg: #efeaea;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --picker-fg: #efeaea;
+  }
+}
+
+[class*='ag-theme-'] .ag-picker-field-wrapper .ag-picker-field-display,
+[class*='ag-theme-'] .ag-picker-field-wrapper .ag-picker-field-icon .ag-icon {
+  color: var(--picker-fg) !important;
+  fill: currentColor !important;
+}
+
+[class*='ag-theme-'] {
+  --ag-foreground-color: var(--picker-fg);
+  --ag-input-text-color: var(--picker-fg);
+  --ag-icon-color: var(--picker-fg);
+}
+
+.ag-picker-field-wrapper.ag-picker-collapsed,
+.ag-picker-field-wrapper.ag-picker-field-disabled {
+  opacity: 1 !important;
+}
+
+html:not(.dark)
+  [class*='ag-theme-']
+  .ag-picker-field-wrapper
+  .ag-picker-field-display,
+html:not(.dark)
+  [class*='ag-theme-']
+  .ag-picker-field-wrapper
+  .ag-picker-field-icon
+  .ag-icon {
+  color: #222 !important;
+  fill: currentColor !important;
+}
+
+[class*='ag-theme-'] .ag-icon {
+  color: var(--picker-fg) !important;
+  fill: currentColor !important;
+}
+
+html:not(.dark) [class*='ag-theme-'] .ag-icon.ag-icon-filter {
+  color: #222 !important;
+  fill: currentColor !important;
+}
+
+:root {
+  --picker-fg: #222;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --picker-fg: #efeaea;
+  }
+}
+
+[class*='ag-theme-'] .ag-input-field-input,
+[class*='ag-theme-'] input.ag-input-field-input.ag-text-field-input {
+  color: var(--picker-fg) !important;
+  caret-color: var(--picker-fg) !important;
+  background-color: transparent;
+}
+
+[class*='ag-theme-'] .ag-input-field-input::placeholder,
+[class*='ag-theme-']
+  input.ag-input-field-input.ag-text-field-input::placeholder {
+  color: var(--picker-fg) !important;
+  opacity: 0.6;
+}
+
+[class*='ag-theme-'] .ag-input-field-input:-webkit-autofill {
+  -webkit-text-fill-color: var(--picker-fg) !important;
+  caret-color: var(--picker-fg) !important;
+  box-shadow: 0 0 0px 1000px transparent inset !important;
+}
+
+[class*='ag-theme-'] .ag-input-field-input.ag-disabled,
+[class*='ag-theme-'] .ag-input-field-input[disabled] {
+  opacity: 1 !important;
+}
+
+html:not(.dark) [class*='ag-theme-'] .ag-input-field-input,
+html:not(.dark)
+  [class*='ag-theme-']
+  input.ag-input-field-input.ag-text-field-input {
+  color: #222 !important;
+  -webkit-text-fill-color: #222 !important;
+}
+
+
 .copilot-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
