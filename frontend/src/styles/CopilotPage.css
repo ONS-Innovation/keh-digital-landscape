@@ -94,7 +94,6 @@ html:not(.dark)
   -webkit-text-fill-color: #222 !important;
 }
 
-
 .copilot-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
