@@ -127,6 +127,8 @@ Current existing tests include:
     - Check projects do exist using AWS and GCP
     - Check that no projects for another cloud provider - Oracle do not appear in the AWS and GCP blips
 
+Run the following to run the tests:
+
 ```bash
 make test-ui
 ```
