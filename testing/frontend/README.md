@@ -109,7 +109,25 @@ Download the extension from [here](https://chromewebstore.google.com/detail/axe-
 
 ## UI Tests
 
-With the application running, it is possible to run tests using Playwright. Mocked returns are used for the GitHub API calls.
+With the application running, it is possible to run tests using Playwright. 
+
+Tests are contained in the testing folder > frontend > tests. Data used in the tests is saved under the data folder.
+
+Mocked API returns are being created using Playwright <i>route.fulfill</i> function. This function mocks any of the API calls.
+
+Current existing tests include:
+
+- Search teams functionality
+
+    -   under Copilot  > Team Usage > Search Teams 
+
+- Tech Radar > Infrastructure (AWS/GCP) 
+
+    - Check that AWS and GCP blips exist
+    - Check projects do exist using AWS and GCP
+    - Check that no projects for another cloud provider - Oracle do not appear in the AWS and GCP blips
+
+Run the following to run the tests:
 
 ```bash
 make test-ui
