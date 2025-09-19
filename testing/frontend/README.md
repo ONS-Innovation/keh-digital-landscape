@@ -121,11 +121,17 @@ Current existing tests include:
 
     -   under Copilot  > Team Usage > Search Teams 
 
-- Tech Radar > Infrastructure (AWS/GCP) 
+- Tech Radar 
 
-    - Check that AWS and GCP blips exist
-    - Check projects do exist using AWS and GCP
-    - Check that no projects for another cloud provider - Oracle do not appear in the AWS and GCP blips
+    -   Infrastructure (AWS/GCP) 
+
+        - Check that AWS and GCP blips exist
+        - Check projects do exist using AWS and GCP
+        - Check that no projects for another cloud provider - Oracle do not appear in the AWS and GCP blips
+    
+    -   Languages
+        - Check that Javascript/TypeScript language exist
+        - Check projects that exist that use Javascript and TypeScript.
 
 Run the following to run the tests:
 

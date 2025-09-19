@@ -64,9 +64,9 @@ test.describe('Check projects available under cloud infrastructure', () => {
         hasText: 'Infrastructure',
       });
       const blip = await page.locator('text', { hasText: blipNumber });
+      // Check whether the page has loaded the Tech Radar page
       await expect(radarInfrastructureText).toHaveClass(/quadrant-label-text/);
       await expect(blip).toHaveClass(/blip-number/);
-
       await page
         .locator('g')
         .filter({ hasText: blipNumber })
@@ -81,7 +81,7 @@ test.describe('Check projects available under cloud infrastructure', () => {
       await expect(noOfProjects).toBeVisible();
 
       for (const project of projects) {
-        await expect(page.getByText(project)).toBeVisible();
+        await expect(page.getByText(project, { exact: true })).toBeVisible();
       }
     });
   }
@@ -118,7 +118,7 @@ test.describe('Check projects available under cloud infrastructure', () => {
     await expect(oracleBlip).toHaveCount(0);
 
     // Or, if you use blip numbers:
-    const blip3 = page.locator('text', { hasText: '3' });
-    await expect(blip3).toHaveCount(0);
+    const blip40 = page.locator('text', { hasText: '40' });
+    await expect(blip40).toHaveCount(0);
   });
 });
