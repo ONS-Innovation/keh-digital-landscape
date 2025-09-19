@@ -14,7 +14,7 @@ The current tests include:
 The tests are implemented in the `testing/frontend/tests` directory using the Playwright framework. The tests are organised into two main files:
 
 - `search.test.js` - Test for search teams functionality
-- `techradar.test.js` - Tests for Tech Radar. Currently tests Infrastructure (GCP/AWS) and languages (JavaScript/Typescript)
+- `techradar.test.js` - Tests for Tech Radar. Currently tests Infrastructure (GCP & AWS nodes) and Languages (JavaScript/Typescript nodes) sections of the radar.
 
 ### Running Tests
 ```bash

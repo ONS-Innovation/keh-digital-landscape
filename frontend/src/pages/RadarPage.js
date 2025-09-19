@@ -397,7 +397,7 @@ function RadarPage() {
           });
         }
 
-        // Javascript and Typescript captured in one language in the radar
+        // Javascript and Typescript captured as one node in the radar
         if (tech === 'Javascript/TypeScript') {
           return value.split(';').some(item => {
             const item_lowered = item.trim().toLowerCase();
