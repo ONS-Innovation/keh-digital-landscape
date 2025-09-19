@@ -24,7 +24,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
 }
 
 .admin-header-left {
@@ -64,9 +63,7 @@
 .admin-filter-search-flex {
   display: flex;
   align-items: flex-end;
-  justify-content: space-between;
   gap: 8px;
-  width: 100%;
 }
 
 @media (max-width: 650px) {

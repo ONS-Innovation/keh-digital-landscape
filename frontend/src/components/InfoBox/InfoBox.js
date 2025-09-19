@@ -29,6 +29,8 @@ const InfoBox = ({
   handleProjectClick,
   onEditConfirm,
   onEditCancel,
+  isHighlighted = false,
+  selectedDirectorate = 'Digital Services',
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState('');
@@ -165,6 +167,13 @@ const InfoBox = ({
     );
   }
 
+  const mostRecentRing =
+    selectedItem.timeline[selectedItem.timeline.length - 1].ringId;
+
+  const positionMessage = isHighlighted
+    ? `Moved specifically for ${selectedDirectorate}.`
+    : 'Imported from Digital Services.';
+
   return (
     <div
       className="info-box"
@@ -248,14 +257,14 @@ const InfoBox = ({
       </div>
       <div className="info-box-header">
         <p className="info-box-ring">{localCategory}</p>
-        <span
-          className={`info-box-ring ${selectedItem.timeline[
-            selectedItem.timeline.length - 1
-          ].ringId.toLowerCase()}`}
-        >
-          {selectedItem.timeline[selectedItem.timeline.length - 1].ringId}
+        <span className={`info-box-ring ${mostRecentRing.toLowerCase()}`}>
+          {mostRecentRing}
         </span>
       </div>
+
+      {selectedDirectorate !== 'Digital Services' && (
+        <small style={{ marginTop: '4px' }}>{positionMessage}</small>
+      )}
 
       <div className="timeline-header">
         <div className="timeline-header-title">
