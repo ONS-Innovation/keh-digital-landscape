@@ -1,7 +1,7 @@
 import { test, expect } from 'playwright/test';
 import { radarData } from './data/radarData';
 import { csvData } from './data/csvData';
-import { cloudBlipCases } from './data/cloudBlipCases';
+import { nodeBlipCases } from './data/nodeBlipCases';
 
 // Function to intercept and mock the API call
 const interceptAPICall = async ({ page }) => {
@@ -50,14 +50,14 @@ const interceptAPICall = async ({ page }) => {
   await page.reload();
 };
 
-test.describe('Check projects available under cloud infrastructure', () => {
+test.describe('Check projects available under Tech Radar', () => {
   for (const {
     name,
     blipNumber,
     heading,
     projects,
     projectsCountText,
-  } of cloudBlipCases) {
+  } of nodeBlipCases) {
     test(`Check projects under ${name}`, async ({ page }) => {
       await interceptAPICall({ page });
       const radarInfrastructureText = await page.locator('text', {
