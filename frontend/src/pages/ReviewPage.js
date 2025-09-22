@@ -60,6 +60,8 @@ const ReviewPage = () => {
   const [highlightedTechnologies, setHighlightedTechnologies] = useState([]);
   const [changedTechnologies, setChangedTechnologies] = useState([]);
 
+  const [stashedDigitalServicesTimeline, setStashedDigitalServicesTimeline] = useState({});
+
   // Fields to scan from CSV and their corresponding categories
   const fieldsToScan = {
     Language_Main: 'Languages',
@@ -176,6 +178,12 @@ const ReviewPage = () => {
           setHighlightedTechnologies(prev => [...prev, entry.id]);
         }
       }
+
+      // Stash the Digital Services timeline for later use if needed
+      setStashedDigitalServicesTimeline(prev => ({
+        ...prev,
+        [entry.id]: digitalServicesTimeline
+      }));
 
       const currentRing =
         selectedDirectorateTimeline[
@@ -302,11 +310,6 @@ const ReviewPage = () => {
       ],
     };
 
-    // TODO: How do we deal with a technology that gets moved back to where Digital Services has it?
-    // Right now it will still be highlighted as it has a directorate-specific position
-    // Maybe get the most recent position for Digital Services and if it matches the current position, remove the highlight?
-    // This is fine for now but will be a problem if lots of tech has directorate-specific positions as they will get permanently highlighted
-
     // Add movement to changedTechnologies if not already present
     if (!changedTechnologies.includes(item.title)) {
       setChangedTechnologies(prev => [
@@ -330,14 +333,32 @@ const ReviewPage = () => {
       );
     }
 
+    const digitalServicesTimeline = stashedDigitalServicesTimeline[item.id]
+    const digitalServicesPosition = digitalServicesTimeline[digitalServicesTimeline.length - 1]?.ringId.toLowerCase();
+
     // If the directorate is not Digital Services, we should highlight this technology
     // This is because it now has a directorate-specific position
+    // If the position is the same as Digital Services, we don't highlight it as it's not directorate-specific
     if (
       selectedDirectorate !== 'Digital Services' &&
+      digitalServicesPosition !== destList.toLowerCase() &&
       !highlightedTechnologies.includes(item.id)
     ) {
       setHighlightedTechnologies(prev => [...prev, item.id]);
     }
+
+    // If the new position matches Digital Services, we should remove the highlight
+    if (
+      selectedDirectorate !== 'Digital Services' &&
+      digitalServicesPosition === destList.toLowerCase() &&
+      highlightedTechnologies.includes(item.id)
+    ) {
+      setHighlightedTechnologies(prev => prev.filter(id => id !== item.id));
+    }
+
+    // Informal Note:
+    // This logic feels like spaghetti but it works for now
+    // It'd be a good idea to refactor this later into something more elegant
 
     updatedEntries[destList] = [...updatedEntries[destList], updatedItem];
     setEntries(updatedEntries);
