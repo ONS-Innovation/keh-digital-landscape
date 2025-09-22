@@ -85,7 +85,7 @@ export const radarData = {
           ringId: 'hold',
           date: '2025-09-17 00:00:00',
           description:
-            'Technology Radar Update: Javascript/TypeScript Categorised as **HOLD**\n.',
+            'Technology Radar Update: Java Categorised as **HOLD**\n.',
           author: 'test@ons.gov.uk',
         },
       ],
