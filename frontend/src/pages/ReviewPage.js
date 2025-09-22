@@ -176,12 +176,20 @@ const ReviewPage = () => {
         // If there are directorate-specific entries, besides 'Digital Services',
         // We should highlight these technologies to make them obvious to the user
         if (inputDirectorate !== 'Digital Services') {
-          
-          const currentPosition = selectedDirectorateTimeline[selectedDirectorateTimeline.length - 1].ringId.toLowerCase();
-          const digitalServicesPosition = digitalServicesTimeline[digitalServicesTimeline.length - 1]?.ringId.toLowerCase();
+          const currentPosition =
+            selectedDirectorateTimeline[
+              selectedDirectorateTimeline.length - 1
+            ].ringId.toLowerCase();
+          const digitalServicesPosition =
+            digitalServicesTimeline[
+              digitalServicesTimeline.length - 1
+            ]?.ringId.toLowerCase();
 
           // Only highlight if the position is different to Digital Services
-          if (currentPosition !== digitalServicesPosition && !highlightedTechnologies.includes(entry.id)) {
+          if (
+            currentPosition !== digitalServicesPosition &&
+            !highlightedTechnologies.includes(entry.id)
+          ) {
             setHighlightedTechnologies(prev => [...prev, entry.id]);
           }
         }
