@@ -291,4 +291,14 @@ Once the pipeline has been set, you can manually trigger a build on the Concours
 
 ```bash
 fly -t aws-sdp trigger-job -j digital-landscape-<branch-name>/build-and-push
+```
+
+## Documentation
+
+The project documentation is located in the `mkdocs/docs` directory. To build and serve the documentation locally, navigate to the `mkdocs/` directory and run the following commands:
+
+```bash
+pip install -r mkdocs_requirements.txt
+mkdocs serve
+```
 

@@ -37,68 +37,11 @@ testing/
 
 ## Development
 
-### Fork this repo
-
-You can fork this repo by clicking the fork button in the top right corner of this page.
-
-### Clone on your local machine
-
-```bash
-git clone https://github.com/ONS-innovation/keh-digital-landscape.git
-```
-
-### Navigate to project directory
-
-```bash
-cd keh-digital-landscape
-```
-
-### Create a new Branch
-
-```bash
-git checkout -b my-new-branch
-```
-
-### Install dependencies
-
-To install both backend and frontend dependencies, run:
-
-```bash
-make install-dev
-```
-
-### Running locally
-
-To run the project locally (frontend and backend together):
-
-```bash
-make dev
-```
-
-This runs the frontend and backend locally on ports 3000 and 5001 respectively.
-
-To run the frontend only:
-
-```bash
-make frontend
-```
-
-To run the backend only:
-
-```bash
-make backend
-```
+For detailed instructions on setting up your development environment and running the project locally, please refer to the [Getting started](/README.md#getting-started) and [Running locally](/README.md#running-locally) sections in the `README.md` file.
 
 ## Documentation
 
-The project documentation is located in the `mkdocs/docs` directory.
-
-You can build and serve the documentation locally by navigating to the `mkdocs/` directory and running:
-
-```bash
-pip install -r mkdocs_requirements.txt
-mkdocs serve
-```
+The project documentation is located in the `mkdocs/docs` directory. For instructions on how to build and serve the documentation locally, please refer to the [Documentation](/README.md#documentation) section in the `README.md` file.
 
 Documentation is written using Markdown.
 
@@ -167,10 +110,10 @@ e.g. `KEH-123-patch-1`
 
 Backend tests are run with PyTest. Frontend tests are run with Playwright and AxeCore.
 
-To run all tests from the root of the repository, use:
+For detailed instructions on running tests, please refer to the [Testing](/README.md#testing) section in the `README.md` file.
 
-```bash
-make test
-```
+## Continuous Integration
+
+For a pull request to be merged, all Continuous Integration (CI) actions must pass. These actions ensure code quality, proper formatting, and functional correctness. Please review any failed CI checks and address the reported issues before requesting a merge.
 
 Please ensure that all tests are passing when submitting a pull request. If you're adding new features, please include tests.
