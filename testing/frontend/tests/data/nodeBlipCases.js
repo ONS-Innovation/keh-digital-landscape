@@ -1,5 +1,5 @@
-// Data for cloud blips in the tech radar
-export const cloudBlipCases = [
+// Data for blips in the tech radar
+export const nodeBlipCases = [
   {
     name: 'Javascript/TypeScript',
     blipNumber: '1',
@@ -16,8 +16,20 @@ export const cloudBlipCases = [
     projectsCountText: '7 projects',
   },
   {
-    name: 'AWS',
+    name: 'Java',
     blipNumber: '2',
+    heading: 'Java',
+    projects: [
+      'Another Project - GCP and AWS services',
+      'GCP Project',
+      'AWS with GCP services',
+      'Java Project',
+    ],
+    projectsCountText: '4 project',
+  },
+  {
+    name: 'AWS',
+    blipNumber: '3',
     heading: 'AWS',
     projects: [
       'AWS Project',
@@ -28,7 +40,7 @@ export const cloudBlipCases = [
   },
   {
     name: 'GCP',
-    blipNumber: '3',
+    blipNumber: '4',
     heading: 'GCP',
     projects: [
       'GCP Project',
