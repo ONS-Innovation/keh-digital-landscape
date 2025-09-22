@@ -180,6 +180,22 @@ If the selected directorate is Digital Services, we filter the timeline to only 
 
 The last entry in this filtered timeline indicates that the current position of the technology for the Digital Services directorate is in the Assess ring.
 
+## Highlighting Technologies + Visuals
+
+To help users quickly identify which technologies are or have been moved specifically for their directorate, some visual cues are used:
+
+- On the Tech Radar page, technologies that have **any** timeline entries for the selected directorate are highlighted with a small margin on the left side of the technology card.
+  
+  ![Tech Radar Highlight Example](../../assets/multipleDirectorateSupport/radar-highlight.png)
+
+- On the Review page, technologies that are in a position **specifically for the selected directorate** are highlighted with a golden border around the technology card.
+  
+  ![Review Page Highlight Example](../../assets/multipleDirectorateSupport/review-highlight.png)
+
+- On both pages, a gradient background is applied to the top of the page to indicate which directorate is currently selected.
+  
+  ![Gradient Background Example](../../assets/multipleDirectorateSupport/gradient-background.png)
+
 ## Project Page (Future Plans / TBC)
 
 Should we ever need to extend directorate support to the Project Page, the same principles would apply.
