@@ -255,10 +255,12 @@ const ReviewPage = () => {
       if (sourceList === destList) return;
 
       // Set up the pending move
-      // TODO: This needs to be updated to use the directorate specific timeline rather than just the last entry
-      // This is messing up the movement calculation if the last entry is for a different directorate (See Ruff in the demo data for an example)
-      const lastRing =
-        item.timeline[item.timeline.length - 1].ringId.toLowerCase();
+
+      // sourceList is the ring we're moving from
+      // This is a quick way to get the last ring without needing to parse the timeline again
+      // The source position is also directorate aware so this is more accurate then parsing the timeline
+      const lastRing = sourceList;
+      
       const defaultDescription = `Moved from ${lastRing} to ${destList}`;
 
       setPendingMove({
