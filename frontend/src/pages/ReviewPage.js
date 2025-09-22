@@ -60,7 +60,8 @@ const ReviewPage = () => {
   const [highlightedTechnologies, setHighlightedTechnologies] = useState([]);
   const [changedTechnologies, setChangedTechnologies] = useState([]);
 
-  const [stashedDigitalServicesTimeline, setStashedDigitalServicesTimeline] = useState({});
+  const [stashedDigitalServicesTimeline, setStashedDigitalServicesTimeline] =
+    useState({});
 
   // Fields to scan from CSV and their corresponding categories
   const fieldsToScan = {
@@ -182,7 +183,7 @@ const ReviewPage = () => {
       // Stash the Digital Services timeline for later use if needed
       setStashedDigitalServicesTimeline(prev => ({
         ...prev,
-        [entry.id]: digitalServicesTimeline
+        [entry.id]: digitalServicesTimeline,
       }));
 
       const currentRing =
@@ -268,7 +269,7 @@ const ReviewPage = () => {
       // This is a quick way to get the last ring without needing to parse the timeline again
       // The source position is also directorate aware so this is more accurate then parsing the timeline
       const lastRing = sourceList;
-      
+
       const defaultDescription = `Moved from ${lastRing} to ${destList}`;
 
       setPendingMove({
@@ -333,8 +334,11 @@ const ReviewPage = () => {
       );
     }
 
-    const digitalServicesTimeline = stashedDigitalServicesTimeline[item.id]
-    const digitalServicesPosition = digitalServicesTimeline[digitalServicesTimeline.length - 1]?.ringId.toLowerCase();
+    const digitalServicesTimeline = stashedDigitalServicesTimeline[item.id];
+    const digitalServicesPosition =
+      digitalServicesTimeline[
+        digitalServicesTimeline.length - 1
+      ]?.ringId.toLowerCase();
 
     // If the directorate is not Digital Services, we should highlight this technology
     // This is because it now has a directorate-specific position
