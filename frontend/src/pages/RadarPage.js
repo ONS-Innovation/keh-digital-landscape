@@ -151,6 +151,12 @@ function RadarPage() {
 
     let shouldBeHighlighted = false;
 
+    // TODO: Address highlight logic if needed
+    // At the moment, technologies get highlighted if they have directorate specific history (i.e. moved out of Digital Services at any point in time)
+    // It is important to highlight these technologies since they will have unique history compared to Digital Services
+    // Even if they move back to Digital Services, they will have a different history and should be highlighted
+    // This logic may need to be revisited in future if it causes confusion (i.e. Why is this tech highlighted here but not on the review page? Why is this technology highlighted with it matches Digital Services?)
+
     for (const entry of filteredTimeline) {
       const directorate = entry.directorate || 'Digital Services';
 
