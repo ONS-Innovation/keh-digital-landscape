@@ -405,7 +405,9 @@ function RadarPage() {
         // Default exact match return
         return value
           .split(';')
-          .some(item => item.trim().toLowerCase() === tech.toLowerCase().trim());
+          .some(
+            item => item.trim().toLowerCase() === tech.toLowerCase().trim()
+          );
       });
     });
   };
