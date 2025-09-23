@@ -74,37 +74,37 @@ First, ensure you have Node.js installed. It is recommended to use Node Version 
 
 1. Install nvm:
 
-    ```bash
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-    ```
+   ```bash
+   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+   ```
 
 2. Install Node.js using nvm:
 
-    ```bash
-    nvm install 24.1.0
-    ```
+   ```bash
+   nvm install 24.1.0
+   ```
 
 3. Set the Node.js version to use:
 
-    ```bash
-    nvm use 24.1.0
-    ```
+   ```bash
+   nvm use 24.1.0
+   ```
 
 4. Remember to export the following in the terminal that the backend is running in:
 
-    ```bash
-    # AWS
-    export AWS_ACCESS_KEY_ID=<your_access_key>
-    export AWS_SECRET_ACCESS_KEY=<your_secret_key>
-    export AWS_SECRET_NAME=<your_secret_name>
-    export AWS_REGION=<your_region>
+   ```bash
+   # AWS
+   export AWS_ACCESS_KEY_ID=<your_access_key>
+   export AWS_SECRET_ACCESS_KEY=<your_secret_key>
+   export AWS_SECRET_NAME=<your_secret_name>
+   export AWS_REGION=<your_region>
 
-    # Github
-    export GITHUB_APP_ID=<your_github_app_id>
-    export GITHUB_APP_CLIENT_ID=<your_github_app_client_id>
-    export GITHUB_APP_CLIENT_SECRET=<your_github_app_client_secret>
-    export GITHUB_ORG=<your_github_organisation>
-    ```
+   # Github
+   export GITHUB_APP_ID=<your_github_app_id>
+   export GITHUB_APP_CLIENT_ID=<your_github_app_client_id>
+   export GITHUB_APP_CLIENT_SECRET=<your_github_app_client_secret>
+   export GITHUB_ORG=<your_github_organisation>
+   ```
 
 Alternatively, you can use the `.env.example` file in the backend to set the environment variables. Copy the `.env.example` file to `.env` and fill in the values. Do not commit the `.env` file to the repository and do not put the secrets in the `.env.example` file.
 
@@ -154,7 +154,7 @@ make docker-build
 make docker-up
 ```
 
-When building the docker image, you *may* run into a memory problem. To increase the memory available to the docker container, you can use the following command:
+When building the docker image, you _may_ run into a memory problem. To increase the memory available to the docker container, you can use the following command:
 
 ```bash
 colima start --memory 8 # 8GB of memory, adjust as needed i.e 16, 32, 64, but 8 should be enough
@@ -224,28 +224,28 @@ make
 
 ### Common Issues
 
-1. When building the docker image, you *may* run into a memory problem. To increase the memory available to the docker container, you can use the following command:
+1. When building the docker image, you _may_ run into a memory problem. To increase the memory available to the docker container, you can use the following command:
 
-    ```bash
-    # Stop the docker container
-    colima stop
+   ```bash
+   # Stop the docker container
+   colima stop
 
-    # Start the docker container with more memory
-    colima start --memory 8 # 8GB of memory, adjust as needed i.e 16, 32, 64, but 8 should be enough
-    ```
+   # Start the docker container with more memory
+   colima start --memory 8 # 8GB of memory, adjust as needed i.e 16, 32, 64, but 8 should be enough
+   ```
 
 2. The frontend is making requests to `localhost:3000` instead of the backend `localhost:5001`. To fix this, stop the application. Ensure the environment variable is set in the terminal that is running the frontend:
 
-    ```bash
-    # Navigate to the frontend directory
-    cd frontend
+   ```bash
+   # Navigate to the frontend directory
+   cd frontend
 
-    # Ensure the environment variable is set in the terminal that is running the frontend
-    export VITE_BACKEND_URL=http://localhost:5001
+   # Ensure the environment variable is set in the terminal that is running the frontend
+   export VITE_BACKEND_URL=http://localhost:5001
 
-    # Run the frontend
-    npm start
-    ```
+   # Run the frontend
+   npm start
+   ```
 
 3. If the backend is returning nothing, ensure you have the correct environment variables set in the `.env` file. See the [.env.example](./backend/.env.example) file for the correct variables.
 
@@ -291,4 +291,13 @@ Once the pipeline has been set, you can manually trigger a build on the Concours
 
 ```bash
 fly -t aws-sdp trigger-job -j digital-landscape-<branch-name>/build-and-push
+```
 
+## Documentation
+
+The project documentation is located in the `mkdocs/docs` directory. To build and serve the documentation locally, navigate to the `mkdocs/` directory and run the following commands:
+
+```bash
+pip install -r mkdocs_requirements.txt
+mkdocs serve
+```

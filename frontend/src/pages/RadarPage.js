@@ -436,6 +436,7 @@ function RadarPage() {
 
     return projectsData.filter(project => {
       const allTechColumns = [
+        'Architectures',
         'Language_Main',
         'Language_Others',
         'Language_Frameworks',
@@ -469,9 +470,43 @@ function RadarPage() {
         const value = project[column];
         if (!value) return false;
 
+        // Check forAWS and GCP (Google) matches
+        // This is due to services being named as technologies
+        // Other technologies require exact match
+        if (tech === 'AWS') {
+          return value.split(';').some(item => {
+            const item_lowered = item.trim().toLowerCase();
+            return (
+              item_lowered.includes('aws') || item_lowered.includes('amazon')
+            );
+          });
+        }
+
+        if (tech === 'GCP') {
+          return value.split(';').some(item => {
+            // Google services to exclude from GCP cloud consideration
+            const excluded_gcp = ['google meet', 'google docs'];
+            const item_lowered = item.trim().toLowerCase();
+            if (excluded_gcp.includes(item_lowered)) return false;
+            return (
+              item_lowered.includes('google') || item_lowered.includes('gcp')
+            );
+          });
+        }
+
+        // Javascript and Typescript captured as one node in the radar
+        if (tech === 'Javascript/TypeScript') {
+          return value.split(';').some(item => {
+            const item_lowered = item.trim().toLowerCase();
+            return (
+              item_lowered === 'javascript' || item_lowered === 'typescript'
+            );
+          });
+        }
+
         return value
           .split(';')
-          .some(item => item.trim().toLowerCase() === tech.toLowerCase());
+          .some(item => item.trim().toLowerCase().includes(tech.toLowerCase()));
       });
     });
   };

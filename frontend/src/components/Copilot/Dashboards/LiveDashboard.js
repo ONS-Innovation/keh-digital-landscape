@@ -284,7 +284,12 @@ function LiveDashboard({
                     avatar: user.assignee.avatar_url,
                     username: user.assignee.login,
                     github: `https://github.com/${user.assignee.login}`,
-                    lastActivity: getFormattedTime(user.last_activity_at),
+                    lastActivity: user.last_activity_at
+                      ? new Date(user.last_activity_at).getTime()
+                      : 0, // Use timestamp for sorting
+                    lastActivityDisplay: getFormattedTime(
+                      user.last_activity_at
+                    ), // Use getFormattedTime to format the date and Display it
                   };
                   return acc;
                 }, {})}
@@ -307,7 +312,12 @@ function LiveDashboard({
                     avatar: user.assignee.avatar_url,
                     username: user.assignee.login,
                     github: `https://github.com/${user.assignee.login}`,
-                    lastActivity: getFormattedTime(user.last_activity_at),
+                    lastActivity: user.last_activity_at
+                      ? new Date(user.last_activity_at).getTime()
+                      : 0, // Use timestamp for sorting
+                    lastActivityDisplay: getFormattedTime(
+                      user.last_activity_at
+                    ), // Use getFormattedTime to format the date and Display it
                   };
                   return acc;
                 }, {})}
@@ -322,6 +332,14 @@ function LiveDashboard({
                 }}
               />
             </div>
+          </div>
+          <div>
+            <p style={{ textAlign: 'center', marginTop: '16px' }}>
+              <small style={{ color: '#888' }}>
+                Users with a last activity of <b>1900-01-01 00:00</b> have{' '}
+                <b>not</b> used their license.
+              </small>
+            </p>
           </div>
         </div>
       )}

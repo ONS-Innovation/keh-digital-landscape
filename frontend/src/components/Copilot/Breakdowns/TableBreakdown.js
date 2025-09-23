@@ -42,19 +42,42 @@ function TableBreakdown({
     if (!rowData.length) return [];
 
     const keys = [idField, ...columns];
-    return keys.map(key => ({
-      field: key,
-      headerName: key === idField ? idHeader : headerMap[key] || key,
-      valueFormatter: !cellRenderers[key]
-        ? key.toLowerCase().includes('rate')
-          ? params => `${(params.value * 100).toFixed(1)}%`
-          : params =>
-              typeof params.value === 'number'
-                ? formatNumberWithCommas(params.value)
-                : params.value
-        : undefined,
-      cellRenderer: cellRenderers[key] || undefined,
-    }));
+    return keys.map(key => {
+      // Custom cellRenderer for lastActivityDisplay to show formatted string
+      if (key === 'lastActivityDisplay') {
+        return {
+          field: key,
+          headerName: headerMap[key] || key,
+          sortable: false,
+          cellRenderer: params => params.value,
+        };
+      }
+      // Custom valueFormatter for lastActivity to show formatted string but sort by timestamp
+      if (key === 'lastActivity') {
+        return {
+          field: key,
+          headerName: headerMap[key] || key,
+          sortable: true,
+          valueFormatter: params => {
+            // Find corresponding display value
+            return params.data.lastActivityDisplay;
+          },
+        };
+      }
+      return {
+        field: key,
+        headerName: key === idField ? idHeader : headerMap[key] || key,
+        valueFormatter: !cellRenderers[key]
+          ? key.toLowerCase().includes('rate')
+            ? params => `${(params.value * 100).toFixed(1)}%`
+            : params =>
+                typeof params.value === 'number'
+                  ? formatNumberWithCommas(params.value)
+                  : params.value
+          : undefined,
+        cellRenderer: cellRenderers[key] || undefined,
+      };
+    });
   }, [rowData, idField, idHeader, columns, headerMap, cellRenderers]);
 
   // Generate unique aria-label based on context
