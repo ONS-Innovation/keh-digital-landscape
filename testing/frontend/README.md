@@ -132,6 +132,8 @@ Current existing tests include:
     -   Languages
         - Check that Javascript/TypeScript language exist
         - Check projects that exist that use Javascript and TypeScript.
+        - Check that Java language exist
+        - Check projects that exist that use Java
 
 Run the following to run the tests:
 
