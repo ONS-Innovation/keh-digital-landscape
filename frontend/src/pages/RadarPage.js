@@ -402,17 +402,23 @@ function RadarPage() {
         if (matcher) {
           return value.split(';').some(matcher);
         }
-        // Default exact match return
-        return value
-          .split(';')
-          .some(
-            item =>
-              item
-                .split(':')[0]          // Consider only text before colon
-                .replace(/[:;,]+$/, '') // Remove trailing colon, semicolon, comma
-                .trim()
-                .toLowerCase() === tech.toLowerCase().trim()
+        // If there is a colon, extract all techs before colons
+        if (value.includes(':')) {
+          // Match all non-space sequences before a colon, or all words before a colon
+          const techMatches = [...value.matchAll(/([^\s:;]+):/g)].map(match =>
+            match[1].trim()
           );
+          return techMatches.some(
+            techName => techName.toLowerCase() === tech.toLowerCase().trim()
+          );
+        } else {
+          // Otherwise, split by ; and match as usual
+          return value
+            .split(';')
+            .some(
+              item => item.trim().toLowerCase() === tech.toLowerCase().trim()
+            );
+        }
       });
     });
   };
