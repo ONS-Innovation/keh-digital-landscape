@@ -408,8 +408,9 @@ function RadarPage() {
           .some(
             item =>
               item
-                .trim()
+                .split(':')[0]          // Consider only text before colon
                 .replace(/[:;,]+$/, '') // Remove trailing colon, semicolon, comma
+                .trim()
                 .toLowerCase() === tech.toLowerCase().trim()
           );
       });
