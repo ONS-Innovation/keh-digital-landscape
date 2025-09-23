@@ -406,7 +406,11 @@ function RadarPage() {
         return value
           .split(';')
           .some(
-            item => item.trim().toLowerCase() === tech.toLowerCase().trim()
+            item =>
+              item
+                .trim()
+                .replace(/[:;,]+$/, '') // Remove trailing colon, semicolon, comma
+                .toLowerCase() === tech.toLowerCase().trim()
           );
       });
     });
