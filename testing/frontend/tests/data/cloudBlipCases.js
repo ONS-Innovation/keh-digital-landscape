@@ -17,7 +17,7 @@ export const cloudBlipCases = [
   },
   {
     name: 'AWS',
-    blipNumber: '2',
+    blipNumber: '3',
     heading: 'AWS',
     projects: [
       'AWS Project',
@@ -28,7 +28,7 @@ export const cloudBlipCases = [
   },
   {
     name: 'GCP',
-    blipNumber: '3',
+    blipNumber: '4',
     heading: 'GCP',
     projects: [
       'GCP Project',
