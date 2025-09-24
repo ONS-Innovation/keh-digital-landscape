@@ -108,8 +108,8 @@ export const radarData = {
     // This tests that the last entry in the timeline is picked correctly
     // when there are multiple entries for different directorates.
     {
-      id: 'test-C',
-      title: 'C',
+      id: 'test-Csharp',
+      title: 'C#',
       quadrant: '1',
       description: 'Languages',
       timeline: [
@@ -125,7 +125,7 @@ export const radarData = {
           ringId: 'trial',
           date: '2025-09-23 00:00:01',
           description:
-            'Technology Radar Update: C Categorised as **TRIAL**\n.',
+            'Technology Radar Update: C# Categorised as **TRIAL**\n.',
           author: 'test@ons.gov.uk',
           directorate: 'Data Science',
         },
@@ -134,7 +134,7 @@ export const radarData = {
           ringId: 'adopt',
           date: '2025-09-23 00:00:02',
           description:
-            'Technology Radar Update: C Categorised as **ADOPT**\nThis is for Data Science only.',
+            'Technology Radar Update: C# Categorised as **ADOPT**\nThis is for Data Science only.',
           author: 'test@ons.gov.uk',
           directorate: 'Data Science',
         }

@@ -979,6 +979,7 @@ const ReviewPage = () => {
                     <h2>Filter by Directorate</h2>
                   </label>
                   <select
+                    id="directorate-select"
                     value={selectedDirectorate}
                     onChange={e => setSelectedDirectorate(e.target.value)}
                     className="multi-select-control"

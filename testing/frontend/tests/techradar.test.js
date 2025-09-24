@@ -31,7 +31,6 @@ const interceptAPICall = async ({ page }) => {
   await interceptAPIJsonCall({ page });
   await interceptAPICSVCall({ page });
   await page.goto('http://localhost:3000/radar');
-  await page.pause();
 
   // Clear all cookies
   await page.context().clearCookies();
@@ -94,8 +93,7 @@ test.describe('Check projects available under cloud infrastructure', () => {
 
     // Click AWS blip
     await page
-      .locator('g')
-      .filter({ hasText: '3' }) // We need to change these so they come from cloudBlipCases.js
+      .locator('g#blip-test-aws')
       .locator('circle')
       .first()
       .click();
@@ -103,8 +101,7 @@ test.describe('Check projects available under cloud infrastructure', () => {
 
     // Click GCP blip
     await page
-      .locator('g')
-      .filter({ hasText: '4' }) // We need to change these so they come from cloudBlipCases.js
+      .locator('g#blip-test-gcp')
       .locator('circle')
       .first()
       .click();
@@ -130,9 +127,7 @@ test('Check that directorate dropdown is present and has expected options', asyn
   await interceptAPICall({ page });
 
   // Check that the directorate selector is present
-  const directorateSelector = page.getByRole('combobox', {
-    name: 'Select directorate',
-  });
+  const directorateSelector = page.locator('select#directorate-select');
   await expect(directorateSelector).toBeVisible();
 
   // Check that all the directorates are present
@@ -155,17 +150,20 @@ test('Check that R appears in trial for all directorates and in adopt for Data S
   await expect(blipR).toHaveCount(1);
 
   // Check that R is in trial for Digital Services
-  const blipRContainer = page.locator('g').filter({ hasText: '2' });
+  const blipRContainer = page.locator('g#blip-test-r');
   const blipRCircle = blipRContainer.locator('circle').first();
 
   // To do this, the circle should have the trial class
   await expect(blipRCircle).toHaveClass(/trial/);
 
+  // Get directorate selector
+  const directorateSelector = page.locator('select#directorate-select');
+
   // Change to Data Science directorate
-  await page.getByRole('combobox').selectOption('Data Science');
+  await directorateSelector.selectOption('Data Science');
 
   // Check that R is in adopt for Data Science
-  const blipRContainerDS = page.locator('g').filter({ hasText: '2' });
+  const blipRContainerDS = page.locator('g#blip-test-r');
   const blipRCircleDS = blipRContainerDS.locator('circle').first();
 
   // To do this, the circle should have the adopt class
@@ -173,44 +171,48 @@ test('Check that R appears in trial for all directorates and in adopt for Data S
 
   // Change to another directorate (DGO)
   // This is to check that DGO inherits the Digital Services position
-  await page.getByRole('combobox').selectOption('DGO');
+  await directorateSelector.selectOption('DGO');
 
   // Check that R is in trial for DGO
-  const blipRContainerDGO = page.locator('g').filter({ hasText: '2' });
+  const blipRContainerDGO = page.locator('g#blip-test-r');
   const blipRCircleDGO = blipRContainerDGO.locator('circle').first();
 
   // To do this, the circle should have the trial class
   await expect(blipRCircleDGO).toHaveClass(/trial/);
 });
 
-// TODO: Fix and enable this test
+test('Check that C# is not on the radar for Digital Services and DGO, but is in adopt for Data Science', async ({ page }) => {
+  await interceptAPICall({ page });
 
-// test('Check that C is not on the radar for Digital Services and DGO, but is in adopt for Data Science', async ({ page }) => {
-//   await interceptAPICall({ page });
+  // Get directorate selector
+  const directorateSelector = page.locator('select#directorate-select');
 
-//   // Check that C is not present for Digital Services
-//   const blipC = await page.locator('text', { hasText: 'C' });
-//   await expect(blipC).toHaveCount(0);
+  // Make sure we start with Digital Services
+  await directorateSelector.selectOption('Digital Services');
 
-//   // Change to Data Science directorate
-//   await page.getByRole('combobox').selectOption('Data Science');
+  // Check that C# is not present for Digital Services
+  const blipC = await page.locator('g#blip-test-Csharp');
+  await expect(blipC).toHaveCount(0);
 
-//   // Check that C is present for Data Science
-//   const blipC_DS = await page.locator('text', { hasText: 'C' });
-//   await expect(blipC_DS).toHaveCount(1);
+  // Change to Data Science directorate
+  await directorateSelector.selectOption('Data Science');
 
-//   // Check that C is in adopt for Data Science
-//   const blipCContainerDS = page.locator('g').filter({ hasText: 'C' });
-//   const blipCCircleDS = blipCContainerDS.locator('circle').first();
+  // Check that C# is present for Data Science
+  const blipC_DS = await page.locator('g#blip-test-Csharp');
+  await expect(blipC_DS).toHaveCount(1);
 
-//   // To do this, the circle should have the adopt class
-//   await expect(blipCCircleDS).toHaveClass(/adopt/);
+  // Check that C# is in adopt for Data Science
+  const blipCContainerDS = page.locator('g#blip-test-Csharp');
+  const blipCCircleDS = blipCContainerDS.locator('circle').first();
 
-//   // Change to another directorate (DGO)
-//   // This is to check that DGO inherits the Digital Services position
-//   await page.getByRole('combobox').selectOption('DGO');
+  // To do this, the circle should have the adopt class
+  await expect(blipCCircleDS).toHaveClass(/adopt/);
 
-//   // Check that C is not present for DGO
-//   const blipC_DGO = await page.locator('text', { hasText: 'C' });
-//   await expect(blipC_DGO).toHaveCount(0);
-// });
+  // Change to another directorate (DGO)
+  // This is to check that DGO inherits the Digital Services position
+  await directorateSelector.selectOption('DGO');
+
+  // Check that C# is not present for DGO
+  const blipC_DGO = await page.locator('g#blip-test-Csharp');
+  await expect(blipC_DGO).toHaveCount(0);
+});

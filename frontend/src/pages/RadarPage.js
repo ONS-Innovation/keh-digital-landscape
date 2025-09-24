@@ -797,6 +797,7 @@ function RadarPage() {
               Directorate:{' '}
             </label>
             <select
+              id="directorate-select"
               value={selectedDirectorate}
               onChange={e => setSelectedDirectorate(e.target.value)}
               className="multi-select-control"
@@ -1161,6 +1162,7 @@ function RadarPage() {
 
                         return (
                           <g
+                            id={`blip-${entry.id}`}
                             key={entry.id}
                             transform={`translate(${position.x}, ${position.y})`}
                             className="blip-container"
