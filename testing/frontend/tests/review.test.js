@@ -50,7 +50,9 @@ const interceptAPICall = async ({ page }) => {
   await page.reload();
 };
 
-test('Check that directorate dropdown is present and has expected options', async ({ page }) => {
+test('Check that directorate dropdown is present and has expected options', async ({
+  page,
+}) => {
   await interceptAPICall({ page });
 
   // Check that the directorate selector is present
@@ -59,7 +61,9 @@ test('Check that directorate dropdown is present and has expected options', asyn
 
   // Check that all the directorates are present
   const options = await directorateSelector.locator('option').all();
-  const optionValues = await Promise.all(options.map(option => option.getAttribute('value')));
+  const optionValues = await Promise.all(
+    options.map(option => option.getAttribute('value'))
+  );
   const expectedValues = ['Digital Services', 'Data Science', 'DGO'];
 
   expect(optionValues).toEqual(expectedValues);
@@ -69,33 +73,35 @@ test('Check that directorate dropdown is present and has expected options', asyn
   expect(selectedValue).toBe('Digital Services');
 });
 
-test('Check technologies appear in the correct areas for different directorates', async ({ page }) => {
-    await interceptAPICall({ page });
+test('Check technologies appear in the correct areas for different directorates', async ({
+  page,
+}) => {
+  await interceptAPICall({ page });
 
-    // Get the directorate select element
-    const directorateSelect = page.locator('#directorate-select');
+  // Get the directorate select element
+  const directorateSelect = page.locator('#directorate-select');
 
-    for (const directorate of Object.keys(reviewPositionCases)) {
-        // Select the directorate
-        await directorateSelect.selectOption(directorate);
+  for (const directorate of Object.keys(reviewPositionCases)) {
+    // Select the directorate
+    await directorateSelect.selectOption(directorate);
 
-        // Get the expected positions for this directorate
-        const expectedPositions = reviewPositionCases[directorate];
+    // Get the expected positions for this directorate
+    const expectedPositions = reviewPositionCases[directorate];
 
-        for (const position of Object.keys(expectedPositions)) {
-            const expectedTechnologies = expectedPositions[position];
+    for (const position of Object.keys(expectedPositions)) {
+      const expectedTechnologies = expectedPositions[position];
 
-            // Get the technologies in this position
-            const technologyContainer = page.locator(`.${position}-box`);
-            const technologyElements = technologyContainer.locator(`.draggable-item`);
-            const technologyIds = await technologyElements.evaluateAll(elements =>
-              elements.map(el => el.id)
-            );
+      // Get the technologies in this position
+      const technologyContainer = page.locator(`.${position}-box`);
+      const technologyElements = technologyContainer.locator(`.draggable-item`);
+      const technologyIds = await technologyElements.evaluateAll(elements =>
+        elements.map(el => el.id)
+      );
 
-            for (const techId of expectedTechnologies) {
-                // Check that the technology is present in this position
-                expect(technologyIds).toContain(`technology-${techId}`);
-            }
-        }
+      for (const techId of expectedTechnologies) {
+        // Check that the technology is present in this position
+        expect(technologyIds).toContain(`technology-${techId}`);
+      }
     }
+  }
 });

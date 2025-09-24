@@ -88,8 +88,7 @@ export const radarData = {
           moved: 3,
           ringId: 'trial',
           date: '2025-09-23 00:00:01',
-          description:
-            'Technology Radar Update: R Categorised as **TRIAL**\n.',
+          description: 'Technology Radar Update: R Categorised as **TRIAL**\n.',
           author: 'test@ons.gov.uk',
         },
         {
@@ -100,7 +99,7 @@ export const radarData = {
             'Technology Radar Update: R Categorised as **ADOPT**\nThis is for Data Science only.',
           author: 'test@ons.gov.uk',
           directorate: 'Data Science',
-        }
+        },
       ],
     },
     // The below technology should appear in review for all directorates
@@ -137,7 +136,7 @@ export const radarData = {
             'Technology Radar Update: C# Categorised as **ADOPT**\nThis is for Data Science only.',
           author: 'test@ons.gov.uk',
           directorate: 'Data Science',
-        }
+        },
       ],
     },
   ],

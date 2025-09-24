@@ -92,19 +92,11 @@ test.describe('Check projects available under cloud infrastructure', () => {
     await interceptAPICall({ page });
 
     // Click AWS blip
-    await page
-      .locator('g#blip-test-aws')
-      .locator('circle')
-      .first()
-      .click();
+    await page.locator('g#blip-test-aws').locator('circle').first().click();
     await expect(page.getByText('Oracle Project')).not.toBeVisible();
 
     // Click GCP blip
-    await page
-      .locator('g#blip-test-gcp')
-      .locator('circle')
-      .first()
-      .click();
+    await page.locator('g#blip-test-gcp').locator('circle').first().click();
     await expect(page.getByText('Oracle Project')).not.toBeVisible();
   });
 
@@ -123,7 +115,9 @@ test.describe('Check projects available under cloud infrastructure', () => {
 
 // Multiple Directorate Support
 
-test('Check that directorate dropdown is present and has expected options', async ({ page }) => {
+test('Check that directorate dropdown is present and has expected options', async ({
+  page,
+}) => {
   await interceptAPICall({ page });
 
   // Check that the directorate selector is present
@@ -132,7 +126,9 @@ test('Check that directorate dropdown is present and has expected options', asyn
 
   // Check that all the directorates are present
   const options = await directorateSelector.locator('option').all();
-  const optionValues = await Promise.all(options.map(option => option.getAttribute('value')));
+  const optionValues = await Promise.all(
+    options.map(option => option.getAttribute('value'))
+  );
   const expectedValues = ['Digital Services', 'Data Science', 'DGO'];
 
   expect(optionValues).toEqual(expectedValues);
@@ -142,7 +138,9 @@ test('Check that directorate dropdown is present and has expected options', asyn
   expect(selectedValue).toBe('Digital Services');
 });
 
-test('Check that R appears in trial for all directorates and in adopt for Data Science only', async ({ page }) => {
+test('Check that R appears in trial for all directorates and in adopt for Data Science only', async ({
+  page,
+}) => {
   await interceptAPICall({ page });
 
   // Check that R is present
@@ -181,7 +179,9 @@ test('Check that R appears in trial for all directorates and in adopt for Data S
   await expect(blipRCircleDGO).toHaveClass(/trial/);
 });
 
-test('Check that C# is not on the radar for Digital Services and DGO, but is in adopt for Data Science', async ({ page }) => {
+test('Check that C# is not on the radar for Digital Services and DGO, but is in adopt for Data Science', async ({
+  page,
+}) => {
   await interceptAPICall({ page });
 
   // Get directorate selector
