@@ -876,7 +876,7 @@ const ReviewPage = () => {
                             ? 'hsl(var(--accent))'
                             : undefined,
                         border: highlightedTechnologies.includes(item.id)
-                          ? '2px solid var(--directorate-highlight)'
+                          ? `2px solid ${directorateColourMap[selectedDirectorate]}`
                           : undefined,
                       }}
                     >
@@ -1059,7 +1059,9 @@ const ReviewPage = () => {
                   Adopt only for Data Science, it will be{' '}
                   <span
                     style={{
-                      border: '2px solid var(--directorate-highlight)',
+                      border: `4px solid ${directorateColourMap[selectedDirectorate]}`,
+                      boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
+                      backgroundColor: `hsl(var(--background))`,
                       padding: '2px',
                       borderRadius: '4px',
                     }}
