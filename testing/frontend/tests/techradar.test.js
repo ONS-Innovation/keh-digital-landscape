@@ -54,6 +54,7 @@ test.describe('Check projects available under Tech Radar', () => {
   for (const {
     name,
     blipNumber,
+    techId,
     heading,
     projects,
     projectsCountText,
@@ -68,8 +69,7 @@ test.describe('Check projects available under Tech Radar', () => {
       await expect(radarInfrastructureText).toHaveClass(/quadrant-label-text/);
       await expect(blip).toHaveClass(/blip-number/);
       await page
-        .locator('g')
-        .filter({ hasText: blipNumber })
+        .locator(`g#blip-${techId}`)
         .locator('circle')
         .first()
         .click();
