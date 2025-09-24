@@ -2,9 +2,9 @@ const { chromium } = require('playwright');
 const AxeBuilder = require('@axe-core/playwright').default;
 const fs = require('fs');
 const path = require('path');
-const { 
-  generateCombinedHtmlReport, 
-  generateCombinedMarkdownReport 
+const {
+  generateCombinedHtmlReport,
+  generateCombinedMarkdownReport,
 } = require('./generate');
 
 // Load test configuration
@@ -32,14 +32,16 @@ async function setupAuthentication(context, pageUrl, pageConfig) {
   if (pageConfig.authenticated) {
     const cookieName = pageConfig.authenticated;
     const cookieValue = process.env[`TEST_${cookieName.toUpperCase()}`];
-    
+
     if (!cookieValue) {
-      console.warn(`Warning: Authentication required for ${pageUrl} but TEST_${cookieName.toUpperCase()} environment variable is not set.`);
+      console.warn(
+        `Warning: Authentication required for ${pageUrl} but TEST_${cookieName.toUpperCase()} environment variable is not set.`
+      );
       return;
     }
-    
+
     console.log(`Setting authentication cookie '${cookieName}' for ${pageUrl}`);
-    
+
     // Set the authentication cookie
     await context.addCookies([
       {
@@ -49,8 +51,8 @@ async function setupAuthentication(context, pageUrl, pageConfig) {
         path: '/',
         httpOnly: true,
         secure: false, // Set to true for production with HTTPS
-        sameSite: 'Lax'
-      }
+        sameSite: 'Lax',
+      },
     ]);
   }
 }
@@ -65,25 +67,28 @@ async function performInteractiveTesting(page, testingElements, settings) {
   for (const selector of testingElements) {
     try {
       console.log(`  - Clicking element: ${selector}`);
-      
+
       // Wait for element to be visible and clickable
       await page.waitForSelector(selector, { timeout: 5000 });
       await page.click(selector);
-      
+
       // Wait after click to allow any dynamic content to load
       await page.waitForTimeout(settings.wait_after_click);
-      
+
       // Wait for any potential DOM changes
       await page.waitForLoadState('domcontentloaded');
-      
     } catch (error) {
-      console.warn(`  - Warning: Could not click element ${selector}: ${error.message}`);
+      console.warn(
+        `  - Warning: Could not click element ${selector}: ${error.message}`
+      );
     }
   }
 }
 
 (async () => {
-  const browser = await chromium.launch({ headless: config.global_settings.headless });
+  const browser = await chromium.launch({
+    headless: config.global_settings.headless,
+  });
   const context = await browser.newContext();
   const page = await context.newPage();
 
@@ -106,7 +111,9 @@ async function performInteractiveTesting(page, testingElements, settings) {
 
     // Perform interactive testing if elements are specified
     if (testing && testing.length > 0) {
-      console.log(`  Performing interactive testing for ${testing.length} elements`);
+      console.log(
+        `  Performing interactive testing for ${testing.length} elements`
+      );
       await performInteractiveTesting(page, testing, settings);
     }
 
@@ -116,18 +123,22 @@ async function performInteractiveTesting(page, testingElements, settings) {
       builder = builder.withTags(tags);
     }
     const accessibilityScanResults = await builder.analyze();
-    
 
     // write JSON report
     const jsonFilename = `report-${name}.json`;
     const jsonPath = path.join(REPORTS_DIR, 'JSON', jsonFilename);
-    fs.writeFileSync(jsonPath, JSON.stringify(accessibilityScanResults, null, 2));
+    fs.writeFileSync(
+      jsonPath,
+      JSON.stringify(accessibilityScanResults, null, 2)
+    );
 
     // Accumulate for combined HTML report
     routeResults.push({ route: url, results: accessibilityScanResults });
 
     console.log(`Accessibility test completed for ${url}`);
-    console.log(`Violations found: ${accessibilityScanResults.violations.length}`);
+    console.log(
+      `Violations found: ${accessibilityScanResults.violations.length}`
+    );
     console.log(`Full report saved.`);
 
     if (accessibilityScanResults.violations.length > 0) {

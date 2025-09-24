@@ -1,4 +1,5 @@
 # Combined Accessibility Report
+
 Report generated on 5/12/2025, 2:22:38 PM
 
 Tested with tags: wcag2a, wcag2aa, wcag21a, wcag21aa
@@ -8,6 +9,7 @@ Report generated on 5/12/2025, 2:22:38 PM
 ## Page: /
 
 ## Summary
+
 - **Total Violations:** 0
 - **Critical:** 0
 - **Serious:** 0
@@ -18,8 +20,8 @@ Report generated on 5/12/2025, 2:22:38 PM
 - **Inapplicable:** 38
 
 ## Violations
-**No violations found!**
 
+**No violations found!**
 
 ---
 
@@ -28,6 +30,7 @@ Report generated on 5/12/2025, 2:22:38 PM
 ## Page: /dashboard
 
 ## Summary
+
 - **Total Violations:** 0
 - **Critical:** 0
 - **Serious:** 0
@@ -38,8 +41,8 @@ Report generated on 5/12/2025, 2:22:38 PM
 - **Inapplicable:** 37
 
 ## Violations
-**No violations found!**
 
+**No violations found!**
 
 ---
 
@@ -48,6 +51,7 @@ Report generated on 5/12/2025, 2:22:38 PM
 ## Page: /dashboard/statistics
 
 ## Summary
+
 - **Total Violations:** 0
 - **Critical:** 0
 - **Serious:** 0
@@ -58,8 +62,8 @@ Report generated on 5/12/2025, 2:22:38 PM
 - **Inapplicable:** 37
 
 ## Violations
-**No violations found!**
 
+**No violations found!**
 
 ---
 
@@ -68,6 +72,7 @@ Report generated on 5/12/2025, 2:22:38 PM
 ## Page: /dashboard/tree-map
 
 ## Summary
+
 - **Total Violations:** 0
 - **Critical:** 0
 - **Serious:** 0
@@ -78,8 +83,8 @@ Report generated on 5/12/2025, 2:22:38 PM
 - **Inapplicable:** 37
 
 ## Violations
-**No violations found!**
 
+**No violations found!**
 
 ---
 
@@ -88,6 +93,7 @@ Report generated on 5/12/2025, 2:22:38 PM
 ## Page: /dashboard/timeline
 
 ## Summary
+
 - **Total Violations:** 0
 - **Critical:** 0
 - **Serious:** 0
@@ -98,4 +104,5 @@ Report generated on 5/12/2025, 2:22:38 PM
 - **Inapplicable:** 37
 
 ## Violations
+
 **No violations found!**

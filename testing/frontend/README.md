@@ -2,7 +2,6 @@
 
 WCAG means the Web Content Accessibility Guidelines. By default, the tests run the latest version of WCAG2.0 and WCAG2.1. To run different tests, you can use specific tags when running with `node test.js {tag1} {tag2}`. You can view all compatible axe-core tags [here](https://www.deque.com/axe/core-documentation/api-documentation/#axecore-tags).
 
-
 ## Prerequisities
 
 1. App is running on `http://localhost:3000`
@@ -96,20 +95,19 @@ node test.js {tag1} {tag2}
 
 View all compatible axe-core tags [here](https://www.deque.com/axe/core-documentation/api-documentation/#axecore-tags).
 
-
 ## Axe DevTools
 
 Whilst this is automated testing, it can be easier to install the free axe DevTools Chrome extension to run scans directly in the browser. Although, you cannot generate reports from the free version of the extension, so reports can be generated here.
 
 Download the extension from [here](https://chromewebstore.google.com/detail/axe-devtools-web-accessib/lhdoppojpmngadmnindnejefpokejbdd).
 
-| axe DevTools Screenshot |
-| --- |
+| axe DevTools Screenshot                               |
+| ----------------------------------------------------- |
 | ![axe devtools extension](./axe-tools-screenshot.png) |
 
 ## UI Tests
 
-With the application running, it is possible to run tests using Playwright. 
+With the application running, it is possible to run tests using Playwright.
 
 Tests are contained in the testing folder > frontend > tests. Data used in the tests is saved under the data folder.
 
@@ -118,20 +116,17 @@ Mocked API returns are being created using Playwright <i>route.fulfill</i> funct
 Current existing tests include:
 
 - Search teams functionality
+  - under Copilot > Team Usage > Search Teams
 
-    -   under Copilot  > Team Usage > Search Teams 
+- Tech Radar
+  - Infrastructure (AWS/GCP)
+    - Check that AWS and GCP blips exist
+    - Check projects do exist using AWS and GCP
+    - Check that no projects for another cloud provider - Oracle do not appear in the AWS and GCP blips
 
-- Tech Radar 
-
-    -   Infrastructure (AWS/GCP) 
-
-        - Check that AWS and GCP blips exist
-        - Check projects do exist using AWS and GCP
-        - Check that no projects for another cloud provider - Oracle do not appear in the AWS and GCP blips
-    
-    -   Languages
-        - Check that Javascript/TypeScript language exist
-        - Check projects that exist that use Javascript and TypeScript.
+  - Languages
+    - Check that Javascript/TypeScript language exist
+    - Check projects that exist that use Javascript and TypeScript.
 
 Run the following to run the tests:
 
