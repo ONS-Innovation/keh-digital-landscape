@@ -68,11 +68,7 @@ test.describe('Check projects available under Tech Radar', () => {
       // Check whether the page has loaded the Tech Radar page
       await expect(radarInfrastructureText).toHaveClass(/quadrant-label-text/);
       await expect(blip).toHaveClass(/blip-number/);
-      await page
-        .locator(`g#blip-${techId}`)
-        .locator('circle')
-        .first()
-        .click();
+      await page.locator(`g#blip-${techId}`).locator('circle').first().click();
 
       const blipInfo = page.getByRole('heading', { name: heading });
       const noOfProjects = page.getByText(projectsCountText);

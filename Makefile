@@ -79,7 +79,7 @@ lint-backend:
 lint-fix-backend:
 	cd backend && npm run lint:fix
 
-format: format-frontend format-backend
+format: format-frontend format-backend format-frontend-testing
 
 format-frontend:
 	cd frontend && npm run format ./src
