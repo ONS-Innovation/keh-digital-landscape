@@ -864,6 +864,7 @@ const ReviewPage = () => {
                     : 0;
                   return (
                     <div
+                      id={`technology-${item.id}`}
                       key={item.id}
                       className="draggable-item"
                       draggable
