@@ -123,10 +123,11 @@ Current existing tests include:
     - Check that AWS and GCP blips exist
     - Check projects do exist using AWS and GCP
     - Check that no projects for another cloud provider - Oracle do not appear in the AWS and GCP blips
-
   - Languages
     - Check that Javascript/TypeScript language exist
     - Check projects that exist that use Javascript and TypeScript.
+    - Check that Java language exist
+    - Check projects that exist that use Java
 
 Run the following to run the tests:
 

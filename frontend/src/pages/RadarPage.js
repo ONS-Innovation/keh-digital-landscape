@@ -426,6 +426,32 @@ function RadarPage() {
   };
 
   /**
+   * specialTechMatchers constant to store the special technology matchers.
+   * This object can be extended to add more special cases.
+   * @type {Object} - The special technology matchers.
+   */
+  const specialTechMatchers = {
+    AWS: item => {
+      const lowered = item.trim().toLowerCase();
+      return lowered.includes('aws') || lowered.includes('amazon');
+    },
+    GCP: item => {
+      const excluded_gcp = ['google meet', 'google docs'];
+      const lowered = item.trim().toLowerCase();
+      if (excluded_gcp.includes(lowered)) return false;
+      return lowered.includes('google') || lowered.includes('gcp');
+    },
+    'Javascript/TypeScript': item => {
+      const lowered = item.trim().toLowerCase();
+      return lowered === 'javascript' || lowered === 'typescript';
+    },
+    SAS: item => {
+      const lowered = item.trim().toLowerCase();
+      return lowered === 'base sas' || lowered === 'sas';
+    },
+  };
+
+  /**
    * findProjectsUsingTechnology function to find the projects using the technology.
    *
    * @param {string} tech - The technology to find the projects for.
@@ -469,44 +495,27 @@ function RadarPage() {
       return allTechColumns.some(column => {
         const value = project[column];
         if (!value) return false;
-
-        // Check forAWS and GCP (Google) matches
-        // This is due to services being named as technologies
-        // Other technologies require exact match
-        if (tech === 'AWS') {
-          return value.split(';').some(item => {
-            const item_lowered = item.trim().toLowerCase();
-            return (
-              item_lowered.includes('aws') || item_lowered.includes('amazon')
-            );
-          });
+        const matcher = specialTechMatchers[tech];
+        if (matcher) {
+          return value.split(';').some(matcher);
         }
-
-        if (tech === 'GCP') {
-          return value.split(';').some(item => {
-            // Google services to exclude from GCP cloud consideration
-            const excluded_gcp = ['google meet', 'google docs'];
-            const item_lowered = item.trim().toLowerCase();
-            if (excluded_gcp.includes(item_lowered)) return false;
-            return (
-              item_lowered.includes('google') || item_lowered.includes('gcp')
+        // If there is a colon, extract all techs before colons
+        if (value.includes(':')) {
+          // Match all non-space sequences before a colon, or all words before a colon
+          const techMatches = [...value.matchAll(/([^\s:;]+):/g)].map(match =>
+            match[1].trim()
+          );
+          return techMatches.some(
+            techName => techName.toLowerCase() === tech.toLowerCase().trim()
+          );
+        } else {
+          // Otherwise, split by ; and match as usual
+          return value
+            .split(';')
+            .some(
+              item => item.trim().toLowerCase() === tech.toLowerCase().trim()
             );
-          });
         }
-
-        // Javascript and Typescript captured as one node in the radar
-        if (tech === 'Javascript/TypeScript') {
-          return value.split(';').some(item => {
-            const item_lowered = item.trim().toLowerCase();
-            return (
-              item_lowered === 'javascript' || item_lowered === 'typescript'
-            );
-          });
-        }
-
-        return value
-          .split(';')
-          .some(item => item.trim().toLowerCase().includes(tech.toLowerCase()));
       });
     });
   };

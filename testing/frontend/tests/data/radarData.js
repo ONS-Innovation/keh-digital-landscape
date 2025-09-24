@@ -68,6 +68,28 @@ export const radarData = {
         },
       ],
     },
+    {
+      id: 'test-java',
+      title: 'Java',
+      quadrant: '1',
+      description: 'Languages',
+      timeline: [
+        {
+          moved: 0,
+          ringId: 'review',
+          date: '2025-07-01 00:00:00',
+          description: 'Added for review from tech audit (Languages)',
+        },
+        {
+          moved: 1,
+          ringId: 'hold',
+          date: '2025-09-17 00:00:00',
+          description:
+            'Technology Radar Update: Java Categorised as **HOLD**\n.',
+          author: 'test@ons.gov.uk',
+        },
+      ],
+    },
     // The below is used to test multiple directorate support.
     // The below technology should appear in trial for all directorates
     // and in adopt for Data Science only.
