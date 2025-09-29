@@ -125,13 +125,13 @@ test('Check that directorate dropdown is present and has expected options', asyn
   const optionValues = await Promise.all(
     options.map(option => option.getAttribute('value'))
   );
-  const expectedValues = ['Digital Services', 'Data Science', 'DGO'];
+  const expectedValues = ['Digital Services (DS)', 'Data Science Campus (DSC)', 'Data Growth and Operations (DGO)'];
 
   expect(optionValues).toEqual(expectedValues);
 
   // Check that the default selected option is Digital Services
   const selectedValue = await directorateSelector.inputValue();
-  expect(selectedValue).toBe('Digital Services');
+  expect(selectedValue).toBe('Digital Services (DS)');
 });
 
 test('Check that R appears in trial for all directorates and in adopt for Data Science only', async ({
@@ -154,7 +154,7 @@ test('Check that R appears in trial for all directorates and in adopt for Data S
   const directorateSelector = page.locator('select#directorate-select');
 
   // Change to Data Science directorate
-  await directorateSelector.selectOption('Data Science');
+  await directorateSelector.selectOption('Data Science Campus (DSC)');
 
   // Check that R is in adopt for Data Science
   const blipRContainerDS = page.locator('g#blip-test-r');
@@ -165,7 +165,7 @@ test('Check that R appears in trial for all directorates and in adopt for Data S
 
   // Change to another directorate (DGO)
   // This is to check that DGO inherits the Digital Services position
-  await directorateSelector.selectOption('DGO');
+  await directorateSelector.selectOption('Data Growth and Operations (DGO)');
 
   // Check that R is in trial for DGO
   const blipRContainerDGO = page.locator('g#blip-test-r');
@@ -184,14 +184,14 @@ test('Check that C# is not on the radar for Digital Services and DGO, but is in 
   const directorateSelector = page.locator('select#directorate-select');
 
   // Make sure we start with Digital Services
-  await directorateSelector.selectOption('Digital Services');
+  await directorateSelector.selectOption('Digital Services (DS)');
 
   // Check that C# is not present for Digital Services
   const blipC = await page.locator('g#blip-test-Csharp');
   await expect(blipC).toHaveCount(0);
 
   // Change to Data Science directorate
-  await directorateSelector.selectOption('Data Science');
+  await directorateSelector.selectOption('Data Science Campus (DSC)');
 
   // Check that C# is present for Data Science
   const blipC_DS = await page.locator('g#blip-test-Csharp');
@@ -206,7 +206,7 @@ test('Check that C# is not on the radar for Digital Services and DGO, but is in 
 
   // Change to another directorate (DGO)
   // This is to check that DGO inherits the Digital Services position
-  await directorateSelector.selectOption('DGO');
+  await directorateSelector.selectOption('Data Growth and Operations (DGO)');
 
   // Check that C# is not present for DGO
   const blipC_DGO = await page.locator('g#blip-test-Csharp');

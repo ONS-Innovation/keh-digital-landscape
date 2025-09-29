@@ -118,9 +118,9 @@ export const radarData = {
           ringId: 'adopt',
           date: '2025-09-23 00:00:02',
           description:
-            'Technology Radar Update: R Categorised as **ADOPT**\nThis is for Data Science only.',
+            'Technology Radar Update: R Categorised as **ADOPT**\nThis is for Data Science Campus (DSC) only.',
           author: 'test@ons.gov.uk',
-          directorate: 'Data Science',
+          directorate: 'Data Science Campus (DSC)',
         },
       ],
     },
@@ -148,16 +148,16 @@ export const radarData = {
           description:
             'Technology Radar Update: C# Categorised as **TRIAL**\n.',
           author: 'test@ons.gov.uk',
-          directorate: 'Data Science',
+          directorate: 'Data Science Campus (DSC)',
         },
         {
           moved: 1,
           ringId: 'adopt',
           date: '2025-09-23 00:00:02',
           description:
-            'Technology Radar Update: C# Categorised as **ADOPT**\nThis is for Data Science only.',
+            'Technology Radar Update: C# Categorised as **ADOPT**\nThis is for Data Science Campus (DSC) only.',
           author: 'test@ons.gov.uk',
-          directorate: 'Data Science',
+          directorate: 'Data Science Campus (DSC)',
         },
       ],
     },

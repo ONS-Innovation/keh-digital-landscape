@@ -2,7 +2,7 @@
 // It is used in review.test.js
 // Technologies are identified by their id field in radarData.js
 export const reviewPositionCases = {
-  'Digital Services': {
+  'Digital Services (DS)': {
     adopt: ['test-aws', 'test-gcp', 'test-javascript-typescript'],
     trial: ['test-r'],
     assess: [],
@@ -10,7 +10,7 @@ export const reviewPositionCases = {
     review: ['test-Csharp'],
     ignore: [],
   },
-  'Data Science': {
+  'Data Science Campus (DSC)': {
     adopt: [
       'test-aws',
       'test-gcp',
@@ -24,7 +24,7 @@ export const reviewPositionCases = {
     review: [],
     ignore: [],
   },
-  DGO: {
+  'Data Growth and Operations (DGO)': {
     adopt: ['test-aws', 'test-gcp', 'test-javascript-typescript'],
     trial: ['test-r'],
     assess: [],

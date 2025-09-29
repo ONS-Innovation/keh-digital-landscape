@@ -64,13 +64,13 @@ test('Check that directorate dropdown is present and has expected options', asyn
   const optionValues = await Promise.all(
     options.map(option => option.getAttribute('value'))
   );
-  const expectedValues = ['Digital Services', 'Data Science', 'DGO'];
+  const expectedValues = ['Digital Services (DS)', 'Data Science Campus (DSC)', 'Data Growth and Operations (DGO)'];
 
   expect(optionValues).toEqual(expectedValues);
 
   // Check that the default selected option is Digital Services
   const selectedValue = await directorateSelector.inputValue();
-  expect(selectedValue).toBe('Digital Services');
+  expect(selectedValue).toBe('Digital Services (DS)');
 });
 
 test('Check technologies appear in the correct areas for different directorates', async ({
