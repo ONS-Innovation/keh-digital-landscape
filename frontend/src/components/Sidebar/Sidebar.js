@@ -4,6 +4,7 @@ import '../../styles/components/Sidebar.css';
 import HelpModal from '../Header/HelpModal';
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
 import UserProfile from '../UserProfile/UserProfile';
+import Modal from '../BugReport/Modal';
 import { MdOutlineRadar } from 'react-icons/md';
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
 import {
@@ -13,12 +14,14 @@ import {
   TbUsers,
   TbChartBar,
   TbHelp,
+  TbBug,
 } from 'react-icons/tb';
 import { VscCopilot } from 'react-icons/vsc';
 
 const Sidebar = () => {
   const location = useLocation();
   const [showHelpModal, setShowHelpModal] = useState(false);
+  const [showBugReportModal, setShowBugReportModal] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(() => {
     const saved = localStorage.getItem('sidebarCollapsed');
     return saved === 'true' ? true : false;
@@ -30,6 +33,14 @@ const Sidebar = () => {
 
   const handleSetShowHelpModal = () => {
     setShowHelpModal(!showHelpModal);
+  };
+
+  const openReportBugModal = () => {
+    setShowBugReportModal(true);
+  };
+
+  const closeReportBugModal = () => {
+    setShowBugReportModal(false);
   };
 
   const generalNavItems = [
@@ -112,6 +123,19 @@ const Sidebar = () => {
       </nav>
       <div className="sidebar-footer">
         <div className="sidebar-footer-buttons">
+          <button
+            onClick={() => openReportBugModal()}
+            className="sidebar-footer-button"
+            aria-label="Open report bug modal"
+          >
+            <span className="sidebar-icon">
+              <TbBug />
+            </span>
+            {!isCollapsed && (
+              <span className="sidebar-label">Report a Bug</span>
+            )}
+          </button>
+          <Modal isOpen={showBugReportModal} onClose={closeReportBugModal} />
           <button
             onClick={() => handleSetShowHelpModal()}
             className="sidebar-footer-button"

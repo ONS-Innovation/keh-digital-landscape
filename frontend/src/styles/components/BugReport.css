@@ -35,7 +35,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 1001 !important;
 }
 
 .modal-content {
@@ -46,4 +46,61 @@
   width: 90%;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: relative;
+}
+
+.modal-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.modal-close-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: var(--radius);
+  transition: all 0.2s ease;
+  border: 1px solid hsl(var(--border));
+  font-size: 1.5rem;
+  color: hsl(var(--foreground));
+}
+
+.modal-close-button:hover {
+  background: hsl(var(--muted));
+  color: hsl(var(--foreground));
+}
+
+.modal-header h2 {
+  color: hsl(var(--foreground));
+  margin-top: 0;
+  font-size: 20px;
+}
+
+.modal-content p {
+  color: hsl(var(--foreground));
+  margin: 0;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.modal-action-button {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: 500;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.modal-action-button:hover {
+  background: hsl(var(--primary) / 0.9);
+  color: hsl(var(--primary-foreground));
 }
