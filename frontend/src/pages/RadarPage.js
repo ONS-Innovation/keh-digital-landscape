@@ -312,8 +312,6 @@ function RadarPage() {
     const results = data.entries
       .filter(entry => {
         // Get the most recent timeline entry
-        // const mostRecentRing =
-        //   entry.timeline[entry.timeline.length - 1].ringId.toLowerCase();
         const mostRecentRing = getMostRecentRing(entry.timeline);
 
         // Exclude entries where most recent ring is review or ignore
@@ -629,8 +627,7 @@ function RadarPage() {
 
   const groupedEntries = data.entries.reduce((acc, entry) => {
     const quadrant = entry.quadrant;
-    // const mostRecentRing =
-    //   entry.timeline[entry.timeline.length - 1].ringId.toLowerCase();
+
     const mostRecentRing = getMostRecentRing(entry.timeline);
 
     // Skip if the most recent timeline entry has ringId of "review" or "ignore"
