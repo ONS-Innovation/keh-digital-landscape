@@ -581,8 +581,6 @@ const ReviewPage = () => {
       date: now,
       description: `Changed from ${selectedItem.title} (${selectedItem.description}) to ${editedTitle} (${editedCategory})`,
       author: currentUser?.user?.email || null,
-      // We don't need to put a directorate here as we don't want people to rename technologies per directorate
-      // directorate: selectedDirectorate,
     };
 
     // Update the item with new values and timeline
