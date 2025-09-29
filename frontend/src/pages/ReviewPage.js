@@ -248,7 +248,7 @@ const ReviewPage = () => {
 
   /**
    * handleDirectorateChange function to handle the directorate change event.
-   * 
+   *
    * @param {string} dir - The selected directorate.
    */
   const handleDirectorateChange = dir => {

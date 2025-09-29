@@ -168,8 +168,7 @@ const InfoBox = ({
     );
   }
 
-  const mostRecentRing =
-    timeline[timeline.length - 1].ringId;
+  const mostRecentRing = timeline[timeline.length - 1].ringId;
 
   const positionMessage = isHighlighted
     ? `Moved specifically for ${selectedDirectorate}.`
