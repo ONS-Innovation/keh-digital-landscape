@@ -40,7 +40,7 @@ const ReviewPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedDirectorate, setSelectedDirectorate] =
-    useState('Digital Services');
+    useState('Digital Services (DS)');
   const [showAddTechnologyModal, setShowAddTechnologyModal] = useState(false);
   const [showMoveModal, setShowMoveModal] = useState(false);
   const [pendingMove, setPendingMove] = useState(null);
@@ -86,12 +86,12 @@ const ReviewPage = () => {
     { label: 'Infrastructure', value: 'Infrastructure' },
   ];
 
-  const directorateOptions = ['Digital Services', 'Data Science', 'DGO'];
+  const directorateOptions = ['Digital Services (DS)', 'Data Science Campus (DSC)', 'Data Growth and Operations (DGO)'];
 
   const directorateColourMap = {
-    'Digital Services': '#1f77b4', // Blue
-    'Data Science': '#ff7f0e', // Orange
-    DGO: '#2ca02c', // Green
+    'Digital Services (DS)': '#1f77b4', // Blue
+    'Data Science Campus (DSC)': '#ff7f0e', // Orange
+    'Data Growth and Operations (DGO)': '#2ca02c', // Green
   };
 
   useEffect(() => {
@@ -160,11 +160,11 @@ const ReviewPage = () => {
 
       // Consider selected directorate when categorising
       entry.timeline.forEach(t => {
-        const directorate = t.directorate || 'Digital Services';
+        const directorate = t.directorate || 'Digital Services (DS)';
         if (directorate === inputDirectorate) {
           selectedDirectorateTimeline.push(t);
         }
-        if (directorate === 'Digital Services') {
+        if (directorate === 'Digital Services (DS)') {
           digitalServicesTimeline.push(t);
         }
       });
@@ -173,9 +173,9 @@ const ReviewPage = () => {
         // If no timeline entries for selected directorate, fall back to Digital Services timeline
         selectedDirectorateTimeline = digitalServicesTimeline;
       } else {
-        // If there are directorate-specific entries, besides 'Digital Services',
+        // If there are directorate-specific entries, besides 'Digital Services (DS)',
         // We should highlight these technologies to make them obvious to the user
-        if (inputDirectorate !== 'Digital Services') {
+        if (inputDirectorate !== 'Digital Services (DS)') {
           const currentPosition =
             selectedDirectorateTimeline[
               selectedDirectorateTimeline.length - 1
@@ -359,7 +359,7 @@ const ReviewPage = () => {
     // This is because it now has a directorate-specific position
     // If the position is the same as Digital Services, we don't highlight it as it's not directorate-specific
     if (
-      selectedDirectorate !== 'Digital Services' &&
+      selectedDirectorate !== 'Digital Services (DS)' &&
       digitalServicesPosition !== destList.toLowerCase() &&
       !highlightedTechnologies.includes(item.id)
     ) {
@@ -368,7 +368,7 @@ const ReviewPage = () => {
 
     // If the new position matches Digital Services, we should remove the highlight
     if (
-      selectedDirectorate !== 'Digital Services' &&
+      selectedDirectorate !== 'Digital Services (DS)' &&
       digitalServicesPosition === destList.toLowerCase() &&
       highlightedTechnologies.includes(item.id)
     ) {

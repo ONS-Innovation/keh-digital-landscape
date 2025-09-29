@@ -58,14 +58,14 @@ function RadarPage() {
   const getTechnologyStatus = useTechnologyStatus();
 
   const [selectedDirectorate, setSelectedDirectorate] =
-    useState('Digital Services');
+    useState('Digital Services (DS)');
 
-  const directorateOptions = ['Digital Services', 'Data Science', 'DGO'];
+  const directorateOptions = ['Digital Services (DS)', 'Data Science Campus (DSC)', 'Data Growth and Operations (DGO)'];
 
   const directorateColourMap = {
-    'Digital Services': '#1f77b4', // Blue
-    'Data Science': '#ff7f0e', // Orange
-    DGO: '#2ca02c', // Green
+    'Digital Services (DS)': '#1f77b4', // Blue
+    'Data Science Campus (DSC)': '#ff7f0e', // Orange
+    'Data Growth and Operations (DGO)': '#2ca02c', // Green
   };
 
   /**
@@ -101,15 +101,15 @@ function RadarPage() {
     let digitalServicesTimeline = [];
 
     timeline.forEach(entry => {
-      const directorate = entry.directorate || 'Digital Services';
+      const directorate = entry.directorate || 'Digital Services (DS)';
 
       if (
         directorate === selectedDirectorate &&
-        directorate !== 'Digital Services'
+        directorate !== 'Digital Services (DS)'
       ) {
         filteredTimeline.push(entry);
       }
-      if (directorate === 'Digital Services') {
+      if (directorate === 'Digital Services (DS)') {
         digitalServicesTimeline.push(entry);
       }
     });
@@ -158,11 +158,11 @@ function RadarPage() {
     // This logic may need to be revisited in future if it causes confusion (i.e. Why is this tech highlighted here but not on the review page? Why is this technology highlighted with it matches Digital Services?)
 
     for (const entry of filteredTimeline) {
-      const directorate = entry.directorate || 'Digital Services';
+      const directorate = entry.directorate || 'Digital Services (DS)';
 
       if (
         directorate === selectedDirectorate &&
-        selectedDirectorate !== 'Digital Services'
+        selectedDirectorate !== 'Digital Services (DS)'
       ) {
         shouldBeHighlighted = true;
         break;
