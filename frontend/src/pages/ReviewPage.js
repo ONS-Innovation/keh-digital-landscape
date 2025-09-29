@@ -206,6 +206,8 @@ const ReviewPage = () => {
         [entry.id]: digitalServicesTimeline,
       }));
 
+      entry.filteredTimeline = selectedDirectorateTimeline;
+
       const currentRing =
         selectedDirectorateTimeline[
           selectedDirectorateTimeline.length - 1
@@ -242,6 +244,19 @@ const ReviewPage = () => {
     // Calculate movement based on index difference
     console.log(destIndex, sourceIndex, destIndex - sourceIndex);
     return destIndex - sourceIndex;
+  };
+
+  /**
+   * handleDirectorateChange function to handle the directorate change event.
+   * 
+   * @param {string} dir - The selected directorate.
+   */
+  const handleDirectorateChange = dir => {
+    setSelectedDirectorate(dir);
+
+    // Clear selected item when directorate changes
+    // This is so stale information doesn't persist within the info box component
+    setSelectedItem(null);
   };
 
   const handleDragStart = (e, item, sourceList) => {
@@ -753,6 +768,7 @@ const ReviewPage = () => {
         onEditCancel={handleCancelEdit}
         isHighlighted={highlightedTechnologies.includes(selectedItem.id)}
         selectedDirectorate={selectedDirectorate}
+        timeline={selectedItem.filteredTimeline}
       />
     );
   };
@@ -985,7 +1001,7 @@ const ReviewPage = () => {
                   <select
                     id="directorate-select"
                     value={selectedDirectorate}
-                    onChange={e => setSelectedDirectorate(e.target.value)}
+                    onChange={e => handleDirectorateChange(e.target.value)}
                     className="multi-select-control"
                     aria-label="Select Directorate"
                   >

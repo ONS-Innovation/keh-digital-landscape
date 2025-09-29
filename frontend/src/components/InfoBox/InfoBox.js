@@ -31,6 +31,7 @@ const InfoBox = ({
   onEditCancel,
   isHighlighted = false,
   selectedDirectorate = 'Digital Services',
+  timeline = selectedItem ? selectedItem.timeline : [],
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState('');
@@ -168,7 +169,7 @@ const InfoBox = ({
   }
 
   const mostRecentRing =
-    selectedItem.timeline[selectedItem.timeline.length - 1].ringId;
+    timeline[timeline.length - 1].ringId;
 
   const positionMessage = isHighlighted
     ? `Moved specifically for ${selectedDirectorate}.`
@@ -285,7 +286,7 @@ const InfoBox = ({
       </div>
 
       <div className="timeline-container" tabIndex={0}>
-        {[...selectedItem.timeline]
+        {[...timeline]
           .reverse()
           .slice()
           [timelineAscending ? 'reverse' : 'slice']()

@@ -178,6 +178,20 @@ function RadarPage() {
   };
 
   /**
+   * handleDirectorateChange function to handle the directorate change event.
+   * 
+   * @param {string} dir - The selected directorate.
+   */
+  const handleDirectorateChange = dir => {
+    setSelectedDirectorate(dir);
+
+    // Clear blip selection when directorate changes
+    // This is so stale information doesn't persist within the info box component
+    setSelectedBlip(null);
+    setLockedBlip(null);
+  };
+
+  /**
    * useEffect hook to set the allBlips state with the blips array.
    */
   useEffect(() => {
@@ -810,7 +824,7 @@ function RadarPage() {
             <select
               id="directorate-select"
               value={selectedDirectorate}
-              onChange={e => setSelectedDirectorate(e.target.value)}
+              onChange={e => handleDirectorateChange(e.target.value)}
               className="multi-select-control"
               aria-label="Select Directorate"
             >
