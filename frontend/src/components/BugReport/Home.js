@@ -9,7 +9,7 @@ const BugReport = () => {
         If you have any bugs or issues with the Digital Landscape, please let us
         know by opening an issue on{' '}
         <a
-          href="https://github.com/ONS-Innovation/keh-digital-landscape/issues/new?template=bug_report.md"
+          href="https://github.com/ONS-Innovation/keh-digital-landscape/issues/new?labels=bug&template=bug_report.md"
           target="_blank"
           rel="noopener noreferrer"
         >
