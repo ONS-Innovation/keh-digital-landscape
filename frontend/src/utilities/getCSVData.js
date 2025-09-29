@@ -1,5 +1,6 @@
 import { toast } from 'react-hot-toast';
 import { useData } from '../contexts/dataContext';
+import customFetch from './customFetch';
 /**
  * fetchCSVFromS3 function to fetch the CSV data from the S3 bucket.
  * Falls back to local CSV if S3 fetch fails.
@@ -9,7 +10,7 @@ import { useData } from '../contexts/dataContext';
 export const fetchCSVFromS3 = async () => {
   try {
     const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
-    const response = await fetch(`${backendUrl}/api/csv`);
+    const response = await customFetch(`${backendUrl}/api/csv`);
     if (!response.ok) {
       throw new Error('Failed to fetch CSV data');
     }
@@ -32,7 +33,6 @@ export const fetchCSVFromS3 = async () => {
           return obj;
         }, {});
       });
-      toast.error('Error loading project data, using local CSV.');
       return data;
     } catch (fallbackError) {
       toast.error('Failed to load project data.');

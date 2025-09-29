@@ -24,7 +24,7 @@ router.get('/csv', async (req, res) => {
     // Transform JSON data to CSV format using the utility function that handles reverse dependencies
     const transformedData = transformProjectsToCSVFormat(jsonData.projects);
 
-    res.json(transformedData);
+    res.status(400).json(transformedData);
   } catch (error) {
     logger.error('Error fetching and transforming project data:', {
       error: error.message,
