@@ -64,7 +64,11 @@ test('Check that directorate dropdown is present and has expected options', asyn
   const optionValues = await Promise.all(
     options.map(option => option.getAttribute('value'))
   );
-  const expectedValues = ['Digital Services (DS)', 'Data Science Campus (DSC)', 'Data Growth and Operations (DGO)'];
+  const expectedValues = [
+    'Digital Services (DS)',
+    'Data Science Campus (DSC)',
+    'Data Growth and Operations (DGO)',
+  ];
 
   expect(optionValues).toEqual(expectedValues);
 

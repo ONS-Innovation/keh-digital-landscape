@@ -39,8 +39,9 @@ const ReviewPage = () => {
   const [pendingNewTechnology, setPendingNewTechnology] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [selectedDirectorate, setSelectedDirectorate] =
-    useState('Digital Services (DS)');
+  const [selectedDirectorate, setSelectedDirectorate] = useState(
+    'Digital Services (DS)'
+  );
   const [showAddTechnologyModal, setShowAddTechnologyModal] = useState(false);
   const [showMoveModal, setShowMoveModal] = useState(false);
   const [pendingMove, setPendingMove] = useState(null);
@@ -86,7 +87,11 @@ const ReviewPage = () => {
     { label: 'Infrastructure', value: 'Infrastructure' },
   ];
 
-  const directorateOptions = ['Digital Services (DS)', 'Data Science Campus (DSC)', 'Data Growth and Operations (DGO)'];
+  const directorateOptions = [
+    'Digital Services (DS)',
+    'Data Science Campus (DSC)',
+    'Data Growth and Operations (DGO)',
+  ];
 
   const directorateColourMap = {
     'Digital Services (DS)': '#1f77b4', // Blue
