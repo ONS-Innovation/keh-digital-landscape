@@ -11,10 +11,19 @@ else
     branch=$(git rev-parse --abbrev-ref HEAD)
 fi
 
-if [[ ${branch} == "main" || ${branch} == "master" || ${branch} == "concourse" ]]; then
+# if [[ ${branch} == "main" || ${branch} == "master" || ${branch} == "concourse" ]]; then
+#     env="prod"
+# else
+#     env="dev"
+# fi
+
+if [[ "$ATC_EXTERNAL_URL" == *"dev"* ]]; then
+    env="dev"
+elif [[ "$ATC_EXTERNAL_URL" == *"prod"* ]]; then
     env="prod"
 else
-    env="dev"
+    echo "Could not determine environment"
+    env="dev"  # fallback or handle as needed
 fi
 
 if [[ ${env} == "dev" ]]; then
