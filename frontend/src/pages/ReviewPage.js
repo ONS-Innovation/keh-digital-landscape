@@ -11,7 +11,9 @@ import ProjectModal from '../components/Projects/ProjectModal';
 import { useTechnologyStatus } from '../utilities/getTechnologyStatus';
 import { useData } from '../contexts/dataContext';
 import { MarkdownText } from '../utilities/markdownRenderer';
-import { format } from 'date-fns';
+import { format, set } from 'date-fns';
+import { getDirectorates } from '../utilities/getDirectorates';
+import { getDirectorateColour, getDirectorateName } from '../utilities/directorateUtils';
 
 const ReviewPage = () => {
   const { getUserData } = useData();
@@ -39,9 +41,6 @@ const ReviewPage = () => {
   const [pendingNewTechnology, setPendingNewTechnology] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [selectedDirectorate, setSelectedDirectorate] = useState(
-    'Digital Services (DS)'
-  );
   const [showAddTechnologyModal, setShowAddTechnologyModal] = useState(false);
   const [showMoveModal, setShowMoveModal] = useState(false);
   const [pendingMove, setPendingMove] = useState(null);
@@ -57,12 +56,17 @@ const ReviewPage = () => {
   const [showProjectCount, setShowProjectCount] = useState(false);
   const [projectCountMap, setProjectCountMap] = useState({});
   const getTechnologyStatus = useTechnologyStatus();
+  
+  const [selectedDirectorate, setSelectedDirectorate] = useState(null);
+  const [defaultDirectorate, setDefaultDirectorate] = useState(null);
+  const [directorateColour, setDirectorateColour] = useState('var(--accent)');
+  const [directorateName, setDirectorateName] = useState('Unknown Directorate');
+  const [directorates, setDirectorates] = useState([]);
 
   const [highlightedTechnologies, setHighlightedTechnologies] = useState([]);
   const [changedTechnologies, setChangedTechnologies] = useState([]);
 
-  const [stashedDigitalServicesTimeline, setStashedDigitalServicesTimeline] =
-    useState({});
+  const [stashedDefaultTimeline, setStashedDefaultTimeline] = useState({});
 
   // Fields to scan from CSV and their corresponding categories
   const fieldsToScan = {
@@ -87,17 +91,22 @@ const ReviewPage = () => {
     { label: 'Infrastructure', value: 'Infrastructure' },
   ];
 
-  const directorateOptions = [
-    'Digital Services (DS)',
-    'Data Science Campus (DSC)',
-    'Data Growth and Operations (DGO)',
-  ];
+  useEffect(() => {
+    getDirectorates().then(setDirectorates);
+  }, []);
 
-  const directorateColourMap = {
-    'Digital Services (DS)': '#1f77b4', // Blue
-    'Data Science Campus (DSC)': '#ff7f0e', // Orange
-    'Data Growth and Operations (DGO)': '#2ca02c', // Green
-  };
+  // Default to directorate with default flag if none selected
+  useEffect(() => {
+    if (directorates.length > 0 && !selectedDirectorate) {
+      const defaultDirectorate = directorates.find(dir => dir.default);
+      const directorateId = defaultDirectorate ? defaultDirectorate.id : directorates[0].id;
+
+      setDefaultDirectorate(directorateId);
+      setSelectedDirectorate(directorateId);
+      setDirectorateColour(getDirectorateColour(directorateId, directorates));
+      setDirectorateName(getDirectorateName(directorateId, directorates));
+    }
+  }, [directorates]);
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -161,36 +170,36 @@ const ReviewPage = () => {
 
     radarEntries.forEach(entry => {
       let selectedDirectorateTimeline = [];
-      let digitalServicesTimeline = [];
+      let defaultTimeline = [];
 
       // Consider selected directorate when categorising
       entry.timeline.forEach(t => {
-        const directorate = t.directorate || 'Digital Services (DS)';
+        const directorate = t.directorate || defaultDirectorate;
         if (directorate === inputDirectorate) {
           selectedDirectorateTimeline.push(t);
         }
-        if (directorate === 'Digital Services (DS)') {
-          digitalServicesTimeline.push(t);
+        if (directorate === defaultDirectorate) {
+          defaultTimeline.push(t);
         }
       });
 
       if (selectedDirectorateTimeline.length === 0) {
-        // If no timeline entries for selected directorate, fall back to Digital Services timeline
-        selectedDirectorateTimeline = digitalServicesTimeline;
+        // If no timeline entries for selected directorate, fall back to default timeline
+        selectedDirectorateTimeline = defaultTimeline;
       } else {
-        // If there are directorate-specific entries, besides 'Digital Services (DS)',
+        // If there are directorate-specific entries, besides default directorate,
         // We should highlight these technologies to make them obvious to the user
-        if (inputDirectorate !== 'Digital Services (DS)') {
+        if (inputDirectorate !== defaultDirectorate) {
           const currentPosition =
             selectedDirectorateTimeline[
               selectedDirectorateTimeline.length - 1
             ].ringId.toLowerCase();
           const digitalServicesPosition =
-            digitalServicesTimeline[
-              digitalServicesTimeline.length - 1
+            defaultTimeline[
+              defaultTimeline.length - 1
             ]?.ringId.toLowerCase();
 
-          // Only highlight if the position is different to Digital Services
+          // Only highlight if the position is different to default directorate
           if (
             currentPosition !== digitalServicesPosition &&
             !highlightedTechnologies.includes(entry.id)
@@ -201,9 +210,9 @@ const ReviewPage = () => {
       }
 
       // Stash the Digital Services timeline for later use if needed
-      setStashedDigitalServicesTimeline(prev => ({
+      setStashedDefaultTimeline(prev => ({
         ...prev,
-        [entry.id]: digitalServicesTimeline,
+        [entry.id]: defaultTimeline,
       }));
 
       entry.filteredTimeline = selectedDirectorateTimeline;
@@ -252,7 +261,12 @@ const ReviewPage = () => {
    * @param {string} dir - The selected directorate.
    */
   const handleDirectorateChange = dir => {
+
+    dir = Number(dir);
+
     setSelectedDirectorate(dir);
+    setDirectorateColour(getDirectorateColour(dir, directorates));
+    setDirectorateName(getDirectorateName(dir, directorates));
 
     // Clear selected item when directorate changes
     // This is so stale information doesn't persist within the info box component
@@ -369,7 +383,7 @@ const ReviewPage = () => {
       );
     }
 
-    const digitalServicesTimeline = stashedDigitalServicesTimeline[item.id];
+    const digitalServicesTimeline = stashedDefaultTimeline[item.id];
     const digitalServicesPosition =
       digitalServicesTimeline[
         digitalServicesTimeline.length - 1
@@ -767,7 +781,7 @@ const ReviewPage = () => {
         }}
         onEditCancel={handleCancelEdit}
         isHighlighted={highlightedTechnologies.includes(selectedItem.id)}
-        selectedDirectorate={selectedDirectorate}
+        selectedDirectorate={directorateName}
         timeline={selectedItem.filteredTimeline}
       />
     );
@@ -895,7 +909,7 @@ const ReviewPage = () => {
                             ? 'hsl(var(--accent))'
                             : undefined,
                         border: highlightedTechnologies.includes(item.id)
-                          ? `2px solid ${directorateColourMap[selectedDirectorate]}`
+                          ? `2px solid ${directorateColour}`
                           : undefined,
                       }}
                     >
@@ -974,7 +988,7 @@ const ReviewPage = () => {
             className="admin-header-left"
             style={{
               width: '100%',
-              background: `linear-gradient(to right, hsl(var(--background)), hsl(var(--background)) 55%, ${directorateColourMap[selectedDirectorate]})`,
+              background: `linear-gradient(to right, hsl(var(--background)), hsl(var(--background)) 55%, ${directorateColour})`,
             }}
           >
             <div className="admin-review-title">
@@ -1000,14 +1014,13 @@ const ReviewPage = () => {
                   </label>
                   <select
                     id="directorate-select"
-                    value={selectedDirectorate}
                     onChange={e => handleDirectorateChange(e.target.value)}
                     className="multi-select-control"
                     aria-label="Select Directorate"
                   >
-                    {directorateOptions.map(dir => (
-                      <option key={dir} value={dir}>
-                        {dir}
+                    {directorates.map(dir => (
+                      <option key={dir.name} value={dir.id}>
+                        {dir.name}
                       </option>
                     ))}
                   </select>
@@ -1069,7 +1082,7 @@ const ReviewPage = () => {
                   float: 'right',
                 }}
               >
-                {selectedDirectorate}
+                {getDirectorateName(selectedDirectorate, directorates)}
               </div>
               <p style={{ float: 'left' }}>
                 <small>
@@ -1078,7 +1091,7 @@ const ReviewPage = () => {
                   Adopt only for Data Science, it will be{' '}
                   <span
                     style={{
-                      border: `4px solid ${directorateColourMap[selectedDirectorate]}`,
+                      border: `4px solid ${directorateColour}`,
                       boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
                       backgroundColor: `hsl(var(--background))`,
                       padding: '2px',
@@ -1228,7 +1241,7 @@ const ReviewPage = () => {
                     ) : (
                       <>
                         {change.technology}: {change.from} &rarr; {change.to} (
-                        {change.directorate})
+                        {getDirectorateName(change.directorate, directorates)})
                       </>
                     )}
                   </li>
@@ -1304,7 +1317,7 @@ const ReviewPage = () => {
               </span>
             </p>
             <p>
-              For the Directorate: <strong>{selectedDirectorate}</strong>
+              For the Directorate: <strong>{directorateName}</strong>
             </p>
             <div className="admin-modal-field">
               <label>Description</label>
