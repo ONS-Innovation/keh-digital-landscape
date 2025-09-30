@@ -22,7 +22,9 @@ export const getDirectorates = async () => {
     return enabledDirectorates;
   } catch (error) {
     console.error('Error loading directorates:', error);
-    toast.error('Error loading directorates. Make sure directorates.json is correctly configured on S3.');
+    toast.error(
+      'Error loading directorates. Make sure directorates.json is correctly configured on S3.'
+    );
     return [];
   }
 };
