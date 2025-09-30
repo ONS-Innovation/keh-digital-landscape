@@ -89,6 +89,7 @@ Located in `routes/default.js`, these provide core application functionality:
 - **GET `/json`** - Retrieve project data in JSON format
 - **GET `/tech-radar/json`** - Fetch technology radar data
 - **GET `/repository/project/json`** - Get repository statistics
+- **GET `/directorates/json`** - Get directorate data in JSON format from S3
 - **GET `/banners`** - Retrieve active banner messages
 - **GET `/banners/all`** - Retrieve all banner messages (includes inactive banners)
 - **GET `/health`** - Health check endpoint

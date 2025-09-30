@@ -30,7 +30,7 @@ const InfoBox = ({
   onEditConfirm,
   onEditCancel,
   isHighlighted = false,
-  selectedDirectorate = 'Digital Services',
+  selectedDirectorate = 'Digital Services (DS)',
   timeline = selectedItem ? selectedItem.timeline : [],
 }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -262,7 +262,7 @@ const InfoBox = ({
         </span>
       </div>
 
-      {selectedDirectorate !== 'Digital Services' && (
+      {selectedDirectorate !== 'Digital Services (DS)' && (
         <small style={{ marginTop: '4px' }}>{positionMessage}</small>
       )}
 
