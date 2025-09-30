@@ -1080,6 +1080,7 @@ const ReviewPage = () => {
                   fontSize: '1.6em',
                   color: 'white',
                   float: 'right',
+                  textShadow: '1px 1px 2px black',
                 }}
               >
                 {getDirectorateName(selectedDirectorate, directorates)}
