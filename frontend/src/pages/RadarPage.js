@@ -14,7 +14,10 @@ import InfoBox from '../components/InfoBox/InfoBox';
 import { useTechnologyStatus } from '../utilities/getTechnologyStatus';
 import { BannerContainer } from '../components/Banner';
 import { getDirectorates } from '../utilities/getDirectorates';
-import { getDirectorateColour, getDirectorateName } from '../utilities/directorateUtils';
+import {
+  getDirectorateColour,
+  getDirectorateName,
+} from '../utilities/directorateUtils';
 
 /**
  * RadarPage component for displaying the radar page.
@@ -73,7 +76,9 @@ function RadarPage() {
   useEffect(() => {
     if (directorates.length > 0 && !selectedDirectorate) {
       const defaultDirectorate = directorates.find(dir => dir.default);
-      const directorateId = defaultDirectorate ? defaultDirectorate.id : directorates[0].id;
+      const directorateId = defaultDirectorate
+        ? defaultDirectorate.id
+        : directorates[0].id;
 
       setDefaultDirectorate(directorateId);
       setSelectedDirectorate(directorateId);
@@ -192,9 +197,8 @@ function RadarPage() {
    * @param {string} dir - The selected directorate.
    */
   const handleDirectorateChange = dir => {
-    
     dir = Number(dir);
-    
+
     setSelectedDirectorate(dir);
     setDirectorateColour(getDirectorateColour(dir, directorates));
     setDirectorateName(getDirectorateName(dir, directorates));

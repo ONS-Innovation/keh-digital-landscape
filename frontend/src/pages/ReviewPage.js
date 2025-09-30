@@ -13,7 +13,10 @@ import { useData } from '../contexts/dataContext';
 import { MarkdownText } from '../utilities/markdownRenderer';
 import { format, set } from 'date-fns';
 import { getDirectorates } from '../utilities/getDirectorates';
-import { getDirectorateColour, getDirectorateName } from '../utilities/directorateUtils';
+import {
+  getDirectorateColour,
+  getDirectorateName,
+} from '../utilities/directorateUtils';
 
 const ReviewPage = () => {
   const { getUserData } = useData();
@@ -56,7 +59,7 @@ const ReviewPage = () => {
   const [showProjectCount, setShowProjectCount] = useState(false);
   const [projectCountMap, setProjectCountMap] = useState({});
   const getTechnologyStatus = useTechnologyStatus();
-  
+
   const [selectedDirectorate, setSelectedDirectorate] = useState(null);
   const [defaultDirectorate, setDefaultDirectorate] = useState(null);
   const [directorateColour, setDirectorateColour] = useState('var(--accent)');
@@ -99,7 +102,9 @@ const ReviewPage = () => {
   useEffect(() => {
     if (directorates.length > 0 && !selectedDirectorate) {
       const defaultDirectorate = directorates.find(dir => dir.default);
-      const directorateId = defaultDirectorate ? defaultDirectorate.id : directorates[0].id;
+      const directorateId = defaultDirectorate
+        ? defaultDirectorate.id
+        : directorates[0].id;
 
       setDefaultDirectorate(directorateId);
       setSelectedDirectorate(directorateId);
@@ -195,9 +200,7 @@ const ReviewPage = () => {
               selectedDirectorateTimeline.length - 1
             ].ringId.toLowerCase();
           const digitalServicesPosition =
-            defaultTimeline[
-              defaultTimeline.length - 1
-            ]?.ringId.toLowerCase();
+            defaultTimeline[defaultTimeline.length - 1]?.ringId.toLowerCase();
 
           // Only highlight if the position is different to default directorate
           if (
@@ -261,7 +264,6 @@ const ReviewPage = () => {
    * @param {string} dir - The selected directorate.
    */
   const handleDirectorateChange = dir => {
-
     dir = Number(dir);
 
     setSelectedDirectorate(dir);
