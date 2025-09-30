@@ -143,11 +143,7 @@ test('Check that directorate dropdown is present and has expected options', asyn
     options.map(option => option.textContent())
   );
 
-  const expectedValues = [
-    '0',
-    '1',
-    '2',
-  ];
+  const expectedValues = ['0', '1', '2'];
 
   const expectedOptionTexts = [
     'Digital Services (DS)',
