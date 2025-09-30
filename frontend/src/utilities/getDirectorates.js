@@ -1,3 +1,5 @@
+import { toast } from 'react-hot-toast';
+
 /**
  * Fetches the list of directorates from the backend API.
  * @returns {Promise<Array>} A promise that resolves to an array of directorates.
@@ -16,6 +18,7 @@ export const getDirectorates = async () => {
     return data;
   } catch (error) {
     console.error('Error loading directorates:', error);
+    toast.error('Error loading directorates. Make sure directorates.json is correctly configured on S3.');
     return [];
   }
 };
