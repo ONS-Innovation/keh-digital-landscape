@@ -120,7 +120,7 @@ export const radarData = {
           description:
             'Technology Radar Update: R Categorised as **ADOPT**\nThis is for Data Science Campus (DSC) only.',
           author: 'test@ons.gov.uk',
-          directorate: 'Data Science Campus (DSC)',
+          directorate: 1,
         },
       ],
     },
@@ -148,7 +148,7 @@ export const radarData = {
           description:
             'Technology Radar Update: C# Categorised as **TRIAL**\n.',
           author: 'test@ons.gov.uk',
-          directorate: 'Data Science Campus (DSC)',
+          directorate: 1,
         },
         {
           moved: 1,
@@ -157,7 +157,7 @@ export const radarData = {
           description:
             'Technology Radar Update: C# Categorised as **ADOPT**\nThis is for Data Science Campus (DSC) only.',
           author: 'test@ons.gov.uk',
-          directorate: 'Data Science Campus (DSC)',
+          directorate: 1,
         },
       ],
     },
