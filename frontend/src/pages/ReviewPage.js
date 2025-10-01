@@ -386,34 +386,41 @@ const ReviewPage = () => {
     }
 
     const digitalServicesTimeline = stashedDefaultTimeline[item.id];
-    const digitalServicesPosition =
-      digitalServicesTimeline[
-        digitalServicesTimeline.length - 1
-      ]?.ringId.toLowerCase();
 
-    // If the directorate is not Digital Services, we should highlight this technology
-    // This is because it now has a directorate-specific position
-    // If the position is the same as Digital Services, we don't highlight it as it's not directorate-specific
-    if (
-      selectedDirectorate !== 'Digital Services (DS)' &&
-      digitalServicesPosition !== destList.toLowerCase() &&
-      !highlightedTechnologies.includes(item.id)
-    ) {
-      setHighlightedTechnologies(prev => [...prev, item.id]);
+    if (digitalServicesTimeline) {
+      // If we have a Digital Services timeline, we can compare positions
+      // If not, the technology is new and the directorate hasn't been switched since adding it.
+      // It is easier to ignore the highlighting logic here then recategorising the entries again (where the stashed timeline would be created/updated)
+
+      const digitalServicesPosition =
+        digitalServicesTimeline[
+          digitalServicesTimeline.length - 1
+        ]?.ringId.toLowerCase();
+
+      // If the directorate is not Digital Services, we should highlight this technology
+      // This is because it now has a directorate-specific position
+      // If the position is the same as Digital Services, we don't highlight it as it's not directorate-specific
+      if (
+        selectedDirectorate !== 'Digital Services (DS)' &&
+        digitalServicesPosition !== destList.toLowerCase() &&
+        !highlightedTechnologies.includes(item.id)
+      ) {
+        setHighlightedTechnologies(prev => [...prev, item.id]);
+      }
+
+      // If the new position matches Digital Services, we should remove the highlight
+      if (
+        selectedDirectorate !== 'Digital Services (DS)' &&
+        digitalServicesPosition === destList.toLowerCase() &&
+        highlightedTechnologies.includes(item.id)
+      ) {
+        setHighlightedTechnologies(prev => prev.filter(id => id !== item.id));
+      }
+
+      // Informal Note:
+      // This logic feels like spaghetti but it works for now
+      // It'd be a good idea to refactor this later into something more elegant
     }
-
-    // If the new position matches Digital Services, we should remove the highlight
-    if (
-      selectedDirectorate !== 'Digital Services (DS)' &&
-      digitalServicesPosition === destList.toLowerCase() &&
-      highlightedTechnologies.includes(item.id)
-    ) {
-      setHighlightedTechnologies(prev => prev.filter(id => id !== item.id));
-    }
-
-    // Informal Note:
-    // This logic feels like spaghetti but it works for now
-    // It'd be a good idea to refactor this later into something more elegant
 
     updatedEntries[destList] = [...updatedEntries[destList], updatedItem];
     setEntries(updatedEntries);
