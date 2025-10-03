@@ -35,7 +35,6 @@ RUN addgroup --system appgroup && adduser --system --group appuser
 USER appuser
 
 # Start the app
-# CMD ["serve", "-s", "build", "-l", "3000"]
-CMD ["serve", "-s", "dist", "-l", "3000"]
+CMD ["serve", "-s", "build", "-l", "3000"]
 
 EXPOSE 3000
