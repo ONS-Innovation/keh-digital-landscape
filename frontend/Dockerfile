@@ -10,7 +10,7 @@ ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
 COPY package*.json ./
 
 # Install dependencies with production flag
-RUN npm ci --omit=dev --legacy-peer-deps
+RUN npm ci -legacy-peer-deps
 
 # Copy the rest of the app files
 COPY . .
