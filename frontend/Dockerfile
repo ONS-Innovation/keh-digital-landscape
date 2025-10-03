@@ -27,8 +27,7 @@ ENV NODE_ENV=production
 RUN npm install -g serve
 
 # Copy only the built app from the builder stage
-# COPY --from=builder /app/build ./build
-COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/build ./build
 
 # Set non-root user
 RUN addgroup --system appgroup && adduser --system --group appuser
