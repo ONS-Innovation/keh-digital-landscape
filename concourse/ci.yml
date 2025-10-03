@@ -81,7 +81,10 @@ jobs:
         timeout: 10m
       - <<: *terraform-task
         params:
+          github_access_token: ((github_access_token))
           env: dev
+          tag: ((tag))
+          secrets: ((sdp_dev_digital_landscape_secrets))
 
   - name: build-and-push-prod
     public: true
@@ -123,4 +126,7 @@ jobs:
         timeout: 10m
       - <<: *terraform-task
         params:
+          github_access_token: ((github_access_token))
           env: prod
+          tag: ((tag))
+          secrets: ((sdp_prod_digital_landscape_secrets))
