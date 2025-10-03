@@ -85,6 +85,7 @@ jobs:
     public: true
     plan:
       - get: resource-repo
+        passed: [build-and-push-dev]
         trigger: false # Manual trigger only
         timeout: 5m
       - task: build-image

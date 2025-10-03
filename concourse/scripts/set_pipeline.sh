@@ -48,4 +48,4 @@ else
     tag=$(echo "${branch}" | tr -cd '[:alnum:]' | cut -c1-7)
 fi
 
-fly -t aws-sdp set-pipeline -c concourse/ci.yml -p ${repo_name}-${branch}  -v branch=${branch} -v tag=${tag} -v env=${env} -v repo_name=${repo_name} -l concourse/pipeline-vars.yml
+fly -t aws-sdp set-pipeline -c concourse/ci.yml -p ${repo_name}-${branch}  -v branch=${branch} -v tag=${tag} -v env=${env} -v repo_name=${repo_name}
