@@ -20,7 +20,7 @@ RUN chown -R appuser:appgroup /app && \
 USER appuser
 
 # Install dependencies
-RUN npm ci --only=production
+RUN npm ci --only=dev
 
 # Copy the rest of the application files
 COPY --chown=appuser:appgroup . .
