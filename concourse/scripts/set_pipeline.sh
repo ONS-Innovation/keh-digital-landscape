@@ -28,7 +28,8 @@
 #!/bin/bash
 set -eo pipefail
 # Usage: ./set_pipeline.sh
-repo_name=$(basename -s .git "$(git config --get remote.origin.url)")
+# repo_name=$(basename -s .git "$(git config --get remote.origin.url)")
+repo_name="digital-landscape"
 # Always use the current branch
 branch=$(git rev-parse --abbrev-ref HEAD)
 
@@ -47,4 +48,4 @@ else
     tag=$(echo "${branch}" | tr -cd '[:alnum:]' | cut -c1-7)
 fi
 
-fly -t aws-sdp set-pipeline -c concourse/ci.yml -p ${repo_name}-${branch}  -v branch=${branch} -v tag=${tag} -v env=${env} -l concourse/pipeline-vars.yml
+fly -t aws-sdp set-pipeline -c concourse/ci.yml -p ${repo_name}-${branch}  -v branch=${branch} -v tag=${tag} -v env=${env} -v repo_name=${repo_name} -l concourse/pipeline-vars.yml
