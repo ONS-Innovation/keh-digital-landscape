@@ -1,5 +1,5 @@
 # backend/Dockerfile
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Install wget before creating non-root user
@@ -20,14 +20,13 @@ RUN chown -R appuser:appgroup /app && \
 USER appuser
 
 # Install dependencies
-RUN npm ci --only=dev
-RUN npm audit fix --force || true
+RUN npm ci --omit=dev
 
 # Copy the rest of the application files
 COPY --chown=appuser:appgroup . .
 
 # Production stage
-FROM node:18-alpine
+FROM node:20-alpine
 WORKDIR /app
 
 # Install wget in the final image before switching to non-root user
