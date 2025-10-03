@@ -80,6 +80,8 @@ jobs:
                 ./resource-repo/concourse/scripts/build_image.sh
         timeout: 10m
       - <<: *terraform-task
+        params:
+          env: dev
 
   - name: build-and-push-prod
     public: true
@@ -120,3 +122,5 @@ jobs:
                 ./resource-repo/concourse/scripts/build_image.sh
         timeout: 10m
       - <<: *terraform-task
+        params:
+          env: prod
