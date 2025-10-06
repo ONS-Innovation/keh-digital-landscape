@@ -49,7 +49,7 @@ const Sidebar = () => {
     { path: '/projects', label: 'Projects', icon: <TbUsers />, isLink: true },
     {
       path: '/copilot',
-      label: 'Copilot',
+      label: 'GitHub Copilot',
       icon: <VscCopilot />,
       isLink: true,
       hasChildren: true,
