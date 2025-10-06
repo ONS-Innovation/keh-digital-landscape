@@ -13,6 +13,11 @@ import ProjectModal from '../components/Projects/ProjectModal';
 import InfoBox from '../components/InfoBox/InfoBox';
 import { useTechnologyStatus } from '../utilities/getTechnologyStatus';
 import { BannerContainer } from '../components/Banner';
+import { getDirectorates } from '../utilities/getDirectorates';
+import {
+  getDirectorateColour,
+  getDirectorateName,
+} from '../utilities/directorateUtils';
 
 /**
  * RadarPage component for displaying the radar page.
@@ -57,6 +62,31 @@ function RadarPage() {
   const { getTechRadarData, getCsvData } = useData();
   const getTechnologyStatus = useTechnologyStatus();
 
+  const [selectedDirectorate, setSelectedDirectorate] = useState(null);
+  const [defaultDirectorate, setDefaultDirectorate] = useState(null);
+  const [directorateColour, setDirectorateColour] = useState('var(--accent)');
+  const [directorateName, setDirectorateName] = useState('Unknown Directorate');
+  const [directorates, setDirectorates] = useState([]);
+
+  useEffect(() => {
+    getDirectorates().then(setDirectorates);
+  }, []);
+
+  // Default to directorate with default flag if none selected
+  useEffect(() => {
+    if (directorates.length > 0 && !selectedDirectorate) {
+      const defaultDirectorate = directorates.find(dir => dir.default);
+      const directorateId = defaultDirectorate
+        ? defaultDirectorate.id
+        : directorates[0].id;
+
+      setDefaultDirectorate(directorateId);
+      setSelectedDirectorate(directorateId);
+      setDirectorateColour(getDirectorateColour(directorateId, directorates));
+      setDirectorateName(getDirectorateName(directorateId, directorates));
+    }
+  }, [directorates]);
+
   /**
    * useEffect hook to fetch the tech radar data from S3.
    */
@@ -75,6 +105,109 @@ function RadarPage() {
 
     fetchData();
   }, [getCsvData]);
+
+  /**
+   * Function to filter the timeline based on the selected directorate.
+   *
+   * This works by filtering the timeline entries to only those that match the selected directorate.
+   * If no entries match the selected directorate, it falls back to entries from "Digital Services".
+   *
+   * @param {Array} timeline - The timeline array of the technology entry.
+   * @return {Array} - The filtered timeline.
+   */
+  const getFilteredTimeline = timeline => {
+    let filteredTimeline = [];
+    let digitalServicesTimeline = [];
+
+    timeline.forEach(entry => {
+      const directorate = entry.directorate || 'Digital Services (DS)';
+
+      if (
+        directorate === selectedDirectorate &&
+        directorate !== 'Digital Services (DS)'
+      ) {
+        filteredTimeline.push(entry);
+      }
+      if (directorate === 'Digital Services (DS)') {
+        digitalServicesTimeline.push(entry);
+      }
+    });
+
+    if (filteredTimeline.length === 0) {
+      filteredTimeline = digitalServicesTimeline;
+    }
+
+    return filteredTimeline;
+  };
+
+  /**
+   * Function to get the most recent ring from the timeline, considering the selected directorate.
+   *
+   * This function filters the timeline using the getFilteredTimeline function and then retrieves the most recent ring ID.
+   *
+   * @param {Array} timeline - The timeline array of the technology entry.
+   * @return {string} - The most recent ring ID.
+   */
+  const getMostRecentRing = timeline => {
+    const filteredTimeline = getFilteredTimeline(timeline);
+
+    // Get the most recent ring from the filtered timeline
+    const mostRecentRing = filteredTimeline[filteredTimeline.length - 1].ringId;
+    return mostRecentRing;
+  };
+
+  /**
+   * Function to determine if a technology entry should be highlighted based on the selected directorate.
+   *
+   * If any timeline entry matches the selected directorate (and it's not "Digital Services"), the entry is highlighted.
+   * This is because it is a directorate specific technology.
+   *
+   * @param {Array} timeline - The timeline array of the technology entry.
+   * @return {boolean} - Whether the entry should be highlighted.
+   */
+  const getShouldBeHighlighted = timeline => {
+    const filteredTimeline = getFilteredTimeline(timeline);
+
+    let shouldBeHighlighted = false;
+
+    // TODO: Address highlight logic if needed
+    // At the moment, technologies get highlighted if they have directorate specific history (i.e. moved out of Digital Services at any point in time)
+    // It is important to highlight these technologies since they will have unique history compared to Digital Services
+    // Even if they move back to Digital Services, they will have a different history and should be highlighted
+    // This logic may need to be revisited in future if it causes confusion (i.e. Why is this tech highlighted here but not on the review page? Why is this technology highlighted with it matches Digital Services?)
+
+    for (const entry of filteredTimeline) {
+      const directorate = entry.directorate || 'Digital Services (DS)';
+
+      if (
+        directorate === selectedDirectorate &&
+        selectedDirectorate !== 'Digital Services (DS)'
+      ) {
+        shouldBeHighlighted = true;
+        break;
+      }
+    }
+
+    return shouldBeHighlighted;
+  };
+
+  /**
+   * handleDirectorateChange function to handle the directorate change event.
+   *
+   * @param {string} dir - The selected directorate.
+   */
+  const handleDirectorateChange = dir => {
+    dir = Number(dir);
+
+    setSelectedDirectorate(dir);
+    setDirectorateColour(getDirectorateColour(dir, directorates));
+    setDirectorateName(getDirectorateName(dir, directorates));
+
+    // Clear blip selection when directorate changes
+    // This is so stale information doesn't persist within the info box component
+    setSelectedBlip(null);
+    setLockedBlip(null);
+  };
 
   /**
    * useEffect hook to set the allBlips state with the blips array.
@@ -216,8 +349,7 @@ function RadarPage() {
     const results = data.entries
       .filter(entry => {
         // Get the most recent timeline entry
-        const mostRecentRing =
-          entry.timeline[entry.timeline.length - 1].ringId.toLowerCase();
+        const mostRecentRing = getMostRecentRing(entry.timeline);
 
         // Exclude entries where most recent ring is review or ignore
         if (mostRecentRing === 'review' || mostRecentRing === 'ignore') {
@@ -232,7 +364,7 @@ function RadarPage() {
       })
       .map(entry => ({
         ...entry,
-        timeline: entry.timeline,
+        timeline: getFilteredTimeline(entry.timeline),
       }));
 
     setSearchResults(results);
@@ -532,8 +664,8 @@ function RadarPage() {
 
   const groupedEntries = data.entries.reduce((acc, entry) => {
     const quadrant = entry.quadrant;
-    const mostRecentRing =
-      entry.timeline[entry.timeline.length - 1].ringId.toLowerCase();
+
+    const mostRecentRing = getMostRecentRing(entry.timeline);
 
     // Skip if the most recent timeline entry has ringId of "review" or "ignore"
     if (mostRecentRing === 'review' || mostRecentRing === 'ignore') return acc;
@@ -543,7 +675,7 @@ function RadarPage() {
 
     acc[quadrant][mostRecentRing].push({
       ...entry,
-      timeline: entry.timeline,
+      timeline: getFilteredTimeline(entry.timeline),
     });
     return acc;
   }, {});
@@ -678,7 +810,7 @@ function RadarPage() {
           <InfoBox
             isAdmin={false}
             selectedItem={selectedBlip || lockedBlip}
-            initialPosition={{ x: 272, y: 80 }}
+            initialPosition={{ x: 272, y: 191 }}
             onClose={() => setIsInfoBoxVisible(false)}
             timelineAscending={timelineAscending}
             setTimelineAscending={setTimelineAscending}
@@ -686,11 +818,58 @@ function RadarPage() {
             setSelectedTimelineItem={setSelectedTimelineItem}
             projectsForTech={projectsForTech}
             handleProjectClick={handleProjectClick}
+            isHighlighted={getShouldBeHighlighted(
+              (selectedBlip || lockedBlip)?.timeline || []
+            )}
+            selectedDirectorate={directorateName}
           />
         )}
 
+        <div
+          className="radar-filter-container"
+          style={{
+            background: `linear-gradient(to right, hsl(var(--background)), hsl(var(--background)) 20%, ${directorateColour})`,
+          }}
+        >
+          <h2 style={{ margin: 0 }}>Filters</h2>
+          <div className="radar-filter-group">
+            <label
+              htmlFor="directorate-select"
+              style={{ paddingRight: '16px' }}
+            >
+              Directorate:{' '}
+            </label>
+            <select
+              id="directorate-select"
+              onChange={e => handleDirectorateChange(e.target.value)}
+              className="multi-select-control"
+              aria-label="Select Directorate"
+            >
+              {directorates.map(dir => (
+                <option key={dir.name} value={dir.id}>
+                  {dir.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div
+            id="directorate-title"
+            style={{
+              fontWeight: 'bold',
+              fontSize: '1.6em',
+              color: 'white',
+              float: 'right',
+              textShadow: '1px 1px 2px black',
+            }}
+          >
+            {directorateName}
+          </div>
+        </div>
+
         <div className="quadrant-lists">
           <div
+            id="top-left-quadrant"
             className={`quadrant-list top-left ${
               expandedQuadrants['4'] ? 'expanded' : 'collapsed'
             }`}
@@ -770,15 +949,23 @@ function RadarPage() {
                     }}
                     tabIndex="0"
                     role="listitem"
-                    aria-label={`${entry.title}, ${entry.timeline[entry.timeline.length - 1].ringId} ring`}
-                    style={{ cursor: 'pointer' }}
+                    aria-label={`${entry.title}, ${getMostRecentRing(entry.timeline)} ring`}
+                    style={{
+                      cursor: 'pointer',
+                      borderLeft: getShouldBeHighlighted(entry.timeline)
+                        ? `4px solid ${directorateColour}`
+                        : 'none',
+                      paddingLeft: getShouldBeHighlighted(entry.timeline)
+                        ? '8px'
+                        : '12px',
+                    }}
                   >
                     <span className="entry-number">{entry.number}.</span>
                     <span className="entry-title">{entry.title}</span>
                     <span
-                      className={`entry-ring ${entry.timeline[entry.timeline.length - 1].ringId.toLowerCase()}`}
+                      className={`entry-ring ${getMostRecentRing(entry.timeline).toLowerCase()}`}
                     >
-                      {entry.timeline[entry.timeline.length - 1].ringId}
+                      {getMostRecentRing(entry.timeline)}
                     </span>
                   </li>
                 ))}
@@ -861,15 +1048,23 @@ function RadarPage() {
                   }}
                   tabIndex="0"
                   role="listitem"
-                  aria-label={`${entry.title}, ${entry.timeline[entry.timeline.length - 1].ringId} ring`}
-                  style={{ cursor: 'pointer' }}
+                  aria-label={`${entry.title}, ${getMostRecentRing(entry.timeline)} ring`}
+                  style={{
+                    cursor: 'pointer',
+                    borderLeft: getShouldBeHighlighted(entry.timeline)
+                      ? `4px solid ${directorateColour}`
+                      : 'none',
+                    paddingLeft: getShouldBeHighlighted(entry.timeline)
+                      ? '8px'
+                      : '12px',
+                  }}
                 >
                   <span className="entry-number">{entry.number}.</span>
                   <span className="entry-title">{entry.title}</span>
                   <span
-                    className={`entry-ring ${entry.timeline[entry.timeline.length - 1].ringId.toLowerCase()}`}
+                    className={`entry-ring ${getMostRecentRing(entry.timeline).toLowerCase()}`}
                   >
-                    {entry.timeline[entry.timeline.length - 1].ringId}
+                    {getMostRecentRing(entry.timeline)}
                   </span>
                 </li>
               ))}
@@ -1010,6 +1205,7 @@ function RadarPage() {
 
                         return (
                           <g
+                            id={`blip-${entry.id}`}
                             key={entry.id}
                             transform={`translate(${position.x}, ${position.y})`}
                             className="blip-container"
@@ -1135,15 +1331,23 @@ function RadarPage() {
                   }}
                   tabIndex="0"
                   role="listitem"
-                  aria-label={`${entry.title}, ${entry.timeline[entry.timeline.length - 1].ringId} ring`}
-                  style={{ cursor: 'pointer' }}
+                  aria-label={`${entry.title}, ${getMostRecentRing(entry.timeline)} ring`}
+                  style={{
+                    cursor: 'pointer',
+                    borderLeft: getShouldBeHighlighted(entry.timeline)
+                      ? `4px solid ${directorateColour}`
+                      : 'none',
+                    paddingLeft: getShouldBeHighlighted(entry.timeline)
+                      ? '8px'
+                      : '12px',
+                  }}
                 >
                   <span className="entry-number">{entry.number}.</span>
                   <span className="entry-title">{entry.title}</span>
                   <span
-                    className={`entry-ring ${entry.timeline[entry.timeline.length - 1].ringId.toLowerCase()}`}
+                    className={`entry-ring ${getMostRecentRing(entry.timeline).toLowerCase()}`}
                   >
-                    {entry.timeline[entry.timeline.length - 1].ringId}
+                    {getMostRecentRing(entry.timeline)}
                   </span>
                 </li>
               ))}
@@ -1205,14 +1409,22 @@ function RadarPage() {
                 <li
                   key={entry.id}
                   onClick={() => handleBlipClick(entry)}
-                  style={{ cursor: 'pointer' }}
+                  style={{
+                    cursor: 'pointer',
+                    borderLeft: getShouldBeHighlighted(entry.timeline)
+                      ? `4px solid ${directorateColour}`
+                      : 'none',
+                    paddingLeft: getShouldBeHighlighted(entry.timeline)
+                      ? '8px'
+                      : '12px',
+                  }}
                 >
                   <span className="entry-number">{entry.number}.</span>
                   <span className="entry-title">{entry.title}</span>
                   <span
-                    className={`entry-ring ${entry.timeline[entry.timeline.length - 1].ringId.toLowerCase()}`}
+                    className={`entry-ring ${getMostRecentRing(entry.timeline).toLowerCase()}`}
                   >
-                    {entry.timeline[entry.timeline.length - 1].ringId}
+                    {getMostRecentRing(entry.timeline)}
                   </span>
                 </li>
               ))}

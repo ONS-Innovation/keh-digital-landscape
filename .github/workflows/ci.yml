@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   lint:
@@ -12,20 +12,25 @@ jobs:
     permissions:
       contents: read
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        
-    - name: Install Dependencies
-      run: |
-        npm install -g npm@latest  # Ensure latest npm version
-        make install-dev
-        
-    - name: Run Linting
-      run: make lint
-    
-    - name: Run Formatting Check
-      run: make format-check
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: |
+          npm install -g npm@latest  # Ensure latest npm version
+          make install-dev
+
+      # We do this since we run prettier in the testing directory
+      # make install-dev doesn't install testing/package.json dependencies
+      - name: Install Prettier Globally
+        run: npm install -g prettier
+
+      - name: Run Linting
+        run: make lint
+
+      - name: Run Formatting Check
+        run: make format-check
