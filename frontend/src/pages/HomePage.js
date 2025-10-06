@@ -100,7 +100,8 @@ function HomePage() {
                 <h2>GitHub Copilot</h2>
               </div>
               <p>
-                Analyse GitHub Copilot usage statistics organisation-wide and by team.
+                Analyse GitHub Copilot usage statistics organisation-wide and by
+                team.
               </p>
             </a>
           </div>
