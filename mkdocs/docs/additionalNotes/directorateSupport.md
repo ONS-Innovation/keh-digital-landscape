@@ -4,6 +4,50 @@
 
 This page outlines how multiple directorates are supported within the digital landscape.
 
+## Where are Directorates Defined?
+
+Directorates are defined in `directorates.json` on AWS S3. This file contains an array of directorate objects, each with its own attributes (importantly an `id`, `name` and `colour`).
+
+In order to get this file from S3, the frontend application makes a request to the backend API, which retrieves the file and returns it to the frontend.
+
+### Example Directorate Entries
+
+```json
+[
+  {
+    "id": 0,
+    "name": "Digital Services (DS)",
+    "colour": "#1f77b4",
+    "default": true,
+    "enabled": true
+  },
+  {
+    "id": 1,
+    "name": "Data Science Campus (DSC)",
+    "colour": "#ff7f0e",
+    "default": false,
+    "enabled": true
+  },
+  {
+    "id": 2,
+    "name": "Data Growth and Operations (DGO)",
+    "colour": "#2ca02c",
+    "default": false,
+    "enabled": true
+  }
+]
+```
+
+### Key Attributes
+
+| Attribute | Description |
+| --------- | ----------- |
+| `id`      | A unique identifier for the directorate. This is used to reference the directorate in each technology's timeline entries. Using an id over its name is required to avoid having to change existing data should the directorate name change. |
+| `name`    | The full name of the directorate. This is displayed in the UI when selecting a directorate. This will typically be in the format "Directorate Name (Abbreviation)". |
+| `colour`  | The colour associated with the directorate. This is used for visual differentiation in the UI. |
+| `default` | A boolean indicating whether this is the default directorate. Only one directorate can be the default. This key is unlikely to be changed as Digital Services should always be the default. |
+| `enabled` | A boolean indicating whether the directorate is enabled for use. This will allow us to disable directorates should the need arise. |
+
 ## Tech Radar + Review Page
 
 The Tech Radar and Review page both support multiple directorates, allowing technologies to be positioned in different radar rings based on directorate.
@@ -58,9 +102,11 @@ entries [
     "date": "2025-09-09 16:39:18",
     "description": "Moved from adopt to hold for Data Science directorate.",
     "author": "dev@ons.gov.uk",
-    "directorate": "Data Science"
+    "directorate": 2 <-- This integer corresponds to the directorate id in directorates.json
 },
 ```
+
+The value of the `directorate` key corresponds to the `id` of the directorate in `directorates.json`.
 
 ### How do we deal with old timeline entries?
 
@@ -110,7 +156,7 @@ Let's say we have a technology with the following timeline entries:
         "date": "2025-09-09 16:39:18",
         "description": "Moved from adopt to hold for Data Science directorate.",
         "author": "dev@ons.gov.uk",
-        "directorate": "Data Science"
+        "directorate": 1
     },
     {
         "moved": 2,
@@ -118,7 +164,7 @@ Let's say we have a technology with the following timeline entries:
         "date": "2025-10-01 10:00:00",
         "description": "Moved from hold to trial for Data Science directorate.",
         "author": "dev@ons.gov.uk",
-        "directorate": "Data Science"
+        "directorate": 1
     },
     {
         "moved": -1,
@@ -126,12 +172,12 @@ Let's say we have a technology with the following timeline entries:
         "date": "2025-11-01 10:00:00",
         "description": "Moved from trial to assess for Digital Services directorate.",
         "author": "dev@ons.gov.uk",
-        "directorate": "Digital Services"
+        "directorate": 0
     }
 ]
 ```
 
-If the selected directorate is Data Science, we filter the timeline to only include entries with `"directorate": "Data Science"`:
+If the selected directorate is Data Science Campus (DSC), we filter the timeline to only include entries with `"directorate": 2` (the id for Data Science in `directorates.json`):
 
 ```json
 "timeline": [
@@ -141,7 +187,7 @@ If the selected directorate is Data Science, we filter the timeline to only incl
         "date": "2025-09-09 16:39:18",
         "description": "Moved from adopt to hold for Data Science directorate.",
         "author": "dev@ons.gov.uk",
-        "directorate": "Data Science"
+        "directorate": 2
     },
     {
         "moved": 2,
@@ -149,14 +195,14 @@ If the selected directorate is Data Science, we filter the timeline to only incl
         "date": "2025-10-01 10:00:00",
         "description": "Moved from hold to trial for Data Science directorate.",
         "author": "dev@ons.gov.uk",
-        "directorate": "Data Science"
+        "directorate": 2
     }
 ]
 ```
 
 The last entry in this filtered timeline indicates that the current position of the technology for the Data Science directorate is in the Trial ring.
 
-If the selected directorate is Digital Services, we filter the timeline to only include entries with `"directorate": "Digital Services"` **or** entries without a `directorate` key:
+If the selected directorate is Digital Services, we filter the timeline to only include entries with `"directorate": 0` **or** entries without a `directorate` key:
 
 ```json
 "timeline": [
@@ -173,7 +219,7 @@ If the selected directorate is Digital Services, we filter the timeline to only 
         "date": "2025-11-01 10:00:00",
         "description": "Moved from trial to assess for Digital Services directorate.",
         "author": "dev@ons.gov.uk",
-        "directorate": "Digital Services"
+        "directorate": 0
     }
 ]
 ```
@@ -188,13 +234,15 @@ To help users quickly identify which technologies are or have been moved specifi
   
   ![Tech Radar Highlight Example](../../assets/multipleDirectorateSupport/radar-highlight.png)
 
-- On the Review page, technologies that are in a position **specifically for the selected directorate** are highlighted with a golden border around the technology card.
+- On the Review page, technologies that are in a position **specifically for the selected directorate** are highlighted with a border around the technology card.
   
   ![Review Page Highlight Example](../../assets/multipleDirectorateSupport/review-highlight.png)
 
 - On both pages, a gradient background is applied to the top of the page to indicate which directorate is currently selected.
   
   ![Gradient Background Example](../../assets/multipleDirectorateSupport/gradient-background.png)
+
+**Note:** The colours used in these visuals correspond to the `colour` attribute defined for each directorate in `directorates.json`. This allows us to easily change the colours associated with each directorate by simply updating the JSON file - i.e. if accessibility requirements change.
 
 ## Project Page (Future Plans / TBC)
 

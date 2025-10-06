@@ -13,6 +13,11 @@ import ProjectModal from '../components/Projects/ProjectModal';
 import InfoBox from '../components/InfoBox/InfoBox';
 import { useTechnologyStatus } from '../utilities/getTechnologyStatus';
 import { BannerContainer } from '../components/Banner';
+import { getDirectorates } from '../utilities/getDirectorates';
+import {
+  getDirectorateColour,
+  getDirectorateName,
+} from '../utilities/directorateUtils';
 
 /**
  * RadarPage component for displaying the radar page.
@@ -57,21 +62,30 @@ function RadarPage() {
   const { getTechRadarData, getCsvData } = useData();
   const getTechnologyStatus = useTechnologyStatus();
 
-  const [selectedDirectorate, setSelectedDirectorate] = useState(
-    'Digital Services (DS)'
-  );
+  const [selectedDirectorate, setSelectedDirectorate] = useState(null);
+  const [defaultDirectorate, setDefaultDirectorate] = useState(null);
+  const [directorateColour, setDirectorateColour] = useState('var(--accent)');
+  const [directorateName, setDirectorateName] = useState('Unknown Directorate');
+  const [directorates, setDirectorates] = useState([]);
 
-  const directorateOptions = [
-    'Digital Services (DS)',
-    'Data Science Campus (DSC)',
-    'Data Growth and Operations (DGO)',
-  ];
+  useEffect(() => {
+    getDirectorates().then(setDirectorates);
+  }, []);
 
-  const directorateColourMap = {
-    'Digital Services (DS)': '#1f77b4', // Blue
-    'Data Science Campus (DSC)': '#ff7f0e', // Orange
-    'Data Growth and Operations (DGO)': '#2ca02c', // Green
-  };
+  // Default to directorate with default flag if none selected
+  useEffect(() => {
+    if (directorates.length > 0 && !selectedDirectorate) {
+      const defaultDirectorate = directorates.find(dir => dir.default);
+      const directorateId = defaultDirectorate
+        ? defaultDirectorate.id
+        : directorates[0].id;
+
+      setDefaultDirectorate(directorateId);
+      setSelectedDirectorate(directorateId);
+      setDirectorateColour(getDirectorateColour(directorateId, directorates));
+      setDirectorateName(getDirectorateName(directorateId, directorates));
+    }
+  }, [directorates]);
 
   /**
    * useEffect hook to fetch the tech radar data from S3.
@@ -183,7 +197,11 @@ function RadarPage() {
    * @param {string} dir - The selected directorate.
    */
   const handleDirectorateChange = dir => {
+    dir = Number(dir);
+
     setSelectedDirectorate(dir);
+    setDirectorateColour(getDirectorateColour(dir, directorates));
+    setDirectorateName(getDirectorateName(dir, directorates));
 
     // Clear blip selection when directorate changes
     // This is so stale information doesn't persist within the info box component
@@ -803,14 +821,14 @@ function RadarPage() {
             isHighlighted={getShouldBeHighlighted(
               (selectedBlip || lockedBlip)?.timeline || []
             )}
-            selectedDirectorate={selectedDirectorate}
+            selectedDirectorate={directorateName}
           />
         )}
 
         <div
           className="radar-filter-container"
           style={{
-            background: `linear-gradient(to right, hsl(var(--background)), hsl(var(--background)) 20%, ${directorateColourMap[selectedDirectorate]})`,
+            background: `linear-gradient(to right, hsl(var(--background)), hsl(var(--background)) 20%, ${directorateColour})`,
           }}
         >
           <h2 style={{ margin: 0 }}>Filters</h2>
@@ -823,14 +841,13 @@ function RadarPage() {
             </label>
             <select
               id="directorate-select"
-              value={selectedDirectorate}
               onChange={e => handleDirectorateChange(e.target.value)}
               className="multi-select-control"
               aria-label="Select Directorate"
             >
-              {directorateOptions.map(dir => (
-                <option key={dir} value={dir}>
-                  {dir}
+              {directorates.map(dir => (
+                <option key={dir.name} value={dir.id}>
+                  {dir.name}
                 </option>
               ))}
             </select>
@@ -843,9 +860,10 @@ function RadarPage() {
               fontSize: '1.6em',
               color: 'white',
               float: 'right',
+              textShadow: '1px 1px 2px black',
             }}
           >
-            {selectedDirectorate}
+            {directorateName}
           </div>
         </div>
 
@@ -935,7 +953,7 @@ function RadarPage() {
                     style={{
                       cursor: 'pointer',
                       borderLeft: getShouldBeHighlighted(entry.timeline)
-                        ? `4px solid ${directorateColourMap[selectedDirectorate]}`
+                        ? `4px solid ${directorateColour}`
                         : 'none',
                       paddingLeft: getShouldBeHighlighted(entry.timeline)
                         ? '8px'
@@ -1034,7 +1052,7 @@ function RadarPage() {
                   style={{
                     cursor: 'pointer',
                     borderLeft: getShouldBeHighlighted(entry.timeline)
-                      ? `4px solid ${directorateColourMap[selectedDirectorate]}`
+                      ? `4px solid ${directorateColour}`
                       : 'none',
                     paddingLeft: getShouldBeHighlighted(entry.timeline)
                       ? '8px'
@@ -1317,7 +1335,7 @@ function RadarPage() {
                   style={{
                     cursor: 'pointer',
                     borderLeft: getShouldBeHighlighted(entry.timeline)
-                      ? `4px solid ${directorateColourMap[selectedDirectorate]}`
+                      ? `4px solid ${directorateColour}`
                       : 'none',
                     paddingLeft: getShouldBeHighlighted(entry.timeline)
                       ? '8px'
@@ -1394,7 +1412,7 @@ function RadarPage() {
                   style={{
                     cursor: 'pointer',
                     borderLeft: getShouldBeHighlighted(entry.timeline)
-                      ? `4px solid ${directorateColourMap[selectedDirectorate]}`
+                      ? `4px solid ${directorateColour}`
                       : 'none',
                     paddingLeft: getShouldBeHighlighted(entry.timeline)
                       ? '8px'

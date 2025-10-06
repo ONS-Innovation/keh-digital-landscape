@@ -2,6 +2,7 @@ import { test, expect } from 'playwright/test';
 import { radarData } from './data/radarData';
 import { csvData } from './data/csvData';
 import { reviewPositionCases } from './data/reviewPositionCases';
+import { directorateData } from './data/directorateData';
 
 // Function to intercept and mock the API call
 const interceptAPICall = async ({ page }) => {
@@ -28,8 +29,21 @@ const interceptAPICall = async ({ page }) => {
       });
     });
   };
+
+  const interceptAPIDirectoratesCall = async ({ page }) => {
+    // Intercept and mock the teams API response with teamsDummyData
+    await page.route('**/api/directorates/json', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(directorateData),
+      });
+    });
+  };
+
   await interceptAPIJsonCall({ page });
   await interceptAPICSVCall({ page });
+  await interceptAPIDirectoratesCall({ page });
   await page.goto('http://localhost:3000/review/dashboard');
 
   // Clear all cookies
@@ -64,17 +78,24 @@ test('Check that directorate dropdown is present and has expected options', asyn
   const optionValues = await Promise.all(
     options.map(option => option.getAttribute('value'))
   );
-  const expectedValues = [
+  const optionTexts = await Promise.all(
+    options.map(option => option.textContent())
+  );
+
+  const expectedValues = ['0', '1', '2'];
+
+  const expectedOptionTexts = [
     'Digital Services (DS)',
     'Data Science Campus (DSC)',
     'Data Growth and Operations (DGO)',
   ];
 
   expect(optionValues).toEqual(expectedValues);
+  expect(optionTexts).toEqual(expectedOptionTexts);
 
-  // Check that the default selected option is Digital Services
+  // Check that the default selected option is Digital Services (the default set in directorateData.js)
   const selectedValue = await directorateSelector.inputValue();
-  expect(selectedValue).toBe('Digital Services (DS)');
+  expect(selectedValue).toBe('0');
 });
 
 test('Check technologies appear in the correct areas for different directorates', async ({
