@@ -17,7 +17,7 @@ const customFetch = async (url, options) => {
       errorData.error || `Request failed with status ${response.status}`;
 
     toast.custom(t => <ErrorToast t={t} error={errorMessage} />, {
-      duration: 6000,
+      duration: 10000,
     });
 
     // Re-throw the error to be caught by the calling function if needed
