@@ -3,8 +3,8 @@
   color: hsl(var(--card-foreground));
   border: 1px solid hsl(var(--border));
   box-shadow:
-    0 4px 6px -1px rgb(0 0 0 / 0.1),
-    0 2px 4px -2px rgb(0 0 0 / 0.1);
+    0 4px 6px -1px hsl(var(--foreground) / 0.3),
+    0 2px 4px -2px hsl(var(--foreground) / 0.3);
   border-radius: 0.5rem;
   pointer-events: auto;
   display: flex;
@@ -23,20 +23,25 @@
 }
 
 .error-toast-message {
-  margin-left: 0.75rem;
+  padding: 1rem;
   flex: 1 1 0%;
 }
 
 .error-toast-title {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  font-size: 1rem;
   font-weight: 500;
+  margin: 0 0 0.5rem 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .error-toast-description {
-  margin-top: 0.25rem;
-  font-size: 0.875rem;
+  margin: 0.25rem 0;
+  font-size: 1rem;
   line-height: 1.25rem;
+  margin-top: 0;
   color: hsl(var(--foreground));
 }
 
@@ -49,14 +54,10 @@
   width: 100%;
   border: 1px solid transparent;
   border-radius: 0;
-  border-top-right-radius: 0.5rem;
-  border-bottom-right-radius: 0.5rem;
   padding: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
   font-weight: 500;
   color: hsl(var(--primary));
   cursor: pointer;
