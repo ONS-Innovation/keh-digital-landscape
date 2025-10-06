@@ -11,7 +11,12 @@ import ProjectModal from '../components/Projects/ProjectModal';
 import { useTechnologyStatus } from '../utilities/getTechnologyStatus';
 import { useData } from '../contexts/dataContext';
 import { MarkdownText } from '../utilities/markdownRenderer';
-import { format } from 'date-fns';
+import { format, set } from 'date-fns';
+import { getDirectorates } from '../utilities/getDirectorates';
+import {
+  getDirectorateColour,
+  getDirectorateName,
+} from '../utilities/directorateUtils';
 
 const ReviewPage = () => {
   const { getUserData } = useData();
@@ -55,6 +60,17 @@ const ReviewPage = () => {
   const [projectCountMap, setProjectCountMap] = useState({});
   const getTechnologyStatus = useTechnologyStatus();
 
+  const [selectedDirectorate, setSelectedDirectorate] = useState(null);
+  const [defaultDirectorate, setDefaultDirectorate] = useState(null);
+  const [directorateColour, setDirectorateColour] = useState('var(--accent)');
+  const [directorateName, setDirectorateName] = useState('Unknown Directorate');
+  const [directorates, setDirectorates] = useState([]);
+
+  const [highlightedTechnologies, setHighlightedTechnologies] = useState([]);
+  const [changedTechnologies, setChangedTechnologies] = useState([]);
+
+  const [stashedDefaultTimeline, setStashedDefaultTimeline] = useState({});
+
   // Fields to scan from CSV and their corresponding categories
   const fieldsToScan = {
     Language_Main: 'Languages',
@@ -79,6 +95,25 @@ const ReviewPage = () => {
   ];
 
   useEffect(() => {
+    getDirectorates().then(setDirectorates);
+  }, []);
+
+  // Default to directorate with default flag if none selected
+  useEffect(() => {
+    if (directorates.length > 0 && !selectedDirectorate) {
+      const defaultDirectorate = directorates.find(dir => dir.default);
+      const directorateId = defaultDirectorate
+        ? defaultDirectorate.id
+        : directorates[0].id;
+
+      setDefaultDirectorate(directorateId);
+      setSelectedDirectorate(directorateId);
+      setDirectorateColour(getDirectorateColour(directorateId, directorates));
+      setDirectorateName(getDirectorateName(directorateId, directorates));
+    }
+  }, [directorates]);
+
+  useEffect(() => {
     const fetchAllData = async () => {
       try {
         setIsLoading(true);
@@ -101,6 +136,16 @@ const ReviewPage = () => {
     fetchAllData();
   }, [getUserData]);
 
+  // Recategorise entries when selectedDirectorate changes
+  // Because we are only categorising the existing data and not fetching the data from S3,
+  // Changes will persist until the page is reloaded, even if the user changes directorate multiple times
+  useEffect(() => {
+    const radarData = { entries: Object.values(entries).flat() };
+
+    const categorized = categorizeEntries(radarData.entries);
+    setEntries(categorized);
+  }, [selectedDirectorate]);
+
   // Update project counts when project data is loaded and counts are shown
   useEffect(() => {
     if (
@@ -112,7 +157,10 @@ const ReviewPage = () => {
     }
   }, [projectsData, showProjectCount]);
 
-  const categorizeEntries = radarEntries => {
+  const categorizeEntries = (
+    radarEntries,
+    inputDirectorate = selectedDirectorate
+  ) => {
     const categorized = {
       adopt: [],
       trial: [],
@@ -122,14 +170,77 @@ const ReviewPage = () => {
       ignore: [],
     };
 
+    // Reset highlighted technologies before categorizing
+    setHighlightedTechnologies([]);
+
     radarEntries.forEach(entry => {
+      let selectedDirectorateTimeline = [];
+      let defaultTimeline = [];
+
+      // Consider selected directorate when categorising
+      entry.timeline.forEach(t => {
+        const directorate = t.directorate || defaultDirectorate;
+        if (directorate === inputDirectorate) {
+          selectedDirectorateTimeline.push(t);
+        }
+        if (directorate === defaultDirectorate) {
+          defaultTimeline.push(t);
+        }
+      });
+
+      if (selectedDirectorateTimeline.length === 0) {
+        // If no timeline entries for selected directorate, fall back to default timeline
+        selectedDirectorateTimeline = defaultTimeline;
+      } else {
+        // If there are directorate-specific entries, besides default directorate,
+        // We should highlight these technologies to make them obvious to the user
+        if (inputDirectorate !== defaultDirectorate) {
+          const currentPosition =
+            selectedDirectorateTimeline[
+              selectedDirectorateTimeline.length - 1
+            ].ringId.toLowerCase();
+          const digitalServicesPosition =
+            defaultTimeline[defaultTimeline.length - 1]?.ringId.toLowerCase();
+
+          // Only highlight if the position is different to default directorate
+          if (
+            currentPosition !== digitalServicesPosition &&
+            !highlightedTechnologies.includes(entry.id)
+          ) {
+            setHighlightedTechnologies(prev => [...prev, entry.id]);
+          }
+        }
+      }
+
+      // Stash the Digital Services timeline for later use if needed
+      setStashedDefaultTimeline(prev => ({
+        ...prev,
+        [entry.id]: defaultTimeline,
+      }));
+
+      entry.filteredTimeline = selectedDirectorateTimeline;
+
       const currentRing =
-        entry.timeline[entry.timeline.length - 1].ringId.toLowerCase();
+        selectedDirectorateTimeline[
+          selectedDirectorateTimeline.length - 1
+        ].ringId.toLowerCase();
       categorized[currentRing].push(entry);
     });
 
     return categorized;
   };
+
+  // Re-categorise entries when selectedDirectorate changes
+  useEffect(() => {
+    if (!entries || !Object.values(entries).flat().length) return;
+    // Flatten all entries to get the original radarEntries
+    // In English, this combines all the lists within entries into a single array
+    // This is so it has the full list to re-categorise from
+    const allEntries = Object.values(entries).flat();
+    const categorized = categorizeEntries(allEntries);
+    setEntries(categorized);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDirectorate]);
 
   // Add this function to calculate ring movement
   const calculateRingMovement = (sourceRing, destRing) => {
@@ -145,6 +256,23 @@ const ReviewPage = () => {
     // Calculate movement based on index difference
     console.log(destIndex, sourceIndex, destIndex - sourceIndex);
     return destIndex - sourceIndex;
+  };
+
+  /**
+   * handleDirectorateChange function to handle the directorate change event.
+   *
+   * @param {string} dir - The selected directorate.
+   */
+  const handleDirectorateChange = dir => {
+    dir = Number(dir);
+
+    setSelectedDirectorate(dir);
+    setDirectorateColour(getDirectorateColour(dir, directorates));
+    setDirectorateName(getDirectorateName(dir, directorates));
+
+    // Clear selected item when directorate changes
+    // This is so stale information doesn't persist within the info box component
+    setSelectedItem(null);
   };
 
   const handleDragStart = (e, item, sourceList) => {
@@ -187,8 +315,12 @@ const ReviewPage = () => {
       if (sourceList === destList) return;
 
       // Set up the pending move
-      const lastRing =
-        item.timeline[item.timeline.length - 1].ringId.toLowerCase();
+
+      // sourceList is the ring we're moving from
+      // This is a quick way to get the last ring without needing to parse the timeline again
+      // The source position is also directorate aware so this is more accurate then parsing the timeline
+      const lastRing = sourceList;
+
       const defaultDescription = `Moved from ${lastRing} to ${destList}`;
 
       setPendingMove({
@@ -225,9 +357,70 @@ const ReviewPage = () => {
           date: now,
           description: moveDescription,
           author: currentUser?.user?.email || null,
+          directorate: selectedDirectorate,
         },
       ],
     };
+
+    // Add movement to changedTechnologies if not already present
+    if (!changedTechnologies.includes(item.title)) {
+      setChangedTechnologies(prev => [
+        ...prev,
+        {
+          technology: item.title,
+          from: lastRing,
+          to: destList,
+          directorate: selectedDirectorate,
+        },
+      ]);
+    } else {
+      // If already present, update the 'to' field
+      setChangedTechnologies(prev =>
+        prev.map(change => {
+          if (change.technology === item.title) {
+            return { ...change, to: destList };
+          }
+          return change;
+        })
+      );
+    }
+
+    const digitalServicesTimeline = stashedDefaultTimeline[item.id];
+
+    if (digitalServicesTimeline) {
+      // If we have a Digital Services timeline, we can compare positions
+      // If not, the technology is new and the directorate hasn't been switched since adding it.
+      // It is easier to ignore the highlighting logic here then recategorising the entries again (where the stashed timeline would be created/updated)
+
+      const digitalServicesPosition =
+        digitalServicesTimeline[
+          digitalServicesTimeline.length - 1
+        ]?.ringId.toLowerCase();
+
+      // If the directorate is not Digital Services, we should highlight this technology
+      // This is because it now has a directorate-specific position
+      // If the position is the same as Digital Services, we don't highlight it as it's not directorate-specific
+      if (
+        selectedDirectorate !== 'Digital Services (DS)' &&
+        digitalServicesPosition !== destList.toLowerCase() &&
+        !highlightedTechnologies.includes(item.id)
+      ) {
+        setHighlightedTechnologies(prev => [...prev, item.id]);
+      }
+
+      // If the new position matches Digital Services, we should remove the highlight
+      if (
+        selectedDirectorate !== 'Digital Services (DS)' &&
+        digitalServicesPosition === destList.toLowerCase() &&
+        highlightedTechnologies.includes(item.id)
+      ) {
+        setHighlightedTechnologies(prev => prev.filter(id => id !== item.id));
+      }
+
+      // Informal Note:
+      // This logic feels like spaghetti but it works for now
+      // It'd be a good idea to refactor this later into something more elegant
+    }
 
     updatedEntries[destList] = [...updatedEntries[destList], updatedItem];
     setEntries(updatedEntries);
@@ -284,6 +477,7 @@ const ReviewPage = () => {
       }
 
       toast.success('Changes saved successfully!');
+      setChangedTechnologies([]);
     } catch (error) {
       console.error('Error saving changes:', error);
       toast.error('Failed to save changes. Please try again.');
@@ -368,6 +562,14 @@ const ReviewPage = () => {
       ],
       links: [],
     };
+
+    // Add new technology to change list
+    if (!changedTechnologies.includes(newTechnology.trim())) {
+      setChangedTechnologies(prev => [
+        { technology: newTechnology.trim() },
+        ...prev,
+      ]);
+    }
 
     setPendingNewTechnology(newEntry);
     setShowAddConfirmModal(true);
@@ -587,6 +789,9 @@ const ReviewPage = () => {
           handleConfirmEdit();
         }}
         onEditCancel={handleCancelEdit}
+        isHighlighted={highlightedTechnologies.includes(selectedItem.id)}
+        selectedDirectorate={directorateName}
+        timeline={selectedItem.filteredTimeline}
       />
     );
   };
@@ -701,6 +906,7 @@ const ReviewPage = () => {
                     : 0;
                   return (
                     <div
+                      id={`technology-${item.id}`}
                       key={item.id}
                       className="draggable-item"
                       draggable
@@ -711,6 +917,9 @@ const ReviewPage = () => {
                           selectedItem?.id === item.id
                             ? 'hsl(var(--accent))'
                             : undefined,
+                        border: highlightedTechnologies.includes(item.id)
+                          ? `2px solid ${directorateColour}`
+                          : undefined,
                       }}
                     >
                       <div className="draggable-item-content">
@@ -784,7 +993,13 @@ const ReviewPage = () => {
       />
       <div className="admin-page">
         <div className="admin-details">
-          <div className="admin-header-left">
+          <div
+            className="admin-header-left"
+            style={{
+              width: '100%',
+              background: `linear-gradient(to right, hsl(var(--background)), hsl(var(--background)) 55%, ${directorateColour})`,
+            }}
+          >
             <div className="admin-review-title">
               <h1>Reviewer Dashboard</h1>
             </div>
@@ -799,42 +1014,105 @@ const ReviewPage = () => {
                     placeholder="Select categories..."
                   />
                 </div>
-              </div>
-              <div className="admin-actions">
-                <div>
-                  <h2> Reviewer Actions</h2>
-                </div>
-                <div className="buttons">
-                  <button
-                    className="admin-button"
-                    onClick={() => setShowAddTechnologyModal(true)}
-                    disabled={isLoading}
-                    title="Add Technology"
-                    aria-label="Add Technology"
+                <div className="admin-filter-section">
+                  <label
+                    htmlFor="directorate-select"
+                    style={{ minWidth: '200px' }}
                   >
-                    Add Technology
-                  </button>
-                  <button
-                    className="admin-button"
-                    onClick={toggleProjectCount}
-                    title="Toggle Project Count"
-                    aria-label="Toggle Project Count"
+                    <h2>Filter by Directorate</h2>
+                  </label>
+                  <select
+                    id="directorate-select"
+                    onChange={e => handleDirectorateChange(e.target.value)}
+                    className="multi-select-control"
+                    aria-label="Select Directorate"
                   >
-                    {showProjectCount
-                      ? 'Hide Project Count'
-                      : 'Show Project Count'}
-                  </button>
-                  <button
-                    className="admin-button"
-                    onClick={handleSaveClick}
-                    disabled={isLoading}
-                    title="Save Changes"
-                    aria-label="Save Changes"
-                  >
-                    Save Changes
-                  </button>
+                    {directorates.map(dir => (
+                      <option key={dir.name} value={dir.id}>
+                        {dir.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
+            </div>
+            <div className="admin-actions">
+              <div>
+                <h2> Reviewer Actions</h2>
+              </div>
+              <div className="buttons">
+                <button
+                  className="admin-button"
+                  onClick={() => setShowAddTechnologyModal(true)}
+                  disabled={isLoading}
+                  title="Add Technology"
+                  aria-label="Add Technology"
+                >
+                  Add Technology
+                </button>
+                <button
+                  className="admin-button"
+                  onClick={toggleProjectCount}
+                  title="Toggle Project Count"
+                  aria-label="Toggle Project Count"
+                >
+                  {showProjectCount
+                    ? 'Hide Project Count'
+                    : 'Show Project Count'}
+                </button>
+                <button
+                  className="admin-button"
+                  onClick={handleSaveClick}
+                  disabled={isLoading || changedTechnologies.length === 0}
+                  title="Save Changes"
+                  aria-label="Save Changes"
+                >
+                  Save Changes
+                </button>
+                <button
+                  className="admin-button"
+                  onClick={() => window.location.reload()}
+                  disabled={isLoading || changedTechnologies.length === 0}
+                  title="Revert Changes"
+                  aria-label="Revert Changes"
+                >
+                  Revert Changes
+                </button>
+              </div>
+            </div>
+            <div>
+              <div
+                id="directorate-title"
+                style={{
+                  paddingRight: '16px',
+                  fontWeight: 'bold',
+                  fontSize: '1.6em',
+                  color: 'white',
+                  float: 'right',
+                  textShadow: '1px 1px 2px black',
+                }}
+              >
+                {getDirectorateName(selectedDirectorate, directorates)}
+              </div>
+              <p style={{ float: 'left' }}>
+                <small>
+                  <b>Note:</b> Highlighted technologies have a
+                  directorate-specific position, for example if Python is in
+                  Adopt only for Data Science, it will be{' '}
+                  <span
+                    style={{
+                      border: `4px solid ${directorateColour}`,
+                      boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
+                      backgroundColor: `hsl(var(--background))`,
+                      padding: '2px',
+                      borderRadius: '4px',
+                    }}
+                  >
+                    highlighted
+                  </span>
+                  .
+                </small>
+              </p>
             </div>
           </div>
           <div className="admin-search-filter">
@@ -955,6 +1233,31 @@ const ReviewPage = () => {
             <h3>WARNING</h3>
             <p>Are you sure you want to save all changes to the Tech Radar?</p>
             <p>This action cannot be undone.</p>
+            <h3>Changes:</h3>
+            {changedTechnologies.length === 0 ? (
+              <p>No changes made.</p>
+            ) : (
+              <ul className="change-list">
+                {changedTechnologies.map((change, index) => (
+                  <li key={index}>
+                    {change.from === undefined && change.to === undefined ? (
+                      <>
+                        {change.technology} (
+                        <span style={{ color: 'green', fontWeight: 'bold' }}>
+                          New
+                        </span>
+                        )
+                      </>
+                    ) : (
+                      <>
+                        {change.technology}: {change.from} &rarr; {change.to} (
+                        {getDirectorateName(change.directorate, directorates)})
+                      </>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
             <div className="modal-buttons">
               <button
                 onClick={handleSaveConfirmModalYes}
@@ -1023,6 +1326,9 @@ const ReviewPage = () => {
                 {pendingMove.destList}
               </span>
             </p>
+            <p>
+              For the Directorate: <strong>{directorateName}</strong>
+            </p>
             <div className="admin-modal-field">
               <label>Description</label>
               <div className="markdown-editor">
@@ -1070,6 +1376,13 @@ const ReviewPage = () => {
                 Supports: # h1, ## h2, *italic*, **bold**, [link text](url)
               </small>
             </div>
+            <p>
+              <small>
+                <b>Please Note:</b> If a technology is moved for Digital
+                Services, it will be moved for all directorates unless they have
+                their own position.
+              </small>
+            </p>
             <div className="modal-buttons">
               <button
                 onClick={handleMoveConfirm}

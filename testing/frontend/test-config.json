@@ -3,29 +3,42 @@
     "/": {
       "name": "home",
       "url": "/",
-      "testing": [
-        ".changelog-load-more-button"
-      ]
+      "testing": [".changelog-load-more-button"]
     },
     "/radar": {
       "name": "radar",
       "url": "/radar",
-      "testing": ["li:has-text('GitHub')", "li:has-text('Survey Reponse Management')"]
+      "testing": [
+        "li:has-text('GitHub')",
+        "li:has-text('Survey Reponse Management')"
+      ]
     },
     "/statistics": {
       "name": "statistics",
       "url": "/statistics",
-      "testing": [".date-selector select", ".archive-toggle", ".multi-select-input"]
+      "testing": [
+        ".date-selector select",
+        ".archive-toggle",
+        ".multi-select-input"
+      ]
     },
     "/projects": {
       "name": "projects",
       "url": "/projects",
-      "testing": ["button:has-text('Filter by')", "button:has-text('Sort by')", ".project-item:first-child"]
+      "testing": [
+        "button:has-text('Filter by')",
+        "button:has-text('Sort by')",
+        ".project-item:first-child"
+      ]
     },
     "/review/dashboard": {
       "name": "review-dashboard",
       "url": "/review/dashboard",
-      "testing": [ ".admin-button:has-text('Show Project Count')", ".item-title:first-child", ".info-box-project-item:has-text('Survey Reponse Management')"]
+      "testing": [
+        ".admin-button:has-text('Show Project Count')",
+        ".item-title:first-child",
+        ".info-box-project-item:has-text('Survey Reponse Management')"
+      ]
     },
     "/admin/dashboard": {
       "name": "admin-dashboard-banner",
@@ -33,10 +46,13 @@
       "testing": []
     },
     "/admin/dashboard?": {
-        "name": "admin-dashboard-tech",
-        "url": "/admin/dashboard",
-        "testing": [".banner-tab:has-text('Technology Management')", ".normalise-btn:first-child"]
-      },
+      "name": "admin-dashboard-tech",
+      "url": "/admin/dashboard",
+      "testing": [
+        ".banner-tab:has-text('Technology Management')",
+        ".normalise-btn:first-child"
+      ]
+    },
     "/copilot": {
       "name": "copilot-live",
       "url": "/copilot",
@@ -65,4 +81,4 @@
     "wait_after_click": 2000,
     "headless": true
   }
-} 
+}

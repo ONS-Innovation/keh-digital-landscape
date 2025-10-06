@@ -264,6 +264,22 @@ router.get('/repository/project/json', async (req, res) => {
 });
 
 /**
+ * Endpoint to fetch list of directorates from S3.
+ * @route GET /api/directorates/json
+ * @returns {Array} Array of directorate objects
+ * @throws {Error} 500 - If fetching fails
+ */
+router.get('/directorates/json', async (req, res) => {
+  try {
+    const data = await s3Service.getObject('main', 'directorates.json');
+    res.json(data);
+  } catch (error) {
+    logger.error('Error fetching directorates:', { error: error.message });
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
  * Endpoint to fetch active banner messages.
  * @route GET /api/banners
  * @returns {Object} Active banner messages data

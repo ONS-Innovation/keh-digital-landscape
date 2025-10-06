@@ -4,11 +4,14 @@
   "description": "Accessibility testing for the ONS Digital Landscape app",
   "main": "test.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "node test.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@axe-core/playwright": "^4.8.5",
     "dotenv": "^16.6.1",
-    "playwright": "^1.42.1"
+    "playwright": "^1.42.1",
+    "prettier": "^3.6.2"
   }
 }

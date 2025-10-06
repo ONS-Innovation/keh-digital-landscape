@@ -2,6 +2,7 @@
 export const nodeBlipCases = [
   {
     name: 'Javascript/TypeScript',
+    techId: 'test-javascript-typescript',
     blipNumber: '1',
     heading: 'Javascript/TypeScript',
     projects: [
@@ -18,6 +19,7 @@ export const nodeBlipCases = [
   {
     name: 'Java',
     blipNumber: '2',
+    techId: 'test-java',
     heading: 'Java',
     projects: [
       'Another Project - GCP and AWS services',
@@ -29,6 +31,7 @@ export const nodeBlipCases = [
   },
   {
     name: 'AWS',
+    techId: 'test-aws',
     blipNumber: '3',
     heading: 'AWS',
     projects: [
@@ -40,6 +43,7 @@ export const nodeBlipCases = [
   },
   {
     name: 'GCP',
+    techId: 'test-gcp',
     blipNumber: '4',
     heading: 'GCP',
     projects: [

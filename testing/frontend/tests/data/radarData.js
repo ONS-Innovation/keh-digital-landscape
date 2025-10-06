@@ -90,6 +90,77 @@ export const radarData = {
         },
       ],
     },
+    // The below is used to test multiple directorate support.
+    // The below technology should appear in trial for all directorates
+    // and in adopt for Data Science only.
+    {
+      id: 'test-r',
+      title: 'R',
+      quadrant: '1',
+      description: 'Languages',
+      timeline: [
+        {
+          moved: 0,
+          ringId: 'review',
+          date: '2025-09-23 00:00:00',
+          description: 'Added for review from tech audit (Languages)',
+          author: 'test@ons.gov.uk',
+        },
+        {
+          moved: 3,
+          ringId: 'trial',
+          date: '2025-09-23 00:00:01',
+          description: 'Technology Radar Update: R Categorised as **TRIAL**\n.',
+          author: 'test@ons.gov.uk',
+        },
+        {
+          moved: 1,
+          ringId: 'adopt',
+          date: '2025-09-23 00:00:02',
+          description:
+            'Technology Radar Update: R Categorised as **ADOPT**\nThis is for Data Science Campus (DSC) only.',
+          author: 'test@ons.gov.uk',
+          directorate: 1,
+        },
+      ],
+    },
+    // The below technology should appear in review for all directorates
+    // and in adopt for Data Science only.
+    // This tests that the last entry in the timeline is picked correctly
+    // when there are multiple entries for different directorates.
+    {
+      id: 'test-Csharp',
+      title: 'C#',
+      quadrant: '1',
+      description: 'Languages',
+      timeline: [
+        {
+          moved: 0,
+          ringId: 'review',
+          date: '2025-09-23 00:00:00',
+          description: 'Added for review from tech audit (Languages)',
+          author: 'test@ons.gov.uk',
+        },
+        {
+          moved: 3,
+          ringId: 'trial',
+          date: '2025-09-23 00:00:01',
+          description:
+            'Technology Radar Update: C# Categorised as **TRIAL**\n.',
+          author: 'test@ons.gov.uk',
+          directorate: 1,
+        },
+        {
+          moved: 1,
+          ringId: 'adopt',
+          date: '2025-09-23 00:00:02',
+          description:
+            'Technology Radar Update: C# Categorised as **ADOPT**\nThis is for Data Science Campus (DSC) only.',
+          author: 'test@ons.gov.uk',
+          directorate: 1,
+        },
+      ],
+    },
   ],
   quadrants: [
     {
