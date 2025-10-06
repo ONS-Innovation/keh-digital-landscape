@@ -2,12 +2,13 @@ import toast from 'react-hot-toast';
 import ErrorToast from '../components/Toast/ErrorToast';
 
 const customFetch = async (url, options) => {
-  const response = await fetch(url, options);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
+  const response = await fetch(backendUrl + url, options);
 
   if (!response.ok) {
     let errorData = { error: `HTTP error! status: ${response.status}` };
     try {
-      errorData = await response.json();
+      errorData = await response;
     } catch (_) {
       // ignore parse errors, default error message will be used
     }

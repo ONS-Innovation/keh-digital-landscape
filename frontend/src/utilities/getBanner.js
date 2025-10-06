@@ -1,3 +1,5 @@
+import customFetch from './customFetch';
+
 /**
  * Fetches banner messages from the backend and filters them for a specific page
  * @param {string} page - The page to filter banners for ('radar', 'statistics', or 'projects')
@@ -5,10 +7,9 @@
  */
 export const fetchBanners = async page => {
   try {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
-    const baseUrl = `${backendUrl}/api/banners`;
+    const baseUrl = `/api/banners`;
 
-    const response = await fetch(baseUrl);
+    const response = await customFetch(baseUrl);
 
     if (!response.ok) {
       throw new Error('Failed to fetch banners');
