@@ -50,6 +50,7 @@ nav:
     - Tech Radar Data: utilities/techRadarData.md
     - Project Data: utilities/projectData.md
     - Repository Data: utilities/repositoryData.md
+    - Custom Fetch: utilities/customFetch.md
   - Constants:
     - Project Constants: constants/projectConstants.md
   - Testing:
