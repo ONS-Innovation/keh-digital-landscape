@@ -23,22 +23,21 @@ terraform-task: &terraform-task
     params:
       secrets: ((sdp_((env))_digital_landscape_secrets))
       github_access_token: ((github_access_token))
-      env: ((env))
       tag: ((tag))
     run:
       path: sh
       args:
         - -cx
         - |
+          echo "DEBUG: Environment is ${env}"
           apk add --no-cache jq curl
-          if [[ "((env))" == "prod" ]]; then
+          if [[ "${env}" == "prod" ]]; then
             tag=$(curl "https://api.github.com/repos/ONS-Innovation/keh-digital-landscape/releases" | jq -r '.[0].tag_name')
             export tag
           else
             export tag=((tag))
           fi
           chmod u+x ./resource-repo/concourse/scripts/terraform_infra.sh
-          export env=((env))
           ./resource-repo/concourse/scripts/terraform_infra.sh
     timeout: 30m
 
