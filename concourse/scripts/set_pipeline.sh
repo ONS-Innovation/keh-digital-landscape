@@ -14,7 +14,12 @@ fi
 
 
 if [[ ${branch} == "main" || ${branch} == "master" ]]; then
-    tag=$(git tag | tail -n 1)
+    # Get the latest tag that matches the format vX.Y.Z
+    tag=$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' | sort -V | tail -n 1)
+    if [[ -z "${tag}" ]]; then
+        echo "No valid semantic versioning tags (vX.Y.Z) found. Cannot set pipeline."
+        exit 1
+    fi
     pipeline_name=${repo_name}
 else
     # Remove non-alphanumeric characters and take the first 7 characters
