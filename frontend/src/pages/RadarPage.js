@@ -1228,6 +1228,15 @@ function RadarPage() {
                               r="15"
                               className={`blip ${ring.toLowerCase()}`}
                             />
+                            {getShouldBeHighlighted(entry.timeline) && (
+                              <circle
+                                r="15"
+                                className="blip-highlight"
+                                stroke={directorateColour}
+                                strokeWidth="2"
+                                fill="none"
+                              />
+                            )}
                             {isSelected && (
                               <circle
                                 r="18"
