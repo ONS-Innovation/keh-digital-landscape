@@ -354,7 +354,10 @@ const ProjectModal = ({
 
     // Fix: Only show the "No Data Captured" placeholder for Environments,
     // but still show other infrastructure fields if present.
-    if (title === 'Infrastructure & Deployment' && keys.includes('Environments')) {
+    if (
+      title === 'Infrastructure & Deployment' &&
+      keys.includes('Environments')
+    ) {
       // Remove Environments from validKeys so we handle it separately
       const otherKeys = validKeys.filter(key => key !== 'Environments');
       const environmentsValue = project.Environments;
@@ -396,7 +399,12 @@ const ProjectModal = ({
               {/* Always render Environments */}
               <div className="detail-item" tabIndex={0}>
                 <h3>Environments:</h3>
-                <p style={{ fontStyle: !hasEnvironments ? 'italic' : 'normal', color: !hasEnvironments ? '#888' : undefined }}>
+                <p
+                  style={{
+                    fontStyle: !hasEnvironments ? 'italic' : 'normal',
+                    color: !hasEnvironments ? '#888' : undefined,
+                  }}
+                >
                   {hasEnvironments
                     ? environmentsValue.replace(/;/g, '; ')
                     : 'No Data Captured'}
