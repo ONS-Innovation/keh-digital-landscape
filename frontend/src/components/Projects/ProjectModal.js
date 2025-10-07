@@ -253,6 +253,7 @@ const ProjectModal = ({
       'Containers',
       'Hosted',
       'Architectures',
+      'Environments',
     ],
     security: ['IAM_Services', 'Source_Control', 'Branching_Strategy'],
     quality: ['Static_Analysis', 'Code_Formatter', 'Monitoring'],
@@ -350,6 +351,62 @@ const ProjectModal = ({
       const value = project[key];
       return value !== 'None' && value !== 'N/A' && value !== 'none';
     });
+
+    // Fix: Only show the "No Data Captured" placeholder for Environments,
+    // but still show other infrastructure fields if present.
+    if (title === 'Infrastructure & Deployment' && keys.includes('Environments')) {
+      // Remove Environments from validKeys so we handle it separately
+      const otherKeys = validKeys.filter(key => key !== 'Environments');
+      const environmentsValue = project.Environments;
+      const hasEnvironments =
+        environmentsValue &&
+        environmentsValue !== 'None' &&
+        environmentsValue !== 'N/A' &&
+        environmentsValue !== 'none';
+
+      return (
+        <div className="project-group">
+          <div
+            className="accordion-header"
+            onClick={() => toggleAccordionGroup(title)}
+          >
+            <h3>{title}</h3>
+            <span
+              className={`accordion-icon ${!expandedGroups[title] ? 'expanded' : ''}`}
+            >
+              <IoChevronDown />
+            </span>
+          </div>
+          {!expandedGroups[title] && (
+            <div className="group-content">
+              {/* Render other infrastructure fields */}
+              {otherKeys.map(key => {
+                const value = project[key];
+                return (
+                  <div key={key} className="detail-item" tabIndex={0}>
+                    <h3>{fieldLabels[key] || key.replace(/_/g, ' ')}:</h3>
+                    <p style={{ whiteSpace: 'pre-wrap' }}>
+                      {technologyListFields.includes(key)
+                        ? renderTechnologyList(value)
+                        : value.replace(/;/g, '; ')}
+                    </p>
+                  </div>
+                );
+              })}
+              {/* Always render Environments */}
+              <div className="detail-item" tabIndex={0}>
+                <h3>Environments:</h3>
+                <p style={{ fontStyle: !hasEnvironments ? 'italic' : 'normal', color: !hasEnvironments ? '#888' : undefined }}>
+                  {hasEnvironments
+                    ? environmentsValue.replace(/;/g, '; ')
+                    : 'No Data Captured'}
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
 
     if (validKeys.length === 0) return null;
 
