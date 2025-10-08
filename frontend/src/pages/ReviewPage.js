@@ -712,6 +712,32 @@ const ReviewPage = () => {
   }, [isDragging, dragOffset]);
 
   /**
+   * specialTechMatchers constant to store the special technology matchers.
+   * This object can be extended to add more special cases.
+   * @type {Object} - The special technology matchers.
+   */
+  const specialTechMatchers = {
+    AWS: item => {
+      const lowered = item.trim().toLowerCase();
+      return lowered.includes('aws') || lowered.includes('amazon');
+    },
+    GCP: item => {
+      const excluded_gcp = ['google meet', 'google docs'];
+      const lowered = item.trim().toLowerCase();
+      if (excluded_gcp.includes(lowered)) return false;
+      return lowered.includes('google') || lowered.includes('gcp');
+    },
+    'Javascript/TypeScript': item => {
+      const lowered = item.trim().toLowerCase();
+      return lowered === 'javascript' || lowered === 'typescript';
+    },
+    SAS: item => {
+      const lowered = item.trim().toLowerCase();
+      return lowered === 'base sas' || lowered === 'sas';
+    },
+  };
+
+  /**
    * Find projects using the selected technology
    * @param {string} tech - The technology name
    * @returns {Array} - Array of projects using the technology
@@ -721,6 +747,7 @@ const ReviewPage = () => {
 
     return projectsData.filter(project => {
       const allTechColumns = [
+        'Architectures',
         'Language_Main',
         'Language_Others',
         'Language_Frameworks',
@@ -753,10 +780,27 @@ const ReviewPage = () => {
       return allTechColumns.some(column => {
         const value = project[column];
         if (!value) return false;
-
-        return value
-          .split(';')
-          .some(item => item.trim().toLowerCase() === tech.toLowerCase());
+        const matcher = specialTechMatchers[tech];
+        if (matcher) {
+          return value.split(';').some(matcher);
+        }
+        // If there is a colon, extract all techs before colons
+        if (value.includes(':')) {
+          // Match all non-space sequences before a colon, or all words before a colon
+          const techMatches = [...value.matchAll(/([^\s:;]+):/g)].map(match =>
+            match[1].trim()
+          );
+          return techMatches.some(
+            techName => techName.toLowerCase() === tech.toLowerCase().trim()
+          );
+        } else {
+          // Otherwise, split by ; and match as usual
+          return value
+            .split(';')
+            .some(
+              item => item.trim().toLowerCase() === tech.toLowerCase().trim()
+            );
+        }
       });
     });
   };
