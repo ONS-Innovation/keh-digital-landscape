@@ -10,7 +10,7 @@ nav:
       - Statistics: pages/statistics/index.md
       - Review: pages/review/index.md
       - Admin: pages/admin/index.md
-      - Copilot: pages/copilot/index.md
+      - GitHub Copilot: pages/copilot/index.md
   - Backend:
       - Overview: backend/index.md
       - Services:
