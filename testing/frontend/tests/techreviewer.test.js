@@ -70,19 +70,18 @@ const interceptAPICall = async ({ page }) => {
 };
 
 test.describe('Check technologies and project count available under Tech Reviewer', () => {
-  for (const {
-    name,
-    heading,
-    projects,
-    projectsCountText,
-  } of nodeBlipCases) {
+  for (const { name, heading, projects, projectsCountText } of nodeBlipCases) {
     test(`Check projects under ${name}`, async ({ page }) => {
       await interceptAPICall({ page });
-      const reviewerDashboardText = await page.getByRole('heading', { name: 'Reviewer Dashboard' });
+      const reviewerDashboardText = await page.getByRole('heading', {
+        name: 'Reviewer Dashboard',
+      });
       await expect(reviewerDashboardText).toBeVisible();
 
       // Click on Show Project Count Button
-      const toggleProjectCountButton = page.getByRole('button', { name: 'Toggle Project Count' });
+      const toggleProjectCountButton = page.getByRole('button', {
+        name: 'Toggle Project Count',
+      });
       await toggleProjectCountButton.click();
 
       // Click on the respective technology heading to expand
@@ -91,10 +90,9 @@ test.describe('Check technologies and project count available under Tech Reviewe
       // Verify the number of projects displayed matches expected projects and count
       for (const project of projects) {
         const noOfProjects = page.getByText(projectsCountText);
-        await expect(noOfProjects).toBeVisible();  
+        await expect(noOfProjects).toBeVisible();
         await expect(page.getByText(project, { exact: true })).toBeVisible();
       }
     });
   }
 });
-
