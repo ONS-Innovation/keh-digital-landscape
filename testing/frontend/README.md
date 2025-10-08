@@ -129,6 +129,9 @@ Current existing tests include:
     - Check that Java language exist
     - Check projects that exist that use Java
 
+- Reviewer Dashboard
+  Using the same data as Tech Radar, the tests check the project count exists.
+
 Run the following to run the tests:
 
 ```bash
