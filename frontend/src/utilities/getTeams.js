@@ -1,11 +1,12 @@
+import customFetch from './customFetch';
+
 /**
  * Check if user is authenticated by testing cookie presence
  * @returns {Promise<boolean>} Authentication status
  */
 export const checkAuthStatus = async () => {
   try {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
-    const response = await fetch(`${backendUrl}/copilot/api/auth/status`, {
+    const response = await customFetch(`/copilot/api/auth/status`, {
       credentials: 'include',
     });
 
@@ -29,8 +30,7 @@ export const checkAuthStatus = async () => {
  */
 export const fetchUserTeams = async () => {
   try {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
-    const response = await fetch(`${backendUrl}/copilot/api/teams`, {
+    const response = await customFetch(`/copilot/api/teams`, {
       credentials: 'include',
     });
 
@@ -61,8 +61,7 @@ export const fetchUserTeams = async () => {
  */
 export const checkCopilotAdminStatus = async () => {
   try {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
-    const response = await fetch(`${backendUrl}/copilot/api/admin/status`, {
+    const response = await customFetch(`/copilot/api/admin/status`, {
       credentials: 'include',
     });
 
@@ -93,16 +92,12 @@ export const checkCopilotAdminStatus = async () => {
  */
 export const exchangeCodeForToken = async code => {
   try {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
-    const response = await fetch(
-      `${backendUrl}/copilot/api/github/oauth/token`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ code }),
-      }
-    );
+    const response = await customFetch(`/copilot/api/github/oauth/token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ code }),
+    });
 
     if (!response.ok) {
       console.error('Failed to exchange code for token:', response.statusText);
@@ -124,14 +119,10 @@ export const exchangeCodeForToken = async code => {
  */
 export const logoutUser = async () => {
   try {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
-    const response = await fetch(
-      `${backendUrl}/copilot/api/github/oauth/logout`,
-      {
-        method: 'POST',
-        credentials: 'include',
-      }
-    );
+    const response = await customFetch(`/copilot/api/github/oauth/logout`, {
+      method: 'POST',
+      credentials: 'include',
+    });
 
     return response.ok;
   } catch (error) {

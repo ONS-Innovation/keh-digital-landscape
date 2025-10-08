@@ -1,3 +1,5 @@
+import customFetch from './customFetch';
+
 /**
  * Fetch Copilot seat data from Github API
  *
@@ -5,8 +7,7 @@
  */
 export const fetchOrgSeatData = async () => {
   try {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
-    const response = await fetch(`${backendUrl}/copilot/api/seats`);
+    const response = await customFetch(`/copilot/api/seats`);
     if (!response.ok) {
       return null;
     }
@@ -32,8 +33,8 @@ export const fetchTeamSeatData = async teamSlug => {
   }
   try {
     const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
-    const response = await fetch(
-      `${backendUrl}/copilot/api/team/seats?teamSlug=${teamSlug}`,
+    const response = await customFetch(
+      `/copilot/api/team/seats?teamSlug=${teamSlug}`,
       {
         credentials: 'include',
       }

@@ -46,10 +46,11 @@ nav:
           - Technology Management: components/admin/techManagement.md
           - Banner Management: components/admin/bannerManagement.md
   - Utilities:
-      - Technology Status: utilities/technologyStatus.md
-      - Tech Radar Data: utilities/techRadarData.md
-      - Project Data: utilities/projectData.md
-      - Repository Data: utilities/repositoryData.md
+    - Technology Status: utilities/technologyStatus.md
+    - Tech Radar Data: utilities/techRadarData.md
+    - Project Data: utilities/projectData.md
+    - Repository Data: utilities/repositoryData.md
+    - Custom Fetch: utilities/customFetch.md
   - Constants:
       - Project Constants: constants/projectConstants.md
   - Testing:

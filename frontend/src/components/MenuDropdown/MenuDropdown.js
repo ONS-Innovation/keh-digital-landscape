@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../../styles/components/MenuDropdown.css';
 import UserProfile from '../UserProfile/UserProfile';
+import Modal from '../BugReport/Modal';
 import {
   TbSmartHome,
   TbEditCircle,
@@ -9,6 +10,7 @@ import {
   TbUsers,
   TbChartBar,
   TbHelp,
+  TbBug,
 } from 'react-icons/tb';
 import { VscCopilot } from 'react-icons/vsc';
 import { IoMenu } from 'react-icons/io5';
@@ -22,6 +24,7 @@ import { MdOutlineRadar } from 'react-icons/md';
  */
 function MenuDropdown({ setShowHelpModal }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [showBugReportModal, setShowBugReportModal] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -50,6 +53,14 @@ function MenuDropdown({ setShowHelpModal }) {
   const handleHelpClick = () => {
     setShowHelpModal(true);
     setIsOpen(false);
+  };
+
+  const openReportBugModal = () => {
+    setShowBugReportModal(true);
+  };
+
+  const closeReportBugModal = () => {
+    setShowBugReportModal(false);
   };
 
   return (
@@ -129,6 +140,10 @@ function MenuDropdown({ setShowHelpModal }) {
           </div>
 
           <div className="help-button-container">
+            <button onClick={() => openReportBugModal()}>
+              <TbBug size={16} />
+              Report a Bug
+            </button>
             <button onClick={handleHelpClick}>
               <TbHelp size={16} />
               Help
@@ -138,6 +153,7 @@ function MenuDropdown({ setShowHelpModal }) {
           <UserProfile variant="dropdown" />
         </div>
       )}
+      <Modal isOpen={showBugReportModal} onClose={closeReportBugModal} />
     </div>
   );
 }

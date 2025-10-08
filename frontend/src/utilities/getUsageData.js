@@ -1,3 +1,5 @@
+import customFetch from './customFetch';
+
 /**
  * Fetch organisation live usage data from Github API
  *
@@ -5,8 +7,7 @@
  */
 export const fetchOrgLiveUsageData = async () => {
   try {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
-    const response = await fetch(`${backendUrl}/copilot/api/org/live`);
+    const response = await customFetch(`/copilot/api/org/live`);
     if (!response.ok) {
       return null;
     }
@@ -26,8 +27,7 @@ export const fetchOrgLiveUsageData = async () => {
  */
 export const fetchOrgHistoricUsageData = async () => {
   try {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
-    const response = await fetch(`${backendUrl}/copilot/api/org/historic`);
+    const response = await customFetch(`/copilot/api/org/historic`);
     if (!response.ok) {
       return null;
     }
@@ -42,9 +42,8 @@ export const fetchOrgHistoricUsageData = async () => {
 
 export const fetchTeamLiveUsageData = async teamSlug => {
   try {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
-    const response = await fetch(
-      `${backendUrl}/copilot/api/team/live?teamSlug=${teamSlug}`,
+    const response = await customFetch(
+      `/copilot/api/team/live?teamSlug=${teamSlug}`,
       {
         credentials: 'include',
       }

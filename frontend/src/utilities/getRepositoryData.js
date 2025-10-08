@@ -1,5 +1,6 @@
 import { toast } from 'react-hot-toast';
 import { useData } from '../contexts/dataContext';
+import customFetch from './customFetch';
 
 /**
  * Fetch general repository statistics
@@ -10,16 +11,15 @@ import { useData } from '../contexts/dataContext';
  */
 export const fetchRepositoryStats = async (date = null, archived = null) => {
   try {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
-    const baseUrl = `${backendUrl}/api/json`;
-
     const params = new URLSearchParams();
     if (date && date !== 'all') params.append('datetime', date);
     if (archived !== null) params.append('archived', archived);
 
+    const baseUrl = `/api/json`;
+
     const url = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
 
-    const response = await fetch(url);
+    const response = await customFetch(url);
 
     if (!response.ok) {
       throw new Error(
@@ -58,10 +58,10 @@ export const fetchRepositoryData = async (
     params.append('repositories', repositories.join(','));
     if (date) params.append('datetime', date);
     if (archived !== null) params.append('archived', archived);
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
-    const baseUrl = `${backendUrl}/api/repository/project/json`;
 
-    const response = await fetch(`${baseUrl}?${params.toString()}`);
+    const response = await customFetch(
+      `/api/repository/project/json?${params.toString()}`
+    );
 
     if (!response.ok) {
       throw new Error(
