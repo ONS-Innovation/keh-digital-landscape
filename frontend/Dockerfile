@@ -1,5 +1,5 @@
 # ---- Build Stage ----
-FROM node:20-slim AS builder
+FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Add build argument for backend URL
@@ -19,7 +19,7 @@ COPY . .
 RUN NODE_OPTIONS=--max-old-space-size=4096 npm run build
 
 # ---- Run Stage ----
-FROM node:20-slim
+FROM node:20-alpine
 WORKDIR /app
 
 ENV NODE_ENV=production
