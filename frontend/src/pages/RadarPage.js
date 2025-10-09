@@ -502,6 +502,7 @@ function RadarPage() {
         'Language_Others',
         'Language_Frameworks',
         'Infrastructure',
+        'Environments',
         'CICD',
         'Cloud_Services',
         'IAM_Services',

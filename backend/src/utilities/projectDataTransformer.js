@@ -68,6 +68,22 @@ function transformProjectToCSVFormat(project, reverseDependencyMap = {}) {
     Architectures: project.architecture.hosting.details
       ? project.architecture.hosting.details.join('; ')
       : '',
+    Environments: project.architecture.environments
+      ? Object.entries(project.architecture.environments)
+          .filter(([key, value]) => value)
+          .map(([key]) => {
+            const envLabels = {
+              dev: 'DEV',
+              int: 'INT',
+              uat: 'UAT',
+              preprod: 'PRE-PROD (STAGING)',
+              prod: 'PROD',
+              postprod: 'POST-PROD'
+            };
+            return envLabels[key] || key.toUpperCase();
+          })
+          .join('; ')
+      : '',
     Source_Control: sourceControl,
     Repo: project.source_control[0]?.links
       ? project.source_control[0]?.links.map(link => link.url).join('; ')

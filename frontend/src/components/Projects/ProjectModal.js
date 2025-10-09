@@ -377,8 +377,6 @@ const ProjectModal = ({
           .join('; ');
       }
 
-      console.log('Environments value:', project.Environments);
-
       environmentsValue = (environmentsValue || '').trim();
       const hasEnvironments =
         environmentsValue &&
@@ -514,34 +512,6 @@ const ProjectModal = ({
       [item]: !prev[item],
     }));
   };
-
-  // Get environments data from localStorage
-  let envData = null;
-  if (JSON.parse(localStorage.getItem('edit'))) {
-    envData = JSON.parse(localStorage.getItem('environments-data-edit'));
-  } else {
-    envData = JSON.parse(localStorage.getItem('environments-data'));
-  }
-
-  // Convert environments object to string for modal
-  const envLabels = {
-    dev: 'DEV',
-    int: 'INT',
-    uat: 'UAT',
-    preprod: 'PRE-PROD (STAGING)',
-    prod: 'PROD',
-    postprod: 'POST-PROD'
-  };
-
-  const environmentsString = envData
-    ? Object.keys(envLabels)
-        .filter(key => envData[key])
-        .map(key => envLabels[key])
-        .join('; ')
-    : '';
-
-  // Assign to project object
-  project.Environments = environmentsString;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
