@@ -352,20 +352,38 @@ const ProjectModal = ({
       return value !== 'None' && value !== 'N/A' && value !== 'none';
     });
 
-    // Fix: Only show the "No Data Captured" placeholder for Environments,
-    // but still show other infrastructure fields if present.
+    // Always show Environments field in Infrastructure group, with robust handling
     if (
       title === 'Infrastructure & Deployment' &&
       keys.includes('Environments')
     ) {
       // Remove Environments from validKeys so we handle it separately
       const otherKeys = validKeys.filter(key => key !== 'Environments');
-      const environmentsValue = project.Environments;
+      let environmentsValue = project.Environments;
+
+      // Handle if Environments is an object (from localStorage or backend)
+      if (environmentsValue && typeof environmentsValue === 'object') {
+        const envLabels = {
+          dev: 'DEV',
+          int: 'INT',
+          uat: 'UAT',
+          preprod: 'PRE-PROD (STAGING)',
+          prod: 'PROD',
+          postprod: 'POST-PROD',
+        };
+        environmentsValue = Object.keys(environmentsValue)
+          .filter(key => environmentsValue[key] === true && envLabels[key])
+          .map(key => envLabels[key])
+          .join('; ');
+      }
+
+      console.log('Environments value:', project.Environments);
+
+      environmentsValue = (environmentsValue || '').trim();
       const hasEnvironments =
         environmentsValue &&
-        environmentsValue !== 'None' &&
-        environmentsValue !== 'N/A' &&
-        environmentsValue !== 'none';
+        environmentsValue.toLowerCase() !== 'none' &&
+        environmentsValue.toLowerCase() !== 'n/a';
 
       return (
         <div className="project-group">
@@ -406,7 +424,12 @@ const ProjectModal = ({
                   }}
                 >
                   {hasEnvironments
-                    ? environmentsValue.replace(/;/g, '; ')
+                    ? environmentsValue.split(';').map((env, idx, arr) => (
+                        <span key={idx}>
+                          {env.trim()}
+                          {idx < arr.length - 1 ? '; ' : ''}
+                        </span>
+                      ))
                     : 'No Data Captured'}
                 </p>
               </div>
@@ -491,6 +514,34 @@ const ProjectModal = ({
       [item]: !prev[item],
     }));
   };
+
+  // Get environments data from localStorage
+  let envData = null;
+  if (JSON.parse(localStorage.getItem('edit'))) {
+    envData = JSON.parse(localStorage.getItem('environments-data-edit'));
+  } else {
+    envData = JSON.parse(localStorage.getItem('environments-data'));
+  }
+
+  // Convert environments object to string for modal
+  const envLabels = {
+    dev: 'DEV',
+    int: 'INT',
+    uat: 'UAT',
+    preprod: 'PRE-PROD (STAGING)',
+    prod: 'PROD',
+    postprod: 'POST-PROD'
+  };
+
+  const environmentsString = envData
+    ? Object.keys(envLabels)
+        .filter(key => envData[key])
+        .map(key => envLabels[key])
+        .join('; ')
+    : '';
+
+  // Assign to project object
+  project.Environments = environmentsString;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
