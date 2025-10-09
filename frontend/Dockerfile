@@ -29,8 +29,8 @@ RUN npm install -g serve
 # Copy only the built app from the builder stage
 COPY --from=builder /app/build ./build
 
-# Set non-root user
-RUN addgroup --system appgroup && adduser --system --group appuser
+# Set non-root user Alpine syntax for creating a non-root user
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser
 
 # Start the app
