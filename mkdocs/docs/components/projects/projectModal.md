@@ -77,7 +77,7 @@ The ProjectModal fetches and displays detailed information about linked GitHub r
 Project information is organised into logical categories for improved readability:
 
 1. **Languages & Frameworks**: Programming languages, frameworks, and testing tools
-2. **Infrastructure & Deployment**: Hosting, cloud services, CI/CD, and containerisation
+2. **Infrastructure & Deployment**: Hosting, cloud services, CI/CD, Containerisation and Environments
 3. **Security & Source Control**: Authentication, source control, and branching strategies
 4. **Quality & Monitoring**: Code quality tools, formatters, and monitoring solutions
 5. **Data Management**: Databases, data stores, and output formats
