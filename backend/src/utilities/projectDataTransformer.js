@@ -13,12 +13,12 @@ function transformProjectToCSVFormat(project, reverseDependencyMap = {}) {
   );
 
   const envLabels = {
-  dev: 'DEV',
-  int: 'INT',
-  uat: 'UAT',
-  preprod: 'PRE-PROD (STAGING)',
-  prod: 'PROD',
-  postprod: 'POST-PROD',
+    dev: 'DEV',
+    int: 'INT',
+    uat: 'UAT',
+    preprod: 'PRE-PROD (STAGING)',
+    prod: 'PROD',
+    postprod: 'POST-PROD',
   };
   // Format technical contact string if found
   const technicalContact = technicalContactUser
