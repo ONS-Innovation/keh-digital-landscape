@@ -82,7 +82,9 @@ function transformProjectToCSVFormat(project, reverseDependencyMap = {}) {
       ? project.architecture.database.main.join('; ')
       : '',
     Project_Tools: project.supporting_tools.project_tracking || '',
-    Documentation: project.details[0]?.documentation_link?.join('; ') || '',
+    Documentation: Array.isArray(project.details[0]?.documentation_link)
+      ? project.details[0].documentation_link.join('; ')
+      : project.details[0]?.documentation_link || '',
     Infrastructure: project.architecture.infrastructure.others
       ? project.architecture.infrastructure.others.join('; ')
       : '',
