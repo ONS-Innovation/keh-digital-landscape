@@ -12,6 +12,14 @@ function transformProjectToCSVFormat(project, reverseDependencyMap = {}) {
       (u.email?.includes('@ons.gov.uk') || u.email?.includes('@ext.ons.gov.uk'))
   );
 
+  const envLabels = {
+  dev: 'DEV',
+  int: 'INT',
+  uat: 'UAT',
+  preprod: 'PRE-PROD (STAGING)',
+  prod: 'PROD',
+  postprod: 'POST-PROD',
+  };
   // Format technical contact string if found
   const technicalContact = technicalContactUser
     ? `${technicalContactUser.email} (${technicalContactUser.grade})`
@@ -71,17 +79,7 @@ function transformProjectToCSVFormat(project, reverseDependencyMap = {}) {
     Environments: project.architecture.environments
       ? Object.entries(project.architecture.environments)
           .filter(([key, value]) => value)
-          .map(([key]) => {
-            const envLabels = {
-              dev: 'DEV',
-              int: 'INT',
-              uat: 'UAT',
-              preprod: 'PRE-PROD (STAGING)',
-              prod: 'PROD',
-              postprod: 'POST-PROD',
-            };
-            return envLabels[key] || key.toUpperCase();
-          })
+          .map(([key]) => envLabels[key] || key.toUpperCase())
           .join('; ')
       : '',
     Source_Control: sourceControl,
