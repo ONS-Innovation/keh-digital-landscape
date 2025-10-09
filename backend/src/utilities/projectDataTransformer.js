@@ -78,7 +78,7 @@ function transformProjectToCSVFormat(project, reverseDependencyMap = {}) {
               uat: 'UAT',
               preprod: 'PRE-PROD (STAGING)',
               prod: 'PROD',
-              postprod: 'POST-PROD'
+              postprod: 'POST-PROD',
             };
             return envLabels[key] || key.toUpperCase();
           })
