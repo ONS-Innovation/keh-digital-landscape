@@ -64,5 +64,5 @@ terraform apply \
 -var "container_ver=${tag}" \
 -var "container_ver_backend=${tag}" \
 -var "frontend_ecr_repo=${frontend_ecr_repo}" \
--var "backend_ecr_repo=${backend_ecr_repo}"
+-var "backend_ecr_repo=${backend_ecr_repo}" \
 -auto-approve
