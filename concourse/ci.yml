@@ -60,7 +60,7 @@ jobs:
     public: true
     plan:
       - get: github-release
-        trigger: false
+        trigger: true
       - get: resource-repo
         trigger: false
       - task: deploy-release
@@ -109,7 +109,7 @@ jobs:
           tag: ((tag))
           secrets: ((sdp_dev_digital_landscape_secrets))
 
-  - name: build-and-push-prod
+  - name: release-build-and-push-prod
     public: true
     plan:
       - get: resource-repo
