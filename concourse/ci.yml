@@ -60,6 +60,7 @@ jobs:
     public: true
     plan:
       - get: resource-repo
+        passed: [deploy-after-github-release]
         trigger: true
         timeout: 5m
       - task: build-image
