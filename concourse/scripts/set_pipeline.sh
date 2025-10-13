@@ -1,27 +1,32 @@
-repo_name=${1}
+#!/bin/bash
+set -eo pipefail
+# Usage: ./set_pipeline.sh
 
-if [[ $# -gt 1 ]]; then
-    branch=${2}
-    git rev-parse --verify ${branch}
-    if [[ $? -ne 0 ]]; then
-        echo "Branch \"${branch}\" does not exist"
+# Define repository name
+repo_name="digital-landscape"
+# Always use the current branch
+branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || { echo "Failed to get branch name"; exit 1; })
+
+if ! git rev-parse --verify "${branch}" >/dev/null 2>&1; then
+    echo "Branch \"${branch}\" does not exist. Cannot set a pipeline without a valid branch."
+    exit 1
+fi
+
+
+if [[ ${branch} == "main" || ${branch} == "master" ]]; then
+    # Get the latest tag that matches the format vX.Y.Z
+    tag=$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' | sort -V | tail -n 1)
+    if [[ -z "${tag}" ]]; then
+        echo "No valid semantic versioning tags (vX.Y.Z) found. Cannot set pipeline."
         exit 1
     fi
+    pipeline_name=${repo_name}
 else
-    branch=$(git rev-parse --abbrev-ref HEAD)
+    # Remove non-alphanumeric characters and take the first 7 characters
+    tag=$(echo "${branch}" | tr -cd '[:alnum:]' | cut -c1-7)
+    pipeline_name=${repo_name}-${branch}
 fi
 
-if [[ ${branch} == "main" || ${branch} == "master" || ${branch} == "concourse" ]]; then
-    env="prod"
-else
-    env="dev"
-fi
+fly -t aws-sdp set-pipeline -c concourse/ci.yml -p ${pipeline_name}  -v branch=${branch} -v tag=${tag} -v repo_name=${repo_name} -v env=dev
 
-if [[ ${env} == "dev" ]]; then
-    tag=$(git rev-parse HEAD)
-else
-    tag=$(git tag | tail -n 1)
-fi
-
-fly -t aws-sdp set-pipeline -c concourse/ci.yml -p ${repo_name}-${branch} -v branch=${branch} -v tag=${tag} -v env=${env} --var repo_name=${repo_name}
-
+echo "Pipeline \"${pipeline_name}\" set successfully."
