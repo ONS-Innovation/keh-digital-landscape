@@ -1,3 +1,9 @@
+resource_types:
+  - name: key-value
+    type: registry-image
+    source:
+      repository: gstack/keyval-resource
+
 resources:
   - name: resource-repo
     type: git
@@ -13,6 +19,8 @@ resources:
       owner: ONS-Innovation
       repository: keh-digital-landscape
       access_token: ((github_access_token))
+  - name: github-release-tag
+    type: key-value
 
 # Define the common terraform task as an anchor
 terraform-task: &terraform-task
@@ -37,11 +45,10 @@ terraform-task: &terraform-task
         - |
           echo "DEBUG: Environment is ${env}"
           apk add --no-cache jq curl
-          if [[ "${env}" == "prod" ]]; then
-            tag=$(curl "https://api.github.com/repos/ONS-Innovation/keh-digital-landscape/releases" | jq -r '.[0].tag_name')
-            export tag
-          else
-            export tag=((tag))
+          export tag=((tag))
+          if [[ "$env" == "prod" && ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "ERROR: Tag '$tag' is not in semantic versioning format (vX.Y.Z)"
+            exit 1
           fi
           chmod u+x ./resource-repo/concourse/scripts/terraform_infra.sh
           ./resource-repo/concourse/scripts/terraform_infra.sh
@@ -135,6 +142,9 @@ jobs:
                 source ./resource-repo/concourse/scripts/assume_role.sh
                 ./resource-repo/concourse/scripts/build_image.sh
         timeout: 15m
+      - put: github-release-tag
+        params:
+          directory: release-tag-output
 
   - name: build-and-push-prod
     public: true
@@ -143,6 +153,8 @@ jobs:
         passed: [deploy-after-github-release, build-and-push-dev]
         trigger: false # Manual trigger only
         timeout: 5m
+      - get: github-release-tag
+        passed: [deploy-after-github-release]
       - task: build-image
         privileged: true
         config:
@@ -153,13 +165,13 @@ jobs:
               repository: hashicorp/terraform
           inputs:
             - name: resource-repo
-            - name: release-tag-output
+            - name: github-release-tag
           params:
             aws_account_id: ((aws_account_sdp_prod))
             aws_role_arn: arn:aws:iam::((aws_account_sdp_prod)):role/sdp-concourse-prod
             secrets: ((sdp_prod_digital_landscape_secrets))
             env: prod
-            tag: release-tag-output/tag
+            tag: github-release-tag/tag
             repo_name: ((repo_name))
           run:
             path: sh
@@ -168,8 +180,7 @@ jobs:
               - |
                 apk add --no-cache aws-cli podman jq iptables curl
                 export repo_name=((repo_name))
-                tag=$(curl "https://api.github.com/repos/ONS-Innovation/keh-digital-landscape/releases" | jq -r '.[0].tag_name')
-                export tag=$(cat release-tag-output/tag)
+                export tag=$(cat github-release-tag/tag)
                 echo "Using release tag: ${tag}"
                 chmod u+x ./resource-repo/concourse/scripts/assume_role.sh
                 chmod u+x ./resource-repo/concourse/scripts/build_image.sh
