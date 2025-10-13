@@ -22,9 +22,7 @@ const ErrorToast = ({ t, error }) => {
       <div className="error-toast-content">
         <div className="error-toast-body">
           <div className="error-toast-message">
-            <p className="error-toast-title">
-              An error occurred
-            </p>
+            <p className="error-toast-title">An error occurred</p>
             <p className="error-toast-description">{error}</p>
             <p className="error-toast-description">
               Did you run into an issue?{' '}
