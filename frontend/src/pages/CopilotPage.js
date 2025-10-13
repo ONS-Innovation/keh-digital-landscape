@@ -1,5 +1,5 @@
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useEffect, useState, useMemo, useRef } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Header from '../components/Header/Header';
 import LiveDashboard from '../components/Copilot/Dashboards/LiveDashboard';
 import HistoricDashboard from '../components/Copilot/Dashboards/HistoricDashboard';
@@ -33,7 +33,6 @@ import { toast } from 'react-hot-toast';
 
 function CopilotDashboard() {
   const navigate = useNavigate();
-  const { scope: urlScope } = useParams();
   const [searchParams] = useSearchParams();
 
   const initialiseDateRange = data => {
@@ -62,7 +61,7 @@ function CopilotDashboard() {
   };
 
   // Cancellation ref for fetchTeamData
-  const fetchTeamDataCancelRef = React.useRef({ cancelled: false });
+  const fetchTeamDataCancelRef = useRef({ cancelled: false });
 
   const fetchTeamData = async slug => {
     fetchTeamDataCancelRef.current.cancelled = false;
@@ -194,7 +193,6 @@ function CopilotDashboard() {
   const [availableTeams, setAvailableTeams] = useState([]);
   const [isTeamLoading, setIsTeamLoading] = useState(false);
   const [teamSlug, setTeamSlug] = useState(null);
-  const [isInitialised, setIsInitialised] = useState(false);
   const [isCopilotAdmin, setIsCopilotAdmin] = useState(false);
   const [userTeamSlugs, setUserTeamSlugs] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -244,8 +242,6 @@ function CopilotDashboard() {
       navigate('/copilot/org/live', { replace: true });
     }
 
-    // Mark as initialised after processing URL parameters
-    setIsInitialised(true);
   }, []); // Empty dependency array - only run once on mount
 
   /**
