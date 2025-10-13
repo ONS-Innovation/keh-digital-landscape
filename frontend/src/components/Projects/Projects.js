@@ -388,9 +388,6 @@ const Projects = ({
         };
       };
 
-      // Combine sort field and direction into single string for switch statement
-      const sortBy = `${sortField}-${sortDirection}`;
-
       // Special case: Sort by technology ring ratio (adopt/trial/assess/hold)
       if (sortField === 'ring-ratio') {
         // Get distribution stats for both projects being compared

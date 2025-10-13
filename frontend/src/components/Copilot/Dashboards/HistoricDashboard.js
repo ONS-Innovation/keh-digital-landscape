@@ -8,7 +8,7 @@ import TableBreakdown from '../Breakdowns/TableBreakdown';
 import CompletionsCards from '../Breakdowns/CompletionsCards';
 import ChatCards from '../Breakdowns/ChatCards';
 
-function HistoricDashboard({ scope, data, isLoading, viewDatesBy }) {
+function HistoricDashboard({ data, isLoading, viewDatesBy }) {
   let completions, chats;
   if (!isLoading) {
     completions = data.completions;

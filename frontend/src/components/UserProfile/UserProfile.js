@@ -80,11 +80,6 @@ const UserProfile = ({ isCollapsed = false, variant = 'sidebar' }) => {
     return user.user.email;
   };
 
-  const getUserRoles = () => {
-    if (!user?.user?.groups || user.user.groups.length === 0) return 'Guest';
-    return user.user.groups.join(', ');
-  };
-
   const isLoggedIn = () => {
     return user?.user?.email && user.user.email !== null;
   };

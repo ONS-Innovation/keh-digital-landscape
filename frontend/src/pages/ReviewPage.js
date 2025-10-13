@@ -11,7 +11,7 @@ import ProjectModal from '../components/Projects/ProjectModal';
 import { useTechnologyStatus } from '../utilities/getTechnologyStatus';
 import { useData } from '../contexts/dataContext';
 import { MarkdownText } from '../utilities/markdownRenderer';
-import { format, set } from 'date-fns';
+import { format } from 'date-fns';
 import { getDirectorates } from '../utilities/getDirectorates';
 import {
   getDirectorateColour,
@@ -71,7 +71,6 @@ const ReviewPage = () => {
 
   const [stashedDefaultTimeline, setStashedDefaultTimeline] = useState({});
 
-  // Fields to scan from CSV and their corresponding categories
   const fieldsToScan = {
     Language_Main: 'Languages',
     Language_Others: 'Languages',

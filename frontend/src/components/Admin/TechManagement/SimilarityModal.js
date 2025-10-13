@@ -17,35 +17,6 @@ const SimilarityModal = ({
     }
   };
 
-  // Helper function to highlight case differences
-  const highlightCaseDifferences = (original, similar) => {
-    // If lengths don't match or lowercase versions are different, return the regular string
-    if (
-      original.length !== similar.length ||
-      original.toLowerCase() !== similar.toLowerCase()
-    ) {
-      return similar;
-    }
-
-    // Create an array of character spans with different styling for case differences
-    return (
-      <>
-        {similar.split('').map((char, index) => {
-          const isDifferentCase = char !== original[index];
-          return (
-            <span
-              key={index}
-              className={isDifferentCase ? 'similarity-modal-diff-case' : ''}
-              title={isDifferentCase ? 'Case difference detected' : ''}
-            >
-              {char}
-            </span>
-          );
-        })}
-      </>
-    );
-  };
-
   return (
     <div className="similarity-modal-container">
       <div className="similarity-modal-header">
