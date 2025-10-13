@@ -290,7 +290,7 @@ export const processUsageData = (data, groupBy = 'day') => {
 
   chat.copyRate = chat.totalChats > 0 ? chat.totalCopies / chat.totalChats : 0;
 
-  Object.entries(chat.editorBreakdown).forEach(([breakdown]) => {
+  Object.values(chat.editorBreakdown).forEach(breakdown => {
     breakdown.insertionRate =
       breakdown.chats > 0 ? breakdown.insertions / breakdown.chats : 0;
     breakdown.copyRate =
