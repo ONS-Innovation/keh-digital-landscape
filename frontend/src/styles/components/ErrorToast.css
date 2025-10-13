@@ -28,7 +28,7 @@
 }
 
 .error-toast-title {
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: 500;
   margin: 0 0 0.5rem 0;
   display: flex;
@@ -40,7 +40,7 @@
 .error-toast-description {
   margin: 0.25rem 0;
   font-size: 1rem;
-  line-height: 1.25rem;
+  line-height: 1.5rem;
   margin-top: 0;
   color: hsl(var(--foreground));
 }

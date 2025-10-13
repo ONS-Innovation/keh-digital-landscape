@@ -2,7 +2,6 @@ import React from 'react';
 import toast from 'react-hot-toast';
 import { useBugReport } from '../../contexts/BugReportContext';
 import '../../styles/components/ErrorToast.css';
-import { TbAlertTriangle } from 'react-icons/tb';
 
 const ErrorToast = ({ t, error }) => {
   const { openBugReportModal } = useBugReport();
@@ -24,7 +23,7 @@ const ErrorToast = ({ t, error }) => {
         <div className="error-toast-body">
           <div className="error-toast-message">
             <p className="error-toast-title">
-              <TbAlertTriangle size={18} /> An error occurred
+              An error occurred
             </p>
             <p className="error-toast-description">{error}</p>
             <p className="error-toast-description">
