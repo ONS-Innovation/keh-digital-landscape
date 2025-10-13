@@ -103,7 +103,7 @@ jobs:
     public: true
     plan:
       - get: github-release
-        trigger: true
+        trigger: false
       - get: resource-repo
         trigger: false
       - task: deploy-release
