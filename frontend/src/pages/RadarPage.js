@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../styles/App.css';
 import Header from '../components/Header/Header';
@@ -31,9 +31,6 @@ function RadarPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isInfoBoxVisible, setIsInfoBoxVisible] = useState(true);
-  const [isDragging, setIsDragging] = useState(false);
-  const [setDragPosition] = useState({ x: 148, y: 80 });
-  const [dragOffset] = useState({ x: 0, y: 0 });
   const [expandedQuadrants, setExpandedQuadrants] = useState({
     1: true,
     2: true,
@@ -46,13 +43,13 @@ function RadarPage() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [draggingQuadrant, setDraggingQuadrant] = useState(null);
-  const [quadrantPositions, setQuadrantPositions] = useState({
+  const [quadrantPositions] = useState({
     4: null, // top-left
     1: null, // top-right
     3: null, // bottom-left
     2: null, // bottom-right
   });
-  const [quadrantDragOffset, setQuadrantDragOffset] = useState({ x: 0, y: 0 });
+  const [ , setQuadrantDragOffset] = useState({ x: 0, y: 0 });
   const [allBlips, setAllBlips] = useState([]);
   const [selectedTimelineItem, setSelectedTimelineItem] = useState(null);
   const [timelineAscending, setTimelineAscending] = useState(false);
@@ -85,7 +82,7 @@ function RadarPage() {
       setDirectorateColour(getDirectorateColour(directorateId, directorates));
       setDirectorateName(getDirectorateName(directorateId, directorates));
     }
-  }, [directorates]);
+  }, [directorates, selectedDirectorate]);
 
   /**
    * useEffect hook to fetch the tech radar data from S3.
@@ -115,30 +112,33 @@ function RadarPage() {
    * @param {Array} timeline - The timeline array of the technology entry.
    * @return {Array} - The filtered timeline.
    */
-  const getFilteredTimeline = timeline => {
-    let filteredTimeline = [];
-    let digitalServicesTimeline = [];
+  const getFilteredTimeline = useCallback(
+    timeline => {
+      let filteredTimeline = [];
+      let digitalServicesTimeline = [];
 
-    timeline.forEach(entry => {
-      const directorate = entry.directorate || 'Digital Services (DS)';
+      timeline.forEach(entry => {
+        const directorate = entry.directorate || 'Digital Services (DS)';
 
-      if (
-        directorate === selectedDirectorate &&
-        directorate !== 'Digital Services (DS)'
-      ) {
-        filteredTimeline.push(entry);
+        if (
+          directorate === selectedDirectorate &&
+          directorate !== 'Digital Services (DS)'
+        ) {
+          filteredTimeline.push(entry);
+        }
+        if (directorate === 'Digital Services (DS)') {
+          digitalServicesTimeline.push(entry);
+        }
+      });
+
+      if (filteredTimeline.length === 0) {
+        filteredTimeline = digitalServicesTimeline;
       }
-      if (directorate === 'Digital Services (DS)') {
-        digitalServicesTimeline.push(entry);
-      }
-    });
 
-    if (filteredTimeline.length === 0) {
-      filteredTimeline = digitalServicesTimeline;
-    }
-
-    return filteredTimeline;
-  };
+      return filteredTimeline;
+    },
+    [selectedDirectorate]
+  );
 
   /**
    * Function to get the most recent ring from the timeline, considering the selected directorate.
@@ -148,13 +148,17 @@ function RadarPage() {
    * @param {Array} timeline - The timeline array of the technology entry.
    * @return {string} - The most recent ring ID.
    */
-  const getMostRecentRing = timeline => {
-    const filteredTimeline = getFilteredTimeline(timeline);
+  const getMostRecentRing = useCallback(
+    timeline => {
+      const filteredTimeline = getFilteredTimeline(timeline);
 
-    // Get the most recent ring from the filtered timeline
-    const mostRecentRing = filteredTimeline[filteredTimeline.length - 1].ringId;
-    return mostRecentRing;
-  };
+      // Get the most recent ring from the filtered timeline
+      const mostRecentRing =
+        filteredTimeline[filteredTimeline.length - 1].ringId;
+      return mostRecentRing;
+    },
+    [getFilteredTimeline]
+  );
 
   /**
    * Function to determine if a technology entry should be highlighted based on the selected directorate.
@@ -209,6 +213,145 @@ function RadarPage() {
     setLockedBlip(null);
   };
 
+  const groupedEntries = useMemo(() => {
+    if (!data) return {};
+    return data.entries.reduce((acc, entry) => {
+      const quadrant = entry.quadrant;
+
+      const mostRecentRing = getMostRecentRing(entry.timeline);
+
+      // Skip if the most recent timeline entry has ringId of "review" or "ignore"
+      if (mostRecentRing === 'review' || mostRecentRing === 'ignore')
+        return acc;
+
+      if (!acc[quadrant]) acc[quadrant] = {};
+      if (!acc[quadrant][mostRecentRing]) acc[quadrant][mostRecentRing] = [];
+
+      acc[quadrant][mostRecentRing].push({
+        ...entry,
+        timeline: getFilteredTimeline(entry.timeline),
+      });
+      return acc;
+    }, {});
+  }, [data, getFilteredTimeline, getMostRecentRing]);
+
+  const numberedEntries = useMemo(() => {
+    const newNumberedEntries = {};
+    let counter = 1;
+    Object.keys(groupedEntries).forEach(quadrant => {
+      newNumberedEntries[quadrant] = [];
+      ['adopt', 'trial', 'assess', 'hold'].forEach(ring => {
+        if (groupedEntries[quadrant][ring]) {
+          groupedEntries[quadrant][ring].forEach(entry => {
+            newNumberedEntries[quadrant].push({
+              ...entry,
+              number: counter++,
+            });
+          });
+        }
+      });
+    });
+    return newNumberedEntries;
+  }, [groupedEntries]);
+
+  /**
+   * specialTechMatchers constant to store the special technology matchers.
+   * This object can be extended to add more special cases.
+   * @type {Object} - The special technology matchers.
+   */
+  const specialTechMatchers = useMemo(() => ({
+    AWS: item => {
+      const lowered = item.trim().toLowerCase();
+      return lowered.includes('aws') || lowered.includes('amazon');
+    },
+    GCP: item => {
+      const excluded_gcp = ['google meet', 'google docs'];
+      const lowered = item.trim().toLowerCase();
+      if (excluded_gcp.includes(lowered)) return false;
+      return lowered.includes('google') || lowered.includes('gcp');
+    },
+    'Javascript/TypeScript': item => {
+      const lowered = item.trim().toLowerCase();
+      return lowered === 'javascript' || lowered === 'typescript';
+    },
+    SAS: item => {
+      const lowered = item.trim().toLowerCase();
+      return lowered === 'base sas' || lowered === 'sas';
+    },
+  }), []);
+
+  /**
+   * findProjectsUsingTechnology function to find the projects using the technology.
+   *
+   * @param {string} tech - The technology to find the projects for.
+   * @returns {Array} - The projects using the technology.
+   */
+  const findProjectsUsingTechnology = useCallback(
+    tech => {
+      if (!projectsData) return [];
+
+      return projectsData.filter(project => {
+        const allTechColumns = [
+          'Architectures',
+          'Language_Main',
+          'Language_Others',
+          'Language_Frameworks',
+          'Infrastructure',
+          'CICD',
+          'Cloud_Services',
+          'IAM_Services',
+          'Testing_Frameworks',
+          'Containers',
+          'Static_Analysis',
+          'Source_Control',
+          'Code_Formatter',
+          'Monitoring',
+          'Datastores',
+          'Database_Technologies',
+          'Data_Output_Formats',
+          'Integrations_ONS',
+          'Integrations_External',
+          'Project_Tools',
+          'Code_Editors',
+          'Communication',
+          'Collaboration',
+          'Incident_Management',
+          'Documentation_Tools',
+          'UI_Tools',
+          'Diagram_Tools',
+          'Miscellaneous',
+        ];
+
+        return allTechColumns.some(column => {
+          const value = project[column];
+          if (!value) return false;
+          const matcher = specialTechMatchers[tech];
+          if (matcher) {
+            return value.split(';').some(matcher);
+          }
+          // If there is a colon, extract all techs before colons
+          if (value.includes(':')) {
+            // Match all non-space sequences before a colon, or all words before a colon
+            const techMatches = [...value.matchAll(/([^\s:;]+):/g)].map(match =>
+              match[1].trim()
+            );
+            return techMatches.some(
+              techName => techName.toLowerCase() === tech.toLowerCase().trim()
+            );
+          } else {
+            // Otherwise, split by ; and match as usual
+            return value
+              .split(';')
+              .some(
+                item => item.trim().toLowerCase() === tech.toLowerCase().trim()
+              );
+          }
+        });
+      });
+    },
+    [projectsData, specialTechMatchers]
+  );
+
   /**
    * useEffect hook to set the allBlips state with the blips array.
    */
@@ -223,7 +366,7 @@ function RadarPage() {
       .sort((a, b) => a.number - b.number);
 
     setAllBlips(blipsArray);
-  }, [data]);
+  }, [data, numberedEntries]);
 
   /**
    * useEffect hook to handle the keyboard navigation for the blips.
@@ -259,7 +402,7 @@ function RadarPage() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [lockedBlip, allBlips]);
+  }, [lockedBlip, allBlips, findProjectsUsingTechnology]);
 
   /**
    * quadrantAngles constant to store the angles for the quadrants.
@@ -391,47 +534,6 @@ function RadarPage() {
     setSearchTerm('');
     setSearchResults([]);
   };
-  /**
-   * useEffect hook to handle the mouse move event.
-   */
-  useEffect(() => {
-    const handleMouseMove = e => {
-      if (isDragging) {
-        setDragPosition({
-          x: e.clientX - dragOffset.x,
-          y: e.clientY - dragOffset.y,
-        });
-      }
-
-      if (draggingQuadrant) {
-        setQuadrantPositions(prev => ({
-          ...prev,
-          [draggingQuadrant]: {
-            x: e.clientX - quadrantDragOffset.x,
-            y: e.clientY - quadrantDragOffset.y,
-          },
-        }));
-      }
-    };
-
-    /**
-     * handleMouseUp function to handle the mouse up event.
-     */
-    const handleMouseUp = () => {
-      setIsDragging(false);
-      setDraggingQuadrant(null);
-    };
-
-    if (isDragging || draggingQuadrant) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-    }
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isDragging, dragOffset, draggingQuadrant, quadrantDragOffset]);
 
   /**
    * toggleQuadrant function to toggle the quadrant.
@@ -446,107 +548,12 @@ function RadarPage() {
   };
 
   /**
-   * specialTechMatchers constant to store the special technology matchers.
-   * This object can be extended to add more special cases.
-   * @type {Object} - The special technology matchers.
-   */
-  const specialTechMatchers = {
-    AWS: item => {
-      const lowered = item.trim().toLowerCase();
-      return lowered.includes('aws') || lowered.includes('amazon');
-    },
-    GCP: item => {
-      const excluded_gcp = ['google meet', 'google docs'];
-      const lowered = item.trim().toLowerCase();
-      if (excluded_gcp.includes(lowered)) return false;
-      return lowered.includes('google') || lowered.includes('gcp');
-    },
-    'Javascript/TypeScript': item => {
-      const lowered = item.trim().toLowerCase();
-      return lowered === 'javascript' || lowered === 'typescript';
-    },
-    SAS: item => {
-      const lowered = item.trim().toLowerCase();
-      return lowered === 'base sas' || lowered === 'sas';
-    },
-  };
-
-  /**
-   * findProjectsUsingTechnology function to find the projects using the technology.
-   *
-   * @param {string} tech - The technology to find the projects for.
-   * @returns {Array} - The projects using the technology.
-   */
-  const findProjectsUsingTechnology = tech => {
-    if (!projectsData) return [];
-
-    return projectsData.filter(project => {
-      const allTechColumns = [
-        'Architectures',
-        'Language_Main',
-        'Language_Others',
-        'Language_Frameworks',
-        'Infrastructure',
-        'CICD',
-        'Cloud_Services',
-        'IAM_Services',
-        'Testing_Frameworks',
-        'Containers',
-        'Static_Analysis',
-        'Source_Control',
-        'Code_Formatter',
-        'Monitoring',
-        'Datastores',
-        'Database_Technologies',
-        'Data_Output_Formats',
-        'Integrations_ONS',
-        'Integrations_External',
-        'Project_Tools',
-        'Code_Editors',
-        'Communication',
-        'Collaboration',
-        'Incident_Management',
-        'Documentation_Tools',
-        'UI_Tools',
-        'Diagram_Tools',
-        'Miscellaneous',
-      ];
-
-      return allTechColumns.some(column => {
-        const value = project[column];
-        if (!value) return false;
-        const matcher = specialTechMatchers[tech];
-        if (matcher) {
-          return value.split(';').some(matcher);
-        }
-        // If there is a colon, extract all techs before colons
-        if (value.includes(':')) {
-          // Match all non-space sequences before a colon, or all words before a colon
-          const techMatches = [...value.matchAll(/([^\s:;]+):/g)].map(match =>
-            match[1].trim()
-          );
-          return techMatches.some(
-            techName => techName.toLowerCase() === tech.toLowerCase().trim()
-          );
-        } else {
-          // Otherwise, split by ; and match as usual
-          return value
-            .split(';')
-            .some(
-              item => item.trim().toLowerCase() === tech.toLowerCase().trim()
-            );
-        }
-      });
-    });
-  };
-
-  /**
    * handleBlipClick function to handle the blip click event.
    *
    * @param {Object} entry - The entry object to handle the click for.
    * @param {boolean} fromModal - Whether the click is from the modal.
    */
-  const handleBlipClick = (entry, fromModal = false) => {
+  const handleBlipClick = useCallback((entry, fromModal = false) => {
     const projects = findProjectsUsingTechnology(entry.title);
     setProjectsForTech(projects);
     setIsInfoBoxVisible(true);
@@ -566,7 +573,7 @@ function RadarPage() {
       setLockedBlip(entryWithNumber);
       setSelectedBlip(entryWithNumber);
     }
-  };
+  }, [findProjectsUsingTechnology, numberedEntries, lockedBlip]);
 
   /**
    * handleBlipHover function to handle the blip hover event.
@@ -634,7 +641,7 @@ function RadarPage() {
         handleBlipClick(entry, true);
       }
     }
-  }, [location.state, data]);
+  }, [location.state, data, handleBlipClick]);
 
   if (!data)
     return (
@@ -646,40 +653,6 @@ function RadarPage() {
         </div>
       </div>
     );
-
-  const groupedEntries = data.entries.reduce((acc, entry) => {
-    const quadrant = entry.quadrant;
-
-    const mostRecentRing = getMostRecentRing(entry.timeline);
-
-    // Skip if the most recent timeline entry has ringId of "review" or "ignore"
-    if (mostRecentRing === 'review' || mostRecentRing === 'ignore') return acc;
-
-    if (!acc[quadrant]) acc[quadrant] = {};
-    if (!acc[quadrant][mostRecentRing]) acc[quadrant][mostRecentRing] = [];
-
-    acc[quadrant][mostRecentRing].push({
-      ...entry,
-      timeline: getFilteredTimeline(entry.timeline),
-    });
-    return acc;
-  }, {});
-
-  const numberedEntries = {};
-  let counter = 1;
-  Object.keys(groupedEntries).forEach(quadrant => {
-    numberedEntries[quadrant] = [];
-    ['adopt', 'trial', 'assess', 'hold'].forEach(ring => {
-      if (groupedEntries[quadrant][ring]) {
-        groupedEntries[quadrant][ring].forEach(entry => {
-          numberedEntries[quadrant].push({
-            ...entry,
-            number: counter++,
-          });
-        });
-      }
-    });
-  });
 
   /**
    * handleTechClick function to handle the tech click event.
