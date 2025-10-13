@@ -24,7 +24,7 @@ resources:
 
 # Define the common terraform task as an anchor
 terraform-task: &terraform-task
-  task: terraform-deploy-((env))
+  task: terraform-deploy
   privileged: true
   config:
     platform: linux
