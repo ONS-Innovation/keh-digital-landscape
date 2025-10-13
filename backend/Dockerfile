@@ -1,5 +1,5 @@
 # backend/Dockerfile
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 
 # Create non-root user
@@ -23,7 +23,7 @@ RUN npm ci --omit=dev
 COPY --chown=appuser:appgroup . .
 
 # Production stage
-FROM node:20-alpine
+FROM node:22-alpine
 WORKDIR /app
 
 # Install wget in the final image before switching to non-root user
