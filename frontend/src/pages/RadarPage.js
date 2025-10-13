@@ -32,8 +32,8 @@ function RadarPage() {
   const [searchResults, setSearchResults] = useState([]);
   const [isInfoBoxVisible, setIsInfoBoxVisible] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
-  const [dragPosition, setDragPosition] = useState({ x: 148, y: 80 });
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [setDragPosition] = useState({ x: 148, y: 80 });
+  const [dragOffset] = useState({ x: 0, y: 0 });
   const [expandedQuadrants, setExpandedQuadrants] = useState({
     1: true,
     2: true,
@@ -63,7 +63,7 @@ function RadarPage() {
   const getTechnologyStatus = useTechnologyStatus();
 
   const [selectedDirectorate, setSelectedDirectorate] = useState(null);
-  const [defaultDirectorate, setDefaultDirectorate] = useState(null);
+  const [, setDefaultDirectorate] = useState(null);
   const [directorateColour, setDirectorateColour] = useState('var(--accent)');
   const [directorateName, setDirectorateName] = useState('Unknown Directorate');
   const [directorates, setDirectorates] = useState([]);
@@ -391,21 +391,6 @@ function RadarPage() {
     setSearchTerm('');
     setSearchResults([]);
   };
-
-  /**
-   * handleMouseDown function to handle the mouse down event.
-   *
-   * @param {Event} e - The event object.
-   */
-  const handleMouseDown = e => {
-    setIsDragging(true);
-    const rect = e.currentTarget.getBoundingClientRect();
-    setDragOffset({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  };
-
   /**
    * useEffect hook to handle the mouse move event.
    */
@@ -697,18 +682,6 @@ function RadarPage() {
   });
 
   /**
-   * isTechnologyInRadar function to check if the technology is in the radar.
-   *
-   * @param {string} techName - The technology name to check.
-   * @returns {boolean} - Whether the technology is in the radar.
-   */
-  const isTechnologyInRadar = techName => {
-    return data.entries.some(
-      entry => entry.title.toLowerCase() === techName.toLowerCase().trim()
-    );
-  };
-
-  /**
    * handleTechClick function to handle the tech click event.
    *
    * @param {string} tech - The technology to handle the click for.
@@ -925,7 +898,7 @@ function RadarPage() {
                 role="list"
                 aria-label="Infrastructure technologies"
               >
-                {numberedEntries['4']?.map((entry, index) => (
+                {numberedEntries['4']?.map(entry => (
                   <li
                     key={entry.id}
                     onClick={() => handleBlipClick(entry)}
@@ -1024,7 +997,7 @@ function RadarPage() {
               </div>
             </div>
             <ul tabIndex="0" role="list" aria-label="Languages technologies">
-              {numberedEntries['1']?.map((entry, index) => (
+              {numberedEntries['1']?.map(entry => (
                 <li
                   key={entry.id}
                   onClick={() => handleBlipClick(entry)}
@@ -1074,15 +1047,18 @@ function RadarPage() {
           <div className="radar-container" tabIndex={0}>
             <svg width="1000" height="1000" viewBox="-500 -500 1000 1000">
               {/* Rings */}
-              {Object.entries(ringRadii).map(([ring, [_, radius]]) => (
-                <circle
-                  key={ring}
-                  cx="0"
-                  cy="0"
-                  r={radius}
-                  className={`ring ${ring}`}
-                />
-              ))}
+              {Object.entries(ringRadii).map(([ring, value]) => {
+                const radius = value[1];
+                return (
+                  <circle
+                    key={ring}
+                    cx="0"
+                    cy="0"
+                    r={radius}
+                    className={`ring ${ring}`}
+                  />
+                );
+              })}
 
               <line
                 x1="-500"
@@ -1316,7 +1292,7 @@ function RadarPage() {
               role="list"
               aria-label="Supporting Tools technologies"
             >
-              {numberedEntries['3']?.map((entry, index) => (
+              {numberedEntries['3']?.map(entry => (
                 <li
                   key={entry.id}
                   onClick={() => handleBlipClick(entry)}
