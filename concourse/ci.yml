@@ -7,6 +7,12 @@ resources:
       username: ((github_access_token))
       password: x-oauth-basic
       branch: ((branch))
+  - name: github-release
+    type: github-release
+    source:
+      owner: ONS-Innovation
+      repository: keh-digital-landscape
+      access_token: ((github_access_token))
 
 # Define the common terraform task as an anchor
 terraform-task: &terraform-task
@@ -42,6 +48,7 @@ terraform-task: &terraform-task
     timeout: 30m
 
 jobs:
+
   - name: build-and-push-dev
     public: true
     plan:
@@ -85,11 +92,55 @@ jobs:
           tag: ((tag))
           secrets: ((sdp_dev_digital_landscape_secrets))
 
+  - name: deploy-after-github-release
+    public: true
+    plan:
+      - get: github-release
+        trigger: true
+      - get: resource-repo
+        trigger: false
+      - task: deploy-release
+        privileged: true
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: hashicorp/terraform
+          inputs:
+            - name: resource-repo
+            - name: github-release
+          outputs:
+            - name: release-tag-output # Output directory for the tag
+          params:
+            aws_account_id: ((aws_account_sdp_dev))
+            aws_role_arn: arn:aws:iam::((aws_account_sdp_dev)):role/sdp-concourse-dev
+            secrets: ((sdp_dev_digital_landscape_secrets))
+            env: dev
+            tag: github-release/tag # Use the release tag from the resource
+            repo_name: ((repo_name))
+          run:
+            path: sh
+            args:
+              - -cx
+              - |
+                apk add --no-cache aws-cli podman jq iptables curl
+                export repo_name=((repo_name))
+                export tag=$(cat github-release/tag)
+                # Write the tag to a file for output
+                echo "${tag}" > release-tag-output/tag
+                echo "Using tag: ${tag}"
+                chmod u+x ./resource-repo/concourse/scripts/assume_role.sh
+                chmod u+x ./resource-repo/concourse/scripts/build_image.sh
+                source ./resource-repo/concourse/scripts/assume_role.sh
+                ./resource-repo/concourse/scripts/build_image.sh
+        timeout: 15m
+
   - name: build-and-push-prod
     public: true
     plan:
       - get: resource-repo
-        passed: [build-and-push-dev]
+        passed: [deploy-after-github-release, build-and-push-dev]
         trigger: false # Manual trigger only
         timeout: 5m
       - task: build-image
@@ -102,12 +153,13 @@ jobs:
               repository: hashicorp/terraform
           inputs:
             - name: resource-repo
+            - name: release-tag-output
           params:
             aws_account_id: ((aws_account_sdp_prod))
             aws_role_arn: arn:aws:iam::((aws_account_sdp_prod)):role/sdp-concourse-prod
             secrets: ((sdp_prod_digital_landscape_secrets))
             env: prod
-            tag: ((tag))
+            tag: release-tag-output/tag
             repo_name: ((repo_name))
           run:
             path: sh
@@ -117,7 +169,8 @@ jobs:
                 apk add --no-cache aws-cli podman jq iptables curl
                 export repo_name=((repo_name))
                 tag=$(curl "https://api.github.com/repos/ONS-Innovation/keh-digital-landscape/releases" | jq -r '.[0].tag_name')
-                export tag
+                export tag=$(cat release-tag-output/tag)
+                echo "Using release tag: ${tag}"
                 chmod u+x ./resource-repo/concourse/scripts/assume_role.sh
                 chmod u+x ./resource-repo/concourse/scripts/build_image.sh
                 source ./resource-repo/concourse/scripts/assume_role.sh
@@ -127,5 +180,5 @@ jobs:
         params:
           github_access_token: ((github_access_token))
           env: prod
-          tag: ((tag))
+          tag: release-tag-output/tag
           secrets: ((sdp_prod_digital_landscape_secrets))
