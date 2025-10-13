@@ -55,11 +55,7 @@ const RecentBanners = () => {
         }
         const data = await response.json();
 
-        const recentBanners = data.messages.sort((a, b) => {
-          return 0;
-        });
-
-        setBanners(recentBanners);
+        setBanners(data.messages);
       } catch (err) {
         setError(err.message);
       } finally {

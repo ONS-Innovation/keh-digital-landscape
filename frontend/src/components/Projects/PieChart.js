@@ -336,6 +336,7 @@ const PieChart = ({
     dynamicCategories,
     maxCategories,
     cloudProvidersOnly,
+    cloudProviders,
   ]);
 
   // Custom tooltip for the pie chart
@@ -363,7 +364,6 @@ const PieChart = ({
     innerRadius,
     outerRadius,
     percent,
-    index,
   }) => {
     // Don't show labels for slices smaller than 5% or with 0 value
     if (percent < 0.05 || percent === 0) return null;
