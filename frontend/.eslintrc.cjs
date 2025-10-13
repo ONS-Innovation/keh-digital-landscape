@@ -26,12 +26,6 @@ module.exports = {
     },
   },
   rules: {
-    'react/react-in-jsx-scope': 'off',
-    'react/prop-types': 'off',
-    'no-unused-vars': 'off',
-    'no-duplicate-imports': 'error',
-    'no-multiple-empty-lines': ['error', { max: 1 }],
-    'no-undef': 'off',
-    'react-refresh/only-export-components': 'warn',
+    'react/prop-types': 'off', // Disabled because we don't use prop-types
   },
 };
