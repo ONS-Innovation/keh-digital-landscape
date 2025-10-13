@@ -163,13 +163,11 @@ variable "copilot_bucket_name" {
 variable "frontend_ecr_repo" {
   description = "Frontend ECR repository"
   type        = string
-  default     = "sdp-dev-tech-radar"
 }
 
 variable "backend_ecr_repo" {
   description = "Backend ECR repository"
   type        = string
-  default     = "sdp-dev-tech-radar-backend"
 }
 
 variable "frontend_port" {
