@@ -8,7 +8,7 @@ const Layout = ({ children }) => {
   return (
     <div className="layout">
       <Toaster
-        position="bottom-right"
+        position="bottom-center"
         reverseOrder={false}
         toastOptions={{
           duration: 3000,
