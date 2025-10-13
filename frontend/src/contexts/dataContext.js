@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useRef } from 'react';
+import { createContext, useContext, useState, useRef } from 'react';
 import { fetchCSVFromS3 } from '../utilities/getCSVData';
 import { fetchTechRadarJSONFromS3 } from '../utilities/getTechRadarJson';
 import {

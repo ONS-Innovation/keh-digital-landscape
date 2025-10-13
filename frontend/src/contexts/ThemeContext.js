@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 /**
  * Creates a context for managing the theme state.

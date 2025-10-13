@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useData } from '../../contexts/dataContext';
 import AccessDenied from '../AccessDenied/AccessDenied';
 import Header from '../Header/Header';

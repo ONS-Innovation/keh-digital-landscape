@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import MultiSelect from '../MultiSelect/MultiSelect';
 import {
@@ -67,7 +67,7 @@ const BannerManage = () => {
       await saveBanner(bannerData);
 
       setBannerSaveStatus('success');
-      toast.success('Banner saved successfully!');
+      toast.success(`Banner saved: ${bannerSaveStatus}`);
 
       // Clear form after successful save
       setTimeout(() => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IoInformationCircle, IoWarning, IoAlertCircle } from 'react-icons/io5';
 import '../../styles/components/RecentBanners.css';
 

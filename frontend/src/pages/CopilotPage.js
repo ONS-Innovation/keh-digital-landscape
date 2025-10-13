@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import Header from '../components/Header/Header';
 import LiveDashboard from '../components/Copilot/Dashboards/LiveDashboard';
 import HistoricDashboard from '../components/Copilot/Dashboards/HistoricDashboard';

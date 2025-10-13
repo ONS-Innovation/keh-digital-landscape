@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { fetchTechRadarJSONFromS3 } from '../utilities/getTechRadarJson';
 import { fetchCSVFromS3 } from '../utilities/getCSVData';
 import Header from '../components/Header/Header';

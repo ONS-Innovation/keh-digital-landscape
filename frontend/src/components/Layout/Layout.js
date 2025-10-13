@@ -1,8 +1,6 @@
-import React from 'react';
-import Header from '../Header/Header';
+import { ThemeProvider } from '../../contexts/ThemeContext';
 import Sidebar from '../Sidebar/Sidebar';
 import '../../styles/Layout.css';
-import { ThemeProvider } from '../../contexts/ThemeContext';
 
 const Layout = ({ children }) => {
   return (

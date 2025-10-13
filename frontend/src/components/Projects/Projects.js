@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useMemo,
-  useEffect,
-  useCallback,
-  useRef,
-} from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import {
   IoOptions,
   IoChevronDown,

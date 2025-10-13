@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import '../../styles/components/Statistics.css';
 import { subMonths, isValid, parseISO } from 'date-fns';
 import SkeletonStatCard from './Skeletons/SkeletonStatCard';
