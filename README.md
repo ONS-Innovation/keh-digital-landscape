@@ -274,7 +274,7 @@ chmod u+x ./concourse/scripts/set_pipeline.sh
 ```
 
 Note that you only have to run chmod the first time running the script in order to give permissions.
-This script will set the branch and pipeline name to whatever branch you are currently on. It will also set the image tag on ECR to 7 characters of the current branch name if running on a branch other than main. For main the ECR tag will be the latest release tag on the repository that have semantic versioning(vX.Y.Z).
+This script will set the branch and pipeline name to whatever branch you are currently on. It will also set the image tag on ECR to 7 characters of the current branch name if running on a branch other than main. For main, the ECR tag will be the latest release tag on the repository that has semantic versioning(vX.Y.Z).
 
 The pipeline name itself will usually follow a pattern as follows: `digital-landscape-<branch-name>` for any non-main branch and `digital-landscape` for the main/master branch.
 
