@@ -50,7 +50,6 @@ const ReviewPage = () => {
   const [moveDescription, setMoveDescription] = useState('');
   const [activeTab, setActiveTab] = useState('write');
   const [isDragging, setIsDragging] = useState(false);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isDuplicate, setIsDuplicate] = useState(false);
   const [projectsData, setProjectsData] = useState(null);
   const [projectsForTech, setProjectsForTech] = useState([]);
@@ -70,21 +69,6 @@ const ReviewPage = () => {
   const [changedTechnologies, setChangedTechnologies] = useState([]);
 
   const [stashedDefaultTimeline, setStashedDefaultTimeline] = useState({});
-
-  const fieldsToScan = {
-    Language_Main: 'Languages',
-    Language_Others: 'Languages',
-    Language_Frameworks: 'Frameworks',
-    Testing_Frameworks: 'Supporting Tools',
-    CICD: 'Supporting Tools',
-    CICD_Orchestration: 'Infrastructure',
-    Monitoring: 'Infrastructure',
-    Infrastructure: 'Infrastructure',
-    Cloud_Services: 'Infrastructure',
-    IAM_Services: 'Infrastructure',
-    Containers: 'Infrastructure',
-    Datastores: 'Infrastructure',
-  };
 
   const categoryOptions = [
     { label: 'Languages', value: 'Languages' },
@@ -110,8 +94,80 @@ const ReviewPage = () => {
       setDirectorateColour(getDirectorateColour(directorateId, directorates));
       setDirectorateName(getDirectorateName(directorateId, directorates));
     }
-  }, [directorates]);
+  }, [directorates, selectedDirectorate]);
+  const categorizeEntries = useCallback(
+    (radarEntries, inputDirectorate = selectedDirectorate) => {
+      const categorized = {
+        adopt: [],
+        trial: [],
+        assess: [],
+        hold: [],
+        review: [],
+        ignore: [],
+      };
 
+      // Reset highlighted technologies before categorizing
+      const newHighlightedTechnologies = [];
+
+      radarEntries.forEach(entry => {
+        let selectedDirectorateTimeline = [];
+        let defaultTimeline = [];
+
+        // Consider selected directorate when categorising
+        entry.timeline.forEach(t => {
+          const directorate = t.directorate || defaultDirectorate;
+          if (directorate === inputDirectorate) {
+            selectedDirectorateTimeline.push(t);
+          }
+          if (directorate === defaultDirectorate) {
+            defaultTimeline.push(t);
+          }
+        });
+
+        if (selectedDirectorateTimeline.length === 0) {
+          // If no timeline entries for selected directorate, fall back to default timeline
+          selectedDirectorateTimeline = defaultTimeline;
+        } else {
+          // If there are directorate-specific entries, besides default directorate,
+          // We should highlight these technologies to make them obvious to the user
+          if (inputDirectorate !== defaultDirectorate) {
+            const currentPosition =
+              selectedDirectorateTimeline[
+                selectedDirectorateTimeline.length - 1
+              ].ringId.toLowerCase();
+            const digitalServicesPosition =
+              defaultTimeline[defaultTimeline.length - 1]?.ringId.toLowerCase();
+
+            // Only highlight if the position is different to default directorate
+            if (
+              currentPosition !== digitalServicesPosition &&
+              !newHighlightedTechnologies.includes(entry.id)
+            ) {
+              newHighlightedTechnologies.push(entry.id);
+            }
+          }
+        }
+
+        // Stash the Digital Services timeline for later use if needed
+        setStashedDefaultTimeline(prev => ({
+          ...prev,
+          [entry.id]: defaultTimeline,
+        }));
+
+        entry.filteredTimeline = selectedDirectorateTimeline;
+
+        const currentRing =
+          selectedDirectorateTimeline[
+            selectedDirectorateTimeline.length - 1
+          ].ringId.toLowerCase();
+        categorized[currentRing].push(entry);
+      });
+
+      setHighlightedTechnologies(newHighlightedTechnologies);
+      return categorized;
+    },
+    [defaultDirectorate, selectedDirectorate]
+  );
   useEffect(() => {
     const fetchAllData = async () => {
       try {
@@ -133,18 +189,95 @@ const ReviewPage = () => {
       }
     };
     fetchAllData();
-  }, [getUserData]);
+  }, [getUserData, categorizeEntries]);
 
+  /**
+   * Find projects using the selected technology
+   * @param {string} tech - The technology name
+   * @returns {Array} - Array of projects using the technology
+   */
+  const findProjectsUsingTechnology = useCallback(
+    tech => {
+      if (!projectsData) return [];
+
+      return projectsData.filter(project => {
+        const allTechColumns = [
+          'Language_Main',
+          'Language_Others',
+          'Language_Frameworks',
+          'Infrastructure',
+          'CICD',
+          'Cloud_Services',
+          'IAM_Services',
+          'Testing_Frameworks',
+          'Containers',
+          'Static_Analysis',
+          'Source_Control',
+          'Code_Formatter',
+          'Monitoring',
+          'Datastores',
+          'Database_Technologies',
+          'Data_Output_Formats',
+          'Integrations_ONS',
+          'Integrations_External',
+          'Project_Tools',
+          'Code_Editors',
+          'Communication',
+          'Collaboration',
+          'Incident_Management',
+          'Documentation_Tools',
+          'UI_Tools',
+          'Diagram_Tools',
+          'Miscellaneous',
+        ];
+
+        return allTechColumns.some(column => {
+          const value = project[column];
+          if (!value) return false;
+
+          return value
+            .split(';')
+            .some(item => item.trim().toLowerCase() === tech.toLowerCase());
+        });
+      });
+    },
+    [projectsData]
+  );
   // Recategorise entries when selectedDirectorate changes
   // Because we are only categorising the existing data and not fetching the data from S3,
   // Changes will persist until the page is reloaded, even if the user changes directorate multiple times
   useEffect(() => {
     const radarData = { entries: Object.values(entries).flat() };
+    if (radarData.entries.length === 0) return;
 
     const categorized = categorizeEntries(radarData.entries);
     setEntries(categorized);
-  }, [selectedDirectorate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDirectorate, categorizeEntries]);
 
+  /**
+   * Calculates project counts for all technologies
+   * @returns {void}
+   */
+  const calculateAllProjectCounts = useCallback(() => {
+    if (!projectsData) return;
+
+    const countMap = {};
+
+    // Get all technologies from all entries
+    const allTechnologies = Object.values(entries)
+      .flat()
+      .map(entry => entry.title);
+
+    // Calculate counts for each technology
+    allTechnologies.forEach(tech => {
+      if (!countMap[tech]) {
+        countMap[tech] = findProjectsUsingTechnology(tech).length;
+      }
+    });
+
+    setProjectCountMap(countMap);
+  }, [projectsData, entries, findProjectsUsingTechnology]);
   // Update project counts when project data is loaded and counts are shown
   useEffect(() => {
     if (
@@ -154,92 +287,13 @@ const ReviewPage = () => {
     ) {
       calculateAllProjectCounts();
     }
-  }, [projectsData, showProjectCount]);
-
-  const categorizeEntries = (
-    radarEntries,
-    inputDirectorate = selectedDirectorate
-  ) => {
-    const categorized = {
-      adopt: [],
-      trial: [],
-      assess: [],
-      hold: [],
-      review: [],
-      ignore: [],
-    };
-
-    // Reset highlighted technologies before categorizing
-    setHighlightedTechnologies([]);
-
-    radarEntries.forEach(entry => {
-      let selectedDirectorateTimeline = [];
-      let defaultTimeline = [];
-
-      // Consider selected directorate when categorising
-      entry.timeline.forEach(t => {
-        const directorate = t.directorate || defaultDirectorate;
-        if (directorate === inputDirectorate) {
-          selectedDirectorateTimeline.push(t);
-        }
-        if (directorate === defaultDirectorate) {
-          defaultTimeline.push(t);
-        }
-      });
-
-      if (selectedDirectorateTimeline.length === 0) {
-        // If no timeline entries for selected directorate, fall back to default timeline
-        selectedDirectorateTimeline = defaultTimeline;
-      } else {
-        // If there are directorate-specific entries, besides default directorate,
-        // We should highlight these technologies to make them obvious to the user
-        if (inputDirectorate !== defaultDirectorate) {
-          const currentPosition =
-            selectedDirectorateTimeline[
-              selectedDirectorateTimeline.length - 1
-            ].ringId.toLowerCase();
-          const digitalServicesPosition =
-            defaultTimeline[defaultTimeline.length - 1]?.ringId.toLowerCase();
-
-          // Only highlight if the position is different to default directorate
-          if (
-            currentPosition !== digitalServicesPosition &&
-            !highlightedTechnologies.includes(entry.id)
-          ) {
-            setHighlightedTechnologies(prev => [...prev, entry.id]);
-          }
-        }
-      }
-
-      // Stash the Digital Services timeline for later use if needed
-      setStashedDefaultTimeline(prev => ({
-        ...prev,
-        [entry.id]: defaultTimeline,
-      }));
-
-      entry.filteredTimeline = selectedDirectorateTimeline;
-
-      const currentRing =
-        selectedDirectorateTimeline[
-          selectedDirectorateTimeline.length - 1
-        ].ringId.toLowerCase();
-      categorized[currentRing].push(entry);
-    });
-
-    return categorized;
-  };
-
-  // Re-categorise entries when selectedDirectorate changes
-  useEffect(() => {
-    if (!entries || !Object.values(entries).flat().length) return;
-    // Flatten all entries to get the original radarEntries
-    // In English, this combines all the lists within entries into a single array
-    // This is so it has the full list to re-categorise from
-    const allEntries = Object.values(entries).flat();
-    const categorized = categorizeEntries(allEntries);
-    setEntries(categorized);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDirectorate]);
+  }, [
+    projectsData,
+    showProjectCount,
+    calculateAllProjectCounts,
+    projectCountMap,
+    findProjectsUsingTechnology,
+  ]);
 
   // Add this function to calculate ring movement
   const calculateRingMovement = (sourceRing, destRing) => {
@@ -575,12 +629,6 @@ const ReviewPage = () => {
     setShowAddTechnologyModal(false);
   };
 
-  const handleEditClick = () => {
-    setEditedTitle(selectedItem.title);
-    setEditedCategory(selectedItem.description);
-    setIsEditing(true);
-  };
-
   const handleCancelEdit = () => {
     setIsEditing(false);
     setEditedTitle('');
@@ -589,12 +637,6 @@ const ReviewPage = () => {
 
   const handleConfirmEdit = () => {
     setShowConfirmModal(true);
-    setEditedItem({
-      ...selectedItem,
-      title: editedTitle,
-      description: editedCategory,
-      quadrant: categoryToQuadrant[editedCategory],
-    });
   };
 
   const categoryToQuadrant = {
@@ -675,90 +717,19 @@ const ReviewPage = () => {
     setShowAddConfirmModal(false);
   };
 
-  // Add mouse handlers
-  const handleMouseDown = e => {
-    setIsDragging(true);
-    const rect = e.currentTarget.getBoundingClientRect();
-    setDragOffset({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  };
-
   useEffect(() => {
-    const handleMouseMove = e => {
-      if (isDragging) {
-        setDragPosition({
-          x: e.clientX - dragOffset.x,
-          y: e.clientY - dragOffset.y,
-        });
-      }
-    };
-
     const handleMouseUp = () => {
       setIsDragging(false);
     };
 
     if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
     }
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging, dragOffset]);
-
-  /**
-   * Find projects using the selected technology
-   * @param {string} tech - The technology name
-   * @returns {Array} - Array of projects using the technology
-   */
-  const findProjectsUsingTechnology = tech => {
-    if (!projectsData) return [];
-
-    return projectsData.filter(project => {
-      const allTechColumns = [
-        'Language_Main',
-        'Language_Others',
-        'Language_Frameworks',
-        'Infrastructure',
-        'CICD',
-        'Cloud_Services',
-        'IAM_Services',
-        'Testing_Frameworks',
-        'Containers',
-        'Static_Analysis',
-        'Source_Control',
-        'Code_Formatter',
-        'Monitoring',
-        'Datastores',
-        'Database_Technologies',
-        'Data_Output_Formats',
-        'Integrations_ONS',
-        'Integrations_External',
-        'Project_Tools',
-        'Code_Editors',
-        'Communication',
-        'Collaboration',
-        'Incident_Management',
-        'Documentation_Tools',
-        'UI_Tools',
-        'Diagram_Tools',
-        'Miscellaneous',
-      ];
-
-      return allTechColumns.some(column => {
-        const value = project[column];
-        if (!value) return false;
-
-        return value
-          .split(';')
-          .some(item => item.trim().toLowerCase() === tech.toLowerCase());
-      });
-    });
-  };
+  }, [isDragging]);
 
   const handleProjectClick = project => {
     setSelectedProject(project);
@@ -793,30 +764,6 @@ const ReviewPage = () => {
         timeline={selectedItem.filteredTimeline}
       />
     );
-  };
-
-  /**
-   * Calculates project counts for all technologies
-   * @returns {void}
-   */
-  const calculateAllProjectCounts = () => {
-    if (!projectsData) return;
-
-    const countMap = {};
-
-    // Get all technologies from all entries
-    const allTechnologies = Object.values(entries)
-      .flat()
-      .map(entry => entry.title);
-
-    // Calculate counts for each technology
-    allTechnologies.forEach(tech => {
-      if (!countMap[tech]) {
-        countMap[tech] = findProjectsUsingTechnology(tech).length;
-      }
-    });
-
-    setProjectCountMap(countMap);
   };
 
   /**
