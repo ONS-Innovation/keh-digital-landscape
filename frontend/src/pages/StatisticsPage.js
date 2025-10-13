@@ -202,13 +202,18 @@ function StatisticsPage() {
     ]
   );
 
-
   // Update useEffect to use current filters and refetch when radar data changes
   useEffect(() => {
     if (radarData) {
       fetchStatistics(currentDate, currentRepoView);
     }
-  }, [selectedRepositories, currentDate, currentRepoView, radarData, fetchStatistics]);
+  }, [
+    selectedRepositories,
+    currentDate,
+    currentRepoView,
+    radarData,
+    fetchStatistics,
+  ]);
 
   const handleDateChange = (date, repoView = 'unarchived') => {
     setCurrentDate(date === 'all' ? null : date);

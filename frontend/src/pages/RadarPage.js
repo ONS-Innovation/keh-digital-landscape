@@ -49,7 +49,7 @@ function RadarPage() {
     3: null, // bottom-left
     2: null, // bottom-right
   });
-  const [ , setQuadrantDragOffset] = useState({ x: 0, y: 0 });
+  const [, setQuadrantDragOffset] = useState({ x: 0, y: 0 });
   const [allBlips, setAllBlips] = useState([]);
   const [selectedTimelineItem, setSelectedTimelineItem] = useState(null);
   const [timelineAscending, setTimelineAscending] = useState(false);
@@ -259,26 +259,29 @@ function RadarPage() {
    * This object can be extended to add more special cases.
    * @type {Object} - The special technology matchers.
    */
-  const specialTechMatchers = useMemo(() => ({
-    AWS: item => {
-      const lowered = item.trim().toLowerCase();
-      return lowered.includes('aws') || lowered.includes('amazon');
-    },
-    GCP: item => {
-      const excluded_gcp = ['google meet', 'google docs'];
-      const lowered = item.trim().toLowerCase();
-      if (excluded_gcp.includes(lowered)) return false;
-      return lowered.includes('google') || lowered.includes('gcp');
-    },
-    'Javascript/TypeScript': item => {
-      const lowered = item.trim().toLowerCase();
-      return lowered === 'javascript' || lowered === 'typescript';
-    },
-    SAS: item => {
-      const lowered = item.trim().toLowerCase();
-      return lowered === 'base sas' || lowered === 'sas';
-    },
-  }), []);
+  const specialTechMatchers = useMemo(
+    () => ({
+      AWS: item => {
+        const lowered = item.trim().toLowerCase();
+        return lowered.includes('aws') || lowered.includes('amazon');
+      },
+      GCP: item => {
+        const excluded_gcp = ['google meet', 'google docs'];
+        const lowered = item.trim().toLowerCase();
+        if (excluded_gcp.includes(lowered)) return false;
+        return lowered.includes('google') || lowered.includes('gcp');
+      },
+      'Javascript/TypeScript': item => {
+        const lowered = item.trim().toLowerCase();
+        return lowered === 'javascript' || lowered === 'typescript';
+      },
+      SAS: item => {
+        const lowered = item.trim().toLowerCase();
+        return lowered === 'base sas' || lowered === 'sas';
+      },
+    }),
+    []
+  );
 
   /**
    * findProjectsUsingTechnology function to find the projects using the technology.
@@ -553,27 +556,30 @@ function RadarPage() {
    * @param {Object} entry - The entry object to handle the click for.
    * @param {boolean} fromModal - Whether the click is from the modal.
    */
-  const handleBlipClick = useCallback((entry, fromModal = false) => {
-    const projects = findProjectsUsingTechnology(entry.title);
-    setProjectsForTech(projects);
-    setIsInfoBoxVisible(true);
+  const handleBlipClick = useCallback(
+    (entry, fromModal = false) => {
+      const projects = findProjectsUsingTechnology(entry.title);
+      setProjectsForTech(projects);
+      setIsInfoBoxVisible(true);
 
-    const quadrant = entry.quadrant;
-    const entryWithNumber = numberedEntries[quadrant].find(
-      e => e.id === entry.id
-    );
+      const quadrant = entry.quadrant;
+      const entryWithNumber = numberedEntries[quadrant].find(
+        e => e.id === entry.id
+      );
 
-    if (fromModal) {
-      setLockedBlip(entryWithNumber);
-      setSelectedBlip(entryWithNumber);
-    } else if (lockedBlip?.id === entry.id) {
-      setLockedBlip(null);
-      setSelectedBlip(null);
-    } else {
-      setLockedBlip(entryWithNumber);
-      setSelectedBlip(entryWithNumber);
-    }
-  }, [findProjectsUsingTechnology, numberedEntries, lockedBlip]);
+      if (fromModal) {
+        setLockedBlip(entryWithNumber);
+        setSelectedBlip(entryWithNumber);
+      } else if (lockedBlip?.id === entry.id) {
+        setLockedBlip(null);
+        setSelectedBlip(null);
+      } else {
+        setLockedBlip(entryWithNumber);
+        setSelectedBlip(entryWithNumber);
+      }
+    },
+    [findProjectsUsingTechnology, numberedEntries, lockedBlip]
+  );
 
   /**
    * handleBlipHover function to handle the blip hover event.

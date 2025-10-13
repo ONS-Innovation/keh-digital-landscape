@@ -70,7 +70,7 @@ function CopilotDashboard() {
     activeSeatData: [],
   });
 
-  const initialiseDateRange = useCallback((data) => {
+  const initialiseDateRange = useCallback(data => {
     let end = data[data.length - 1]?.date
       ? new Date(data[data.length - 1].date)
       : new Date();
@@ -82,7 +82,7 @@ function CopilotDashboard() {
     };
   }, []);
 
-  const getEndSliderValue = useCallback((data) => {
+  const getEndSliderValue = useCallback(data => {
     const startDateStr = data[0]?.date;
     const endDateStr = data[data.length - 1]?.date;
 
@@ -172,24 +172,30 @@ function CopilotDashboard() {
     }
   };
 
-  const setFilteredData = useCallback((data, setData) => {
-    if (!data || !startDate || !endDate || !sliderFinished) return;
-    const filteredData = filterUsageData(data, startDate, endDate);
-    setData(prev => ({
-      ...prev,
-      filteredUsage: filteredData,
-      processedUsage: processUsageData(filteredData),
-    }));
-  }, [startDate, endDate, sliderFinished]);
+  const setFilteredData = useCallback(
+    (data, setData) => {
+      if (!data || !startDate || !endDate || !sliderFinished) return;
+      const filteredData = filterUsageData(data, startDate, endDate);
+      setData(prev => ({
+        ...prev,
+        filteredUsage: filteredData,
+        processedUsage: processUsageData(filteredData),
+      }));
+    },
+    [startDate, endDate, sliderFinished]
+  );
 
-  const setActiveSeats = useCallback((data, setData) => {
-    if (!data || !inactivityDate) return;
-    const activeSeats = filterInactiveUsers(data, inactivityDate);
-    setData(prev => ({
-      ...prev,
-      activeSeatData: activeSeats,
-    }));
-  }, [inactivityDate]);
+  const setActiveSeats = useCallback(
+    (data, setData) => {
+      if (!data || !inactivityDate) return;
+      const activeSeats = filterInactiveUsers(data, inactivityDate);
+      setData(prev => ({
+        ...prev,
+        activeSeatData: activeSeats,
+      }));
+    },
+    [inactivityDate]
+  );
 
   const [liveOrgData, setLiveOrgData] = useState({
     allUsage: [],
@@ -362,7 +368,13 @@ function CopilotDashboard() {
 
     fetchLiveAndSeatsData();
     authenticateGitHubUser();
-  }, [getLiveUsageData, getSeatsData, searchParams, initialiseDateRange, getEndSliderValue]);
+  }, [
+    getLiveUsageData,
+    getSeatsData,
+    searchParams,
+    initialiseDateRange,
+    getEndSliderValue,
+  ]);
 
   /**
    * Fetch historic data if view mode is set to historic and has not been fetched yet
