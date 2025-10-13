@@ -76,7 +76,7 @@ function transformProjectToCSVFormat(project, reverseDependencyMap = {}) {
     Architectures: project.architecture.hosting.details
       ? project.architecture.hosting.details.join('; ')
       : '',
-    Environments: project.architecture.environments
+    Environments: project.architecture?.environments
       ? Object.entries(project.architecture.environments)
           .filter(([_, value]) => value)
           .map(([key]) => envLabels[key] || key.toUpperCase())
