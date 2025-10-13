@@ -278,7 +278,11 @@ This script will set the branch and pipeline name to whatever branch you are cur
 
 The pipeline name itself will usually follow a pattern as follows: `digital-landscape-<branch-name>` for any non-main branch and `digital-landscape` for the main/master branch.
 
-A manual trigger of deployment to the sdp-prod environment is required through the Concourse CI UI on the pipeline name `digital-landscape` build-and-push-prod job. The deployment will use the latest release that has the tag in the form of vX.Y.Z.
+#### Prod deployment
+
+To deploy to prod, it is required that a Github Release is made on Github. The release is required to follow semantic versioning of vX.Y.Z. 
+
+A manual trigger is to be made on the pipeline name `digital-landscape > deploy-after-github-release` job through the Concourse CI UI. This will create a github-create-tag resource that is required on the `digital-landscape > build-and-push-prod` job. Then the prod deployment job is also through a manual trigger ensuring that prod is only deployed using the latest GitHub release tag in the form of vX.Y.Z and is manually controlled.
 
 #### Triggering a pipeline
 
