@@ -14,6 +14,7 @@ import { MarkdownText } from '../utilities/markdownRenderer';
 import { format } from 'date-fns';
 import { getDirectorates } from '../utilities/getDirectorates';
 import { specialTechMatchers } from '../utilities/getSpecialTechMatchers';
+import { specialTechMatchers } from '../utilities/getSpecialTechMatchers';
 import {
   getDirectorateColour,
   getDirectorateName,
@@ -748,7 +749,75 @@ const ReviewPage = () => {
     return () => {
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging]);
+  }, [isDragging, dragOffset]);
+
+  /**
+   * Find projects using the selected technology
+   * @param {string} tech - The technology name
+   * @returns {Array} - Array of projects using the technology
+   */
+  const findProjectsUsingTechnology = tech => {
+    if (!projectsData) return [];
+
+    return projectsData.filter(project => {
+      const allTechColumns = [
+        'Architectures',
+        'Language_Main',
+        'Language_Others',
+        'Language_Frameworks',
+        'Infrastructure',
+        'CICD',
+        'Cloud_Services',
+        'IAM_Services',
+        'Testing_Frameworks',
+        'Containers',
+        'Static_Analysis',
+        'Source_Control',
+        'Code_Formatter',
+        'Monitoring',
+        'Datastores',
+        'Database_Technologies',
+        'Data_Output_Formats',
+        'Integrations_ONS',
+        'Integrations_External',
+        'Project_Tools',
+        'Code_Editors',
+        'Communication',
+        'Collaboration',
+        'Incident_Management',
+        'Documentation_Tools',
+        'UI_Tools',
+        'Diagram_Tools',
+        'Miscellaneous',
+      ];
+
+      return allTechColumns.some(column => {
+        const value = project[column];
+        if (!value) return false;
+        const matcher = specialTechMatchers[tech];
+        if (matcher) {
+          return value.split(';').some(matcher);
+        }
+        // If there is a colon, extract all techs before colons
+        if (value.includes(':')) {
+          // Match all non-space sequences before a colon, or all words before a colon
+          const techMatches = [...value.matchAll(/([^\s:;]+):/g)].map(match =>
+            match[1].trim()
+          );
+          return techMatches.some(
+            techName => techName.toLowerCase() === tech.toLowerCase().trim()
+          );
+        } else {
+          // Otherwise, split by ; and match as usual
+          return value
+            .split(';')
+            .some(
+              item => item.trim().toLowerCase() === tech.toLowerCase().trim()
+            );
+        }
+      });
+    });
+  };
 
   const handleProjectClick = project => {
     setSelectedProject(project);
