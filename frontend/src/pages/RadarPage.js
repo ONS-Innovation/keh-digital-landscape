@@ -14,6 +14,7 @@ import InfoBox from '../components/InfoBox/InfoBox';
 import { useTechnologyStatus } from '../utilities/getTechnologyStatus';
 import { BannerContainer } from '../components/Banner';
 import { getDirectorates } from '../utilities/getDirectorates';
+import { specialTechMatchers } from '../utilities/getSpecialTechMatchers';
 import {
   getDirectorateColour,
   getDirectorateName,
@@ -253,35 +254,6 @@ function RadarPage() {
     });
     return newNumberedEntries;
   }, [groupedEntries]);
-
-  /**
-   * specialTechMatchers constant to store the special technology matchers.
-   * This object can be extended to add more special cases.
-   * @type {Object} - The special technology matchers.
-   */
-  const specialTechMatchers = useMemo(
-    () => ({
-      AWS: item => {
-        const lowered = item.trim().toLowerCase();
-        return lowered.includes('aws') || lowered.includes('amazon');
-      },
-      GCP: item => {
-        const excluded_gcp = ['google meet', 'google docs'];
-        const lowered = item.trim().toLowerCase();
-        if (excluded_gcp.includes(lowered)) return false;
-        return lowered.includes('google') || lowered.includes('gcp');
-      },
-      'Javascript/TypeScript': item => {
-        const lowered = item.trim().toLowerCase();
-        return lowered === 'javascript' || lowered === 'typescript';
-      },
-      SAS: item => {
-        const lowered = item.trim().toLowerCase();
-        return lowered === 'base sas' || lowered === 'sas';
-      },
-    }),
-    []
-  );
 
   /**
    * findProjectsUsingTechnology function to find the projects using the technology.

@@ -270,27 +270,32 @@ To set the pipeline, run the following script:
 
 ```bash
 chmod u+x ./concourse/scripts/set_pipeline.sh
-./concourse/scripts/set_pipeline.sh digital-landscape
+./concourse/scripts/set_pipeline.sh
 ```
 
 Note that you only have to run chmod the first time running the script in order to give permissions.
-This script will set the branch and pipeline name to whatever branch you are currently on. It will also set the image tag on ECR to the current commit hash at the time of setting the pipeline.
+This script will set the branch and pipeline name to whatever branch you are currently on. It will also set the image tag on ECR to 7 characters of the current branch name if running on a branch other than main. For main, the ECR tag will be the latest release tag on the repository that has semantic versioning(vX.Y.Z).
 
-The pipeline name itself will usually follow a pattern as follows: `<repo-name>-<branch-name>`
-If you wish to set a pipeline for another branch without checking out, you can run the following:
+The pipeline name itself will usually follow a pattern as follows: `digital-landscape-<branch-name>` for any non-main branch and `digital-landscape` for the main/master branch.
 
-```bash
-./concourse/scripts/set_pipeline.sh digital-landscape <branch_name>
-```
+#### Prod deployment
 
-If the branch you are deploying is "main" or "master", it will trigger a deployment to the sdp-prod environment. To set the ECR image tag, you must draft a Github release pointing to the latest release of the main/master branch that has a tag in the form of vX.Y.Z. Drafting up a release will automatically deploy the latest version of the main/master branch with the associated release tag, but you can also manually trigger a build through the Concourse UI or the terminal prompt.
+To deploy to prod, it is required that a Github Release is made on Github. The release is required to follow semantic versioning of vX.Y.Z. 
+
+A manual trigger is to be made on the pipeline name `digital-landscape > deploy-after-github-release` job through the Concourse CI UI. This will create a github-create-tag resource that is required on the `digital-landscape > build-and-push-prod` job. Then the prod deployment job is also through a manual trigger ensuring that prod is only deployed using the latest GitHub release tag in the form of vX.Y.Z and is manually controlled.
 
 #### Triggering a pipeline
 
-Once the pipeline has been set, you can manually trigger a build on the Concourse UI, or run the following command:
+Once the pipeline has been set, you can manually trigger a dev build on the Concourse UI, or run the following command for non-main branch deployment:
 
 ```bash
-fly -t aws-sdp trigger-job -j digital-landscape-<branch-name>/build-and-push
+fly -t aws-sdp trigger-job -j digital-landscape-<branch-name>/build-and-push-dev
+```
+
+and for main branch deployment:
+
+```bash
+fly -t aws-sdp trigger-job -j digital-landscape/build-and-push-dev
 ```
 
 ## Documentation

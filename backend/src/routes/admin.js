@@ -70,7 +70,7 @@ router.post('/banners/update', async (req, res) => {
     } catch (error) {
       // If file doesn't exist, create a new structure
       messagesData = { messages: [] };
-      logger.info('Creating new messages.json file');
+      logger.error('Creating new messages.json file: ', error);
     }
 
     // Add the new banner to messages
@@ -106,6 +106,7 @@ router.get('/banners', async (req, res) => {
       res.json(messagesData);
     } catch (error) {
       // If file doesn't exist, return empty array
+      logger.error('No messages file exist:', error);
       res.json({ messages: [] });
     }
   } catch (error) {
@@ -136,6 +137,7 @@ router.post('/banners/toggle', async (req, res) => {
     try {
       messagesData = await s3Service.getObject('main', 'messages.json');
     } catch (error) {
+      logger.error('Error fetching messages:', error);
       return res.status(400).json({ error: 'Messages file not found' });
     }
 
@@ -181,6 +183,7 @@ router.post('/banners/delete', async (req, res) => {
     try {
       messagesData = await s3Service.getObject('main', 'messages.json');
     } catch (error) {
+      logger.error('Error fetching messages:', error);
       return res.status(400).json({ error: 'Messages file not found' });
     }
 

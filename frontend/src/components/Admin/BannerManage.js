@@ -27,10 +27,6 @@ const BannerManage = () => {
     { label: 'Copilot Org', value: 'copilot/org' },
   ];
 
-  useEffect(() => {
-    loadExistingBanners();
-  }, []);
-
   /**
    * Fetches existing banners from the backend
    */
@@ -43,6 +39,10 @@ const BannerManage = () => {
       toast.error('Failed to load existing banners');
     }
   };
+
+  useEffect(() => {
+    loadExistingBanners();
+  }, []);
 
   /**
    * Handles saving a banner

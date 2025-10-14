@@ -15,7 +15,7 @@ router.get('/auth/status', (req, res) => {
   try {
     const userToken = req.cookies.githubUserToken;
     if (!userToken) {
-      return res.status(401).json({ error: 'Authentication required' });
+      return res.status(200).json({ response: 'No user token found' });
     }
     res.json({
       authenticated: !!userToken,

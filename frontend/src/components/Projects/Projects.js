@@ -137,6 +137,7 @@ const Projects = ({
         'Language_Others',
         'Language_Frameworks',
         'Infrastructure',
+        'Environments',
         'CICD',
         'Cloud_Services',
         'IAM_Services',
@@ -227,6 +228,7 @@ const Projects = ({
           'Language_Others',
           'Language_Frameworks',
           'Infrastructure',
+          'Environments',
           'CICD',
           'Cloud_Services',
           'IAM_Services',
@@ -1022,7 +1024,7 @@ const Projects = ({
                           {mainArchitecture}
                         </div>
                       )}
-                      {project.Project_Dependencies.length > 0 && (
+                      {project.Project_Dependencies?.length > 0 && (
                         <div
                           className="project-badge project-dependencies-badge"
                           title={project.Project_Dependencies.map(
@@ -1032,7 +1034,7 @@ const Projects = ({
                           {project.Project_Dependencies.length} Dependencies
                         </div>
                       )}
-                      {project.Listed_As_Project_Dependency.length > 0 && (
+                      {project.Listed_As_Project_Dependency?.length > 0 && (
                         <div
                           className="project-badge listed-as-dependency-badge"
                           title={project.Listed_As_Project_Dependency.map(

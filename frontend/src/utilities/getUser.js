@@ -1,3 +1,5 @@
+import customFetch from './customFetch';
+
 /**
  * Returns default guest user object
  * @returns {Object} Default guest user data
@@ -16,9 +18,9 @@ const getGuestUser = () => ({
  * @param {string} url - The API endpoint URL
  * @returns {Promise<Object>} User data or guest user on error
  */
-const makeUserApiCall = async url => {
+export const fetchUserInfo = async url => {
   try {
-    const response = await fetch(url);
+    const response = await customFetch('/user/api/info');
 
     if (!response.ok) {
       if (response.status === 401 || response.status === 403) {
@@ -35,16 +37,6 @@ const makeUserApiCall = async url => {
     );
     return getGuestUser();
   }
-};
-
-/**
- * Fetches user information from the backend API
- * @returns {Promise<Object>} User data including email, username, groups, and development mode info
- */
-export const fetchUserInfo = async () => {
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
-  const url = `${backendUrl}/user/api/info`;
-  return makeUserApiCall(url);
 };
 
 /**
@@ -65,11 +57,9 @@ export const logoutUser = async clearCache => {
   if (import.meta.env.NODE_ENV === 'development') {
     // In development mode, call the backend logout endpoint then reload the page
     try {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
-      const logoutUrl = `${backendUrl}/user/api/logout`;
       const currentUrl = window.location.origin;
 
-      await fetch(logoutUrl, {
+      await customFetch('/user/api/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -85,15 +75,12 @@ export const logoutUser = async clearCache => {
   } else {
     // In production, call the backend logout endpoint
     try {
-      const logoutUrl = '/user/api/logout';
-      const currentUrl = window.location.origin;
-
-      const response = await fetch(logoutUrl, {
+      const response = await customFetch('/user/api/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ logout_uri: currentUrl }),
+        body: JSON.stringify({ logout_uri: window.location.origin }),
       });
 
       if (response.ok) {

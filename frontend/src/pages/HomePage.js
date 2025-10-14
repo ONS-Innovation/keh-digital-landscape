@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header/Header';
 import Changelog from '../components/HomePage/Changelog';
 import RecentBanners from '../components/HomePage/RecentBanners';
+import BugReport from '../components/BugReport/Home';
 import {
   TbEditCircle,
   TbUserShield,
@@ -105,6 +106,7 @@ function HomePage() {
           </div>
 
           <RecentBanners />
+          <BugReport />
           <Changelog />
         </div>
       </div>
