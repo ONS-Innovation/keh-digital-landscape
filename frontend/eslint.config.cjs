@@ -59,23 +59,15 @@ module.exports = defineConfig([
     },
 
     rules: {
-      'react/react-in-jsx-scope': 'off',
-      'react/prop-types': 'off',
-      'no-unused-vars': 'off',
+      'react/prop-types': 'off', // Disabled because we don't use prop-types
       'no-duplicate-imports': 'error',
-
       'no-multiple-empty-lines': [
         'error',
         {
           max: 1,
         },
       ],
-
-      'no-undef': 'off',
       'react-refresh/only-export-components': 'warn',
-      'react-hooks/preserve-manual-memoization': 'off',
-      'react-hooks/set-state-in-effect': 'off',
-      'react-hooks/exhaustive-deps': 'off',
     },
   },
 ]);
