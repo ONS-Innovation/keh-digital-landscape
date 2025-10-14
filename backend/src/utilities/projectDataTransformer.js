@@ -12,6 +12,14 @@ function transformProjectToCSVFormat(project, reverseDependencyMap = {}) {
       (u.email?.includes('@ons.gov.uk') || u.email?.includes('@ext.ons.gov.uk'))
   );
 
+  const envLabels = {
+    dev: 'DEV',
+    int: 'INT',
+    uat: 'UAT',
+    preprod: 'PRE-PROD (STAGING)',
+    prod: 'PROD',
+    postprod: 'POST-PROD',
+  };
   // Format technical contact string if found
   const technicalContact = technicalContactUser
     ? `${technicalContactUser.email} (${technicalContactUser.grade})`
@@ -68,6 +76,12 @@ function transformProjectToCSVFormat(project, reverseDependencyMap = {}) {
     Architectures: project.architecture.hosting.details
       ? project.architecture.hosting.details.join('; ')
       : '',
+    Environments: project.architecture?.environments
+      ? Object.entries(project.architecture.environments)
+          .filter(([_, value]) => value)
+          .map(([key]) => envLabels[key] || key.toUpperCase())
+          .join('; ')
+      : '',
     Source_Control: sourceControl,
     Repo: project.source_control[0]?.links
       ? project.source_control[0]?.links.map(link => link.url).join('; ')
@@ -82,7 +96,9 @@ function transformProjectToCSVFormat(project, reverseDependencyMap = {}) {
       ? project.architecture.database.main.join('; ')
       : '',
     Project_Tools: project.supporting_tools.project_tracking || '',
-    Documentation: project.details[0]?.documentation_link?.join('; ') || '',
+    Documentation: Array.isArray(project.details[0]?.documentation_link)
+      ? project.details[0].documentation_link.join('; ')
+      : project.details[0]?.documentation_link || '',
     Infrastructure: project.architecture.infrastructure.others
       ? project.architecture.infrastructure.others.join('; ')
       : '',

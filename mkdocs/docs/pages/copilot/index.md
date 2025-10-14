@@ -1,4 +1,4 @@
-# Copilot Usage Dashboard
+# GitHub Copilot Usage Dashboard
 
 The Copilot dashboard allows users to analyse GitHub Copilot usage statistics across the organisation and within individual teams.
 

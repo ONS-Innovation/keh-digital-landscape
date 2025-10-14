@@ -60,4 +60,6 @@ terraform apply \
 -var "api_s3_bucket_name=${api_s3_bucket_name}" \
 -var "container_ver=${tag}" \
 -var "container_ver_backend=${tag}" \
+-var "frontend_ecr_repo=${container_image_frontend}" \
+-var "backend_ecr_repo=${container_image_backend}" \
 -auto-approve
