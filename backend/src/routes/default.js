@@ -299,7 +299,7 @@ router.get('/banners', async (req, res) => {
       );
     } catch (error) {
       // If file doesn't exist, return empty array
-      logger.info('No messages.json file found, returning empty array');
+      logger.error('No messages.json file found, returning empty array:', error);
       messagesData = { messages: [] };
     }
 
@@ -330,7 +330,7 @@ router.get('/banners/all', async (req, res) => {
       );
     } catch (error) {
       // If file doesn't exist, return empty array
-      logger.info('No messages.json file found, returning empty array');
+      logger.error('No messages.json file found, returning empty array:', error);
       messagesData = { messages: [] };
     }
 
