@@ -35,8 +35,8 @@ export const saveBanner = async banner => {
     let errorData = {};
     try {
       errorData = await response.json();
-    } catch (_) {
-      // ignore parse errors
+    } catch (error) {
+      console.error('Error parsing response:', error);
     }
     throw new Error(errorData.error || 'Failed to save banner');
   }
@@ -61,8 +61,8 @@ export const toggleBanner = async (index, shouldShow) => {
     let errorData = {};
     try {
       errorData = await response.json();
-    } catch (_) {
-      // ignore parse errors
+    } catch (error) {
+      console.error('Error parsing response:', error);
     }
     throw new Error(errorData.error || 'Failed to toggle banner visibility');
   }
@@ -84,8 +84,8 @@ export const deleteBanner = async index => {
     let errorData = {};
     try {
       errorData = await response.json();
-    } catch (_) {
-      // ignore parse errors
+    } catch (error) {
+      console.error('Error parsing response:', error);
     }
     throw new Error(errorData.error || 'Failed to delete banner');
   }

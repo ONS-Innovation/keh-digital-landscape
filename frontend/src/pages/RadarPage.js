@@ -15,7 +15,6 @@ import { useTechnologyStatus } from '../utilities/getTechnologyStatus';
 import { BannerContainer } from '../components/Banner';
 import { getDirectorates } from '../utilities/getDirectorates';
 import { specialTechMatchers } from '../utilities/getSpecialTechMatchers';
-import { specialTechMatchers } from '../utilities/getSpecialTechMatchers';
 import {
   getDirectorateColour,
   getDirectorateName,
@@ -555,101 +554,6 @@ function RadarPage() {
       ...prev,
       [quadrantId]: !prev[quadrantId],
     }));
-  };
-
-  /**
-   * specialTechMatchers constant to store the special technology matchers.
-   * This object can be extended to add more special cases.
-   * @type {Object} - The special technology matchers.
-   */
-  const specialTechMatchers = {
-    AWS: item => {
-      const lowered = item.trim().toLowerCase();
-      return lowered.includes('aws') || lowered.includes('amazon');
-    },
-    GCP: item => {
-      const excluded_gcp = ['google meet', 'google docs'];
-      const lowered = item.trim().toLowerCase();
-      if (excluded_gcp.includes(lowered)) return false;
-      return lowered.includes('google') || lowered.includes('gcp');
-    },
-    'Javascript/TypeScript': item => {
-      const lowered = item.trim().toLowerCase();
-      return lowered === 'javascript' || lowered === 'typescript';
-    },
-    SAS: item => {
-      const lowered = item.trim().toLowerCase();
-      return lowered === 'base sas' || lowered === 'sas';
-    },
-  };
-
-  /**
-   * findProjectsUsingTechnology function to find the projects using the technology.
-   *
-   * @param {string} tech - The technology to find the projects for.
-   * @returns {Array} - The projects using the technology.
-   */
-  const findProjectsUsingTechnology = tech => {
-    if (!projectsData) return [];
-
-    return projectsData.filter(project => {
-      const allTechColumns = [
-        'Architectures',
-        'Language_Main',
-        'Language_Others',
-        'Language_Frameworks',
-        'Infrastructure',
-        'CICD',
-        'Cloud_Services',
-        'IAM_Services',
-        'Testing_Frameworks',
-        'Containers',
-        'Static_Analysis',
-        'Source_Control',
-        'Code_Formatter',
-        'Monitoring',
-        'Datastores',
-        'Database_Technologies',
-        'Data_Output_Formats',
-        'Integrations_ONS',
-        'Integrations_External',
-        'Project_Tools',
-        'Code_Editors',
-        'Communication',
-        'Collaboration',
-        'Incident_Management',
-        'Documentation_Tools',
-        'UI_Tools',
-        'Diagram_Tools',
-        'Miscellaneous',
-      ];
-
-      return allTechColumns.some(column => {
-        const value = project[column];
-        if (!value) return false;
-        const matcher = specialTechMatchers[tech];
-        if (matcher) {
-          return value.split(';').some(matcher);
-        }
-        // If there is a colon, extract all techs before colons
-        if (value.includes(':')) {
-          // Match all non-space sequences before a colon, or all words before a colon
-          const techMatches = [...value.matchAll(/([^\s:;]+):/g)].map(match =>
-            match[1].trim()
-          );
-          return techMatches.some(
-            techName => techName.toLowerCase() === tech.toLowerCase().trim()
-          );
-        } else {
-          // Otherwise, split by ; and match as usual
-          return value
-            .split(';')
-            .some(
-              item => item.trim().toLowerCase() === tech.toLowerCase().trim()
-            );
-        }
-      });
-    });
   };
 
   /**

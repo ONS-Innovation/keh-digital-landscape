@@ -1,4 +1,3 @@
-import { toast } from 'react-hot-toast';
 import { useData } from '../contexts/dataContext';
 import customFetch from './customFetch';
 
@@ -17,6 +16,7 @@ export const fetchTechRadarJSONFromS3 = async () => {
     const data = await response.json();
     return data;
   } catch (error) {
+    console.error('Error fetching tech radar JSON from S3:', error);
     return null;
   }
 };

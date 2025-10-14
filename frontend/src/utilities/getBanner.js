@@ -66,7 +66,8 @@ export const fetchBanners = async page => {
 
           // If it's been more than 7 days, show the banner again
           return now - dismissedAt > sevenDays;
-        } catch (e) {
+        } catch (error) {
+          console.error('Error parsing dismissed banner:', error);
           // If there's an error parsing the JSON, show the banner
           return true;
         }

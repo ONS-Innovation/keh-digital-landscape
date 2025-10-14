@@ -1,7 +1,5 @@
-import { ThemeProvider } from '../../contexts/ThemeContext';
 import Sidebar from '../Sidebar/Sidebar';
 import '../../styles/Layout.css';
-import { Toaster } from 'react-hot-toast';
 import { Toaster } from 'react-hot-toast';
 
 const Layout = ({ children }) => {
@@ -30,7 +28,6 @@ const Layout = ({ children }) => {
         <Sidebar />
         <main className="main-content">{children}</main>
       </div>
-    </div>
     </div>
   );
 };

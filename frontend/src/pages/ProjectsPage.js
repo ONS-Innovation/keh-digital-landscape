@@ -33,7 +33,8 @@ function ProjectsPage() {
         setProjectsData(csvData);
         setRadarData(techData);
       } catch (error) {
-        toast.error('Unexpected error occurred.');
+        console.error('Error fetching data:', error);
+        toast.error('Error fetching data.');
       }
     };
 
@@ -62,6 +63,7 @@ function ProjectsPage() {
       setProjectsData(newData);
       toast.success('Data refreshed successfully.');
     } catch (error) {
+      console.error('Error refreshing data:', error);
       toast.error('Error refreshing data.');
     }
   };

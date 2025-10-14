@@ -9,8 +9,8 @@ const customFetch = async (url, options) => {
     let errorData = { error: `HTTP error! status: ${response.status}` };
     try {
       errorData = await response;
-    } catch (_) {
-      // ignore parse errors, default error message will be used
+    } catch (error) {
+      console.error('Error parsing response:', error);
     }
 
     const errorMessage =
