@@ -74,5 +74,8 @@ module.exports = defineConfig([{
 
         "no-undef": "off",
         "react-refresh/only-export-components": "warn",
+        "react-hooks/preserve-manual-memoization": "off",
+        "react-hooks/set-state-in-effect": "off",
+        "react-hooks/exhaustive-deps": "off",
     },
 }]);

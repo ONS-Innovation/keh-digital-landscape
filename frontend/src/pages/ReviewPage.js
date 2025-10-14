@@ -239,7 +239,6 @@ const ReviewPage = () => {
     const allEntries = Object.values(entries).flat();
     const categorized = categorizeEntries(allEntries);
     setEntries(categorized);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDirectorate]);
 
   // Add this function to calculate ring movement
