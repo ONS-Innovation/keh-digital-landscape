@@ -136,12 +136,12 @@ jobs:
             env: prod
             tag: github-release-tag/tag
             repo_name: ((repo_name))
+            branch: ((branch))
           run:
             path: sh
             args:
               - -cx
               - |
-                branch=$(git -C resource-repo rev-parse --abbrev-ref HEAD)
                 if [[ "$branch" != "main" ]]; then
                   echo "Not on main branch, skipping build."
                   exit 0
