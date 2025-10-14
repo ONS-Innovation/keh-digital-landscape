@@ -106,7 +106,7 @@ jobs:
         params:
           github_access_token: ((github_access_token))
           env: dev
-          tag: ((tag))
+          tag: release-tag-output/tag
           secrets: ((sdp_dev_digital_landscape_secrets))
 
   - name: release-build-and-push-prod
