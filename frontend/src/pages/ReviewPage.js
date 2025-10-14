@@ -13,6 +13,7 @@ import { useData } from '../contexts/dataContext';
 import { MarkdownText } from '../utilities/markdownRenderer';
 import { format, set } from 'date-fns';
 import { getDirectorates } from '../utilities/getDirectorates';
+import { specialTechMatchers } from '../utilities/getSpecialTechMatchers';
 import {
   getDirectorateColour,
   getDirectorateName,
@@ -710,32 +711,6 @@ const ReviewPage = () => {
       document.removeEventListener('mouseup', handleMouseUp);
     };
   }, [isDragging, dragOffset]);
-
-  /**
-   * specialTechMatchers constant to store the special technology matchers.
-   * This object can be extended to add more special cases.
-   * @type {Object} - The special technology matchers.
-   */
-  const specialTechMatchers = {
-    AWS: item => {
-      const lowered = item.trim().toLowerCase();
-      return lowered.includes('aws') || lowered.includes('amazon');
-    },
-    GCP: item => {
-      const excluded_gcp = ['google meet', 'google docs'];
-      const lowered = item.trim().toLowerCase();
-      if (excluded_gcp.includes(lowered)) return false;
-      return lowered.includes('google') || lowered.includes('gcp');
-    },
-    'Javascript/TypeScript': item => {
-      const lowered = item.trim().toLowerCase();
-      return lowered === 'javascript' || lowered === 'typescript';
-    },
-    SAS: item => {
-      const lowered = item.trim().toLowerCase();
-      return lowered === 'base sas' || lowered === 'sas';
-    },
-  };
 
   /**
    * Find projects using the selected technology
