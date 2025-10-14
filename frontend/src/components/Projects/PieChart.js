@@ -336,6 +336,7 @@ const PieChart = ({
     dynamicCategories,
     maxCategories,
     cloudProvidersOnly,
+    cloudProviders,
   ]);
 
   // Custom tooltip for the pie chart
