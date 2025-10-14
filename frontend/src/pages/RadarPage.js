@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../styles/App.css';
 import Header from '../components/Header/Header';
@@ -43,13 +43,13 @@ function RadarPage() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [draggingQuadrant, setDraggingQuadrant] = useState(null);
-  const [quadrantPositions] = useState({
+  const [quadrantPositions, setQuadrantPositions] = useState({
     4: null, // top-left
     1: null, // top-right
     3: null, // bottom-left
     2: null, // bottom-right
   });
-  const [, setQuadrantDragOffset] = useState({ x: 0, y: 0 });
+  const quadrantDragOffset = useRef({ x: 0, y: 0 });
   const [allBlips, setAllBlips] = useState([]);
   const [selectedTimelineItem, setSelectedTimelineItem] = useState(null);
   const [timelineAscending, setTimelineAscending] = useState(false);
@@ -370,6 +370,40 @@ function RadarPage() {
 
     setAllBlips(blipsArray);
   }, [data, numberedEntries]);
+
+  /**
+   * useEffect hook to handle the mouse move event.
+   */
+  useEffect(() => {
+    const handleMouseMove = e => {
+      if (draggingQuadrant) {
+        setQuadrantPositions(prev => ({
+          ...prev,
+          [draggingQuadrant]: {
+            x: e.clientX - quadrantDragOffset.current.x,
+            y: e.clientY - quadrantDragOffset.current.y,
+          },
+        }));
+      }
+    };
+
+    /**
+     * handleMouseUp function to handle the mouse up event.
+     */
+    const handleMouseUp = () => {
+      setDraggingQuadrant(null);
+    };
+
+    if (draggingQuadrant) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [draggingQuadrant]);
 
   /**
    * useEffect hook to handle the keyboard navigation for the blips.
@@ -725,10 +759,10 @@ function RadarPage() {
     e.stopPropagation();
     if (e.target.closest('.drag-handle')) {
       const rect = e.currentTarget.getBoundingClientRect();
-      setQuadrantDragOffset({
+      quadrantDragOffset.current = {
         x: e.clientX - rect.left,
         y: e.clientY - rect.top,
-      });
+      };
       setDraggingQuadrant(quadrantId);
     }
   };
