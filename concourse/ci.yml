@@ -24,7 +24,7 @@ resources:
 
 # Define the common terraform task as an anchor
 terraform-task: &terraform-task
-  task: terraform
+  task: terraform-deploy
   privileged: true
   config:
     platform: linux
@@ -56,55 +56,11 @@ terraform-task: &terraform-task
 
 jobs:
 
-  - name: build-and-push-dev
-    public: true
-    plan:
-      - get: resource-repo
-        passed: [deploy-after-github-release]
-        trigger: true
-        timeout: 5m
-      - task: build-image
-        privileged: true
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: hashicorp/terraform
-          inputs:
-            - name: resource-repo
-          params:
-            aws_account_id: ((aws_account_sdp_dev))
-            aws_role_arn: arn:aws:iam::((aws_account_sdp_dev)):role/sdp-concourse-dev
-            secrets: ((sdp_dev_digital_landscape_secrets))
-            env: dev
-            tag: ((tag))
-            repo_name: ((repo_name))
-          run:
-            path: sh
-            args:
-              - -cx
-              - |
-                apk add --no-cache aws-cli podman jq iptables curl
-                export repo_name=((repo_name))
-                export tag=((tag))
-                chmod u+x ./resource-repo/concourse/scripts/assume_role.sh
-                chmod u+x ./resource-repo/concourse/scripts/build_image.sh
-                source ./resource-repo/concourse/scripts/assume_role.sh
-                ./resource-repo/concourse/scripts/build_image.sh
-        timeout: 10m
-      - <<: *terraform-task
-        params:
-          github_access_token: ((github_access_token))
-          env: dev
-          tag: ((tag))
-          secrets: ((sdp_dev_digital_landscape_secrets))
-
-  - name: deploy-after-github-release
+  - name: deploy-after-github-release-dev
     public: true
     plan:
       - get: github-release
-        trigger: false
+        trigger: true
       - get: resource-repo
         trigger: false
       - task: deploy-release
@@ -146,16 +102,22 @@ jobs:
       - put: github-release-tag
         params:
           directory: release-tag-output
+      - <<: *terraform-task
+        params:
+          github_access_token: ((github_access_token))
+          env: dev
+          tag: ((tag))
+          secrets: ((sdp_dev_digital_landscape_secrets))
 
-  - name: build-and-push-prod
+  - name: release-build-and-push-prod
     public: true
     plan:
       - get: resource-repo
-        passed: [deploy-after-github-release, build-and-push-dev]
+        passed: [deploy-after-github-release-dev]
         trigger: false # Manual trigger only
         timeout: 5m
       - get: github-release-tag
-        passed: [deploy-after-github-release]
+        passed: [deploy-after-github-release-dev]
       - task: build-image
         privileged: true
         config:
@@ -174,11 +136,16 @@ jobs:
             env: prod
             tag: github-release-tag/tag
             repo_name: ((repo_name))
+            branch: ((branch))
           run:
             path: sh
             args:
               - -cx
               - |
+                if [[ "$branch" != "main" ]]; then
+                  echo "Not on main branch, skipping build."
+                  exit 0
+                fi
                 apk add --no-cache aws-cli podman jq iptables curl
                 export repo_name=((repo_name))
                 export tag=$(cat github-release-tag/tag)

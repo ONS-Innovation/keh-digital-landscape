@@ -26,9 +26,6 @@ api_s3_bucket_name=$(echo "$secrets" | jq -r .api_s3_bucket_name)
 container_image_frontend=$(echo "$secrets" | jq -r .container_image_frontend)
 container_image_backend=$(echo "$secrets" | jq -r .container_image_backend)
 
-frontend_ecr_repo=$(echo "$secrets" | jq -r .frontend_ecr_repo)
-backend_ecr_repo=$(echo "$secrets" | jq -r .backend_ecr_repo)
-
 export AWS_ACCESS_KEY_ID=$aws_access_key_id
 export AWS_SECRET_ACCESS_KEY=$aws_secret_access_key
 
@@ -63,6 +60,6 @@ terraform apply \
 -var "api_s3_bucket_name=${api_s3_bucket_name}" \
 -var "container_ver=${tag}" \
 -var "container_ver_backend=${tag}" \
--var "frontend_ecr_repo=${frontend_ecr_repo}" \
--var "backend_ecr_repo=${backend_ecr_repo}" \
+-var "frontend_ecr_repo=${container_image_frontend}" \
+-var "backend_ecr_repo=${container_image_backend}" \
 -auto-approve
