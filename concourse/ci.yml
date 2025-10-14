@@ -141,6 +141,11 @@ jobs:
             args:
               - -cx
               - |
+                branch=$(git -C resource-repo rev-parse --abbrev-ref HEAD)
+                if [[ "$branch" != "main" ]]; then
+                  echo "Not on main branch, skipping build."
+                  exit 0
+                fi
                 apk add --no-cache aws-cli podman jq iptables curl
                 export repo_name=((repo_name))
                 export tag=$(cat github-release-tag/tag)
