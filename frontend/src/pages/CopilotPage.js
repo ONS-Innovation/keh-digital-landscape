@@ -32,7 +32,12 @@ import { BannerContainer } from '../components/Banner';
 import { toast } from 'react-hot-toast';
 
 function CopilotDashboard() {
-  const historicTeamData = useRef(null); // TODO: Add team historic data support. Setting this for now to avoid lint errors.
+  const [historicTeamData] = useState({
+    allUsage: [],
+    weekUsage: [],
+    monthUsage: [],
+    yearUsage: [],
+  }); // TODO: Add team historic data support
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [sliderValues, setSliderValues] = useState(null);
@@ -149,29 +154,6 @@ function CopilotDashboard() {
     ]
   );
 
-  const getDashboardData = () => {
-    if (viewMode === 'live' && scope === 'organisation') return liveOrgData;
-    if (viewMode === 'live' && scope === 'team') return liveTeamData;
-    if (viewMode === 'historic' && scope === 'organisation')
-      return historicOrgData;
-    if (viewMode === 'historic' && scope === 'team') return historicTeamData; // TODO: Add team historic data support
-  };
-
-  const getGroupedData = () => {
-    if (scope === 'team') {
-      // TODO: Add team historic data support
-      if (viewDatesBy === 'Day') return historicTeamData.allUsage;
-      if (viewDatesBy === 'Week') return historicTeamData.weekUsage;
-      if (viewDatesBy === 'Month') return historicTeamData.monthUsage;
-      if (viewDatesBy === 'Year') return historicTeamData.yearUsage;
-    } else {
-      if (viewDatesBy === 'Day') return historicOrgData.allUsage;
-      if (viewDatesBy === 'Week') return historicOrgData.weekUsage;
-      if (viewDatesBy === 'Month') return historicOrgData.monthUsage;
-      if (viewDatesBy === 'Year') return historicOrgData.yearUsage;
-    }
-  };
-
   const setFilteredData = useCallback(
     (data, setData) => {
       if (!data || !startDate || !endDate || !sliderFinished) return;
@@ -229,41 +211,107 @@ function CopilotDashboard() {
     );
   }, [availableTeams, searchTerm]);
 
-  const data = getDashboardData();
+  const groupedData = useMemo(() => {
+    if (scope === 'team') {
+      // TODO: Add team historic data support
+      switch (viewDatesBy) {
+        case 'Day':
+          return historicTeamData.allUsage;
+        case 'Week':
+          return historicTeamData.weekUsage;
+        case 'Month':
+          return historicTeamData.monthUsage;
+        case 'Year':
+          return historicTeamData.yearUsage;
+        default:
+          return [];
+      }
+    } else {
+      switch (viewDatesBy) {
+        case 'Day':
+          return historicOrgData.allUsage;
+        case 'Week':
+          return historicOrgData.weekUsage;
+        case 'Month':
+          return historicOrgData.monthUsage;
+        case 'Year':
+          return historicOrgData.yearUsage;
+        default:
+          return [];
+      }
+    }
+  }, [scope, viewDatesBy, historicTeamData, historicOrgData]);
+
+  const dashboardData = useMemo(() => {
+    if (viewMode === 'live' && scope === 'organisation') return liveOrgData;
+    if (viewMode === 'live' && scope === 'team') return liveTeamData;
+    if (viewMode === 'historic' && scope === 'organisation')
+      return historicOrgData;
+    if (viewMode === 'historic' && scope === 'team') return historicTeamData; // TODO: Add team historic data support
+    return null;
+  }, [
+    viewMode,
+    scope,
+    liveOrgData,
+    liveTeamData,
+    historicOrgData,
+    historicTeamData,
+  ]);
+
+  const sliderMaxValue = useMemo(() => {
+    const usageData =
+      scope === 'organisation' ? liveOrgData.allUsage : liveTeamData.allUsage;
+    return getEndSliderValue(usageData);
+  }, [scope, liveOrgData.allUsage, liveTeamData.allUsage, getEndSliderValue]);
 
   /**
-   * Initialise state from URL parameters (only runs once on component mount)
+   * Initialise URL state values
    */
-  useEffect(() => {
+  const initialUrlState = useMemo(() => {
     const pathParts = window.location.pathname.split('/');
     const currentUrlScope = pathParts[2]; // Get scope from pathname
 
     if (currentUrlScope === 'org') {
-      setScope('organisation');
-      const viewMode = pathParts[3];
-      if (viewMode === 'historic') {
-        setViewMode('historic');
-      } else {
-        setViewMode('live');
-      }
+      return {
+        scope: 'organisation',
+        viewMode: pathParts[3] === 'historic' ? 'historic' : 'live',
+        teamSlug: null,
+        isSelectingTeam: false,
+        shouldFetchTeam: false,
+      };
     } else if (currentUrlScope === 'team') {
-      setScope('team');
       const teamParam = pathParts[3];
-      if (teamParam) {
-        setTeamSlug(teamParam);
-        setIsSelectingTeam(false);
-        // Fetch team data if we have a team slug from URL
-        fetchTeamData(teamParam);
-      } else {
-        setIsSelectingTeam(true);
-      }
+      return {
+        scope: 'team',
+        viewMode: 'live',
+        teamSlug: teamParam || null,
+        isSelectingTeam: !teamParam,
+        shouldFetchTeam: !!teamParam,
+      };
     } else {
-      // Default to organisation live view
-      setScope('organisation');
-      setViewMode('live');
-      navigate('/copilot/org/live', { replace: true });
+      return {
+        scope: 'organisation',
+        viewMode: 'live',
+        teamSlug: null,
+        isSelectingTeam: false,
+        shouldFetchTeam: false,
+      };
     }
-  }, [fetchTeamData, navigate]); // Empty dependency array - only run once on mount
+  }, []);
+
+  // Apply URL state
+  useEffect(() => {
+    setScope(initialUrlState.scope);
+    setViewMode(initialUrlState.viewMode);
+    setTeamSlug(initialUrlState.teamSlug);
+    setIsSelectingTeam(initialUrlState.isSelectingTeam);
+
+    if (initialUrlState.scope === 'organisation') {
+      navigate('/copilot/org/live', { replace: true });
+    } else if (initialUrlState.shouldFetchTeam && initialUrlState.teamSlug) {
+      fetchTeamData(initialUrlState.teamSlug);
+    }
+  }, [initialUrlState, navigate, fetchTeamData]);
 
   /**
    * Trigger data filter upon slider completion
@@ -281,13 +329,9 @@ function CopilotDashboard() {
     setSliderValues(values);
 
     const newStart = new Date();
-    newStart.setDate(
-      newStart.getDate() - getEndSliderValue(data.allUsage) - 1 + values[0]
-    );
+    newStart.setDate(newStart.getDate() - sliderMaxValue - 1 + values[0]);
     const newEnd = new Date();
-    newEnd.setDate(
-      newEnd.getDate() - getEndSliderValue(data.allUsage) + values[1]
-    );
+    newEnd.setDate(newEnd.getDate() - sliderMaxValue + values[1]);
 
     setStartDate(newStart.toISOString().slice(0, 10));
     setEndDate(newEnd.toISOString().slice(0, 10));
@@ -406,12 +450,15 @@ function CopilotDashboard() {
   /**
    * Filter and then process live usage data based on start and end date
    */
+  // Process filtered data when dependencies change
   useEffect(() => {
-    scope === 'organisation'
-      ? setFilteredData(liveOrgData.allUsage, setLiveOrgData)
-      : setFilteredData(liveTeamData.allUsage, setLiveTeamData);
+    if (!sliderFinished) return;
 
-    setSliderFinished(false);
+    if (scope === 'organisation') {
+      setFilteredData(liveOrgData.allUsage, setLiveOrgData);
+    } else {
+      setFilteredData(liveTeamData.allUsage, setLiveTeamData);
+    }
   }, [
     scope,
     liveOrgData.allUsage,
@@ -420,7 +467,6 @@ function CopilotDashboard() {
     endDate,
     sliderFinished,
     setFilteredData,
-    setActiveSeats,
   ]);
 
   /**
@@ -444,19 +490,32 @@ function CopilotDashboard() {
   /**
    * Display team selection UI to choose a team to fetch data for
    */
+  // Compute team selection state and date range based on scope and team slug
+  const teamSelectionState = useMemo(() => {
+    const usageData =
+      scope === 'organisation' ? liveOrgData.allUsage : liveTeamData.allUsage;
+    const { start, end } = initialiseDateRange(usageData);
+    return {
+      isSelectingTeam: scope === 'team' && !teamSlug,
+      dateRange: { start, end },
+      sliderValues: [1, getEndSliderValue(usageData)],
+    };
+  }, [
+    scope,
+    teamSlug,
+    initialiseDateRange,
+    getEndSliderValue,
+    liveOrgData.allUsage,
+    liveTeamData.allUsage,
+  ]);
+
+  // Apply team selection state
   useEffect(() => {
-    if (scope === 'organisation') {
-      setIsSelectingTeam(false);
-    } else if (scope === 'team' && !teamSlug) {
-      // Only set to true if we don't have a team slug
-      setIsSelectingTeam(true);
-    }
-    //Reset start and end dates when switching scopes
-    const { start, end } = initialiseDateRange(data.allUsage);
-    setStartDate(start);
-    setEndDate(end);
-    setSliderValues([1, getEndSliderValue(data.allUsage)]);
-  }, [scope, teamSlug, initialiseDateRange, getEndSliderValue, data.allUsage]);
+    setIsSelectingTeam(teamSelectionState.isSelectingTeam);
+    setStartDate(teamSelectionState.dateRange.start);
+    setEndDate(teamSelectionState.dateRange.end);
+    setSliderValues(teamSelectionState.sliderValues);
+  }, [teamSelectionState]);
 
   const handleLogout = async () => {
     try {
@@ -532,10 +591,14 @@ function CopilotDashboard() {
                       setIsSelectingTeam(true);
                       setTeamSlug(null);
                       navigate('/copilot/team', { replace: true });
-                      const { start, end } = initialiseDateRange(data.allUsage);
+                      const usageData =
+                        scope === 'organisation'
+                          ? liveOrgData.allUsage
+                          : liveTeamData.allUsage;
+                      const { start, end } = initialiseDateRange(usageData);
                       setStartDate(start);
                       setEndDate(end);
-                      setSliderValues([1, getEndSliderValue(data.allUsage)]);
+                      setSliderValues([1, getEndSliderValue(usageData)]);
                     }}
                     aria-label={`Return to team selection`}
                   >
@@ -556,7 +619,7 @@ function CopilotDashboard() {
                         <Slider
                           range
                           min={1}
-                          max={getEndSliderValue(data.allUsage)}
+                          max={sliderMaxValue}
                           value={sliderValues}
                           onChange={updateSlider}
                           onChangeComplete={handleSliderCompletion}
@@ -566,7 +629,10 @@ function CopilotDashboard() {
                             'End date selector',
                           ]}
                           ariaValueTextFormatterForHandle={(value, index) => {
-                            const usage = data?.allUsage;
+                            const usage =
+                              scope === 'organisation'
+                                ? liveOrgData.allUsage
+                                : liveTeamData.allUsage;
                             if (!usage?.length)
                               return `${index === 0 ? 'Start' : 'End'} date: Unknown`;
 
@@ -739,7 +805,7 @@ function CopilotDashboard() {
           ) : viewMode === 'live' ? (
             <LiveDashboard
               scope={scope}
-              data={data}
+              data={dashboardData}
               isLiveLoading={
                 scope === 'organisation' ? isLiveLoading : isTeamLoading
               }
@@ -751,7 +817,7 @@ function CopilotDashboard() {
           ) : (
             <HistoricDashboard
               scope={scope}
-              data={getGroupedData()}
+              data={groupedData}
               isLoading={isHistoricLoading}
               viewDatesBy={viewDatesBy}
             />
