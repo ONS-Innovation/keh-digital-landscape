@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { IoClose } from 'react-icons/io5';
 import '../../styles/components/HelpModal.css';
@@ -15,24 +15,46 @@ function HelpModal({ show, onClose }) {
   const [shouldRender, setShouldRender] = useState(false);
   const location = useLocation();
 
+  // Handle modal visibility state
+  const modalState = useMemo(() => {
+    return {
+      shouldRender: show,
+      isVisible: show,
+    };
+  }, [show]);
+
+  // Handle modal visibility and animation
   useEffect(() => {
-    if (show) {
-      setShouldRender(true);
-      // Small delay to ensure DOM is ready before starting animation
+    let unmountTimer;
+    let animationTimer;
+
+    if (modalState.shouldRender) {
+      // First render the modal
       requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
+        setShouldRender(true);
+        // Then trigger animation in the next frame
+        animationTimer = requestAnimationFrame(() => {
           setIsVisible(true);
         });
       });
     } else {
-      setIsVisible(false);
-      // Wait for animation to finish before unmounting
-      const timer = setTimeout(() => {
-        setShouldRender(false);
-      }, 1000); // Match this with the CSS transition duration
-      return () => clearTimeout(timer);
+      // Hide the modal first
+      requestAnimationFrame(() => {
+        setIsVisible(false);
+        // Then unmount after animation
+        unmountTimer = setTimeout(() => {
+          setShouldRender(false);
+        }, 1000); // Match this with the CSS transition duration
+      });
     }
-  }, [show]);
+
+    return () => {
+      clearTimeout(unmountTimer);
+      if (animationTimer) {
+        cancelAnimationFrame(animationTimer);
+      }
+    };
+  }, [modalState]);
 
   if (!shouldRender) return null;
 
