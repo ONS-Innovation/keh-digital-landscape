@@ -5,6 +5,7 @@ import { IoClose, IoSearch, IoChevronDown } from 'react-icons/io5';
 import SkeletonLanguageCard from '../Statistics/Skeletons/SkeletonLanguageCard';
 import { fetchRepositoryData } from '../../utilities/getRepositoryData';
 import { useTechnologyStatus } from '../../utilities/getTechnologyStatus';
+
 /**
  * ProjectModal component for displaying project details in a modal.
  *
@@ -326,15 +327,14 @@ const ProjectModal = ({
     'Miscellaneous',
   ];
 
+  //Keeps all the values so every value will appear
   const filterItems = items => {
+    const q = searchQuery.trim().toLowerCase();
     return items.filter(key => {
-      if (!project[key]) return false;
-      const label = fieldLabels[key] || key.replace(/_/g, ' ');
-      const value = project[key].toString().toLowerCase();
-      return (
-        label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        value.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      const label = (fieldLabels[key] || key.replace(/_/g, ' ')).toLowerCase();
+      const value = (project[key] ?? '').toString().toLowerCase();
+      if (!q) return true;
+      return label.includes(q) || value.includes(q);
     });
   };
 
@@ -347,12 +347,11 @@ const ProjectModal = ({
 
   const renderGroup = (title, keys) => {
     const filteredKeys = filterItems(keys);
-    const validKeys = filteredKeys.filter(key => {
-      const value = project[key];
-      return value !== 'None' && value !== 'N/A' && value !== 'none';
-    });
 
-    if (validKeys.length === 0) return null;
+    if (filteredKeys.length === 0) return null;
+
+    const isEmptyValue = v =>
+      v == null || v === '' || v === 'None' || v === 'N/A' || v === 'none';
 
     return (
       <div className="project-group">
@@ -369,49 +368,64 @@ const ProjectModal = ({
         </div>
         {!expandedGroups[title] && (
           <div className="group-content">
-            {validKeys.map(key => {
+            {filteredKeys.map(key => {
+              const label = fieldLabels[key] || key.replace(/_/g, ' ');
               const value = project[key];
+
               if (key.toLowerCase() === 'miscellaneous') {
                 return (
                   <div
                     key={key}
                     className={`detail-item ${title === 'Repositories' ? 'large-span' : ''}`}
                   >
-                    <h3>{fieldLabels[key] || key.replace(/_/g, ' ')}:</h3>
-                    <div className="miscellaneous-block">
-                      {value.split(';').map((item, idx) => {
-                        const colonIndex = item.indexOf(':');
-                        let label = item;
-                        let description = '';
-                        if (colonIndex !== -1) {
-                          label = item.slice(0, colonIndex);
-                          description = item.slice(colonIndex + 1).trim();
-                        }
-                        return (
-                          <div key={idx} className="misc-item">
-                            <div>{label.trim()}:</div>
-                            {description && (
-                              <div className="misc-desc">{description}</div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
+                    <h3>{label}:</h3>
+                    {isEmptyValue(value) ? (
+                      <p>
+                        <em>No Data Captured</em>
+                      </p>
+                    ) : (
+                      <div className="miscellaneous-block">
+                        {value.split(';').map((item, idx) => {
+                          const colonIndex = item.indexOf(':');
+                          let l = item;
+                          let description = '';
+                          if (colonIndex !== -1) {
+                            l = item.slice(0, colonIndex);
+                            description = item.slice(colonIndex + 1).trim();
+                          }
+                          return (
+                            <div key={idx} className="misc-item">
+                              <div>{l.trim()}:</div>
+                              {description && (
+                                <div className="misc-desc">{description}</div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
                 );
               }
+
               return (
                 <div
                   key={key}
                   className={`detail-item ${title === 'Repositories' ? 'large-span' : ''}`}
                   tabIndex={0}
                 >
-                  <h3>{fieldLabels[key] || key.replace(/_/g, ' ')}:</h3>
-                  <p style={{ whiteSpace: 'pre-wrap' }}>
-                    {technologyListFields.includes(key)
-                      ? renderTechnologyList(value)
-                      : value.replace(/;/g, '; ')}
-                  </p>
+                  <h3>{label}:</h3>
+                  {isEmptyValue(value) ? (
+                    <p>
+                      <em>No Data Captured</em>
+                    </p>
+                  ) : (
+                    <p style={{ whiteSpace: 'pre-wrap' }}>
+                      {technologyListFields.includes(key)
+                        ? renderTechnologyList(value)
+                        : value.replace(/;/g, '; ')}
+                    </p>
+                  )}
                 </div>
               );
             })}
