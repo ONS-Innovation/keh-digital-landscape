@@ -324,7 +324,7 @@ function RadarPage() {
         });
       });
     },
-    [projectsData, specialTechMatchers]
+    [projectsData]
   );
 
   /**

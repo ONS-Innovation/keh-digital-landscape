@@ -272,7 +272,7 @@ const ReviewPage = () => {
     const categorized = categorizeEntries(radarData.entries);
     setEntries(categorized);
 
-  }, [selectedDirectorate, categorizeEntries]);
+  }, [selectedDirectorate, categorizeEntries, entries]);
 
   /**
    * Calculates project counts for all technologies
