@@ -271,7 +271,6 @@ const ReviewPage = () => {
 
     const categorized = categorizeEntries(radarData.entries);
     setEntries(categorized);
-
   }, [selectedDirectorate, categorizeEntries, entries]);
 
   /**
