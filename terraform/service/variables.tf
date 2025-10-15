@@ -145,19 +145,16 @@ variable "force_deployment" {
 variable "s3_bucket_name" {
   description = "Name of the S3 bucket that the application needs to access"
   type        = string
-  default     = "sdp-dev-tech-radar"
 }
 
 variable "api_s3_bucket_name" {
   description = "Name of the S3 bucket that the application needs to access"
   type        = string
-  default     = "sdp-dev-tech-audit-tool-api"
 }
 
 variable "copilot_bucket_name" {
   description = "Name of the S3 bucket storing historic Copilot data"
   type        = string
-  default     = "sdp-dev-copilot-usage-dashboard"
 }
 
 variable "frontend_ecr_repo" {
