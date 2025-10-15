@@ -41,6 +41,7 @@ terraform-task: &terraform-task
       secrets: ((sdp_((env))_digital_landscape_secrets))
       github_access_token: ((github_access_token))
       env: ((env))
+      branch: ((branch))
     run:
       path: sh
       args:
