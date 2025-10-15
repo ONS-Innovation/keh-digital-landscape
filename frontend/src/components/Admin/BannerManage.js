@@ -40,9 +40,7 @@ const BannerManage = () => {
     }
   };
 
-  useEffect(() => {
-    loadExistingBanners();
-  }, []);
+  loadExistingBanners();
 
   /**
    * Handles saving a banner
