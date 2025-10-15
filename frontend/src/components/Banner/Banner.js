@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import '../../styles/components/Banner.css';
 
 /**
@@ -20,13 +20,11 @@ const Banner = ({ title, description, type = 'info', onClose }) => {
     '_'
   );
 
-  useEffect(() => {
-    // Check localStorage to see if this banner was previously dismissed
-    const isDismissed = localStorage.getItem(bannerId);
-    if (isDismissed) {
-      setIsVisible(false);
-    }
-  }, [bannerId]);
+  // Check localStorage to see if this banner was previously dismissed
+  const isDismissed = localStorage.getItem(bannerId);
+  if (isDismissed) {
+    setIsVisible(false);
+  }
 
   if (!isVisible) {
     return null;
