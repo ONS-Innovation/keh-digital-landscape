@@ -26,6 +26,8 @@ api_s3_bucket_name=$(echo "$secrets" | jq -r .api_s3_bucket_name)
 container_image_frontend=$(echo "$secrets" | jq -r .container_image_frontend)
 container_image_backend=$(echo "$secrets" | jq -r .container_image_backend)
 
+copilot_bucket_name=$(echo "$secrets" | jq -r .copilot_bucket_name)
+
 export AWS_ACCESS_KEY_ID=$aws_access_key_id
 export AWS_SECRET_ACCESS_KEY=$aws_secret_access_key
 
@@ -62,4 +64,5 @@ terraform apply \
 -var "container_ver_backend=${tag}" \
 -var "frontend_ecr_repo=${container_image_frontend}" \
 -var "backend_ecr_repo=${container_image_backend}" \
+-var "copilot_bucket_name=${copilot_bucket_name}" \
 -auto-approve
