@@ -44,7 +44,7 @@ terraform-task: &terraform-task
         - -cx
         - |
           echo "DEBUG: Environment is ${env}"
-          echo "DEBUG: Tag is ${tag}"
+          echo "DEBUG: Tag is ${tag}: ((tag))"
           apk add --no-cache jq curl
           export tag=((tag))
           if [[ "$env" == "prod" && ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
@@ -107,7 +107,8 @@ jobs:
         params:
           github_access_token: ((github_access_token))
           env: dev
-          tag: release-tag-output/tag
+          # tag: github-release/tag
+          tag: ((tag))
           secrets: ((sdp_dev_digital_landscape_secrets))
 
   - name: release-build-and-push-prod
