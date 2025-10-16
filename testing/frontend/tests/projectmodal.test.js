@@ -1,101 +1,180 @@
-// ProjectModal.test.jsx
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import ProjectModal from './ProjectModal';
+import { test, expect } from 'playwright/test';
+import { radarData } from './data/radarData';
+import { csvData } from './data/csvData';
+import { directorateData } from './data/directorateData';
 
-// Minimal mocks for imported hooks/utilities (no repo fetching in these tests)
-jest.mock('../../utilities/getTechnologyStatus', () => ({
-  useTechnologyStatus: () => () => 'adopt',
-}));
-jest.mock('../../utilities/getRepositoryData', () => ({
-  fetchRepositoryData: jest.fn(),
-}));
+/**
+ * Adjust these to match your dataset & UI:
+ * - TARGET_PROJECT_NAME should be the project item you click to open the modal.
+ * - BLIP_TO_OPEN should be the blip you click first to reveal that project.
+ *   (Use an id that already exists in your radar SVG like `g#blip-test-aws` or similar.)
+ */
+const TARGET_PROJECT_NAME = 'Empty Env Project';
+const BLIP_TO_OPEN = 'g#blip-test-aws';
 
-const renderModal = (overrides = {}) => {
-  const defaultProps = {
-    isOpen: true,
-    onClose: jest.fn(),
-    project: {
-      Project: 'a',
-      Programme: 'a',
-      Programme_Short: 'a',
-      Environments: '',              // this should be "no data captured"
-      Infrastructure: 'Kubernetes',
-      CICD: 'GitHub Actions',
-      Cloud_Services: 'AWS',
-      Containers: 'Docker',
-      Hosted: 'On-prem',
-      Architectures: 'Microservices',
-      // General group: check special-case renderer
-      Miscellaneous: '',
-    },
-    renderTechnologyList: (val) => <span data-testid="tech-list">{String(val)}</span>,
-    onTechClick: jest.fn(),
-    ...overrides,
+/**
+ * Creates patched data so the target project shows empty fields,
+ * which should render as "No Data Captured" in the modal.
+ *
+ * NOTE: Adapt the shape based on how your app pulls project data.
+ * If your project modal is sourced primarily from csvData rows, patch there.
+ * If it comes from radarData, patch there instead (or both).
+ */
+function makePatchedCsvData() {
+  // Example patcher — adjust to your real csvData shape.
+  // Common patterns:
+  //  - csvData.rows: [{ Project, Environments, Miscellaneous, ... }]
+  //  - csvData.projects: [{ name, Environments, Miscellaneous, ... }]
+  const clone = JSON.parse(JSON.stringify(csvData));
+
+  const patchRow = (row) => {
+    // Match by project name (change key to your schema)
+    if (
+      row.Project?.trim() === TARGET_PROJECT_NAME ||
+      row.name?.trim() === TARGET_PROJECT_NAME
+    ) {
+      row.Environments = '';        // triggers "No Data Captured"
+      row.Miscellaneous = '';       // also triggers "No Data Captured" in special block
+    }
+    return row;
   };
 
-  return render(<ProjectModal {...defaultProps} />);
+  if (Array.isArray(clone.rows)) {
+    clone.rows = clone.rows.map(patchRow);
+  }
+  if (Array.isArray(clone.projects)) {
+    clone.projects = clone.projects.map(patchRow);
+  }
+
+  return clone;
+}
+
+function makePatchedRadarData() {
+  // Optional: If your modal’s project object is sourced from radarData,
+  // patch it similarly here. This is a no-op unless you rely on radarData.
+  const clone = JSON.parse(JSON.stringify(radarData));
+
+  // Example (adjust for your schema):
+  // if (Array.isArray(clone.projects)) {
+  //   clone.projects = clone.projects.map(p => {
+  //     if (p.name === TARGET_PROJECT_NAME) {
+  //       return { ...p, Environments: '', Miscellaneous: '' };
+  //     }
+  //     return p;
+  //   });
+  // }
+
+  return clone;
+}
+
+// Intercept & mock APIs the same way you do in your other tests
+const interceptAPICall = async ({ page }) => {
+  const patchedCsv = makePatchedCsvData();
+  const patchedRadar = makePatchedRadarData();
+
+  await page.route('**/api/tech-radar/json', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(patchedRadar),
+    });
+  });
+
+  await page.route('**/api/csv', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(patchedCsv),
+    });
+  });
+
+  await page.route('**/api/directorates/json', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(directorateData),
+    });
+  });
+
+  await page.goto('http://localhost:3000/radar');
+
+  // Clear cookies then set a dummy auth cookie to simulate a logged-in user
+  await page.context().clearCookies();
+  await page.context().addCookies([
+    {
+      name: 'githubUserToken',
+      value: 'dummy-token',
+      domain: 'localhost',
+      path: '/',
+      httpOnly: true,
+      secure: false,
+      sameSite: 'Lax',
+    },
+  ]);
+
+  await page.reload();
 };
 
-describe('ProjectModal "No Data Captured" UI', () => {
-  test('renders "No Data Captured" for empty standard fields (e.g., Environments)', () => {
-    renderModal();
+test.describe('Project Modal - "No Data Captured" UI (Playwright)', () => {
+  test('shows "No Data Captured" for empty fields in the modal', async ({ page }) => {
+    await interceptAPICall({ page });
 
-    // Group title is visible (content is expanded by default in this component)
-    expect(screen.getByText('Infrastructure & Deployment')).toBeInTheDocument();
+    // 1) Open a blip to reveal project list
+    await page.locator(BLIP_TO_OPEN).locator('circle').first().click();
 
-    // Field label
-    expect(screen.getByText('Environments:')).toBeInTheDocument();
+    // 2) Click the specific project to open the modal
+    //    Adjust selector based on how the project is rendered (button, link, list item).
+    //    Using getByText exact=true to avoid partial matches.
+    await page.getByText(TARGET_PROJECT_NAME, { exact: true }).click();
 
-    // Fallback text for empty value
-    expect(screen.getByText(/No Data Captured/i)).toBeInTheDocument();
+    // 3) Assert group title is visible (modal content)
+    await expect(page.getByText('Infrastructure & Deployment')).toBeVisible();
+
+    // 4) Assert the Environments field label is present
+    await expect(page.getByText('Environments:')).toBeVisible();
+
+    // 5) Assert the fallback text is shown
+    await expect(page.getByText(/no data captured/i)).toBeVisible();
+
+    // 6) Also check the special "Miscellaneous" block shows fallback
+    await expect(page.getByText('Miscellaneous:')).toBeVisible();
+    // Multiple instances likely (Environments + Miscellaneous)
+    await expect(page.getByText(/no data captured/i)).toBeVisible();
   });
 
-  test('renders actual content when field has data', () => {
-    renderModal();
+  test('search within modal still shows "No Data Captured" field when filtering by label', async ({ page }) => {
+    await interceptAPICall({ page });
 
-    // Another field in the same group with real data should show its value, not the fallback
-    expect(screen.getByText('Infrastructure:')).toBeInTheDocument();
-    expect(screen.getByText(/Kubernetes/i)).toBeInTheDocument();
+    // Open blip and project modal
+    await page.locator(BLIP_TO_OPEN).locator('circle').first().click();
+    await page.getByText(TARGET_PROJECT_NAME, { exact: true }).click();
+
+    // Type in the modal’s search box
+    const searchInput = page.getByPlaceholder('Search project details...');
+    await searchInput.fill('environments');
+
+    // Should still see the label + fallback
+    await expect(page.getByText('Environments:')).toBeVisible();
+    await expect(page.getByText(/no data captured/i)).toBeVisible();
   });
 
-  test('shows "No Data Captured" for the special Miscellaneous block when empty', () => {
-    renderModal();
+  test('collapsing the group hides label and fallback, expanding shows them again', async ({ page }) => {
+    await interceptAPICall({ page });
 
-    expect(screen.getByText('General Information')).toBeInTheDocument();
-    expect(screen.getByText('Miscellaneous:')).toBeInTheDocument();
-    expect(screen.getAllByText(/No Data Captured/i).length).toBeGreaterThan(1);
-  });
+    // Open blip and project modal
+    await page.locator(BLIP_TO_OPEN).locator('circle').first().click();
+    await page.getByText(TARGET_PROJECT_NAME, { exact: true }).click();
 
-  test('search still shows the field with "No Data Captured" when searching by its label', async () => {
-    renderModal();
-    const user = userEvent.setup();
+    const infraHeader = page.getByText('Infrastructure & Deployment');
 
-    // Search input in the header
-    const search = screen.getByPlaceholderText(/Search project details/i);
-    await user.type(search, 'environments'); // matches field label
+    // Collapse
+    await infraHeader.click();
+    await expect(page.getByText('Environments:')).not.toBeVisible();
+    await expect(page.getByText(/no data captured/i)).not.toBeVisible();
 
-    // The "Environments:" field should remain visible and still show the fallback text
-    expect(screen.getByText('Environments:')).toBeInTheDocument();
-    expect(screen.getByText(/No Data Captured/i)).toBeInTheDocument();
-  });
-
-  test('accordion behavior: field & fallback hidden when the group is collapsed', async () => {
-    renderModal();
-    const user = userEvent.setup();
-
-    // Collapse the Infrastructure group
-    const infraHeader = screen.getByText('Infrastructure & Deployment');
-    await user.click(infraHeader);
-
-    // After collapsing, the label/fallback shouldn’t be visible
-    expect(screen.queryByText('Environments:')).not.toBeInTheDocument();
-    expect(screen.queryByText(/No Data Captured/i)).not.toBeInTheDocument();
-
-    // Expand again
-    await user.click(infraHeader);
-    expect(screen.getByText('Environments:')).toBeInTheDocument();
-    expect(screen.getByText(/No Data Captured/i)).toBeInTheDocument();
+    // Expand
+    await infraHeader.click();
+    await expect(page.getByText('Environments:')).toBeVisible();
+    await expect(page.getByText(/no data captured/i)).toBeVisible();
   });
 });

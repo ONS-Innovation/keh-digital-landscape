@@ -12,6 +12,13 @@
     "@axe-core/playwright": "^4.8.5",
     "dotenv": "^16.6.1",
     "playwright": "^1.42.1",
-    "prettier": "^3.6.2"
+    "prettier": "^3.6.2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@babel/preset-react": "^7.27.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1"
   }
 }
