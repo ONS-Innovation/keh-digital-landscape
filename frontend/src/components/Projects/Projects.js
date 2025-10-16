@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useMemo,
-  useEffect,
-  useCallback,
-  useRef,
-} from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import {
   IoOptions,
   IoChevronDown,
@@ -395,9 +389,6 @@ const Projects = ({
           holdRatio: distribution.hold / distribution.total || 0,
         };
       };
-
-      // Combine sort field and direction into single string for switch statement
-      const sortBy = `${sortField}-${sortDirection}`;
 
       // Special case: Sort by technology ring ratio (adopt/trial/assess/hold)
       if (sortField === 'ring-ratio') {

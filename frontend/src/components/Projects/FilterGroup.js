@@ -1,4 +1,3 @@
-import React from 'react';
 import { IoCheckmarkSharp, IoChevronForward } from 'react-icons/io5';
 
 /**

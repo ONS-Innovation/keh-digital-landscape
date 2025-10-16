@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import '../../styles/components/ProjectModal.css';
 import '../../styles/LangColours.css';
 import { IoClose, IoSearch, IoChevronDown } from 'react-icons/io5';

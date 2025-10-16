@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Banner from './Banner';
 import { useData } from '../../contexts/dataContext';
 

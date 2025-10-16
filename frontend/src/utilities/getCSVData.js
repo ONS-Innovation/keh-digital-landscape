@@ -18,6 +18,7 @@ export const fetchCSVFromS3 = async () => {
     const data = await response.json();
     return data;
   } catch (error) {
+    console.error('Error loading CSV data:', error);
     try {
       const response = await fetch('/tech_radar/onsTechData.csv');
       if (!response.ok) {
@@ -35,6 +36,7 @@ export const fetchCSVFromS3 = async () => {
       });
       return data;
     } catch (fallbackError) {
+      console.error('Error loading project data:', fallbackError);
       toast.error('Failed to load project data.');
       return null;
     }

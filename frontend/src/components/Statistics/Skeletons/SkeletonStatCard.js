@@ -1,4 +1,3 @@
-import React from 'react';
 import '../../../styles/components/SkeletonLoading.css';
 
 function SkeletonStatCard({ minWidth = '0' }) {
