@@ -327,7 +327,7 @@ const ProjectModal = ({
     'Miscellaneous',
   ];
 
-  //Keeps all the values so every value will appear
+  // Keeps all the values so every value will appear
   const filterItems = items => {
     const q = searchQuery.trim().toLowerCase();
     return items.filter(key => {
@@ -381,7 +381,7 @@ const ProjectModal = ({
                     <h3>{label}:</h3>
                     {isEmptyValue(value) ? (
                       <p>
-                        <em>No Data Captured</em>
+                        <em>no data captured</em>
                       </p>
                     ) : (
                       <div className="miscellaneous-block">
