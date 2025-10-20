@@ -16,12 +16,14 @@ cd mkdocs
 ## Setup
 
 1. Create a virtual environment (recommended but not required):
+
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
 
 2. Install dependencies:
+
 ```bash
 make setup
 ```
@@ -29,6 +31,7 @@ make setup
 ## Running locally
 
 To run the documentation locally:
+
 ```bash
 make mkdocs
 ```
