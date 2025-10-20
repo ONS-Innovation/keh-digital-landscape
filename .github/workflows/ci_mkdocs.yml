@@ -1,4 +1,4 @@
-name: Linting and Formatting
+name: (MkDocs) - Linting and Formatting
 
 on:
   push:
