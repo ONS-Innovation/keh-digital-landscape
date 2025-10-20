@@ -38,7 +38,7 @@
   z-index: 1001 !important;
 }
 
-.modal-content {
+.bug-modal-content {
   background: hsl(var(--background));
   padding: 20px;
   border-radius: var(--radius);
@@ -80,7 +80,7 @@
   font-size: 20px;
 }
 
-.modal-content p {
+.bug-modal-content p {
   color: hsl(var(--foreground));
   margin: 0;
   margin-bottom: 10px;
