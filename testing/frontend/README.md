@@ -113,22 +113,6 @@ Tests are contained in the testing folder > frontend > tests. Data used in the t
 
 Mocked API returns are being created using Playwright <i>route.fulfill</i> function. This function mocks any of the API calls.
 
-Current existing tests include:
-
-- Search teams functionality
-  - under Copilot > Team Usage > Search Teams
-
-- Tech Radar
-  - Infrastructure (AWS/GCP)
-    - Check that AWS and GCP blips exist
-    - Check projects do exist using AWS and GCP
-    - Check that no projects for another cloud provider - Oracle do not appear in the AWS and GCP blips
-  - Languages
-    - Check that Javascript/TypeScript language exist
-    - Check projects that exist that use Javascript and TypeScript.
-    - Check that Java language exist
-    - Check projects that exist that use Java
-
 Run the following to run the tests:
 
 ```bash
@@ -137,7 +121,7 @@ make test-ui
 
 ## Cleaning
 
-After tests have finished, remove the /reports folder by using:
+After tests have finished, remove the `/reports` and `/test-results` folders by using:
 
 ```bash
 make clean

@@ -922,6 +922,7 @@ const Projects = ({
               return (
                 <div
                   key={index}
+                  id={`project-${project.Project.toLowerCase().replace(/ /g, '-')}`}
                   className="project-item"
                   onClick={() => handleProjectClick(project)}
                 >

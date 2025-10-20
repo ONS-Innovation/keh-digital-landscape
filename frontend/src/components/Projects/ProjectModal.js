@@ -354,7 +354,7 @@ const ProjectModal = ({
       v == null || v === '' || v === 'None' || v === 'N/A' || v === 'none';
 
     return (
-      <div className="project-group">
+      <div id={`group-${title.toLowerCase().replace(/ /g, '-')}`} className="project-group">
         <div
           className="accordion-header"
           onClick={() => toggleAccordionGroup(title)}
@@ -376,6 +376,7 @@ const ProjectModal = ({
                 return (
                   <div
                     key={key}
+                    id={`detail-${title.toLowerCase().replace(/ /g, '-')}-${key.toLowerCase().replace(/[ _]/g, '-')}`}
                     className={`detail-item ${title === 'Repositories' ? 'large-span' : ''}`}
                   >
                     <h3>{label}:</h3>
@@ -411,6 +412,7 @@ const ProjectModal = ({
               return (
                 <div
                   key={key}
+                  id={`detail-${title.toLowerCase().replace(/ /g, '-')}-${key.toLowerCase().replace(/[ _]/g, '-')}`}
                   className={`detail-item ${title === 'Repositories' ? 'large-span' : ''}`}
                   tabIndex={0}
                 >
