@@ -57,3 +57,23 @@ make mkdocs-deploy
 
 This will build the documentation and deploy it to the `gh-pages` branch of the repository.
 The GitHub Pages site will then be updated with the latest changes from the `gh-pages` branch.
+
+## Linting
+
+Install developer dependencies with:
+
+```bash
+make setup-dev
+```
+
+To lint markdown files for style issues:
+
+```bash
+make lint
+```
+
+To automatically fix markdown formatting:
+
+```bash
+make lint-fix
+```
