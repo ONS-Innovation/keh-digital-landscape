@@ -27,13 +27,13 @@ The sidebar includes links to:
 The component maintains its collapse state in localStorage and toggles between expanded and collapsed views. When collapsed, only icons are displayed to maximise screen real estate while maintaining functionality.
 
 ```javascript
-import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import "../../styles/components/Sidebar.css";
-import HelpModal from "../Header/HelpModal";
-import ThemeToggle from "../ThemeToggle/ThemeToggle";
-import { MdOutlineRadar } from "react-icons/md";
-import { IoChevronBack, IoChevronForward } from "react-icons/io5";
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import '../../styles/components/Sidebar.css';
+import HelpModal from '../Header/HelpModal';
+import ThemeToggle from '../ThemeToggle/ThemeToggle';
+import { MdOutlineRadar } from 'react-icons/md';
+import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
 import {
   TbSmartHome,
   TbEditCircle,
@@ -41,19 +41,19 @@ import {
   TbUsers,
   TbChartBar,
   TbHelp,
-} from "react-icons/tb";
-import { VscCopilot } from "react-icons/vsc";
+} from 'react-icons/tb';
+import { VscCopilot } from 'react-icons/vsc';
 
 const Sidebar = () => {
   const location = useLocation();
   const [showHelpModal, setShowHelpModal] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(() => {
-    const saved = localStorage.getItem("sidebarCollapsed");
-    return saved === "true" ? true : false;
+    const saved = localStorage.getItem('sidebarCollapsed');
+    return saved === 'true' ? true : false;
   });
 
   useEffect(() => {
-    localStorage.setItem("sidebarCollapsed", isCollapsed);
+    localStorage.setItem('sidebarCollapsed', isCollapsed);
   }, [isCollapsed]);
 
   // Navigation items definition and rendering

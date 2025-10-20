@@ -11,7 +11,7 @@ The utility exports a primary function:
 ```javascript
 export const fetchCSVFromS3 = async () => {
   // Implementation details
-}
+};
 ```
 
 This function:
@@ -26,19 +26,16 @@ This function:
 The function follows a robust error-handling pattern:
 
 1. **Primary Request**: Attempts to fetch data from the API endpoint
-
-      - Uses `localhost:5001/api/csv` in development
-      - Uses `/api/csv` in production
+   - Uses `localhost:5001/api/csv` in development
+   - Uses `/api/csv` in production
 
 2. **Fallback Mechanism**: If the primary request fails, attempts to load local CSV data
-
-      - Parses the CSV text into a structured object
-      - Displays an error toast notification to inform the user
+   - Parses the CSV text into a structured object
+   - Displays an error toast notification to inform the user
 
 3. **Final Error Handling**: If both primary and fallback requests fail
-
-      - Returns `null` to indicate failure
-      - Displays an error toast notification
+   - Returns `null` to indicate failure
+   - Displays an error toast notification
 
 ## Integration with DataContext
 
@@ -51,29 +48,32 @@ The DataContext uses this utility to:
 Example usage within DataContext:
 
 ```javascript
-const getCsvData = useCallback(async (forceRefresh = false) => {
-  // Check cache first unless forceRefresh is true
-  if (csvData && !forceRefresh) {
-    return csvData;
-  }
+const getCsvData = useCallback(
+  async (forceRefresh = false) => {
+    // Check cache first unless forceRefresh is true
+    if (csvData && !forceRefresh) {
+      return csvData;
+    }
 
-  // Check for pending request
-  if (pendingRequests.csv) {
-    return pendingRequests.csv;
-  }
+    // Check for pending request
+    if (pendingRequests.csv) {
+      return pendingRequests.csv;
+    }
 
-  // Create new request
-  const request = fetchCSVFromS3();
-  pendingRequests.csv = request;
+    // Create new request
+    const request = fetchCSVFromS3();
+    pendingRequests.csv = request;
 
-  try {
-    const data = await request;
-    setCsvData(data);
-    return data;
-  } finally {
-    pendingRequests.csv = null;
-  }
-}, [csvData, pendingRequests]);
+    try {
+      const data = await request;
+      setCsvData(data);
+      return data;
+    } finally {
+      pendingRequests.csv = null;
+    }
+  },
+  [csvData, pendingRequests]
+);
 ```
 
 ## Error Handling

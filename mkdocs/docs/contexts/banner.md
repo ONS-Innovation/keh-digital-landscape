@@ -21,13 +21,9 @@ import { useBanner } from '../contexts/banner';
 
 function MyComponent() {
   // Parameters: message text, unique local storage key
-  useBanner("Welcome to our application! This is an important announcement.", "welcome-banner");
-  
-  return (
-    <div>
-      {/* Your component content */}
-    </div>
-  );
+  useBanner('Welcome to our application! This is an important announcement.', 'welcome-banner');
+
+  return <div>{/* Your component content */}</div>;
 }
 ```
 
@@ -43,7 +39,7 @@ The `useBanner` hook accepts two parameters:
 The banner system works through the following process:
 
 1. **Initial Check**: When a component mounts, the hook checks if the banner has been previously dismissed
-2. **Dismissal Logic**: 
+2. **Dismissal Logic**:
    - If the banner hasn't been dismissed before, it displays immediately
    - If dismissed, it checks when the dismissal occurred
    - If the dismissal was more than 7 days ago, it shows the banner again

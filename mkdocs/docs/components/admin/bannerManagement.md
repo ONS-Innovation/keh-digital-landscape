@@ -20,23 +20,23 @@ Site-wide banners are useful for communicating important information to users, s
 The BannerManage component is implemented with these key elements:
 
 - **State Management**:
-    - Banner properties (title, message, type)
-    - Target pages selection
-    - Existing banners list
-    - Confirmation modals
+  - Banner properties (title, message, type)
+  - Target pages selection
+  - Existing banners list
+  - Confirmation modals
 
 - **Banner Properties**:
-    - Title (optional heading for the banner)
-    - Message (main content of the banner)
-    - Type (info, warning, or error)
-    - Target pages (where the banner will appear)
-    - Visibility status (active or hidden)
+  - Title (optional heading for the banner)
+  - Message (main content of the banner)
+  - Type (info, warning, or error)
+  - Target pages (where the banner will appear)
+  - Visibility status (active or hidden)
 
 - **API Integration**:
-    - Fetches existing banners from backend API
-    - Saves new banners to backend storage
-    - Updates banner visibility status
-    - Deletes banners from the system
+  - Fetches existing banners from backend API
+  - Saves new banners to backend storage
+  - Updates banner visibility status
+  - Deletes banners from the system
 
 ## Usage
 
@@ -77,4 +77,4 @@ The banner management system integrates with the frontend application through th
 2. **Admin API**: Handles banner CRUD operations
 3. **Banner Utilities**: Provides functions for fetching and managing banners
 
-This integration ensures that administrators can easily communicate with users across the application without requiring code changes or deployments. 
+This integration ensures that administrators can easily communicate with users across the application without requiring code changes or deployments.

@@ -11,7 +11,7 @@ The utility exports a primary function:
 ```javascript
 export const fetchTechRadarJSONFromS3 = async () => {
   // Implementation details
-}
+};
 ```
 
 This function:
@@ -26,22 +26,19 @@ This function:
 The function follows a straightforward request pattern:
 
 1. **Environment-Specific URL**: Determines the correct API endpoint
-
-      - Uses `localhost:5001/api/tech-radar/json` in development
-      - Uses `/api/tech-radar/json` in production
+   - Uses `localhost:5001/api/tech-radar/json` in development
+   - Uses `/api/tech-radar/json` in production
 
 2. **Request Execution**: Fetches data from the determined endpoint
-
-      - Validates response status
-      - Returns `null` for unsuccessful responses
+   - Validates response status
+   - Returns `null` for unsuccessful responses
 
 3. **Response Parsing**: Converts the JSON response to a JavaScript object
 
 4. **Error Handling**: Manages request failures
-
-      - Catches and logs network errors
-      - Displays error toast notification
-      - Returns `null` to indicate failure
+   - Catches and logs network errors
+   - Displays error toast notification
+   - Returns `null` to indicate failure
 
 ## Integration with DataContext
 
@@ -54,29 +51,32 @@ The DataContext uses this utility to:
 Example usage within DataContext:
 
 ```javascript
-const getTechRadarData = useCallback(async (forceRefresh = false) => {
-  // Check cache first unless forceRefresh is true
-  if (techRadarData && !forceRefresh) {
-    return techRadarData;
-  }
+const getTechRadarData = useCallback(
+  async (forceRefresh = false) => {
+    // Check cache first unless forceRefresh is true
+    if (techRadarData && !forceRefresh) {
+      return techRadarData;
+    }
 
-  // Check for pending request
-  if (pendingRequests.techRadar) {
-    return pendingRequests.techRadar;
-  }
+    // Check for pending request
+    if (pendingRequests.techRadar) {
+      return pendingRequests.techRadar;
+    }
 
-  // Create new request
-  const request = fetchTechRadarJSONFromS3();
-  pendingRequests.techRadar = request;
+    // Create new request
+    const request = fetchTechRadarJSONFromS3();
+    pendingRequests.techRadar = request;
 
-  try {
-    const data = await request;
-    setTechRadarData(data);
-    return data;
-  } finally {
-    pendingRequests.techRadar = null;
-  }
-}, [techRadarData, pendingRequests]);
+    try {
+      const data = await request;
+      setTechRadarData(data);
+      return data;
+    } finally {
+      pendingRequests.techRadar = null;
+    }
+  },
+  [techRadarData, pendingRequests]
+);
 ```
 
 ## Error Handling
@@ -86,7 +86,6 @@ The utility implements error handling:
 - Catches and logs network errors
 - Provides user feedback via toast notifications
 - Returns `null` when data is unavailable
-
 
 ## Usage in Components
 

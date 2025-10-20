@@ -12,7 +12,7 @@ The utility exports a primary hook:
 export const useTechnologyStatus = () => {
   // Implementation details
   return getTechnologyStatus;
-}
+};
 ```
 
 This hook:
@@ -29,77 +29,70 @@ The `useTechnologyStatus` hook returns a function with the following signature:
 ```javascript
 const getTechnologyStatus = (tech) => {
   // Implementation details
-}
+};
 ```
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `tech` | string | The technology name to check status for |
-| Returns | string\|null\|Promise | The status string ("adopt", "trial", "assess", "hold"), null if not found, or a Promise that resolves to status/null |
+| Parameter | Type                  | Description                                                                                                          |
+| --------- | --------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `tech`    | string                | The technology name to check status for                                                                              |
+| Returns   | string\|null\|Promise | The status string ("adopt", "trial", "assess", "hold"), null if not found, or a Promise that resolves to status/null |
 
 ## Implementation Details
 
 The implementation follows a flexible, performance-optimised approach:
 
 1. **Context Integration**: Uses React's Context API via the DataContext
-
-    - Accesses cached radar data for immediate response when available
-    - Automatically retrieves radar data when needed
+   - Accesses cached radar data for immediate response when available
+   - Automatically retrieves radar data when needed
 
 2. **Synchronous Operation**: Returns immediate results when data is available
-
-    - Allows for direct usage in render functions without async handling
-    - Prevents unnecessary re-renders
+   - Allows for direct usage in render functions without async handling
+   - Prevents unnecessary re-renders
 
 3. **Asynchronous Fallback**: Returns a Promise when data needs to be fetched
-
-    - Transparently handles data loading when necessary
-    - Maintains API consistency regardless of data availability state
+   - Transparently handles data loading when necessary
+   - Maintains API consistency regardless of data availability state
 
 4. **Status Determination Logic**: Identifies the current status of a technology
-
-    - Finds the technology in radar entries by case-insensitive matching
-    - Retrieves the most recent timeline entry for status
-    - Filters out technologies with "review" or "ignore" status 
-    - Returns a normalised lowercase status for consistent usage
+   - Finds the technology in radar entries by case-insensitive matching
+   - Retrieves the most recent timeline entry for status
+   - Filters out technologies with "review" or "ignore" status
+   - Returns a normalised lowercase status for consistent usage
 
 ## Usage in Components
 
 The hook is designed for flexible usage within components:
 
 RadarPage:
+
 ```javascript
+/**
+ * renderTechnologyList function to render the technology list.
+ *
+ * @param {string} technologies - The technologies to render.
+ * @returns {JSX.Element|null} - The rendered technology list or null if not found.
+ */
+const renderTechnologyList = (technologies) => {
+  if (!technologies) return null;
 
-  /**
-   * renderTechnologyList function to render the technology list.
-   *
-   * @param {string} technologies - The technologies to render.
-   * @returns {JSX.Element|null} - The rendered technology list or null if not found.
-   */
-  const renderTechnologyList = (technologies) => {
-    if (!technologies) return null;
+  return technologies.split(';').map((tech, index) => {
+    const trimmedTech = tech.trim();
+    const status = getTechnologyStatus(trimmedTech);
 
-    return technologies.split(";").map((tech, index) => {
-      const trimmedTech = tech.trim();
-      const status = getTechnologyStatus(trimmedTech);
-
-      return (
-        <span key={index}>
-          {index > 0 && "; "}
-          {status ? (
-            <span
-              className={`clickable-tech ${status}`}
-              onClick={() => handleTechClick(trimmedTech)}
-            >
-              {trimmedTech}
-            </span>
-          ) : (
-            trimmedTech
-          )}
-        </span>
-      );
-    });
-  };
+    return (
+      <span key={index}>
+        {index > 0 && '; '}
+        {status ? (
+          <span className={`clickable-tech ${status}`} onClick={() => handleTechClick(trimmedTech)}>
+            {trimmedTech}
+          </span>
+        ) : (
+          trimmedTech
+        )}
+      </span>
+    );
+  });
+};
 ```
 
 ## Integration with RadarPage and ProjectsPage

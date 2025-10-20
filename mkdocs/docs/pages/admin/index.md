@@ -9,18 +9,21 @@ The Admin Dashboard allows authorised users to manage system-wide settings and m
 ## Features
 
 ### Banner Management
+
 - Create, toggle, and delete site-wide notification banners
 - Configure banner properties (title, message, type)
-- Select target pages for each banner 
+- Select target pages for each banner
 - Preview banner appearance before deployment
 
 ### Technology Reference Management
+
 - View categorised technology reference lists
 - Add, edit, and remove technologies in each category
 - Alphabetical and length-based sorting options
 - Import and normalise technologies from project data
 
 ### Technology Audit Tool
+
 - Detect untracked technologies used in projects
 - Identify similar technologies with configurable similarity threshold
 - Merge or normalise technology names to ensure consistency
@@ -29,6 +32,7 @@ The Admin Dashboard allows authorised users to manage system-wide settings and m
 ## Usage
 
 ### Managing Banners
+
 1. Enter banner title and message
 2. Select banner type (info, warning, or error)
 3. Choose target pages for the banner to appear
@@ -36,6 +40,7 @@ The Admin Dashboard allows authorised users to manage system-wide settings and m
 5. Toggle banner visibility or delete as needed
 
 ### Technology Reference Lists
+
 1. Select a category to view or edit its technologies
 2. Add new technologies with the "Add Technology" button
 3. Edit or remove existing technologies as needed
@@ -43,6 +48,7 @@ The Admin Dashboard allows authorised users to manage system-wide settings and m
 5. Save changes to persist modifications
 
 ### Normalising Technologies
+
 1. In the "Untracked Technologies" section, locate inconsistent technology names
 2. Click the normalise button for a technology
 3. Select the canonical version or enter a custom name
@@ -50,6 +56,7 @@ The Admin Dashboard allows authorised users to manage system-wide settings and m
 5. Apply normalisation to update all project references
 
 ### Technology Similarity Detection
+
 1. Adjust the similarity threshold slider as needed
 2. Review potential matches in the untracked technologies list
 3. Click on the match count to view similar technologies

@@ -6,9 +6,9 @@ The HelpModal component provides contextual help and guidance for users when vie
 
 The HelpModal component accepts the following props:
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `show` | boolean | Required | Controls the visibility of the modal |
+| Prop      | Type     | Default  | Description                                      |
+| --------- | -------- | -------- | ------------------------------------------------ |
+| `show`    | boolean  | Required | Controls the visibility of the modal             |
 | `onClose` | function | Required | Handler function called when the modal is closed |
 
 ## Usage
@@ -18,17 +18,12 @@ import HelpModal from '../components/Header/HelpModal';
 
 function SidebarComponent() {
   const [showHelp, setShowHelp] = useState(false);
-  
+
   return (
     <div className="sidebar">
-      <button onClick={() => setShowHelp(true)}>
-        Help
-      </button>
-      
-      <HelpModal 
-        show={showHelp}
-        onClose={() => setShowHelp(false)}
-      />
+      <button onClick={() => setShowHelp(true)}>Help</button>
+
+      <HelpModal show={showHelp} onClose={() => setShowHelp(false)} />
     </div>
   );
 }
