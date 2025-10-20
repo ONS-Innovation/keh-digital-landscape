@@ -1,2 +1,0 @@
-mdformat==0.7.17
-mdformat-gfm==0.3.6

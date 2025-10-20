@@ -4,7 +4,7 @@ setup:
 
 .PHONY: setup-dev
 setup-dev:
-	python3 -m pip install -r mdformat_requirements.txt
+	npm install
 
 .PHONY: mkdocs
 mkdocs:  ## Run mkdocs.
@@ -20,11 +20,11 @@ mkdocs-deploy:  ## Deploy mkdocs to GitHub Pages.
 
 .PHONY: lint
 lint:  ## Lint markdown files.
-	mdformat --check docs/
+	npx prettier --check docs/
 
 .PHONY: lint-fix
 lint-fix:  ## Fix markdown formatting.
-	mdformat docs/
+	npx prettier --write docs/
 
 .PHONY: clean
 clean:
@@ -33,3 +33,4 @@ clean:
 	rm -rf .pytest_cache
 	rm -rf .ruff_cache
 	rm -rf venv
+	rm -rf node_modules
