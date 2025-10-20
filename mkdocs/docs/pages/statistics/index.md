@@ -41,3 +41,10 @@ The Statistics section provides detailed analytics and insights into repository 
 - Click on a language card that has a colour other than grey and it will take you to the /radar page with the info box filled with the language details
 
 - Use the search bar to search for a language (CMD + K or CTRL + K)
+
+## Technology Grouping
+
+Some languages are grouped together on the Tech Radar for consistency:
+
+- **Javascript/Typescript**: Clicking on either "Javascript" or "Typescript" language cards will navigate to the "Javascript/Typescript" entry on the radar page
+- Other special matchers may apply similarly based on Tech Radar configuration
