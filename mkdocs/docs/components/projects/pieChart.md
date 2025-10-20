@@ -18,19 +18,19 @@ The PieChart component provides a visual representation of project data categori
 
 The PieChart component accepts the following props:
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `projectsData` | array | Required | Array of project objects containing project details |
-| `title` | string | Required | The title to display above the chart |
-| `categoryField` | string | Required | The field name to use for categorisation |
-| `categories` | array | `[]` | Predefined categories to display in the chart |
-| `categoryLabels` | object | `{}` | Mapping of category values to display labels |
-| `categoryColours` | object | `{}` | Mapping of category values to colour codes |
-| `getCategoryValue` | function | `(project, field) => project[field] \|\| "Unknown"` | Function to extract category value from a project |
-| `splitSemicolon` | boolean | `false` | Whether to split the category field by semicolon |
-| `dynamicCategories` | boolean | `false` | Whether to dynamically detect categories from the data |
-| `maxCategories` | number | `8` | Maximum number of categories to display before grouping as "Other" |
-| `cloudProvidersOnly` | boolean | `false` | Whether to specifically identify major cloud providers |
+| Prop                 | Type     | Default                                             | Description                                                        |
+| -------------------- | -------- | --------------------------------------------------- | ------------------------------------------------------------------ |
+| `projectsData`       | array    | Required                                            | Array of project objects containing project details                |
+| `title`              | string   | Required                                            | The title to display above the chart                               |
+| `categoryField`      | string   | Required                                            | The field name to use for categorisation                           |
+| `categories`         | array    | `[]`                                                | Predefined categories to display in the chart                      |
+| `categoryLabels`     | object   | `{}`                                                | Mapping of category values to display labels                       |
+| `categoryColours`    | object   | `{}`                                                | Mapping of category values to colour codes                         |
+| `getCategoryValue`   | function | `(project, field) => project[field] \|\| "Unknown"` | Function to extract category value from a project                  |
+| `splitSemicolon`     | boolean  | `false`                                             | Whether to split the category field by semicolon                   |
+| `dynamicCategories`  | boolean  | `false`                                             | Whether to dynamically detect categories from the data             |
+| `maxCategories`      | number   | `8`                                                 | Maximum number of categories to display before grouping as "Other" |
+| `cloudProvidersOnly` | boolean  | `false`                                             | Whether to specifically identify major cloud providers             |
 
 ## Usage
 
@@ -88,32 +88,35 @@ function ProjectsOverview() {
 The PieChart component can work with categories in several ways:
 
 ### Predefined Categories
+
 When specific `categories` are provided, the component counts projects matching each category and displays them accordingly.
 
 ### Dynamic Category Detection
+
 When `dynamicCategories` is enabled, the component:
 
 1. Analyses the project data to identify unique values
-2. Counts frequency of each value across all projects
-3. Selects the most common categories up to `maxCategories`
-4. Groups remaining values as "Other" when exceeding the maximum
+1. Counts frequency of each value across all projects
+1. Selects the most common categories up to `maxCategories`
+1. Groups remaining values as "Other" when exceeding the maximum
 
 ### Cloud Provider Detection
+
 When `cloudProvidersOnly` is enabled, the component:
 
 1. Specifically identifies major cloud providers (AWS, GCP, Azure)
-2. Matches technologies against predefined provider-specific keywords from [projectConstants](../../constants/projectConstants.md)
-3. Categorises unmatched technologies as "Other"
-4. Presents the distribution of cloud provider usage across projects
+1. Matches technologies against predefined provider-specific keywords from [projectConstants](../../constants/projectConstants.md)
+1. Categorises unmatched technologies as "Other"
+1. Presents the distribution of cloud provider usage across projects
 
 ## Multi-Value Field Handling
 
 When `splitSemicolon` is enabled, the component:
 
 1. Splits the specified `categoryField` by semicolons
-2. Treats each value as a separate instance
-3. Counts occurrences of each value across all projects
-4. Shows the distribution of values rather than projects
+1. Treats each value as a separate instance
+1. Counts occurrences of each value across all projects
+1. Shows the distribution of values rather than projects
 
 ## Visual Customisation
 

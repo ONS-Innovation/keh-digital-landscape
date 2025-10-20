@@ -162,6 +162,7 @@ The service provides comprehensive error handling:
 The service requires the following environment variables:
 
 ### Required (Production)
+
 ```bash
 ALB_ARN=arn:aws:elasticloadbalancing:region:account:loadbalancer/app/name
 AWS_REGION=eu-west-2
@@ -170,6 +171,7 @@ COGNITO_USER_POOL_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 ### Optional (Development)
+
 ```bash
 NODE_ENV=development
 DEV_USER_GROUPS=admin,reviewer
@@ -251,16 +253,19 @@ module.exports = router;
 ### Common Issues
 
 1. **401 Unauthorised Errors**
+
    - Check ALB configuration and token headers
    - Verify Cognito User Pool and Client ID configuration
    - Ensure tokens are properly forwarded by ALB
 
-2. **403 Forbidden Errors**
+1. **403 Forbidden Errors**
+
    - Verify user is assigned to correct Cognito groups
    - Check group names match service expectations
    - Confirm user has authenticated successfully
 
-3. **Development Mode Issues**
+1. **Development Mode Issues**
+
    - Ensure `NODE_ENV=development` is set
    - Check `DEV_USER_GROUPS` environment variable
    - Verify development user creation
@@ -274,6 +279,7 @@ LOG_LEVEL=debug
 ```
 
 This will provide detailed information about:
+
 - Token verification attempts
 - Group membership checks
 - Authentication bypass events

@@ -16,12 +16,12 @@ const customFetch = async (url, options) => {
 
 This function:
 
-1.  Constructs the full API endpoint URL, prepending a backend URL if available.
-2.  Executes the `fetch` request with the given URL and options.
-3.  Checks for `response.ok` to determine if the request was successful.
-4.  If the response is not OK, it attempts to parse error data from the response.
-5.  Displays a custom `ErrorToast` notification with a descriptive error message.
-6.  Re-throws the error to allow calling functions to handle it further if necessary.
+1. Constructs the full API endpoint URL, prepending a backend URL if available.
+1. Executes the `fetch` request with the given URL and options.
+1. Checks for `response.ok` to determine if the request was successful.
+1. If the response is not OK, it attempts to parse error data from the response.
+1. Displays a custom `ErrorToast` notification with a descriptive error message.
+1. Re-throws the error to allow calling functions to handle it further if necessary.
 
 ## Implementation Details
 

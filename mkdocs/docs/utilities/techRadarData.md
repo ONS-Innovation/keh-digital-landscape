@@ -17,9 +17,9 @@ export const fetchTechRadarJSONFromS3 = async () => {
 This function:
 
 1. Fetches Tech Radar data from the API endpoint
-2. Handles environment-specific URLs (development vs production)
-3. Implements error handling with user feedback
-4. Returns structured Tech Radar data for consumption by the DataContext
+1. Handles environment-specific URLs (development vs production)
+1. Implements error handling with user feedback
+1. Returns structured Tech Radar data for consumption by the DataContext
 
 ## Implementation Details
 
@@ -27,29 +27,29 @@ The function follows a straightforward request pattern:
 
 1. **Environment-Specific URL**: Determines the correct API endpoint
 
-      - Uses `localhost:5001/api/tech-radar/json` in development
-      - Uses `/api/tech-radar/json` in production
+   - Uses `localhost:5001/api/tech-radar/json` in development
+   - Uses `/api/tech-radar/json` in production
 
-2. **Request Execution**: Fetches data from the determined endpoint
+1. **Request Execution**: Fetches data from the determined endpoint
 
-      - Validates response status
-      - Returns `null` for unsuccessful responses
+   - Validates response status
+   - Returns `null` for unsuccessful responses
 
-3. **Response Parsing**: Converts the JSON response to a JavaScript object
+1. **Response Parsing**: Converts the JSON response to a JavaScript object
 
-4. **Error Handling**: Manages request failures
+1. **Error Handling**: Manages request failures
 
-      - Catches and logs network errors
-      - Displays error toast notification
-      - Returns `null` to indicate failure
+   - Catches and logs network errors
+   - Displays error toast notification
+   - Returns `null` to indicate failure
 
 ## Integration with DataContext
 
 The DataContext uses this utility to:
 
 1. Fetch Tech Radar data on initial application load
-2. Refresh Tech Radar data when requested by the user
-3. Cache the returned data to minimize redundant API calls
+1. Refresh Tech Radar data when requested by the user
+1. Cache the returned data to minimize redundant API calls
 
 Example usage within DataContext:
 
@@ -87,13 +87,12 @@ The utility implements error handling:
 - Provides user feedback via toast notifications
 - Returns `null` when data is unavailable
 
-
 ## Usage in Components
 
 The Tech Radar data is used throughout the application to:
 
 1. Build the radar visualisation
-2. Display technology status in the Statistics view
-3. Highlight technologies in project listings
-4. Provide filtering options based on technology status
-5. Show historical movement of technologies between rings
+1. Display technology status in the Statistics view
+1. Highlight technologies in project listings
+1. Provide filtering options based on technology status
+1. Show historical movement of technologies between rings

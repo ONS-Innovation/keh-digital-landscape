@@ -36,19 +36,19 @@ function MyComponent() {
 The `useBanner` hook accepts two parameters:
 
 1. **message** (string): The text content to display in the banner
-2. **localStorageKey** (string): A unique identifier used to store dismissal information in the browser's local storage
+1. **localStorageKey** (string): A unique identifier used to store dismissal information in the browser's local storage
 
 ## Implementation Details
 
 The banner system works through the following process:
 
 1. **Initial Check**: When a component mounts, the hook checks if the banner has been previously dismissed
-2. **Dismissal Logic**: 
+1. **Dismissal Logic**:
    - If the banner hasn't been dismissed before, it displays immediately
    - If dismissed, it checks when the dismissal occurred
    - If the dismissal was more than 7 days ago, it shows the banner again
-3. **User Interaction**: When a user dismisses the banner, the current timestamp is stored in local storage
-4. **Visual Presentation**: The banner appears as a toast notification in the bottom-right corner of the screen with an "Info" header and a checkmark button for dismissal
+1. **User Interaction**: When a user dismisses the banner, the current timestamp is stored in local storage
+1. **Visual Presentation**: The banner appears as a toast notification in the bottom-right corner of the screen with an "Info" header and a checkmark button for dismissal
 
 ## Styling
 

@@ -5,6 +5,7 @@ The S3 Service provides a centralised interface for all Amazon S3 operations wit
 ## Overview
 
 The service manages three different S3 buckets:
+
 - **Main bucket** - Primary application data storage
 - **TAT bucket** - Technology Assessment Tool data
 - **Copilot bucket** - GitHub Copilot metrics and data
@@ -26,12 +27,14 @@ const copilotBucket = process.env.S3_BUCKET_NAME_COPILOT;
 Retrieves an object from the specified S3 bucket.
 
 **Parameters:**
+
 - `bucket` (string) - The S3 bucket name
 - `key` (string) - The object key/path
 
 **Returns:** Promise resolving to the object data
 
 **Example:**
+
 ```javascript
 const s3Service = require('./s3Service');
 const data = await s3Service.getObject('my-bucket', 'data/file.json');
@@ -42,6 +45,7 @@ const data = await s3Service.getObject('my-bucket', 'data/file.json');
 Stores an object in the specified S3 bucket.
 
 **Parameters:**
+
 - `bucket` (string) - The S3 bucket name
 - `key` (string) - The object key/path
 - `body` (any) - The object data to store
@@ -50,6 +54,7 @@ Stores an object in the specified S3 bucket.
 **Returns:** Promise resolving to the put operation result
 
 **Example:**
+
 ```javascript
 const result = await s3Service.putObject(
   'my-bucket', 
@@ -63,6 +68,7 @@ const result = await s3Service.putObject(
 Generates a presigned URL for accessing an S3 object.
 
 **Parameters:**
+
 - `bucket` (string) - The S3 bucket name
 - `key` (string) - The object key/path
 - `expiresIn` (number, optional) - URL expiration time in seconds (default: 3600)
@@ -70,6 +76,7 @@ Generates a presigned URL for accessing an S3 object.
 **Returns:** Promise resolving to the signed URL
 
 **Example:**
+
 ```javascript
 const signedUrl = await s3Service.getObjectViaSignedUrl(
   'my-bucket', 
@@ -81,12 +88,15 @@ const signedUrl = await s3Service.getObjectViaSignedUrl(
 ## Bucket Configuration Methods
 
 ### `getMainBucket()`
+
 Returns the main application bucket name.
 
 ### `getTatBucket()`
+
 Returns the TAT (Technology Assessment Tool) bucket name.
 
 ### `getCopilotBucket()`
+
 Returns the Copilot metrics bucket name.
 
 ## Error Handling
@@ -131,4 +141,4 @@ try {
 - Uses singleton pattern to maintain single S3 client instances
 - Automatically stringifies JSON data for storage
 - Provides consistent error logging across all operations
-- Supports multiple bucket configurations for different data types 
+- Supports multiple bucket configurations for different data types

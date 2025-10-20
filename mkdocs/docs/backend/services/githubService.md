@@ -5,6 +5,7 @@ The GitHub Service provides centralised functionality for interacting with the G
 ## Overview
 
 The service specialises in GitHub Copilot data retrieval:
+
 - Organisation-level Copilot metrics
 - Seat information and assignment data
 - Automatic pagination handling
@@ -13,6 +14,7 @@ The service specialises in GitHub Copilot data retrieval:
 ## Dependencies
 
 The service relies on:
+
 - GitHub App authentication (via `getAppAndInstallation` utility)
 - Application logging system
 - Environment variables for organisation configuration
@@ -30,6 +32,7 @@ Retrieves comprehensive GitHub Copilot metrics for the organisation.
 More information on the response structure can be found [here](https://docs.github.com/en/rest/copilot/copilot-metrics?apiVersion=2022-11-28#get-copilot-metrics-for-an-organization).
 
 **Example:**
+
 ```javascript
 const githubService = require('./githubService');
 
@@ -42,6 +45,7 @@ try {
 ```
 
 ### `getCopilotTeamMetrics(teamSlug)`
+
 Retrieves GitHub Copilot metrics for a team in the organisation.
 
 **Returns:** Promise resolving to Copilot metrics object
@@ -51,6 +55,7 @@ Retrieves GitHub Copilot metrics for a team in the organisation.
 More information on the response structure can be found [here](https://docs.github.com/en/rest/copilot/copilot-metrics?apiVersion=2022-11-28#get-copilot-metrics-for-a-team).
 
 **Example:**
+
 ```javascript
 const githubService = require('./githubService');
 const teamSlug = req.query.teamSlug;
@@ -64,6 +69,7 @@ try {
 ```
 
 ### `getTeamMembers(teamSlug)`
+
 Retrieves members of a specific team.
 
 **Returns:** Promise resolving to an array of team members with login, name, and url
@@ -73,6 +79,7 @@ Retrieves members of a specific team.
 More information on the response structure can be found [here](https://docs.github.com/en/rest/teams/members?apiVersion=2022-11-28#list-team-members).
 
 **Example:**
+
 ```javascript
 const githubService = require('./githubService');
 const teamSlug = req.query.teamSlug;
@@ -86,6 +93,7 @@ try {
 ```
 
 ### `getUserTeams(userToken)`
+
 Retrieves teams the authenticated user is a member of in the organisation.
 
 **Returns:** Promise resolving to an array of teams
@@ -95,6 +103,7 @@ Retrieves teams the authenticated user is a member of in the organisation.
 More information on the response structure can be found [here](https://docs.github.com/en/rest/teams/teams?apiVersion=2022-11-28#list-teams-for-the-authenticated-user).
 
 **Example:**
+
 ```javascript
 const githubService = require('./githubService');
 
@@ -136,11 +145,13 @@ More information on the response structure can be found [here](https://docs.gith
 ```
 
 **Features:**
+
 - Automatic pagination handling for large organisations
 - Complete seat information including activity data
 - User assignee details
 
 **Example:**
+
 ```javascript
 const seats = await githubService.getCopilotSeats();
 console.log(`Retrieved ${seats.length} Copilot seats`);
@@ -157,9 +168,9 @@ console.log(`${recentlyActive.length} seats active in the last 7 days`);
 The service uses GitHub App authentication:
 
 1. Retrieves GitHub App credentials from AWS Secrets Manager
-2. Authenticates using the App ID and private key
-3. Gets installation access for the configured organisation
-4. Uses installation-scoped Octokit instance for API calls
+1. Authenticates using the App ID and private key
+1. Gets installation access for the configured organisation
+1. Uses installation-scoped Octokit instance for API calls
 
 ## Pagination Handling
 
@@ -209,6 +220,7 @@ Required environment variables:
 ## Usage Examples
 
 ### Retrieve Current Metrics
+
 ```javascript
 const githubService = require('../services/githubService');
 
@@ -231,6 +243,7 @@ async function getCopilotSummary() {
 ```
 
 ### Monitor Seat Activity
+
 ```javascript
 async function getInactiveSeats(daysThreshold = 30) {
   const seats = await githubService.getCopilotSeats();
@@ -254,4 +267,4 @@ async function getInactiveSeats(daysThreshold = 30) {
 - Implements automatic pagination for scalability
 - Provides comprehensive error logging
 - Designed for organisation-level Copilot management
-- Supports monitoring and analytics use cases 
+- Supports monitoring and analytics use cases

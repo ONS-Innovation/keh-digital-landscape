@@ -16,11 +16,13 @@ The backend tests are implemented in the `testing/backend/` directory using the 
 ### Base Configuration
 
 All tests use a common base URL configuration:
+
 ```python
 BASE_URL = "http://localhost:5001"
 ```
 
 ### Running Tests
+
 ```bash
 # Navigate to the testing directory
 cd testing/backend
@@ -201,11 +203,13 @@ Tests deleting banner messages:
 Tests validation of banner deletion requests:
 
 ::: testing.backend.src.test_admin.test_admin_banner_delete_invalid
+
 ### Copilot API Tests
 
 These tests are located in `test_copilot.py` and verify the GitHub Copilot API endpoints.
 
 #### Authentication Tests
+
 Tests authentication handling for the API:
 
 ::: testing.backend.src.test_copilot.test_auth_status_no_token
@@ -213,16 +217,19 @@ Tests authentication handling for the API:
 ::: testing.backend.src.test_copilot.test_auth_status_with_token
 
 #### Live Organisation Data Retrieval
+
 Tests retrieving live Copilot organisation usage data:
 
 ::: testing.backend.src.test_copilot.test_org_live_get
 
 This test verifies:
+
 - Successful retrieval of organisation-wide Copilot usage metrics
 - Response structure contains date, active users, engaged users and IDE metrics
 - All data fields have correct types
 
 #### Live Team Data Retrieval
+
 Tests retrieving live Copilot team usage data:
 
 ::: testing.backend.src.test_copilot.test_team_live_get_no_auth
@@ -236,6 +243,7 @@ Tests retrieving live Copilot team usage data:
 ::: testing.backend.src.test_copilot.test_team_live_get_missing_slug
 
 These tests verify:
+
 - Authentication is required for team data access
 - Invalid tokens are handled appropriately
 - Successful retrieval of team-specific usage metrics
@@ -243,26 +251,31 @@ These tests verify:
 - Validation of required parameters
 
 #### Historic Organisation Data Retrieval
+
 Tests retrieving historic Copilot organisation usage data:
 
 ::: testing.backend.src.test_copilot.test_org_historic_get
 
 This test verifies:
+
 - Successful retrieval of historical organisation-wide metrics
 - Response structure matches live data format
 - All data fields have correct types
 
 #### Organisation Seat Data Retrieval
+
 Tests retrieving Copilot seat data for the organisation:
 
 ::: testing.backend.src.test_copilot.test_seats_get
 
 This test verifies:
+
 - Successful retrieval of organisation-wide seat allocation
 - Response contains creation dates, assignees and activity timestamps
 - All data fields have correct types
 
 #### Team Seat Data Retrieval
+
 Tests retrieving Copilot seat data for teams:
 
 ::: testing.backend.src.test_copilot.test_team_seats_get_no_auth
@@ -274,12 +287,14 @@ Tests retrieving Copilot seat data for teams:
 ::: testing.backend.src.test_copilot.test_team_seats_get_missing_slug
 
 These tests verify:
+
 - Authentication is required for team seat data access
 - Successful retrieval of team-specific seat allocation
 - Error handling for invalid team slugs
 - Validation of required parameters
 
 #### Team Listing
+
 Tests retrieving available teams:
 
 ::: testing.backend.src.test_copilot.test_teams_get_no_auth
@@ -287,6 +302,7 @@ Tests retrieving available teams:
 ::: testing.backend.src.test_copilot.test_teams_get_with_auth
 
 These tests verify:
+
 - Authentication is required for team listing
 - Successful retrieval of available teams
 - Response contains team slugs, names and URLs
@@ -298,6 +314,7 @@ Tests the banner message endpoints for retrieving active and all banners:
 ::: testing.backend.src.test_main.test_banner_endpoints
 
 The banner endpoint tests verify:
+
 - Active banners are correctly filtered in the /api/banners endpoint
 - All banners (active and inactive) are returned by /api/banners/all
 - Missing messages.json is handled gracefully
@@ -317,6 +334,7 @@ Tests retrieving all banner messages from the admin endpoint:
 ::: testing.backend.src.test_admin.test_admin_banner_get
 
 This test validates that:
+
 - The endpoint correctly returns banner messages from the S3 bucket
 - The response has a valid structure with a "messages" array
 - The response can be successfully parsed by the admin UI
@@ -328,6 +346,7 @@ Tests creating a new banner with complete and valid data:
 ::: testing.backend.src.test_admin.test_admin_banner_update
 
 This test verifies:
+
 - Creating a banner with title, message, type, and target pages
 - The appropriate success response is returned
 - The newly created banner can be retrieved in a subsequent GET request
@@ -339,6 +358,7 @@ Tests validation of banner creation requests with invalid data:
 ::: testing.backend.src.test_admin.test_admin_banner_update_invalid
 
 This test checks error handling for:
+
 - Missing required message field
 - Empty target pages array
 - Malformed banner structure in the request
@@ -350,6 +370,7 @@ Tests toggling the visibility status of an existing banner:
 ::: testing.backend.src.test_admin.test_admin_banner_toggle
 
 This test ensures:
+
 - A test banner can be created for toggling
 - The visibility can be toggled from true to false
 - The updated banner visibility is correctly stored
@@ -362,6 +383,7 @@ Tests validation of banner visibility toggle requests with invalid data:
 ::: testing.backend.src.test_admin.test_admin_banner_toggle_invalid
 
 This test validates error handling for:
+
 - Non-numeric index values
 - Missing index parameter
 - Out-of-range index values
@@ -373,6 +395,7 @@ Tests deleting an existing banner:
 ::: testing.backend.src.test_admin.test_admin_banner_delete
 
 This test verifies:
+
 - A test banner can be created for deletion
 - The banner can be successfully deleted
 - The deleted banner is no longer returned in subsequent GET requests
@@ -384,6 +407,7 @@ Tests validation of banner deletion requests with invalid parameters:
 ::: testing.backend.src.test_admin.test_admin_banner_delete_invalid
 
 This test checks error handling for:
+
 - Non-numeric index values
 - Missing index parameter
 - Out-of-range index values
@@ -397,6 +421,7 @@ Tests retrieval of the technology reference lists:
 ::: testing.backend.src.test_admin.test_admin_get_array_data
 
 This test verifies:
+
 - The endpoint returns JSON data with technology references
 - The response has a valid structure as a dictionary
 
@@ -407,6 +432,7 @@ Tests updating a single category in the technology reference lists:
 ::: testing.backend.src.test_admin.test_admin_update_array_data_single_category
 
 This test ensures:
+
 - A single category can be updated without affecting others
 - The response includes a specific success message for single category update
 - The updated data can be retrieved in a subsequent GET request
@@ -418,6 +444,7 @@ Tests updating all categories in the technology reference lists simultaneously:
 ::: testing.backend.src.test_admin.test_admin_update_array_data_all_categories
 
 This test validates:
+
 - The entire technology reference data structure can be replaced
 - The response includes a specific success message for all categories update
 - The updated data structure can be retrieved in a subsequent GET request
@@ -429,6 +456,7 @@ Tests validation of technology reference list updates with invalid data:
 ::: testing.backend.src.test_admin.test_admin_update_array_data_invalid
 
 This test checks error handling for:
+
 - Updating all categories with non-object data
 - Single category update without specifying a category
 - Single category update with missing items array
@@ -449,6 +477,7 @@ Tests normalising technology names across projects:
 ::: testing.backend.src.test_admin.test_admin_normalise_technology_positive
 
 This test ensures:
+
 - Technology names can be normalised from one form to another
 - The response includes a count of updated projects
 - The system handles normalisation of non-existent technologies gracefully
@@ -460,6 +489,7 @@ Tests validation of technology normalisation requests with invalid data:
 ::: testing.backend.src.test_admin.test_admin_normalise_technology_invalid
 
 This test checks error handling for:
+
 - Missing "from" parameter
 - Missing "to" parameter
 - Missing both parameters
@@ -483,16 +513,16 @@ Tests the server's handling of invalid parameter values:
 The backend tests follow this general execution flow:
 
 1. **Setup**: Configure the test environment and parameters
-2. **Request**: Make an HTTP request to the target endpoint
-3. **Validation**: Assert that the response status code is as expected
-4. **Data Verification**: Assert that the response data structure is correct
-5. **Content Verification**: Assert that the response data contains the expected values
+1. **Request**: Make an HTTP request to the target endpoint
+1. **Validation**: Assert that the response status code is as expected
+1. **Data Verification**: Assert that the response data structure is correct
+1. **Content Verification**: Assert that the response data contains the expected values
 
 ## Integration with Frontend Utilities
 
 These backend tests validate the same endpoints that are used by the frontend utilities:
 
 1. **Project Data Utility**: The `test_csv_endpoint()` test validates the endpoint used by `fetchCSVFromS3()`
-2. **Repository Data Utility**: The repository project tests validate the endpoint used by `fetchRepositoryData()`
-3. **Tech Radar Data Utility**: The `test_tech_radar_json_endpoint()` test validates the endpoint used by `fetchTechRadarJSONFromS3()`
-4. **Admin Utilities**: The admin API tests validate the endpoints used by the admin interface for banner management and technology reference list management 
+1. **Repository Data Utility**: The repository project tests validate the endpoint used by `fetchRepositoryData()`
+1. **Tech Radar Data Utility**: The `test_tech_radar_json_endpoint()` test validates the endpoint used by `fetchTechRadarJSONFromS3()`
+1. **Admin Utilities**: The admin API tests validate the endpoints used by the admin interface for banner management and technology reference list management

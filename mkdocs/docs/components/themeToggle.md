@@ -31,9 +31,9 @@ function Header() {
 The ThemeToggle component:
 
 1. Uses the `useTheme` hook from ThemeContext to access the current theme state and toggle function
-2. Renders a button with an icon that changes based on the current theme (sun for light mode, moon for dark mode)
-3. Includes appropriate ARIA labels that update based on the current theme
-4. Calls the `toggleTheme` function from the context when clicked
+1. Renders a button with an icon that changes based on the current theme (sun for light mode, moon for dark mode)
+1. Includes appropriate ARIA labels that update based on the current theme
+1. Calls the `toggleTheme` function from the context when clicked
 
 ## Code Example
 
