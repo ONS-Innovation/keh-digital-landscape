@@ -1,7 +1,8 @@
-.PHONY: setup test clean
-
-setup:
+.PHONY setup:
 	python3 -m pip install -r mkdocs_requirements.txt
+
+.PHONY setup-dev:
+	python3 -m pip install -r mdformat_requirements.txt
 
 .PHONY: mkdocs
 mkdocs:  ## Run mkdocs.
@@ -15,8 +16,15 @@ mkdocs-build:  ## Build mkdocs.
 mkdocs-deploy:  ## Deploy mkdocs to GitHub Pages.
 	PYTHONPATH=.. mkdocs gh-deploy
 
+.PHONY: lint
+lint:  ## Lint markdown files.
+	mdformat --check docs/
 
-clean:
+.PHONY: lint-fix
+lint-fix:  ## Fix markdown formatting.
+	mdformat docs/
+
+.PHONY clean:
 	find . -type d -name "__pycache__" -exec rm -r {} +
 	find . -type f -name "*.pyc" -delete 
 	rm -rf .pytest_cache
