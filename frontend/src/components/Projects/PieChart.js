@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import {
   PieChart as RechartsPieChart,
   Pie,
@@ -364,7 +364,6 @@ const PieChart = ({
     innerRadius,
     outerRadius,
     percent,
-    index,
   }) => {
     // Don't show labels for slices smaller than 5% or with 0 value
     if (percent < 0.05 || percent === 0) return null;
