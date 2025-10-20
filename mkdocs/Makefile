@@ -1,7 +1,9 @@
-.PHONY setup:
+.PHONY: setup
+setup:
 	python3 -m pip install -r mkdocs_requirements.txt
 
-.PHONY setup-dev:
+.PHONY: setup-dev
+setup-dev:
 	python3 -m pip install -r mdformat_requirements.txt
 
 .PHONY: mkdocs
@@ -24,7 +26,8 @@ lint:  ## Lint markdown files.
 lint-fix:  ## Fix markdown formatting.
 	mdformat docs/
 
-.PHONY clean:
+.PHONY: clean
+clean:
 	find . -type d -name "__pycache__" -exec rm -r {} +
 	find . -type f -name "*.pyc" -delete 
 	rm -rf .pytest_cache
