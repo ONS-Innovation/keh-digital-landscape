@@ -107,11 +107,26 @@ Download the extension from [here](https://chromewebstore.google.com/detail/axe-
 
 ## UI Tests
 
-With the application running, it is possible to run tests using Playwright.
+The UI tests are written using [Playwright](https://playwright.dev/) and are located in the `testing/frontend/tests` directory. These tests are designed to verify the application's user interface and user flows, including both general UI and accessibility checks.
 
-Tests are contained in the testing folder > frontend > tests. Data used in the tests is saved under the data folder.
+### **Test Structure**
 
-Mocked API returns are being created using Playwright <i>route.fulfill</i> function. This function mocks any of the API calls.
+- **Test Files:**  
+  All UI test scripts are located in `testing/frontend/tests`. Each file typically targets a specific feature or page (e.g., `review.test.js`, `search.test.js`).
+
+- **Test Data:**  
+  Test data used by the UI tests is stored in the `testing/frontend/data` directory. This data is loaded and used to mock API responses, ensuring tests are deterministic and not dependent on live backend data.
+
+- **Mocking API Calls:**  
+  Playwright’s [`route.fulfill`](https://playwright.dev/docs/network#handle-requests) function is used to intercept and mock API requests. This allows the tests to simulate various backend responses and edge cases without requiring changes to the backend or test environment.
+
+- **Test Configuration:**  
+  The `test-config.json` file defines which routes require authentication and other test-specific settings. Routes that require authentication are marked with `"authenticated": "githubUserToken"`.
+
+- **Reports:**  
+  After running the tests, reports are generated in the `testing/reports/{timestamp}` directory. These include both JSON and human-readable HTML/Markdown summaries.
+
+### **Test Coverage**
 
 Run the following to run the tests:
 

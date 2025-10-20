@@ -17,10 +17,12 @@ pid2=$!
 wait $pid1 $pid2
 
 # Tag images
+echo "Tagging images..."
 podman tag ${container_image_frontend}:${tag} ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${container_image_frontend}:${tag}
 podman tag ${container_image_backend}:${tag} ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${container_image_backend}:${tag}
 
 # Push images in parallel
+echo "Pushing images to AWS in parallel..."
 podman push ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${container_image_frontend}:${tag} &
 pid3=$!
 podman push ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${container_image_backend}:${tag} &

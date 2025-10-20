@@ -24,7 +24,7 @@ router.get('/csv', async (req, res) => {
     // Transform JSON data to CSV format using the utility function that handles reverse dependencies
     const transformedData = transformProjectsToCSVFormat(jsonData.projects);
 
-    res.json(transformedData);
+    res.status(200).json(transformedData);
   } catch (error) {
     logger.error('Error fetching and transforming project data:', {
       error: error.message,
@@ -299,7 +299,10 @@ router.get('/banners', async (req, res) => {
       );
     } catch (error) {
       // If file doesn't exist, return empty array
-      logger.info('No messages.json file found, returning empty array');
+      logger.error(
+        'No messages.json file found, returning empty array:',
+        error
+      );
       messagesData = { messages: [] };
     }
 
@@ -330,7 +333,10 @@ router.get('/banners/all', async (req, res) => {
       );
     } catch (error) {
       // If file doesn't exist, return empty array
-      logger.info('No messages.json file found, returning empty array');
+      logger.error(
+        'No messages.json file found, returning empty array:',
+        error
+      );
       messagesData = { messages: [] };
     }
 

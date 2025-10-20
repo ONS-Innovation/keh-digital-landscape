@@ -298,6 +298,18 @@ and for main branch deployment:
 fly -t aws-sdp trigger-job -j digital-landscape/build-and-push-dev
 ```
 
+#### Destroying a pipeline
+
+To destroy the pipeline, run the following command:
+
+```bash
+fly -t aws-sdp destroy-pipeline -p digital-landscape-<branch-name>
+```
+
+**It is unlikely that you will need to destroy a pipeline, but the command is here if needed.**
+
+**Note:** This will not destroy any resources created by Terraform. You must manually destroy these resources using Terraform.
+
 ## Documentation
 
 The project documentation is located in the `mkdocs/docs` directory. To build and serve the documentation locally, navigate to the `mkdocs/` directory and run the following commands:
