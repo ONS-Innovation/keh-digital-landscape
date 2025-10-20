@@ -145,7 +145,6 @@ const TechManage = () => {
       }
 
       const data = await response.json();
-      console.log(data);
       setArrayData(data);
 
       // Set the first category as selected by default
