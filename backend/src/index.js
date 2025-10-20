@@ -105,3 +105,5 @@ app.listen(port, () => {
     compressionEnabled: true,
   });
 });
+
+export default app;
