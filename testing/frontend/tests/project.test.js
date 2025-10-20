@@ -121,9 +121,6 @@ test.describe('Projects Page Tests', () => {
           // TODO: Should these fields exist in the frontend if they never get any data?
           if (csvData[i][field] === undefined) {
             await expect(contents).toHaveText('No Data Captured');
-            console.log(
-              `Category exists in the frontend but not in the CSV data: ${field}`
-            );
             continue;
           }
 
@@ -151,7 +148,7 @@ test.describe('Projects Page Tests', () => {
             } else if (field === 'Repo') {
               // TODO: Implement repository list testing
               // TODO: Make repository list in the modal have a placeholder if no data
-              console.log('Repository list not tested.');
+              continue;
             } else {
               await expect(contents).not.toHaveText('No Data Captured');
               await expect(contents).toHaveText(csvData[0][field]);

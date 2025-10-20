@@ -354,7 +354,10 @@ const ProjectModal = ({
       v == null || v === '' || v === 'None' || v === 'N/A' || v === 'none';
 
     return (
-      <div id={`group-${title.toLowerCase().replace(/ /g, '-')}`} className="project-group">
+      <div
+        id={`group-${title.toLowerCase().replace(/ /g, '-')}`}
+        className="project-group"
+      >
         <div
           className="accordion-header"
           onClick={() => toggleAccordionGroup(title)}
