@@ -1,0 +1,30 @@
+name: Linting and Formatting
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'mkdocs/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'mkdocs/**'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: cd mkdocs && make setup-dev
+
+      - name: Run Linting
+        run: cd mkdocs && make lint
