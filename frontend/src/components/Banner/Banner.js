@@ -20,12 +20,6 @@ const Banner = ({ title, description, type = 'info', onClose }) => {
     '_'
   );
 
-  // Check localStorage to see if this banner was previously dismissed
-  const isDismissed = localStorage.getItem(bannerId);
-  if (isDismissed) {
-    setIsVisible(false);
-  }
-
   if (!isVisible) {
     return null;
   }

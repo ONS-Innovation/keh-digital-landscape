@@ -53,7 +53,7 @@ export const fetchBanners = async page => {
           );
         const dismissed = localStorage.getItem(bannerId);
 
-        // If not dismissed, or if it's been more than 7 days since dismissal, show the banner
+        // If not dismissed, show the banner
         if (!dismissed) {
           return true;
         }
@@ -64,8 +64,14 @@ export const fetchBanners = async page => {
           const now = new Date().getTime();
           const sevenDays = 7 * 24 * 60 * 60 * 1000; // milliseconds in 7 days
 
-          // If it's been more than 7 days, show the banner again
-          return now - dismissedAt > sevenDays;
+          // If it's been more than 7 days, remove the dismissal and show the banner again
+          if (now - dismissedAt > sevenDays) {
+            localStorage.removeItem(bannerId);
+            return true;
+          }
+
+          // If dismissed and within 7 days, don't show it
+          return false;
         } catch (error) {
           console.error('Error parsing dismissed banner:', error);
           // If there's an error parsing the JSON, show the banner
