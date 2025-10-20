@@ -6,9 +6,9 @@ The HelpModal component provides contextual help and guidance for users when vie
 
 The HelpModal component accepts the following props:
 
-| Prop      | Type     | Default  | Description                                      |
-| --------- | -------- | -------- | ------------------------------------------------ |
-| `show`    | boolean  | Required | Controls the visibility of the modal             |
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `show` | boolean | Required | Controls the visibility of the modal |
 | `onClose` | function | Required | Handler function called when the modal is closed |
 
 ## Usage
@@ -52,8 +52,8 @@ Each context-specific help section includes links to more detailed documentation
 The HelpModal uses a two-phase rendering approach for smooth animations:
 
 1. **Mount Phase**: Component is added to the DOM but remains invisible
-1. **Visibility Phase**: CSS transitions are applied to fade in the modal
-1. **Unmount Delay**: When closing, animations complete before removal from DOM
+2. **Visibility Phase**: CSS transitions are applied to fade in the modal
+3. **Unmount Delay**: When closing, animations complete before removal from DOM
 
 ## Styling
 

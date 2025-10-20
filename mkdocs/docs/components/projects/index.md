@@ -17,15 +17,15 @@ The Projects component provides a comprehensive view of all projects within the 
 
 The Projects component accepts the following props:
 
-| Prop                  | Type     | Default    | Description                                                 |
-| --------------------- | -------- | ---------- | ----------------------------------------------------------- |
-| `isOpen`              | boolean  | Required   | Controls the visibility of the projects list                |
-| `projectsData`        | array    | Required   | Array of project objects containing project details         |
-| `handleProjectClick`  | function | Required   | Handler function called when a project is clicked           |
-| `getTechnologyStatus` | function | Required   | Function to determine the Tech Radar status of a technology |
-| `onRefresh`           | function | Required   | Handler function to refresh the projects data               |
-| `searchTerm`          | string   | `""`       | The search term to filter projects                          |
-| `setSearchTerm`       | function | `() => {}` | Function to update the search term                          |
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `isOpen` | boolean | Required | Controls the visibility of the projects list |
+| `projectsData` | array | Required | Array of project objects containing project details |
+| `handleProjectClick` | function | Required | Handler function called when a project is clicked |
+| `getTechnologyStatus` | function | Required | Function to determine the Tech Radar status of a technology |
+| `onRefresh` | function | Required | Handler function to refresh the projects data |
+| `searchTerm` | string | `""` | The search term to filter projects |
+| `setSearchTerm` | function | `() => {}` | Function to update the search term |
 
 ## Usage
 
@@ -74,19 +74,15 @@ function ProjectsPage() {
 The Projects component includes several pie charts that provide statistical breakdowns of the project data:
 
 ### Project Stages
-
 Displays the distribution of projects across different stages (Active Support, Development, Unsupported)
 
 ### Development Type
-
 Shows the distribution of development approaches (In House, Partner, Outsourced)
 
 ### Hosting Platform
-
 Illustrates the distribution of hosting environments (Cloud, On-premises, Hybrid)
 
 ### Architectures
-
 Visualises the distribution of cloud providers and other architectures (AWS, GCP, Azure, Other)
 
 Each pie chart is interactive with tooltips showing exact counts and percentages.
@@ -96,23 +92,18 @@ Each pie chart is interactive with tooltips showing exact counts and percentages
 The component includes an advanced filtering system allowing users to filter projects by multiple criteria. The filtering interface utilises the reusable [FilterGroup](filterGroup.md) component to create consistent, collapsible filter sections for each category:
 
 ### Project Stage
-
 Filter by development stages (Active Support, Development, Unsupported)
 
 ### Development Type
-
-Filter by development approaches (In House, Partner, Outsourced)
+Filter by development approaches (In House, Partner, Outsourced) 
 
 ### Hosting
-
 Filter by hosting environments (Cloud, On-premises, Hybrid)
 
 ### Architectures
-
 Filter by cloud providers and architectures (AWS, GCP, Azure, Other)
 
 ### Programme
-
 Filter by specific programmes using a multi-select dropdown
 
 The filtering system maintains a count of active filters and provides a clear all option for easy reset. All filter categories and options are defined centrally in the [projectConstants](../../constants/projectConstants.md) file to ensure consistency throughout the application.
@@ -122,22 +113,18 @@ The filtering system maintains a count of active filters and provides a clear al
 The component provides multiple sorting mechanisms:
 
 ### Name Sorting
-
 - **A to Z**: Alphabetical sorting by project name
 - **Z to A**: Reverse alphabetical sorting by project name
 
 ### Programme Sorting
-
 - **A to Z**: Alphabetical sorting by programme name
 - **Z to A**: Reverse alphabetical sorting by programme name
 
 ### Technology Count Sorting
-
 - **Most Technologies**: Projects with the highest number of technologies first
 - **Least Technologies**: Projects with the lowest number of technologies first
 
 ### Technology Status Sorting
-
 - **Adopt Ratio**: Sort by the proportion of technologies in the Adopt ring
 - **Trial Ratio**: Sort by the proportion of technologies in the Trial ring
 - **Assess Ratio**: Sort by the proportion of technologies in the Assess ring
@@ -150,9 +137,9 @@ For each Technology Status sorting option, users can choose between highest rati
 The Projects component calculates technology distribution for each project by:
 
 1. Extracting technologies from relevant fields in the project data
-1. Determining the Tech Radar status of each technology (Adopt, Trial, Assess, Hold)
-1. Calculating the proportion of technologies in each status category
-1. Visualising the distribution as a segmented, colour-coded bar
+2. Determining the Tech Radar status of each technology (Adopt, Trial, Assess, Hold)
+3. Calculating the proportion of technologies in each status category
+4. Visualising the distribution as a segmented, colour-coded bar
 
 ## Search Functionality
 
@@ -173,13 +160,10 @@ The search is case-insensitive and updates the project list in real-time as the 
 Each project entry includes several visual elements:
 
 ### Project Badges
-
 Quick-reference badges showing project stage, development type, hosting environment, and primary architecture
 
 ### Technology Distribution Bar
-
 A colour-coded bar representing the proportion of technologies in each Tech Radar ring:
-
 - **Adopt**: Technologies recommended for adoption (green)
 - **Trial**: Technologies in trial phase (blue)
 - **Assess**: Technologies being assessed (orange)
@@ -191,10 +175,9 @@ Hovering over each segment displays a tooltip with the exact count and percentag
 ## Refresh Functionality
 
 The component includes a refresh button that:
-
 1. Triggers the provided `onRefresh` callback
-1. Updates the project data without requiring a full page refresh
-1. Maintains current filtering and sorting settings
+2. Updates the project data without requiring a full page refresh
+3. Maintains current filtering and sorting settings
 
 ## Styling
 

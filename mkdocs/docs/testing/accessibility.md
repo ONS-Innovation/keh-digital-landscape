@@ -77,8 +77,8 @@ fs.mkdirSync(path.join(REPORTS_DIR, 'JSON'), { recursive: true });
 The testing framework generates three types of reports:
 
 1. **Individual JSON reports**: Raw data for each route
-1. **Combined HTML report**: Human-readable report with detailed information and styling
-1. **Combined Markdown report**: Suitable for documentation systems and GitHub
+2. **Combined HTML report**: Human-readable report with detailed information and styling
+3. **Combined Markdown report**: Suitable for documentation systems and GitHub
 
 ### Report Example
 
@@ -119,9 +119,9 @@ Violations are categorised by impact:
 When reviewing accessibility reports:
 
 1. Focus on Critical and Serious issues first
-1. Look for patterns across multiple pages
-1. Prioritise fixes that impact the largest number of users
-1. Address violations with clear remediation guidance
+2. Look for patterns across multiple pages
+3. Prioritise fixes that impact the largest number of users
+4. Address violations with clear remediation guidance
 
 ## Integration with Development Workflow
 

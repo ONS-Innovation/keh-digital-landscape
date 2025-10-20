@@ -5,7 +5,6 @@ The Tech Radar Service provides centralised functionality for managing technolog
 ## Overview
 
 The service manages technology radar operations:
-
 - Technology radar data retrieval and parsing
 - Entry updates with validation
 - Data structure management
@@ -15,7 +14,6 @@ The service manages technology radar operations:
 ## Dependencies
 
 The service integrates with:
-
 - S3 Service for data storage and retrieval
 - Application logging system
 - JSON parsing and validation utilities
@@ -29,7 +27,6 @@ Retrieves and parses the complete technology radar dataset.
 **Returns:** Promise resolving to parsed tech radar object
 
 **Response Structure:**
-
 ```javascript
 {
   quadrants: [
@@ -50,7 +47,6 @@ Retrieves and parses the complete technology radar dataset.
 ```
 
 **Example:**
-
 ```javascript
 const techRadarService = require('./techRadarService');
 
@@ -67,11 +63,9 @@ try {
 Updates a specific technology entry in the radar dataset.
 
 **Parameters:**
-
 - `entryData` (object) - The technology entry data to update
 
 **Entry Data Structure:**
-
 ```javascript
 {
   name: string,          // Technology name (required)
@@ -85,14 +79,12 @@ Updates a specific technology entry in the radar dataset.
 **Returns:** Promise resolving to update result
 
 **Validation:**
-
 - Ensures required fields are present
 - Validates ring values against allowed options
 - Checks for duplicate entries
 - Maintains data integrity
 
 **Example:**
-
 ```javascript
 const newEntry = {
   name: "React Hooks",
@@ -113,18 +105,14 @@ try {
 ## Data Structure Management
 
 ### Quadrant Organisation
-
 The service organises technologies into quadrants:
-
 - **Languages & Frameworks** - Programming languages and development frameworks
 - **Tools** - Development and operational tools
 - **Platforms** - Cloud platforms and infrastructure services
 - **Techniques** - Development practices and methodologies
 
 ### Ring Classification
-
 Technologies are classified into rings based on adoption status:
-
 - **Adopt** - Technologies ready for production use
 - **Trial** - Technologies worth pursuing in proof of concepts
 - **Assess** - Technologies to explore with the goal of understanding their fit
@@ -135,7 +123,6 @@ Technologies are classified into rings based on adoption status:
 The service implements comprehensive validation:
 
 ### Entry Validation
-
 ```javascript
 function validateEntry(entry) {
   const requiredFields = ['name', 'ring', 'quadrant'];
@@ -158,7 +145,6 @@ function validateEntry(entry) {
 ```
 
 ### Duplicate Detection
-
 ```javascript
 function checkForDuplicates(entries, newEntry) {
   const duplicate = entries.find(entry => 
@@ -177,7 +163,6 @@ function checkForDuplicates(entries, newEntry) {
 The service seamlessly integrates with S3 storage:
 
 ### Data Retrieval
-
 ```javascript
 // Retrieve current radar data
 const radarData = await s3Service.getObject(
@@ -187,7 +172,6 @@ const radarData = await s3Service.getObject(
 ```
 
 ### Data Persistence
-
 ```javascript
 // Store updated radar data
 await s3Service.putObject(
@@ -210,7 +194,6 @@ The service provides comprehensive error handling:
 ## Usage Examples
 
 ### Retrieve Technology Summary
-
 ```javascript
 async function getTechnologySummary() {
   try {
@@ -233,7 +216,6 @@ async function getTechnologySummary() {
 ```
 
 ### Bulk Update Technologies
-
 ```javascript
 async function bulkUpdateTechnologies(entries) {
   const results = [];
@@ -252,7 +234,6 @@ async function bulkUpdateTechnologies(entries) {
 ```
 
 ### Search Technologies
-
 ```javascript
 async function searchTechnologies(searchTerm) {
   const radarData = await techRadarService.getTechRadarData();
@@ -272,4 +253,4 @@ async function searchTechnologies(searchTerm) {
 - Provides audit trail through logging
 - Supports batch operations for efficiency
 - Maintains backward compatibility with existing data formats
-- Includes comprehensive validation to prevent data corruption
+- Includes comprehensive validation to prevent data corruption 

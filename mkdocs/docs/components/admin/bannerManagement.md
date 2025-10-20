@@ -20,40 +20,37 @@ Site-wide banners are useful for communicating important information to users, s
 The BannerManage component is implemented with these key elements:
 
 - **State Management**:
-
-  - Banner properties (title, message, type)
-  - Target pages selection
-  - Existing banners list
-  - Confirmation modals
+    - Banner properties (title, message, type)
+    - Target pages selection
+    - Existing banners list
+    - Confirmation modals
 
 - **Banner Properties**:
-
-  - Title (optional heading for the banner)
-  - Message (main content of the banner)
-  - Type (info, warning, or error)
-  - Target pages (where the banner will appear)
-  - Visibility status (active or hidden)
+    - Title (optional heading for the banner)
+    - Message (main content of the banner)
+    - Type (info, warning, or error)
+    - Target pages (where the banner will appear)
+    - Visibility status (active or hidden)
 
 - **API Integration**:
-
-  - Fetches existing banners from backend API
-  - Saves new banners to backend storage
-  - Updates banner visibility status
-  - Deletes banners from the system
+    - Fetches existing banners from backend API
+    - Saves new banners to backend storage
+    - Updates banner visibility status
+    - Deletes banners from the system
 
 ## Usage
 
 ### Creating a Banner
 
 1. Enter a banner title (used as the heading for the banner)
-1. Compose the banner message (the main content to display)
-1. Select a banner type:
+2. Compose the banner message (the main content to display)
+3. Select a banner type:
    - Info (blue): For general announcements
    - Warning (yellow): For important notices
    - Error (red): For critical alerts
-1. Choose target pages where the banner should appear
-1. Click "Save Banner" to create the banner
-1. Confirm the action in the confirmation modal
+4. Choose target pages where the banner should appear
+5. Click "Save Banner" to create the banner
+6. Confirm the action in the confirmation modal
 
 ### Managing Existing Banners
 
@@ -68,16 +65,16 @@ The "Existing Banners" section displays all banners in the system and offers the
 Banners are displayed on the selected pages based on these rules:
 
 1. Only active banners (show = true) are displayed to users
-1. Banners appear on all pages selected during creation
-1. Banners appear at the top of the page in order of creation (newest first)
-1. Banner styling is determined by the selected type
+2. Banners appear on all pages selected during creation
+3. Banners appear at the top of the page in order of creation (newest first)
+4. Banner styling is determined by the selected type
 
 ## Integration with Frontend
 
 The banner management system integrates with the frontend application through these components:
 
 1. **Banner Component**: Displays active banners on specified pages
-1. **Admin API**: Handles banner CRUD operations
-1. **Banner Utilities**: Provides functions for fetching and managing banners
+2. **Admin API**: Handles banner CRUD operations
+3. **Banner Utilities**: Provides functions for fetching and managing banners
 
-This integration ensures that administrators can easily communicate with users across the application without requiring code changes or deployments.
+This integration ensures that administrators can easily communicate with users across the application without requiring code changes or deployments. 

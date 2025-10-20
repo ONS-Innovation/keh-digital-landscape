@@ -17,7 +17,6 @@ The tests are implemented in the `testing/frontend/tests` directory using the Pl
 - `techradar.test.js` - Tests for Tech Radar. Currently tests Infrastructure (GCP & AWS nodes) and Languages (JavaScript/Typescript and Java nodes) sections of the radar.
 
 ### Running Tests
-
 ```bash
 # Navigate to the testing directory
 cd testing/frontend

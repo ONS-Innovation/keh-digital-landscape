@@ -14,9 +14,9 @@ The `SkeletonStatCard` component renders a placeholder for statistical cards tha
 
 #### Props
 
-| Prop       | Type   | Default | Description                        |
-| ---------- | ------ | ------- | ---------------------------------- |
-| `minWidth` | string | `"0"`   | Minimum width of the skeleton card |
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `minWidth` | string | `"0"` | Minimum width of the skeleton card |
 
 #### Usage
 
@@ -100,9 +100,9 @@ The skeleton styling includes:
 Skeleton components are designed to be:
 
 1. Lightweight components with minimal logic
-1. Using CSS variables to match the application's theme
-1. Not interfering with screen readers or keyboard navigation
-1. Using CSS animations rather than JavaScript for smooth performance
+2. Using CSS variables to match the application's theme
+3. Not interfering with screen readers or keyboard navigation
+4. Using CSS animations rather than JavaScript for smooth performance
 
 ## Integration with Components
 

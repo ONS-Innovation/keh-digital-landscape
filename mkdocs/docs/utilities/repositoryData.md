@@ -21,19 +21,19 @@ export const fetchRepositoryData = async (
 This function:
 
 1. Fetches detailed data for specific repositories
-1. Supports filtering by date and archived status
-1. Handles environment-specific URLs (development vs production)
-1. Implements error handling with user feedback
+2. Supports filtering by date and archived status
+3. Handles environment-specific URLs (development vs production)
+4. Implements error handling with user feedback
 
 ## Parameters
 
 The function accepts the following parameters:
 
-| Parameter      | Type       | Default  | Description                                                |
-| -------------- | ---------- | -------- | ---------------------------------------------------------- |
-| `repositories` | string\[\] | Required | Array of repository names to fetch data for                |
-| `date`         | string     | `null`   | ISO date string to filter repositories by last commit date |
-| `archived`     | string     | `null`   | 'true'/'false' to filter archived repositories             |
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `repositories` | string[] | Required | Array of repository names to fetch data for |
+| `date` | string | `null` | ISO date string to filter repositories by last commit date |
+| `archived` | string | `null` | 'true'/'false' to filter archived repositories |
 
 ## Implementation Details
 
@@ -41,35 +41,35 @@ The function follows a structured request pattern:
 
 1. **Parameter Validation**: Checks if repositories array is valid
 
-   - Returns `null` if repositories array is empty or undefined
+    - Returns `null` if repositories array is empty or undefined
 
-1. **URL Parameter Construction**: Builds query parameters
+2. **URL Parameter Construction**: Builds query parameters
 
-   - Converts repository array to comma-separated string
-   - Adds optional date and archived parameters when provided
+    - Converts repository array to comma-separated string
+    - Adds optional date and archived parameters when provided
 
-1. **Environment-Specific URL**: Determines the correct API endpoint
+3. **Environment-Specific URL**: Determines the correct API endpoint
 
-   - Uses `localhost:5001/api/repository/project/json` in development
-   - Uses `/api/repository/project/json` in production
+    - Uses `localhost:5001/api/repository/project/json` in development
+    - Uses `/api/repository/project/json` in production
 
-1. **Request Execution**: Fetches data with constructed URL and parameters
+4. **Request Execution**: Fetches data with constructed URL and parameters
 
-   - Validates response status
-   - Parses JSON response
+    - Validates response status
+    - Parses JSON response
 
-1. **Error Handling**: Manages request failures
+5. **Error Handling**: Manages request failures
 
-   - Displays error toast notification
-   - Returns `null` to indicate failure
+    - Displays error toast notification
+    - Returns `null` to indicate failure
 
 ## Integration with DataContext
 
 The DataContext uses this utility to:
 
 1. Fetch repository data when needed for specific views
-1. Apply filtering based on user selections (date ranges, archived status)
-1. Cache the returned data to minimize redundant API calls
+2. Apply filtering based on user selections (date ranges, archived status)
+3. Cache the returned data to minimize redundant API calls
 
 Example usage within DataContext:
 

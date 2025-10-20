@@ -15,14 +15,14 @@ The ProjectModal component provides a detailed view of project information in a 
 
 The ProjectModal component accepts the following props:
 
-| Prop                   | Type     | Default  | Description                                                 |
-| ---------------------- | -------- | -------- | ----------------------------------------------------------- |
-| `isOpen`               | boolean  | Required | Controls the visibility of the modal                        |
-| `onClose`              | function | Required | Handler function called when the modal is closed            |
-| `project`              | object   | Required | The project object containing all project details           |
-| `renderTechnologyList` | function | Required | Function to render technology lists in a consistent format  |
-| `getTechnologyStatus`  | function | Required | Function to determine the Tech Radar status of a technology |
-| `onTechClick`          | function | Required | Handler for when a technology tag is clicked                |
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `isOpen` | boolean | Required | Controls the visibility of the modal |
+| `onClose` | function | Required | Handler function called when the modal is closed |
+| `project` | object | Required | The project object containing all project details |
+| `renderTechnologyList` | function | Required | Function to render technology lists in a consistent format |
+| `getTechnologyStatus` | function | Required | Function to determine the Tech Radar status of a technology |
+| `onTechClick` | function | Required | Handler for when a technology tag is clicked |
 
 ## Usage
 
@@ -77,12 +77,12 @@ The ProjectModal fetches and displays detailed information about linked GitHub r
 Project information is organised into logical categories for improved readability:
 
 1. **Languages & Frameworks**: Programming languages, frameworks, and testing tools
-1. **Infrastructure & Deployment**: Hosting, cloud services, CI/CD, containerisation and environments
-1. **Security & Source Control**: Authentication, source control, and branching strategies
-1. **Quality & Monitoring**: Code quality tools, formatters, and monitoring solutions
-1. **Data Management**: Databases, data stores, and output formats
-1. **Integrations**: Internal and external system integrations
-1. **General Information**: Project area, tools, documentation, and collaboration
+2. **Infrastructure & Deployment**: Hosting, cloud services, CI/CD, containerisation and environments
+3. **Security & Source Control**: Authentication, source control, and branching strategies
+4. **Quality & Monitoring**: Code quality tools, formatters, and monitoring solutions
+5. **Data Management**: Databases, data stores, and output formats
+6. **Integrations**: Internal and external system integrations
+7. **General Information**: Project area, tools, documentation, and collaboration
 
 ## Search Functionality
 

@@ -29,7 +29,7 @@ The authentication system provides:
 Users are assigned to groups in Cognito that determine their access levels:
 
 - **`admin`** - Full administrative access to all backend endpoints
-- **`reviewer`** - Access to review functionality and technology radar updates
+- **`reviewer`** - Access to review functionality and technology radar updates  
 - **Combined roles** - Users can belong to multiple groups for expanded permissions
 
 #### Authentication Middleware
@@ -77,14 +77,12 @@ app.use('/user/api', userRoutes);   // User authentication endpoints
 ## Route Modules
 
 ### User Routes (`/user/api`)
-
 Located in `routes/userRoutes.js`, these provide authentication functionality:
 
 - **GET `/info`** - Retrieve authenticated user information including email and groups
 - **POST `/logout`** - Handle user logout and return Cognito logout URL
 
 ### Default Routes (`/api`)
-
 Located in `routes/default.js`, these provide core application functionality:
 
 - **GET `/csv`** - Retrieve project data in CSV format
@@ -97,7 +95,6 @@ Located in `routes/default.js`, these provide core application functionality:
 - **GET `/health`** - Health check endpoint
 
 ### Admin Routes (`/admin/api`)
-
 Located in `routes/admin.js`, these provide administrative functionality requiring admin group membership:
 
 - **POST `/banners`** - Update the banner messages in S3 from admin
@@ -111,13 +108,11 @@ Located in `routes/admin.js`, these provide administrative functionality requiri
 - **POST `/normalise/technology`** - Normalise the technology names across projects in S3 from admin
 
 ### Review Routes (`/review/api`)
-
 Located in `routes/review.js`, these provide review functionality requiring reviewer group membership:
 
 - **POST `/tech-radar/update`** - Update the tech radar JSON in S3 with reviewer attribution
 
 ### Copilot Routes (`/copilot/api`)
-
 Located in `routes/copilot.js`, these provide GitHub Copilot metrics:
 
 - **GET `/org/live`** - Get Copilot organisation live usage data
@@ -134,7 +129,6 @@ Located in `routes/copilot.js`, these provide GitHub Copilot metrics:
 The backend uses centralised services to handle external integrations and business logic:
 
 ### Cognito Service (`services/cognitoService.js`)
-
 Manages AWS Cognito authentication and authorisation:
 
 - JWT token verification using `aws-jwt-verify`
@@ -144,7 +138,6 @@ Manages AWS Cognito authentication and authorisation:
 - Secure logout handling
 
 ### S3 Service (`services/s3Service.js`)
-
 Manages all Amazon S3 operations:
 
 - Singleton pattern for consistent S3 client instances
@@ -153,7 +146,6 @@ Manages all Amazon S3 operations:
 - Centralised error handling and logging
 
 ### GitHub Service (`services/githubService.js`)
-
 Handles GitHub API interactions:
 
 - Copilot metrics retrieval with automatic pagination
@@ -161,7 +153,6 @@ Handles GitHub API interactions:
 - Integration with GitHub App authentication
 
 ### Tech Radar Service (`services/techRadarService.js`)
-
 Manages technology radar operations:
 
 - Data retrieval and parsing
@@ -173,25 +164,21 @@ Manages technology radar operations:
 Helper functions and data transformation utilities:
 
 ### GitHub App Authentication (`utilities/getAppAndInstallation.js`)
-
 - Handles GitHub App authentication using AWS Secrets Manager
 - Returns authenticated Octokit instance for API calls
 
 ### Project Data Transformer (`utilities/projectDataTransformer.js`)
-
 - Transforms project objects from raw JSON to CSV format
 - Handles user role extraction and contact information
 - Formats technology arrays and metadata
 
 ### Technology Array Updater (`utilities/updateTechnologyInArray.js`)
-
 - Helper function for updating technology names in arrays
 - Used in technology normalisation processes
 
 ## Configuration
 
 ### Logger (`config/logger.js`)
-
 Provides centralised logging using Winston:
 
 - Console logging with colour formatting
@@ -204,33 +191,27 @@ Provides centralised logging using Winston:
 Key environment variables used by the backend:
 
 #### Server Configuration
-
 - `PORT` - Server port (default: 5001)
 - `LOG_LEVEL` - Logging level (default: info)
 - `NODE_ENV` - Environment mode (development/production)
 
-#### AWS Configuration
-
+#### AWS Configuration  
 - `AWS_REGION` - AWS region for services
 - `ALB_ARN` - Application Load Balancer ARN for JWT verification
 - `AWS_SECRET_NAME` - AWS Secrets Manager secret name
 
 #### Cognito Configuration
-
 - `COGNITO_USER_POOL_ID` - Cognito User Pool ID
 - `COGNITO_USER_POOL_CLIENT_ID` - Cognito User Pool Client ID
 
 #### Development Configuration
-
 - `DEV_USER_GROUPS` - Comma-separated list of groups for development user
 
 #### GitHub Configuration
-
 - `GITHUB_ORG` - GitHub organisation name
 - `GITHUB_APP_ID` - GitHub App ID
 
 #### Logging Configuration
-
 - `CLOUDWATCH_GROUP_NAME` - CloudWatch log group
 
 ## Error Handling

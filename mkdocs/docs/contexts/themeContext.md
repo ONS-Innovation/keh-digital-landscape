@@ -60,9 +60,9 @@ function ThemeToggleButton() {
 The theme context uses React's useState and useEffect hooks to:
 
 1. Initialise the theme from local storage or default to 'light'
-1. Persist theme changes to local storage
-1. Apply theme classes to the document and body elements
-1. Provide a simple toggle mechanism between 'light' and 'dark' modes
+2. Persist theme changes to local storage
+3. Apply theme classes to the document and body elements
+4. Provide a simple toggle mechanism between 'light' and 'dark' modes
 
 ## Error Handling
 
@@ -81,3 +81,4 @@ The ThemeProvider includes a pre-configured toast notification system (using rea
 - Place the `ThemeProvider` at the root of your application
 - Use the `useTheme` hook to access theme information rather than creating separate state
 - Leverage CSS variables defined in your theme to ensure consistent styling
+

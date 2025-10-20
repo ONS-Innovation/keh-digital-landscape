@@ -17,15 +17,15 @@ The FilterGroup component provides a reusable, collapsible filter section with c
 
 The FilterGroup component accepts the following props:
 
-| Prop            | Type     | Default  | Description                                         |
-| --------------- | -------- | -------- | --------------------------------------------------- |
-| `title`         | string   | Required | The title displayed in the filter group header      |
-| `sectionKey`    | string   | Required | A unique identifier for this filter section         |
-| `isExpanded`    | boolean  | Required | Controls whether the filter options are visible     |
-| `toggleSection` | function | Required | Function called when the section header is clicked  |
-| `items`         | array    | Required | Array of items to display as filterable options     |
-| `selectedItems` | array    | `[]`     | Array of currently selected items                   |
-| `onItemChange`  | function | Required | Function called when an item is selected/deselected |
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `title` | string | Required | The title displayed in the filter group header |
+| `sectionKey` | string | Required | A unique identifier for this filter section |
+| `isExpanded` | boolean | Required | Controls whether the filter options are visible |
+| `toggleSection` | function | Required | Function called when the section header is clicked |
+| `items` | array | Required | Array of items to display as filterable options |
+| `selectedItems` | array | `[]` | Array of currently selected items |
+| `onItemChange` | function | Required | Function called when an item is selected/deselected |
 
 ## Usage
 
@@ -101,13 +101,11 @@ function FilterableList() {
 The FilterGroup component consists of two main parts:
 
 ### Header Section
-
 - Contains the filter category title
 - Includes a chevron icon that rotates based on expanded state
 - Serves as a clickable button to toggle the visibility of filter options
 
 ### Filter Options Section
-
 - Contains a list of checkboxes for individual filter options
 - Displays a custom checkbox design with checkmark icons
 - Shows or hides based on the `isExpanded` prop

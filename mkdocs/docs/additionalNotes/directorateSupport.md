@@ -40,13 +40,13 @@ In order to get this file from S3, the frontend application makes a request to t
 
 ### Key Attributes
 
-| Attribute | Description                                                                                                                                                                                                                                 |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Attribute | Description |
+| --------- | ----------- |
 | `id`      | A unique identifier for the directorate. This is used to reference the directorate in each technology's timeline entries. Using an id over its name is required to avoid having to change existing data should the directorate name change. |
-| `name`    | The full name of the directorate. This is displayed in the UI when selecting a directorate. This will typically be in the format "Directorate Name (Abbreviation)".                                                                         |
-| `colour`  | The colour associated with the directorate. This is used for visual differentiation in the UI.                                                                                                                                              |
-| `default` | A boolean indicating whether this is the default directorate. Only one directorate can be the default. This key is unlikely to be changed as Digital Services should always be the default.                                                 |
-| `enabled` | A boolean indicating whether the directorate is enabled for use. This will allow us to disable directorates should the need arise.                                                                                                          |
+| `name`    | The full name of the directorate. This is displayed in the UI when selecting a directorate. This will typically be in the format "Directorate Name (Abbreviation)". |
+| `colour`  | The colour associated with the directorate. This is used for visual differentiation in the UI. |
+| `default` | A boolean indicating whether this is the default directorate. Only one directorate can be the default. This key is unlikely to be changed as Digital Services should always be the default. |
+| `enabled` | A boolean indicating whether the directorate is enabled for use. This will allow us to disable directorates should the need arise. |
 
 ## Tech Radar + Review Page
 
@@ -231,15 +231,15 @@ The last entry in this filtered timeline indicates that the current position of 
 To help users quickly identify which technologies are or have been moved specifically for their directorate, some visual cues are used:
 
 - On the Tech Radar page, technologies that have **any** timeline entries for the selected directorate are highlighted with a small margin on the left side of the technology card.
-
+  
   ![Tech Radar Highlight Example](../../assets/multipleDirectorateSupport/radar-highlight.png)
 
 - On the Review page, technologies that are in a position **specifically for the selected directorate** are highlighted with a border around the technology card.
-
+  
   ![Review Page Highlight Example](../../assets/multipleDirectorateSupport/review-highlight.png)
 
 - On both pages, a gradient background is applied to the top of the page to indicate which directorate is currently selected.
-
+  
   ![Gradient Background Example](../../assets/multipleDirectorateSupport/gradient-background.png)
 
 **Note:** The colours used in these visuals correspond to the `colour` attribute defined for each directorate in `directorates.json`. This allows us to easily change the colours associated with each directorate by simply updating the JSON file - i.e. if accessibility requirements change.

@@ -21,21 +21,18 @@ Each technology is placed in one of four rings:
 ## Features
 
 ### Interactive Visualisation
-
 - Hover over blips to view information or click to lock selection
 - Drag quadrant lists to customise your view
 - Filter technologies by quadrant by clicking on the label around the radar
 - Search functionality for quick access (CMD + K or CTRL + K)
 
 ### Technology Details
-
 - Using the [Info Box](/components/infoBox) component, you can view:
-  - Current adoption status
-  - Timeline of changes
-  - Related projects
+    - Current adoption status
+    - Timeline of changes
+    - Related projects
 
 ### Navigation
-
 - Keyboard shortcuts:
-  - Press key `1` to move up the list
-  - Press key `2` to move down the list
+    - Press key `1` to move up the list
+    - Press key `2` to move down the list
