@@ -351,12 +351,12 @@ const ProjectModal = ({
     if (filteredKeys.length === 0) return null;
 
     const isEmptyValue = v => {
-    if (typeof v === 'string') {
-      const trimmed = v.trim().toLowerCase();
-      return trimmed === '' || trimmed === 'none' || trimmed === 'n/a';
-    }
-    return v == null;
-  };
+      if (typeof v === 'string') {
+        const trimmed = v.trim().toLowerCase();
+        return trimmed === '' || trimmed === 'none' || trimmed === 'n/a';
+      }
+      return v == null;
+    };
 
     return (
       <div
