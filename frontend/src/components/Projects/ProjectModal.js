@@ -327,7 +327,7 @@ const ProjectModal = ({
     'Miscellaneous',
   ];
 
-  //Keeps all the values so every value will appear
+  // Keeps all the values so every value will appear
   const filterItems = items => {
     const q = searchQuery.trim().toLowerCase();
     return items.filter(key => {
@@ -350,8 +350,13 @@ const ProjectModal = ({
 
     if (filteredKeys.length === 0) return null;
 
-    const isEmptyValue = v =>
-      v == null || v === '' || v === 'None' || v === 'N/A' || v === 'none';
+    const isEmptyValue = v => {
+    if (typeof v === 'string') {
+      const trimmed = v.trim().toLowerCase();
+      return trimmed === '' || trimmed === 'none' || trimmed === 'n/a';
+    }
+    return v == null;
+  };
 
     return (
       <div
@@ -385,7 +390,7 @@ const ProjectModal = ({
                     <h3>{label}:</h3>
                     {isEmptyValue(value) ? (
                       <p>
-                        <em>No Data Captured</em>
+                        <em>no data captured</em>
                       </p>
                     ) : (
                       <div className="miscellaneous-block">
@@ -422,7 +427,7 @@ const ProjectModal = ({
                   <h3>{label}:</h3>
                   {isEmptyValue(value) ? (
                     <p>
-                      <em>No Data Captured</em>
+                      <em>no data captured</em>
                     </p>
                   ) : (
                     <p style={{ whiteSpace: 'pre-wrap' }}>

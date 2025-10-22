@@ -115,17 +115,17 @@ test.describe('Projects Page Tests', () => {
           const contents = detailItem.locator('p').first();
 
           // Some of the technology fields in the frontend modal do not exist in the CSV data
-          // These should be treated as 'No Data Captured' for testing purposes
+          // These should be treated as 'no data captured' for testing purposes
           // We log these instances for future reference
 
           // TODO: Should these fields exist in the frontend if they never get any data?
           if (csvData[i][field] === undefined) {
-            await expect(contents).toHaveText('No Data Captured');
+            await expect(contents).toHaveText('no data captured');
             continue;
           }
 
           if (csvData[0][field] === '') {
-            await expect(contents).toHaveText('No Data Captured');
+            await expect(contents).toHaveText('no data captured');
           } else {
             if (field === 'Miscellaneous') {
               const miscItems = detailItem.locator('.misc-item');
@@ -150,7 +150,7 @@ test.describe('Projects Page Tests', () => {
               // TODO: Make repository list in the modal have a placeholder if no data
               continue;
             } else {
-              await expect(contents).not.toHaveText('No Data Captured');
+              await expect(contents).not.toHaveText('no data captured');
               await expect(contents).toHaveText(csvData[0][field]);
             }
           }
