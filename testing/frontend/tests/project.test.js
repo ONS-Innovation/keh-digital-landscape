@@ -133,9 +133,7 @@ test.describe('Projects Page Tests', () => {
                 .split(';')
                 .map(item => item.trim());
 
-              // We need to divide by 2 since the modal is rendered twice for some reason
-              // TODO: Investigate why the modal is rendered twice and fix if necessary
-              const miscCount = (await miscItems.count()) / 2;
+              const miscCount = (await miscItems.count());
               await expect(miscCount).toBe(miscData.length);
 
               // This for loop will only check the first half of the misc items to avoid duplicates
