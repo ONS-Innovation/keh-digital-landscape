@@ -24,6 +24,10 @@ export const specialTechMatchers = {
   },
   'HCL (Terraform)': item => {
     const lowered = item.trim().toLowerCase();
-    return lowered === 'hcl (terraform)' || lowered === 'hcl' || lowered === 'terraform';
-  }
+    return (
+      lowered === 'hcl (terraform)' ||
+      lowered === 'hcl' ||
+      lowered === 'terraform'
+    );
+  },
 };
