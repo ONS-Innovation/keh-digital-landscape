@@ -27,10 +27,7 @@ const { chromium } = require('playwright');
 const AxeBuilder = require('@axe-core/playwright').default;
 const fs = require('fs');
 const path = require('path');
-const { 
-  generateCombinedHtmlReport, 
-  generateCombinedMarkdownReport 
-} = require('./generate');
+const { generateCombinedHtmlReport, generateCombinedMarkdownReport } = require('./generate');
 
 // collect optional axe tags from CLI arguments
 const tags = process.argv.slice(2);
@@ -65,7 +62,7 @@ fs.mkdirSync(path.join(REPORTS_DIR, 'JSON'), { recursive: true });
       builder = builder.withTags(tags);
     }
     const accessibilityScanResults = await builder.analyze();
-    
+
     // Process results and generate reports
     // ...
   }

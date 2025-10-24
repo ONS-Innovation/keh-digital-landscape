@@ -5,6 +5,7 @@ This directory contains the documentation using MkDocs in Python.
 ## Prerequisites
 
 - Python 3.8 or higher
+- Node.js 16+ (for Prettier markdown linting and formatting)
 - Make (for using Makefile commands)
 
 Make sure you are currently in the /testing directory when running the commands. To change directory, run:
@@ -16,12 +17,14 @@ cd mkdocs
 ## Setup
 
 1. Create a virtual environment (recommended but not required):
+
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
 
 2. Install dependencies:
+
 ```bash
 make setup
 ```
@@ -29,6 +32,7 @@ make setup
 ## Running locally
 
 To run the documentation locally:
+
 ```bash
 make mkdocs
 ```
@@ -57,3 +61,31 @@ make mkdocs-deploy
 
 This will build the documentation and deploy it to the `gh-pages` branch of the repository.
 The GitHub Pages site will then be updated with the latest changes from the `gh-pages` branch.
+
+## Linting & Formatting
+
+The mkdocs documentation uses **Prettier** for markdown linting and formatting.
+
+### Prerequisites for Linting
+
+Install developer dependencies with:
+
+```bash
+make setup-dev
+```
+
+### Check markdown formatting issues
+
+To lint markdown files and check for formatting issues without making changes:
+
+```bash
+make lint
+```
+
+### Automatically fix markdown formatting
+
+To automatically fix markdown formatting issues:
+
+```bash
+make lint-fix
+```

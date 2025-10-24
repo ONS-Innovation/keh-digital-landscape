@@ -9,16 +9,19 @@ The Review Dashboard allows authorised users with reviewer group membership to m
 ## Access Requirements
 
 ### Authentication
+
 - Users must be authenticated through AWS Cognito
 - Requires membership in the `reviewer` group
 - Development mode bypasses authentication for local development
 
 ### User Attribution
+
 When reviewers make changes to technologies, their email address is automatically captured and attributed as the author of the change for audit and tracking purposes.
 
 ## Features
 
 ### Technology Management
+
 - Drag-and-drop interface for moving technologies between rings
 - Add new technologies through a guided dialogue
 - Edit technology details including name and category
@@ -28,6 +31,7 @@ When reviewers make changes to technologies, their email address is automaticall
 - Automatic author attribution for all changes
 
 ### Project Visibility
+
 - View projects using each technology
 - Toggle project count display to see project count metrics
 - Click project entries to explore detailed project information
@@ -35,21 +39,25 @@ When reviewers make changes to technologies, their email address is automaticall
 ## Usage
 
 ### Moving Technologies
+
 1. Drag a technology from one ring to another
 2. Enter a description explaining the reason for the change (supports simple markdown formatting)
 3. Your email will be automatically recorded as the author of this change
 4. Confirm the move to update the technology's status
 
 ### Adding Technologies
+
 1. Click "Add Technology" button
 2. Enter technology name and select appropriate category
 3. Your email will be automatically recorded as the author
 4. Confirm to add the technology to the Review ring
 
 ### Saving Changes
+
 Changes made in the Review Dashboard are not applied until explicitly saved using the "Save Changes" button. This ensures a controlled update process and maintains data integrity.
 
 ### Project Count Visibility
+
 Toggle the "Show Project Count" button to display the number of projects using each technology, helping identify widely-adopted versus rarely-used technologies.
 
 ## Security & Audit Trail

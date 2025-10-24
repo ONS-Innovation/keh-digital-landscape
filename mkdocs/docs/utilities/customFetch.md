@@ -11,7 +11,7 @@ The utility exports a primary function:
 ```javascript
 const customFetch = async (url, options) => {
   // Implementation details
-}
+};
 ```
 
 This function:
@@ -43,10 +43,9 @@ const customFetch = async (url, options) => {
       // ignore parse errors, default error message will be used
     }
 
-    const errorMessage =
-      errorData.error || `Request failed with status ${response.status}`;
+    const errorMessage = errorData.error || `Request failed with status ${response.status}`;
 
-    toast.custom(t => <ErrorToast t={t} error={errorMessage} />, {
+    toast.custom((t) => <ErrorToast t={t} error={errorMessage} />, {
       duration: 10000,
     });
 
@@ -58,7 +57,6 @@ const customFetch = async (url, options) => {
 };
 
 export default customFetch;
-
 ```
 
 ## Example Usage in `getUser.js`

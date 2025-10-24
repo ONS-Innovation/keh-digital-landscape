@@ -15,14 +15,14 @@ The ProjectModal component provides a detailed view of project information in a 
 
 The ProjectModal component accepts the following props:
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `isOpen` | boolean | Required | Controls the visibility of the modal |
-| `onClose` | function | Required | Handler function called when the modal is closed |
-| `project` | object | Required | The project object containing all project details |
-| `renderTechnologyList` | function | Required | Function to render technology lists in a consistent format |
-| `getTechnologyStatus` | function | Required | Function to determine the Tech Radar status of a technology |
-| `onTechClick` | function | Required | Handler for when a technology tag is clicked |
+| Prop                   | Type     | Default  | Description                                                 |
+| ---------------------- | -------- | -------- | ----------------------------------------------------------- |
+| `isOpen`               | boolean  | Required | Controls the visibility of the modal                        |
+| `onClose`              | function | Required | Handler function called when the modal is closed            |
+| `project`              | object   | Required | The project object containing all project details           |
+| `renderTechnologyList` | function | Required | Function to render technology lists in a consistent format  |
+| `getTechnologyStatus`  | function | Required | Function to determine the Tech Radar status of a technology |
+| `onTechClick`          | function | Required | Handler for when a technology tag is clicked                |
 
 ## Usage
 
@@ -32,26 +32,28 @@ import ProjectModal from '../components/Projects/ProjectModal';
 function ProjectsView() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+
   const handleTechClick = (techName) => {
     // Navigate to tech radar or show tech details
   };
-  
+
   const getTechStatus = (techName) => {
     // Return the status of the technology (adopt, trial, assess, hold)
   };
-  
+
   return (
     <div className="projects-container">
       {/* Project list or grid */}
-      
+
       <ProjectModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         project={selectedProject}
         renderTechnologyList={(technologies) => (
           <div className="tech-list">
-            {technologies.map(tech => <span key={tech}>{tech}</span>)}
+            {technologies.map((tech) => (
+              <span key={tech}>{tech}</span>
+            ))}
           </div>
         )}
         getTechnologyStatus={getTechStatus}

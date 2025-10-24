@@ -6,15 +6,15 @@ The Header component serves as the primary navigation interface for the Digital 
 
 The Header component accepts the following props:
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `searchTerm` | string | `""` | The current search term displayed in the search input |
-| `onSearchChange` | function | `() => {}` | Handler function called when the search term changes |
-| `searchResults` | array | `[]` | Array of search results to display in the dropdown |
-| `onSearchResultClick` | function | `() => {}` | Handler function called when a search result is clicked |
-| `onOpenProjects` | function | `() => {}` | Handler function called when the projects button is clicked |
-| `onStatsTechClick` | function | `() => {}` | Handler function called when a technology is clicked in statistics |
-| `hideSearch` | boolean | `false` | Whether to hide the search functionality |
+| Prop                  | Type     | Default    | Description                                                        |
+| --------------------- | -------- | ---------- | ------------------------------------------------------------------ |
+| `searchTerm`          | string   | `""`       | The current search term displayed in the search input              |
+| `onSearchChange`      | function | `() => {}` | Handler function called when the search term changes               |
+| `searchResults`       | array    | `[]`       | Array of search results to display in the dropdown                 |
+| `onSearchResultClick` | function | `() => {}` | Handler function called when a search result is clicked            |
+| `onOpenProjects`      | function | `() => {}` | Handler function called when the projects button is clicked        |
+| `onStatsTechClick`    | function | `() => {}` | Handler function called when a technology is clicked in statistics |
+| `hideSearch`          | boolean  | `false`    | Whether to hide the search functionality                           |
 
 ## Usage
 
@@ -24,19 +24,19 @@ import Header from '../components/Header/Header';
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  
+
   const handleSearchChange = (term) => {
     setSearchTerm(term);
     // Perform search and update results
   };
-  
+
   const handleSearchResultClick = (result) => {
     // Handle result selection
   };
-  
+
   return (
     <div className="app">
-      <Header 
+      <Header
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
         searchResults={searchResults}

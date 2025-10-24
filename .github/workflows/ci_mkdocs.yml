@@ -1,0 +1,30 @@
+name: (MkDocs) - Linting and Formatting
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'mkdocs/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'mkdocs/**'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Node.js Dependencies
+        run: cd mkdocs && make setup-dev
+
+      - name: Run Linting
+        run: cd mkdocs && make lint

@@ -9,13 +9,9 @@ The utility exports a primary function:
 ### fetchRepositoryData
 
 ```javascript
-export const fetchRepositoryData = async (
-  repositories,
-  date = null,
-  archived = null
-) => {
+export const fetchRepositoryData = async (repositories, date = null, archived = null) => {
   // Implementation details
-}
+};
 ```
 
 This function:
@@ -29,39 +25,34 @@ This function:
 
 The function accepts the following parameters:
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `repositories` | string[] | Required | Array of repository names to fetch data for |
-| `date` | string | `null` | ISO date string to filter repositories by last commit date |
-| `archived` | string | `null` | 'true'/'false' to filter archived repositories |
+| Parameter      | Type     | Default  | Description                                                |
+| -------------- | -------- | -------- | ---------------------------------------------------------- |
+| `repositories` | string[] | Required | Array of repository names to fetch data for                |
+| `date`         | string   | `null`   | ISO date string to filter repositories by last commit date |
+| `archived`     | string   | `null`   | 'true'/'false' to filter archived repositories             |
 
 ## Implementation Details
 
 The function follows a structured request pattern:
 
 1. **Parameter Validation**: Checks if repositories array is valid
-
-    - Returns `null` if repositories array is empty or undefined
+   - Returns `null` if repositories array is empty or undefined
 
 2. **URL Parameter Construction**: Builds query parameters
-
-    - Converts repository array to comma-separated string
-    - Adds optional date and archived parameters when provided
+   - Converts repository array to comma-separated string
+   - Adds optional date and archived parameters when provided
 
 3. **Environment-Specific URL**: Determines the correct API endpoint
-
-    - Uses `localhost:5001/api/repository/project/json` in development
-    - Uses `/api/repository/project/json` in production
+   - Uses `localhost:5001/api/repository/project/json` in development
+   - Uses `/api/repository/project/json` in production
 
 4. **Request Execution**: Fetches data with constructed URL and parameters
-
-    - Validates response status
-    - Parses JSON response
+   - Validates response status
+   - Parses JSON response
 
 5. **Error Handling**: Manages request failures
-
-    - Displays error toast notification
-    - Returns `null` to indicate failure
+   - Displays error toast notification
+   - Returns `null` to indicate failure
 
 ## Integration with DataContext
 
@@ -77,9 +68,7 @@ Example usage within DataContext:
 const getRepositoryData = useCallback(
   async (repositories, date = null, archived = null, forceRefresh = false) => {
     // Create cache key based on parameters
-    const cacheKey = `${repositories.join(",")}:${date || ""}:${
-      archived || ""
-    }`;
+    const cacheKey = `${repositories.join(',')}:${date || ''}:${archived || ''}`;
 
     // Check cache first unless forceRefresh is true
     if (repositoryData.has(cacheKey) && !forceRefresh) {

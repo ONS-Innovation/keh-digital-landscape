@@ -5,6 +5,7 @@ Welcome to the Digital Landscape documentation. This tool provides comprehensive
 ## Key Features
 
 ### Tech Radar
+
 Interactive visualisation of technology adoption status and trends across the organisation. The radar provides insights into:
 
 - Technology adoption rings (Adopt, Trial, Assess, Hold)
@@ -13,6 +14,7 @@ Interactive visualisation of technology adoption status and trends across the or
 - Detailed information about each technology and linked projects
 
 ### Statistics
+
 Detailed analytics of repository statistics and language usage, including:
 
 - Repository counts and status
@@ -23,6 +25,7 @@ Detailed analytics of repository statistics and language usage, including:
 - Average/total size toggle and Tech Radar ring toggle
 
 ### Projects
+
 Comprehensive project management interface offering:
 
 - Overview of all projects from Tech Audit Tool
@@ -30,6 +33,7 @@ Comprehensive project management interface offering:
 - Repository information and statistics from GitHub scraping
 
 ### Review
+
 Administrative interface for managing the Tech Radar:
 
 - Technology status updates
@@ -38,6 +42,7 @@ Administrative interface for managing the Tech Radar:
 - Add new technology
 
 ### Admin
+
 Advanced administrative tools for managing the platform:
 
 - Banner management for site-wide notifications

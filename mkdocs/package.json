@@ -1,0 +1,8 @@
+{
+  "name": "mkdocs-linting",
+  "version": "1.0.0",
+  "description": "Linting and formatting configuration for MkDocs documentation",
+  "devDependencies": {
+    "prettier": "^3.2.5"
+  }
+}
