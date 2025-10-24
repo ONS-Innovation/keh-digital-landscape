@@ -27,7 +27,6 @@ import {
   ARCHITECTURE_CATEGORIES,
   CATEGORY_COLOURS,
 } from '../../constants/projectConstants';
-import ProjectModal from './ProjectModal';
 
 /**
  * Projects component for displaying a list of projects.
@@ -922,6 +921,7 @@ const Projects = ({
               return (
                 <div
                   key={index}
+                  id={`project-${project.Project.toLowerCase().replace(/ /g, '-')}`}
                   className="project-item"
                   onClick={() => handleProjectClick(project)}
                 >
@@ -1145,15 +1145,6 @@ const Projects = ({
             <div className="projects-empty-state">No projects found</div>
           )}
         </div>
-        {isModalOpen && (
-          <ProjectModal
-            isOpen={isModalOpen}
-            onClose={onModalClose}
-            project={selectedProject}
-            onTechClick={onTechOrProjectClick}
-            renderTechnologyList={renderTechnologyList}
-          />
-        )}
       </div>
     </>
   );
