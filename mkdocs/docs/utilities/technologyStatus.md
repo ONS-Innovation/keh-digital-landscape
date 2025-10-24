@@ -104,6 +104,17 @@ Both the RadarPage and ProjectsPage leverage this utility to:
 3. Create consistent visual indicators for technology adoption levels
 4. Filter out technologies that should not be highlighted (those with "review" or "ignore" status)
 
+## Special Technology Matching
+
+The utility works alongside special technology matchers (`getSpecialTechMatchers.js`) to handle technology grouping:
+
+- **Purpose**: Maps individual language variants (e.g., "Javascript", "Typescript") to their consolidated Tech Radar entries (e.g., "Javascript/Typescript")
+- **Usage in Statistics**: The Statistics component uses these matchers to determine if a language is on the radar and should be clickable
+- **Usage in RadarPage**: When navigating from Statistics to RadarPage, the mapped technology name is used to locate the correct radar entry
+- **Example**: Clicking "Javascript" in Statistics will navigate to the "Javascript/Typescript" entry on the radar
+
+This ensures consistent technology grouping across all pages without requiring duplicate Tech Radar entries.
+
 ## Error Handling
 
 The utility implements comprehensive error handling:
