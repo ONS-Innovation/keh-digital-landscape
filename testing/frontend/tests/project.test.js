@@ -133,7 +133,7 @@ test.describe('Projects Page Tests', () => {
                 .split(';')
                 .map(item => item.trim());
 
-              const miscCount = (await miscItems.count());
+              const miscCount = await miscItems.count();
               await expect(miscCount).toBe(miscData.length);
 
               // This for loop will only check the first half of the misc items to avoid duplicates
