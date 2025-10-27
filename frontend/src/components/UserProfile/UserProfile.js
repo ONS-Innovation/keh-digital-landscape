@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useData } from '../../contexts/dataContext';
 import {
   TbUser,
@@ -78,11 +78,6 @@ const UserProfile = ({ isCollapsed = false, variant = 'sidebar' }) => {
     if (isLoading) return 'Loading...';
     if (!user?.user?.email) return 'Guest';
     return user.user.email;
-  };
-
-  const getUserRoles = () => {
-    if (!user?.user?.groups || user.user.groups.length === 0) return 'Guest';
-    return user.user.groups.join(', ');
   };
 
   const isLoggedIn = () => {
