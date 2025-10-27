@@ -330,9 +330,9 @@ const ProjectModal = ({
   // Keeps all the values so every value will appear
   const filterItems = items => {
     const q = searchQuery.trim().toLowerCase();
+    if (!q) return items;
     return items.filter(key => {
       const label = (fieldLabels[key] || key.replace(/_/g, ' ')).toLowerCase();
-      if (!q) return true;
       const value = (project[key] ?? '').toString().toLowerCase();
       return label.includes(q) || value.includes(q);
     });
