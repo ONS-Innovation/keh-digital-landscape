@@ -12,3 +12,4 @@ test-ui:
 
 clean:
 	rm -rf reports
+	rm -rf test-results
