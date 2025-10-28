@@ -128,7 +128,7 @@ The UI tests are written using [Playwright](https://playwright.dev/) and are loc
 
 ### **Test Coverage**
 
-  Current existing tests include:
+Current existing tests include:
 
 - **Search Teams Functionality**
 
