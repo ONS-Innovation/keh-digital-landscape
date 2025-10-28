@@ -128,6 +128,26 @@ The UI tests are written using [Playwright](https://playwright.dev/) and are loc
 
 ### **Test Coverage**
 
+  Current existing tests include:
+
+- **Search Teams Functionality**
+
+  Located under Copilot > Team Usage > Search Teams
+  Tests searching, filtering, and displaying teams
+
+- **Tech Radar**
+  - **Infrastructure (AWS/GCP):**
+    - Verifies AWS and GCP blips are present
+    - Checks that projects using AWS and GCP are displayed
+    - Ensures projects for unsupported cloud providers (e.g., Oracle) do not appear in AWS/GCP blips
+  - **Languages:**
+    - Checks that JavaScript/TypeScript and Java languages are present
+    - Verifies projects using these languages are displayed
+
+- **Reviewer Dashboard**
+  - Uses the same data as Tech Radar
+  - Checks that the project count is displayed correctly
+
 Run the following to run the tests:
 
 ```bash
