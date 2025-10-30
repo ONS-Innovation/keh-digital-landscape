@@ -1,5 +1,5 @@
 {
-  "name": "tech-radar-frontend",
+  "name": "digital-landscape-frontend",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -9,9 +9,6 @@
     "@aws-sdk/credential-providers": "^3.699.0",
     "@aws-sdk/s3-request-presigner": "^3.705.0",
     "@radix-ui/react-popover": "^1.1.4",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
     "ag-grid-react": "^33.2.4",
     "date-fns": "^4.1.0",
     "http-proxy-middleware": "^2.0.6",
@@ -24,6 +21,7 @@
     "react-router-dom": "^7.5.2",
     "recharts": "^2.15.1",
     "string-similarity": "^4.0.4",
+    "vite": "^7.1.9",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -54,6 +52,9 @@
     "@eslint/compat": "^1.4.0",
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.37.0",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.3",
@@ -65,7 +66,6 @@
     "globals": "^16.4.0",
     "jsdom": "^25.0.1",
     "prettier": "^3.2.5",
-    "vite": "^7.1.9",
     "vitest": "^3.2.4"
   },
   "resolutions": {
