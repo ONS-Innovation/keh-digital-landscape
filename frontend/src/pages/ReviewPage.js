@@ -271,7 +271,8 @@ const ReviewPage = () => {
 
     const categorized = categorizeEntries(radarData.entries);
     setEntries(categorized);
-  }, [selectedDirectorate, categorizeEntries, entries]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDirectorate, categorizeEntries]);
 
   /**
    * Calculates project counts for all technologies
