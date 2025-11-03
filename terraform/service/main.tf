@@ -50,6 +50,10 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
         {
           name  = "VITE_BACKEND_URL",
           value = "https://${local.service_url}"
+        },
+        {
+          name  = "VITE_SUPPORT_MAIL",
+          value = var.support_mail
         }
       ]
     },
