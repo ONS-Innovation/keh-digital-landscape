@@ -781,40 +781,6 @@ function RadarPage() {
       </div>
     );
 
-  const groupedEntries = data.entries.reduce((acc, entry) => {
-    const quadrant = entry.quadrant;
-
-    const mostRecentRing = getMostRecentRing(entry.timeline);
-
-    // Skip if the most recent timeline entry has ringId of "review" or "ignore"
-    if (mostRecentRing === 'review' || mostRecentRing === 'ignore') return acc;
-
-    if (!acc[quadrant]) acc[quadrant] = {};
-    if (!acc[quadrant][mostRecentRing]) acc[quadrant][mostRecentRing] = [];
-
-    acc[quadrant][mostRecentRing].push({
-      ...entry,
-      timeline: getFilteredTimeline(entry.timeline),
-    });
-    return acc;
-  }, {});
-
-  const numberedEntries = {};
-  let counter = 1;
-  Object.keys(groupedEntries).forEach(quadrant => {
-    numberedEntries[quadrant] = [];
-    ['adopt', 'trial', 'assess', 'hold'].forEach(ring => {
-      if (groupedEntries[quadrant][ring]) {
-        groupedEntries[quadrant][ring].forEach(entry => {
-          numberedEntries[quadrant].push({
-            ...entry,
-            number: counter++,
-          });
-        });
-      }
-    });
-  });
-
   return (
     <>
       <Header
