@@ -11,12 +11,21 @@ const Modal = ({ isOpen, onClose }) => {
     );
   };
 
+  const handleEmailReport = () => {
+    const supportEmail = import.meta.env.VITE_SUPPORT_MAIL || '';
+    if (supportEmail !== '') {
+      window.location.href = `mailto:${supportEmail}`;
+    } else {
+      toast.error('No support email found');
+    }
+  };
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="bug-modal-content" onClick={e => e.stopPropagation()}>
-        <div className="modal-header">
+        <div className="bug-modal-header">
           <h2>Report a Bug</h2>
-          <button className="modal-close-button" onClick={onClose}>
+          <button className="bug-modal-close-button" onClick={onClose}>
             <TbX />
           </button>
         </div>
@@ -24,8 +33,18 @@ const Modal = ({ isOpen, onClose }) => {
           You will be redirected to GitHub to create an issue. Please do not
           include any sensitive information in your bug report.
         </p>
-        <button className="modal-action-button" onClick={handleCreateIssue}>
+        <button className="bug-modal-action-button" onClick={handleCreateIssue}>
           Continue to GitHub
+        </button>
+        <div className="bug-modal-divider" />
+        <p className="bug-modal-email-text">
+          Alternatively, you can email us directly about this issue.
+        </p>
+        <button
+          className="bug-modal-action-button bug-modal-email-button"
+          onClick={handleEmailReport}
+        >
+          Send Email
         </button>
       </div>
     </div>
