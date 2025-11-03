@@ -23,10 +23,10 @@ The projectConstants file exports the following constants:
 
 ```js
 export const CLOUD_PROVIDERS = {
-  AWS: ["aws", "amazon", "ec2", "lambda", "fargate", "ecs", "eks"],
-  GCP: ["gcp", "google cloud", "cloud run", "gke", "app engine"],
-  Azure: ["azure", "microsoft"],
-  Other: []
+  AWS: ['aws', 'amazon', 'ec2', 'lambda', 'fargate', 'ecs', 'eks'],
+  GCP: ['gcp', 'google cloud', 'cloud run', 'gke', 'app engine'],
+  Azure: ['azure', 'microsoft'],
+  Other: [],
 };
 ```
 
@@ -35,7 +35,7 @@ A mapping of cloud provider names to arrays of identifying keywords, used to det
 ### PROJECT_STAGES
 
 ```js
-export const PROJECT_STAGES = ["Active Support", "Development", "Unsupported"];
+export const PROJECT_STAGES = ['Active Support', 'Development', 'Unsupported'];
 ```
 
 An array of standard project lifecycle stages used throughout the application for filtering and categorisation.
@@ -43,7 +43,7 @@ An array of standard project lifecycle stages used throughout the application fo
 ### DEVELOPMENT_TYPES
 
 ```js
-export const DEVELOPMENT_TYPES = ["In House", "Partner", "Outsourced"];
+export const DEVELOPMENT_TYPES = ['In House', 'Partner', 'Outsourced'];
 ```
 
 An array of standard development approach types used for filtering and categorisation.
@@ -52,9 +52,9 @@ An array of standard development approach types used for filtering and categoris
 
 ```js
 export const DEVELOPMENT_TYPE_CODES = {
-  I: "In House",
-  P: "Partner",
-  O: "Outsourced"
+  I: 'In House',
+  P: 'Partner',
+  O: 'Outsourced',
 };
 ```
 
@@ -63,7 +63,7 @@ A mapping of single-character codes to full development type names, used for con
 ### HOSTING_TYPES
 
 ```js
-export const HOSTING_TYPES = ["Cloud", "Hybrid", "On-premises"];
+export const HOSTING_TYPES = ['Cloud', 'Hybrid', 'On-premises'];
 ```
 
 An array of standard hosting environment types used for filtering and categorisation.
@@ -71,7 +71,7 @@ An array of standard hosting environment types used for filtering and categorisa
 ### ARCHITECTURE_CATEGORIES
 
 ```js
-export const ARCHITECTURE_CATEGORIES = ["AWS", "GCP", "Azure", "Other"];
+export const ARCHITECTURE_CATEGORIES = ['AWS', 'GCP', 'Azure', 'Other'];
 ```
 
 An array of architecture categories representing major cloud providers and other architectures.
@@ -81,25 +81,25 @@ An array of architecture categories representing major cloud providers and other
 ```js
 export const CATEGORY_COLOURS = {
   // Project stages
-  "Active Support": "var(--color-adopt)",
-  "Development": "var(--color-trial)",
-  "Unsupported": "var(--color-hold)",
-  
+  'Active Support': 'var(--color-adopt)',
+  Development: 'var(--color-trial)',
+  Unsupported: 'var(--color-hold)',
+
   // Development types
-  "I": "var(--color-adopt)",
-  "O": "var(--color-trial)",
-  "P": "var(--color-assess)",
-  
+  I: 'var(--color-adopt)',
+  O: 'var(--color-trial)',
+  P: 'var(--color-assess)',
+
   // Hosting types
-  "Cloud": "var(--color-adopt)",
-  "On-premises": "var(--color-trial)",
-  "Hybrid": "var(--color-assess)",
-  
+  Cloud: 'var(--color-adopt)',
+  'On-premises': 'var(--color-trial)',
+  Hybrid: 'var(--color-assess)',
+
   // Architecture categories
-  "AWS": "var(--color-adopt)",
-  "GCP": "var(--color-trial)",
-  "Azure": "var(--color-hold)",
-  "Other": "var(--color-assess)",
+  AWS: 'var(--color-adopt)',
+  GCP: 'var(--color-trial)',
+  Azure: 'var(--color-hold)',
+  Other: 'var(--color-assess)',
 };
 ```
 
@@ -110,10 +110,10 @@ A comprehensive mapping of category values to colour variables, ensuring consist
 These constants are used throughout the application to ensure consistent categorisation and display:
 
 ```jsx
-import { 
-  PROJECT_STAGES, 
-  DEVELOPMENT_TYPES, 
-  CATEGORY_COLOURS 
+import {
+  PROJECT_STAGES,
+  DEVELOPMENT_TYPES,
+  CATEGORY_COLOURS,
 } from '../../constants/projectConstants';
 
 function ProjectsStatistics() {
@@ -126,7 +126,7 @@ function ProjectsStatistics() {
         categories={PROJECT_STAGES}
         categoryColours={CATEGORY_COLOURS}
       />
-      
+
       <FilterGroup
         title="Development Type"
         sectionKey="developmentType"

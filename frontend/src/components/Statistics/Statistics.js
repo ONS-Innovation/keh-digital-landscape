@@ -5,6 +5,7 @@ import SkeletonStatCard from './Skeletons/SkeletonStatCard';
 import SkeletonLanguageCard from './Skeletons/SkeletonLanguageCard';
 import MultiSelect from '../MultiSelect/MultiSelect';
 import { useTechnologyStatus } from '../../utilities/getTechnologyStatus';
+import { specialTechMatchers } from '../../utilities/getSpecialTechMatchers';
 import { formatNumberWithCommas } from '../../utilities/getCommaSeparated';
 
 /**
@@ -53,6 +54,21 @@ function Statistics({
   const getTechnologyStatus = useTechnologyStatus();
 
   /**
+   * Maps a language to its tech radar equivalent using specialTechMatchers
+   *
+   * @param {string} language - The language to map
+   * @returns {string} - The mapped tech radar language or the original language
+   */
+  const mapLanguageToTechRadar = useCallback(language => {
+    for (const [techName, matcher] of Object.entries(specialTechMatchers)) {
+      if (matcher(language)) {
+        return techName;
+      }
+    }
+    return language;
+  }, []);
+
+  /**
    * handleDateChange function handles the date change event.
    *
    * @param {string} value - The selected date value.
@@ -87,7 +103,7 @@ function Statistics({
    * @param {string} language - The language to handle the click for.
    */
   const handleLanguageClick = language => {
-    const status = getTechnologyStatus(language);
+    const status = getTechnologyStatus(mapLanguageToTechRadar(language));
     if (status && status !== 'review' && status !== 'ignore') {
       onTechClick(language);
     }
@@ -141,7 +157,7 @@ function Statistics({
         .includes(searchTerm.toLowerCase());
 
       if (showTechRadarOnly) {
-        const status = getTechnologyStatus(language);
+        const status = getTechnologyStatus(mapLanguageToTechRadar(language));
         return (
           matchesSearch &&
           status !== null &&
@@ -179,6 +195,7 @@ function Statistics({
     sortConfig,
     getTechnologyStatus,
     showTechRadarOnly,
+    mapLanguageToTechRadar,
   ]);
 
   /**
@@ -444,7 +461,9 @@ function Statistics({
 
             <div className="language-grid" tabIndex="0">
               {sortedAndFilteredLanguages.map(([language, stats]) => {
-                const status = getTechnologyStatus(language);
+                const status = getTechnologyStatus(
+                  mapLanguageToTechRadar(language)
+                );
                 return (
                   <div
                     key={language}

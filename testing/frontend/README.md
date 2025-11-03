@@ -131,8 +131,9 @@ The UI tests are written using [Playwright](https://playwright.dev/) and are loc
 Current existing tests include:
 
 - **Search Teams Functionality**
-  - Located under Copilot > Team Usage > Search Teams
-  - Tests searching, filtering, and displaying teams
+
+  Located under Copilot > Team Usage > Search Teams
+  Tests searching, filtering, and displaying teams
 
 - **Tech Radar**
   - **Infrastructure (AWS/GCP):**
@@ -155,7 +156,7 @@ make test-ui
 
 ## Cleaning
 
-After tests have finished, remove the /reports folder by using:
+After tests have finished, remove the `/reports` and `/test-results` folders by using:
 
 ```bash
 make clean

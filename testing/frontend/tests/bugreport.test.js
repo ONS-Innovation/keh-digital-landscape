@@ -13,7 +13,7 @@ test('Sidebar Report a Bug button opens and closes the modal', async ({
     page.getByRole('heading', { name: 'Report a Bug' })
   ).toBeVisible();
   await expect(page.locator('.modal-overlay')).toBeVisible();
-  await expect(page.locator('.modal-content')).toBeVisible();
+  await expect(page.locator('.bug-modal-content')).toBeVisible();
 
   // Close the modal using the close button
   await page.locator('.modal-close-button').click();

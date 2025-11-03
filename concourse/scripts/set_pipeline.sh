@@ -12,21 +12,15 @@ if ! git rev-parse --verify "${branch}" >/dev/null 2>&1; then
     exit 1
 fi
 
-
+# Name the pipeline based on the branch
 if [[ ${branch} == "main" || ${branch} == "master" ]]; then
-    # Get the latest tag that matches the format vX.Y.Z
-    tag=$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' | sort -V | tail -n 1)
-    if [[ -z "${tag}" ]]; then
-        echo "No valid semantic versioning tags (vX.Y.Z) found. Cannot set pipeline."
-        exit 1
-    fi
     pipeline_name=${repo_name}
 else
     # Remove non-alphanumeric characters and take the first 7 characters
-    tag=$(echo "${branch}" | tr -cd '[:alnum:]' | cut -c1-7)
-    pipeline_name=${repo_name}-${branch}
+    sanitized_branch=$(echo "${branch}" | tr -cd '[:alnum:]' | cut -c1-7)
+    pipeline_name=${repo_name}-${sanitized_branch}
 fi
 
-fly -t aws-sdp set-pipeline -c concourse/ci.yml -p ${pipeline_name}  -v branch=${branch} -v tag=${tag} -v repo_name=${repo_name} -v env=dev
+fly -t aws-sdp set-pipeline -c concourse/ci.yml -p ${pipeline_name}  -v branch=${branch} -v repo_name=${repo_name} -v env=dev
 
 echo "Pipeline \"${pipeline_name}\" set successfully."

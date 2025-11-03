@@ -17,15 +17,15 @@ The Statistics component provides a visualisation of repository and programming 
 
 The Statistics component accepts the following props:
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `data` | object | Required | Object containing repository and language statistics |
-| `onTechClick` | function | Required | Handler function called when a technology is clicked |
-| `onDateChange` | function | Required | Handler function called when the date filter changes |
-| `isLoading` | boolean | Required | Whether the statistics data is currently loading |
-| `projectsData` | array | Required | Array of project objects for project filtering |
+| Prop               | Type     | Default  | Description                                           |
+| ------------------ | -------- | -------- | ----------------------------------------------------- |
+| `data`             | object   | Required | Object containing repository and language statistics  |
+| `onTechClick`      | function | Required | Handler function called when a technology is clicked  |
+| `onDateChange`     | function | Required | Handler function called when the date filter changes  |
+| `isLoading`        | boolean  | Required | Whether the statistics data is currently loading      |
+| `projectsData`     | array    | Required | Array of project objects for project filtering        |
 | `onProjectsChange` | function | Required | Handler function called when selected projects change |
-| `searchTerm` | string | `""` | Current search term for filtering languages |
+| `searchTerm`       | string   | `""`     | Current search term for filtering languages           |
 
 ## Usage
 
@@ -37,27 +37,27 @@ function StatisticsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [projectsData, setProjectsData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   const handleTechClick = (techName) => {
     // Navigate to tech radar or show tech details
   };
-  
+
   const handleDateChange = (date, repoView) => {
     // Fetch data for the selected date range and repository view
-    fetchStatistics(date, repoView).then(data => {
+    fetchStatistics(date, repoView).then((data) => {
       setData(data);
       setIsLoading(false);
     });
   };
-  
+
   const handleProjectsChange = (selectedProjects) => {
     // Filter statistics by selected projects
-    fetchProjectStatistics(selectedProjects).then(data => {
+    fetchProjectStatistics(selectedProjects).then((data) => {
       setData(data);
       setIsLoading(false);
     });
   };
-  
+
   return (
     <div className="statistics-page">
       <Statistics

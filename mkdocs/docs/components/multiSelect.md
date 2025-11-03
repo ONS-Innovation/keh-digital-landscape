@@ -16,13 +16,13 @@ The MultiSelect component provides an interactive dropdown interface for selecti
 
 The MultiSelect component accepts the following props:
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `options` | array | Required | Array of option objects with `value` and `label` properties |
-| `value` | array | Required | Array of currently selected option objects |
-| `onChange` | function | Required | Handler function called when selections change |
-| `placeholder` | string | `"Select..."` | Text displayed when no options are selected |
-| `isDisabled` | boolean | `false` | Whether the component is disabled |
+| Prop          | Type     | Default       | Description                                                 |
+| ------------- | -------- | ------------- | ----------------------------------------------------------- |
+| `options`     | array    | Required      | Array of option objects with `value` and `label` properties |
+| `value`       | array    | Required      | Array of currently selected option objects                  |
+| `onChange`    | function | Required      | Handler function called when selections change              |
+| `placeholder` | string   | `"Select..."` | Text displayed when no options are selected                 |
+| `isDisabled`  | boolean  | `false`       | Whether the component is disabled                           |
 
 ## Usage
 
@@ -31,7 +31,7 @@ import MultiSelect from '../components/MultiSelect/MultiSelect';
 
 function FilterForm() {
   const [selectedTechnologies, setSelectedTechnologies] = useState([]);
-  
+
   const technologyOptions = [
     { value: 'react', label: 'React' },
     { value: 'angular', label: 'Angular' },
@@ -39,7 +39,7 @@ function FilterForm() {
     { value: 'svelte', label: 'Svelte' },
     { value: 'nextjs', label: 'Next.js' },
   ];
-  
+
   return (
     <div className="filter-form">
       <label>Technologies:</label>

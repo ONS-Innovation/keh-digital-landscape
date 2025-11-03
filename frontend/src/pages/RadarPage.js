@@ -70,6 +70,21 @@ function RadarPage() {
     getDirectorates().then(setDirectorates);
   }, []);
 
+  /**
+   * Maps a language to its tech radar equivalent using specialTechMatchers
+   *
+   * @param {string} language - The language to map
+   * @returns {string} - The mapped tech radar language or the original language
+   */
+  const mapLanguageToTechRadar = language => {
+    for (const [techName, matcher] of Object.entries(specialTechMatchers)) {
+      if (matcher(language)) {
+        return techName;
+      }
+    }
+    return language;
+  };
+
   // Default to directorate with default flag if none selected
   useEffect(() => {
     if (directorates.length > 0 && !selectedDirectorate) {
@@ -622,8 +637,9 @@ function RadarPage() {
       return;
     }
 
+    const mappedTechName = mapLanguageToTechRadar(techName);
     const entry = data.entries.find(
-      entry => entry.title.toLowerCase() === techName.toLowerCase()
+      entry => entry.title.toLowerCase() === mappedTechName.toLowerCase()
     );
 
     if (entry) {
@@ -632,11 +648,11 @@ function RadarPage() {
         e => e.id === entry.id
       );
 
-      const projects = findProjectsUsingTechnology(entry.title);
-      setProjectsForTech(projects);
-      setLockedBlip(entryWithNumber);
-      setSelectedBlip(entryWithNumber);
-      setIsInfoBoxVisible(true);
+      setIsProjectModalOpen(false);
+      console.log(isProjectsModalOpen);
+      setIsProjectsModalOpen(false);
+
+      handleBlipClick(entryWithNumber, true);
     }
   };
 
@@ -646,8 +662,9 @@ function RadarPage() {
   useEffect(() => {
     if (location.state?.selectedTech) {
       const tech = location.state.selectedTech;
+      const mappedTech = mapLanguageToTechRadar(tech);
       const entry = data?.entries.find(
-        entry => entry.title.toLowerCase() === tech.toLowerCase()
+        entry => entry.title.toLowerCase() === mappedTech.toLowerCase()
       );
       if (entry) {
         handleBlipClick(entry, true);
@@ -672,8 +689,9 @@ function RadarPage() {
    * @param {string} tech - The technology to handle the click for.
    */
   const handleTechClick = tech => {
+    const mappedTech = mapLanguageToTechRadar(tech);
     const radarEntry = data.entries.find(
-      entry => entry.title.toLowerCase() === tech.toLowerCase().trim()
+      entry => entry.title.toLowerCase() === mappedTech.toLowerCase().trim()
     );
 
     if (radarEntry) {
@@ -751,6 +769,51 @@ function RadarPage() {
       setFilteredQuadrant(quadrantId); // Filter by new quadrant
     }
   };
+
+  if (!data)
+    return (
+      <div>
+        <Header />
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading Radar...</p>
+        </div>
+      </div>
+    );
+
+  const groupedEntries = data.entries.reduce((acc, entry) => {
+    const quadrant = entry.quadrant;
+
+    const mostRecentRing = getMostRecentRing(entry.timeline);
+
+    // Skip if the most recent timeline entry has ringId of "review" or "ignore"
+    if (mostRecentRing === 'review' || mostRecentRing === 'ignore') return acc;
+
+    if (!acc[quadrant]) acc[quadrant] = {};
+    if (!acc[quadrant][mostRecentRing]) acc[quadrant][mostRecentRing] = [];
+
+    acc[quadrant][mostRecentRing].push({
+      ...entry,
+      timeline: getFilteredTimeline(entry.timeline),
+    });
+    return acc;
+  }, {});
+
+  const numberedEntries = {};
+  let counter = 1;
+  Object.keys(groupedEntries).forEach(quadrant => {
+    numberedEntries[quadrant] = [];
+    ['adopt', 'trial', 'assess', 'hold'].forEach(ring => {
+      if (groupedEntries[quadrant][ring]) {
+        groupedEntries[quadrant][ring].forEach(entry => {
+          numberedEntries[quadrant].push({
+            ...entry,
+            number: counter++,
+          });
+        });
+      }
+    });
+  });
 
   return (
     <>

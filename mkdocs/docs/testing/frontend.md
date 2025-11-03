@@ -4,11 +4,6 @@
 
 The frontend testing is run using Playwright. Playwright is an end-to-end test framework. All API endpoints that serve data to the Digital Landscape application are being fulfilled using a function, <i>route.fulfill</i>.
 
-The current tests include:
-
-- Search teams functionality
-- Tech Radar infrastructure check for AWS and GCP and language check for Javascript/TypeScript and Java. The tests also check the relevant projects under each node.
-
 ## Test Implementation
 
 The tests are implemented in the `testing/frontend/tests` directory using the Playwright framework. The tests are organised into two main files:
@@ -17,6 +12,7 @@ The tests are implemented in the `testing/frontend/tests` directory using the Pl
 - `techradar.test.js` - Tests for Tech Radar. Currently tests Infrastructure (GCP & AWS nodes) and Languages (JavaScript/Typescript and Java nodes) sections of the radar.
 
 ### Running Tests
+
 ```bash
 # Navigate to the testing directory
 cd testing/frontend
