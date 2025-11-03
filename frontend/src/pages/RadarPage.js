@@ -1394,11 +1394,7 @@ function RadarPage() {
                 </span>
               </div>
             </div>
-            <ul 
-              tabIndex="0"
-              role="list"
-              aria-label="Frameworks technologies"
-            >
+            <ul tabIndex="0" role="list" aria-label="Frameworks technologies">
               {numberedEntries['2']?.map(entry => (
                 <li
                   key={entry.id}
