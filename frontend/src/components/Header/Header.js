@@ -116,6 +116,7 @@ function Header({
               value={searchTerm}
               onChange={e => onSearchChange(e.target.value)}
               className="search-input"
+              name="search"
             />
             {searchTerm ? (
               <button className="search-clear" onClick={clearSearch}>

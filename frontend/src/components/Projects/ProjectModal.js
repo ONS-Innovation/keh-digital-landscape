@@ -481,6 +481,7 @@ const ProjectModal = ({
                 onChange={e => setSearchQuery(e.target.value)}
                 className="search-input-projects"
                 aria-label="Search project details"
+                name="search"
               />
             </div>
             <button
