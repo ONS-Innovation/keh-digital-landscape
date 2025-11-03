@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo, useRef, useCallback } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import Header from '../components/Header/Header';
 import LiveDashboard from '../components/Copilot/Dashboards/LiveDashboard';
 import HistoricDashboard from '../components/Copilot/Dashboards/HistoricDashboard';
@@ -39,6 +39,7 @@ function CopilotDashboard() {
     yearUsage: [],
   }); // TODO: Add team historic data support
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const [sliderValues, setSliderValues] = useState(null);
   const [inactiveDays, setInactiveDays] = useState(28);
@@ -265,53 +266,34 @@ function CopilotDashboard() {
   }, [scope, liveOrgData.allUsage, liveTeamData.allUsage, getEndSliderValue]);
 
   /**
-   * Initialise URL state values
+   * Sync state from URL changes (browser navigation, back/forward, direct URL, tab clicks)
+   * This effect makes URL the single source of truth for routing state
    */
-  const initialUrlState = useMemo(() => {
-    const pathParts = window.location.pathname.split('/');
+  useEffect(() => {
+    const pathParts = location.pathname.split('/');
     const currentUrlScope = pathParts[2]; // Get scope from pathname
 
     if (currentUrlScope === 'org') {
-      return {
-        scope: 'organisation',
-        viewMode: pathParts[3] === 'historic' ? 'historic' : 'live',
-        teamSlug: null,
-        isSelectingTeam: false,
-        shouldFetchTeam: false,
-      };
+      const urlViewMode = pathParts[3] === 'historic' ? 'historic' : 'live';
+      setScope('organisation');
+      setViewMode(urlViewMode);
+      setTeamSlug(null);
+      setIsSelectingTeam(false);
     } else if (currentUrlScope === 'team') {
       const teamParam = pathParts[3];
-      return {
-        scope: 'team',
-        viewMode: 'live',
-        teamSlug: teamParam || null,
-        isSelectingTeam: !teamParam,
-        shouldFetchTeam: !!teamParam,
-      };
+      setScope('team');
+      setTeamSlug(teamParam || null);
+      setIsSelectingTeam(!teamParam);
+      if (teamParam) {
+        fetchTeamData(teamParam);
+      }
     } else {
-      return {
-        scope: 'organisation',
-        viewMode: 'live',
-        teamSlug: null,
-        isSelectingTeam: false,
-        shouldFetchTeam: false,
-      };
-    }
-  }, []);
-
-  // Apply URL state
-  useEffect(() => {
-    setScope(initialUrlState.scope);
-    setViewMode(initialUrlState.viewMode);
-    setTeamSlug(initialUrlState.teamSlug);
-    setIsSelectingTeam(initialUrlState.isSelectingTeam);
-
-    if (initialUrlState.scope === 'organisation') {
+      // Default to organisation/live if path doesn't match expected format
+      setScope('organisation');
+      setViewMode('live');
       navigate('/copilot/org/live', { replace: true });
-    } else if (initialUrlState.shouldFetchTeam && initialUrlState.teamSlug) {
-      fetchTeamData(initialUrlState.teamSlug);
     }
-  }, [initialUrlState, navigate, fetchTeamData]);
+  }, [location.pathname, navigate, fetchTeamData]);
 
   /**
    * Trigger data filter upon slider completion
@@ -560,20 +542,12 @@ function CopilotDashboard() {
             { id: 'team', label: 'Team Usage' },
           ]}
           activeTab={scope}
-          onTabChange={() => {
-            setViewMode('live'); // TODO: Add team historic data support
-            setScope(prevScope => {
-              const newScope =
-                prevScope === 'organisation' ? 'team' : 'organisation';
-              if (newScope === 'team') {
-                setIsSelectingTeam(true);
-                setTeamSlug(null);
-                navigate('/copilot/team', { replace: true });
-              } else {
-                navigate('/copilot/org/live', { replace: true });
-              }
-              return newScope;
-            });
+          onTabChange={tabId => {
+            if (tabId === 'team') {
+              navigate('/copilot/team', { replace: true });
+            } else if (tabId === 'organisation') {
+              navigate('/copilot/org/live', { replace: true });
+            }
           }}
         />
         <div className="admin-container" tabIndex="0">
@@ -680,7 +654,6 @@ function CopilotDashboard() {
                       ]}
                       activeTab={viewMode}
                       onTabChange={mode => {
-                        setViewMode(mode);
                         navigate(`/copilot/org/${mode}`, { replace: true });
                       }}
                     />
