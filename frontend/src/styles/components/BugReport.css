@@ -68,11 +68,22 @@
   border: 1px solid hsl(var(--border));
   font-size: 1.5rem;
   color: hsl(var(--foreground));
+  outline: none;
 }
 
 .bug-modal-close-button:hover {
   background: hsl(var(--muted));
   color: hsl(var(--foreground));
+}
+
+.bug-modal-close-button:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+  background: hsl(var(--muted));
+}
+
+.bug-modal-close-button:focus:not(:focus-visible) {
+  outline: none;
 }
 
 .bug-modal-header h2 {
@@ -99,11 +110,22 @@
   font-weight: 500;
   width: 100%;
   transition: all 0.2s ease;
+  outline: none;
 }
 
 .bug-modal-action-button:hover {
   background: hsl(var(--primary) / 0.9);
   color: hsl(var(--primary-foreground));
+}
+
+.bug-modal-action-button:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px hsl(var(--ring) / 0.2);
+}
+
+.bug-modal-action-button:focus:not(:focus-visible) {
+  outline: none;
 }
 
 .bug-modal-divider {
@@ -126,4 +148,31 @@
 .bug-modal-email-button:hover {
   background: hsl(var(--muted) / 0.8);
   color: hsl(var(--foreground));
+}
+
+.bug-modal-email-button:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px hsl(var(--ring) / 0.2);
+}
+
+.bug-modal-email-button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .bug-modal-close-button,
+  .bug-modal-action-button {
+    transition: none;
+  }
+
+  .modal-overlay {
+    animation: none;
+  }
+}
+
+/* Ensure modal content is keyboard accessible */
+.bug-modal-content:focus-within {
+  outline: none;
 }
