@@ -39,7 +39,7 @@ const Projects = ({
   handleProjectClick,
   getTechnologyStatus,
   onRefresh,
-  searchTerm
+  searchTerm,
 }) => {
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [sortField, setSortField] = useState('name');
