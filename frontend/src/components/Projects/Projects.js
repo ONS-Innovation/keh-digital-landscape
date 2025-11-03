@@ -39,12 +39,7 @@ const Projects = ({
   handleProjectClick,
   getTechnologyStatus,
   onRefresh,
-  searchTerm,
-  selectedProject,
-  isModalOpen,
-  onModalClose,
-  onTechOrProjectClick,
-  renderTechnologyList,
+  searchTerm
 }) => {
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [sortField, setSortField] = useState('name');
