@@ -130,7 +130,7 @@
   top: 50%;
   transform: translateY(-50%);
   color: var(--text-secondary);
-  font-size: 10px;
+  font-size: 14px;
   padding: 4px 6px;
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
@@ -184,7 +184,7 @@
 }
 
 .search-result-ring {
-  font-size: 10px;
+  font-size: 14px;
   padding: 2px 8px;
   border-radius: 12px;
   font-weight: 500;

@@ -118,7 +118,7 @@
   padding: 10px 12px;
   text-align: left;
   border-bottom: 1px solid hsl(var(--border));
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .tech-table th.sortable-header {
@@ -137,7 +137,7 @@
   right: 8px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .tech-table th.sorted-ascending,
@@ -161,7 +161,7 @@
 
 .tech-table td {
   padding: 4px 8px;
-  font-size: 12px;
+  font-size: 14px;
   box-sizing: border-box;
   vertical-align: middle;
   text-wrap: nowrap;
@@ -213,7 +213,7 @@
   border: none;
   cursor: pointer;
   color: hsl(var(--muted-foreground));
-  font-size: 12px;
+  font-size: 14px;
   padding: 4px;
   display: flex;
   align-items: center;
@@ -324,7 +324,7 @@
   border: 1px solid hsl(var(--border));
   background-color: hsl(var(--card));
   color: hsl(var(--card-foreground));
-  font-size: 12px;
+  font-size: 14px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -416,7 +416,7 @@
   border: none;
   cursor: pointer;
   color: hsl(var(--primary));
-  font-size: 12px;
+  font-size: 14px;
   padding: 8px;
   display: flex;
   align-items: center;
@@ -445,7 +445,7 @@
   outline: none;
   background-color: hsl(var(--muted));
   color: hsl(var(--foreground));
-  font-size: 12px;
+  font-size: 14px;
   font-family: inherit;
 }
 
@@ -525,7 +525,7 @@
 }
 
 .table-action-btn.normalise-btn {
-  font-size: 12px;
+  font-size: 14px;
   color: hsl(var(--muted-foreground));
 }
 
@@ -586,7 +586,7 @@
 .affected-list {
   max-height: 200px;
   overflow-y: auto;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .affected-list:focus-within {
@@ -773,7 +773,7 @@
   padding: 4px 6px;
   background-color: hsl(var(--muted));
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 14px;
   border-left: 3px solid hsl(var(--border));
 }
 
@@ -797,7 +797,7 @@
 .similar-tech-source {
   padding: 1px 4px;
   border-radius: 3px;
-  font-size: 10px;
+  font-size: 14px;
   color: hsl(var(--foreground));
   white-space: nowrap;
 }
@@ -811,7 +811,7 @@
 }
 
 .similar-tech-match {
-  font-size: 10px;
+  font-size: 14px;
   color: hsl(var(--muted-foreground));
   background-color: hsl(var(--muted));
   padding: 1px 4px;
@@ -822,7 +822,7 @@
 .no-similar {
   color: hsl(var(--muted-foreground));
   font-style: italic;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .similar-tech-cell {
@@ -837,7 +837,7 @@
   color: hsl(var(--muted-foreground));
   border-radius: 3px;
   cursor: pointer;
-  font-size: 10px;
+  font-size: 14px;
   margin-left: 4px;
   transition: all 0.2s;
 }
@@ -858,7 +858,7 @@
   color: hsl(var(--foreground));
   padding: 1px 4px;
   border-radius: 3px;
-  font-size: 10px;
+  font-size: 14px;
   white-space: nowrap;
 }
 
@@ -866,7 +866,7 @@
   background-color: hsl(var(--muted));
   border: 1px solid hsl(var(--border));
   color: hsl(var(--primary));
-  font-size: 12px;
+  font-size: 14px;
   padding: 4px 8px;
   border-radius: var(--radius);
   cursor: pointer;
@@ -898,7 +898,7 @@
 }
 
 .similarity-threshold-label {
-  font-size: 13px;
+  font-size: 14px;
   color: hsl(var(--foreground));
   display: flex;
   align-items: center;
@@ -909,7 +909,7 @@
   color: hsl(var(--card-foreground));
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
-  font-size: 12px;
+  font-size: 14px;
   cursor: pointer;
   transition: all 0.2s ease;
   padding: 2px 24px;
@@ -995,7 +995,7 @@
 }
 
 .similarity-threshold-reset {
-  font-size: 12px;
+  font-size: 14px;
   border: none;
   background-color: hsl(var(--accent));
   color: hsl(var(--accent-foreground));
@@ -1012,7 +1012,7 @@
 }
 
 .similarity-stats {
-  font-size: 12px;
+  font-size: 14px;
   color: hsl(var(--muted-foreground));
   margin-top: 1px;
   text-align: right;

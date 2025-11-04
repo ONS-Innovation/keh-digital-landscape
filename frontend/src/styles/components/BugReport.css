@@ -17,7 +17,7 @@
 .bug-report-container span {
   color: hsl(var(--muted-foreground));
   margin-bottom: 16px;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .bug-report-container span a {
