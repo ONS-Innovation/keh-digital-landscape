@@ -288,7 +288,7 @@ line {
 
 .entry-number {
   width: 30px;
-  font-size: 10px;
+  font-size: 14px;
   color: hsl(var(--muted-foreground));
 }
 
@@ -302,7 +302,7 @@ line {
 .entry-ring {
   padding: 2px 8px;
   border-radius: 12px;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: bold;
 }
 
@@ -336,7 +336,7 @@ line {
 
 .blip-number {
   fill: hsl(var(--background));
-  font-size: 10px;
+  font-size: 14px;
   pointer-events: none;
   font-weight: bold;
   position: relative;
@@ -374,7 +374,7 @@ text {
   }
 
   .entry-ring {
-    font-size: 10px;
+    font-size: 14px;
   }
 }
 
@@ -384,7 +384,7 @@ text {
   }
 
   .quadrant-list {
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .quadrant-list h2 {
@@ -462,7 +462,7 @@ text {
     left: 50%;
     transform: translateX(-50%);
     color: hsl(var(--muted-foreground));
-    font-size: 12px;
+    font-size: 14px;
     opacity: 0.8;
   }
 }
@@ -566,7 +566,7 @@ text {
 .info-box p {
   margin: 0 0 8px 0;
   color: hsl(var(--muted-foreground));
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .info-box-timeline-item {
@@ -583,7 +583,7 @@ text {
 
 .timeline-author {
   color: hsl(var(--foreground));
-  font-size: 10px;
+  font-size: 14px;
   font-weight: normal;
   margin-top: 8px;
   display: block;
@@ -648,14 +648,14 @@ text {
   color: hsl(var(--muted-foreground));
   text-align: center;
   margin: 0 !important;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .info-box-ring {
   align-self: flex-start;
   padding: 4px 12px;
   border-radius: 12px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: bold;
 }
 
@@ -721,7 +721,7 @@ text {
   }
 
   .ring-label {
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .blip {
@@ -729,7 +729,7 @@ text {
   }
 
   .blip-number {
-    font-size: 10px;
+    font-size: 14px;
   }
 }
 
@@ -753,7 +753,7 @@ text {
 .info-box-links a {
   color: inherit;
   opacity: 0.6;
-  font-size: 12px;
+  font-size: 14px;
   padding: 2px 10px;
 }
 
@@ -795,7 +795,7 @@ text {
   display: inline-block;
   padding: 2px 12px;
   border-radius: 12px;
-  font-size: 10px !important;
+  font-size: 14px !important;
   font-weight: 500;
   margin: 0;
 
@@ -911,7 +911,7 @@ text {
   padding: 2px 12px;
   margin: 0 !important;
   border-radius: 12px;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 500;
 }
 
@@ -920,7 +920,7 @@ text {
   margin: 0 !important;
   margin-top: 2px;
   border-radius: 12px;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 500;
 }
 
@@ -1015,7 +1015,7 @@ text {
   border: 1px solid hsl(var(--border));
   border-radius: 4px;
   padding: 2px 8px;
-  font-size: 12px;
+  font-size: 14px;
   color: hsl(var(--foreground));
   cursor: pointer;
   transition: all 0.2s ease;
@@ -1060,7 +1060,7 @@ text {
   border-radius: 4px;
   background-color: hsl(var(--muted));
   cursor: pointer;
-  font-size: 12px;
+  font-size: 14px;
   transition: background-color 0.2s ease;
 }
 
@@ -1244,7 +1244,7 @@ text {
   box-sizing: border-box;
   border-radius: 50px;
   border: 1px solid transparent;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   position: relative;
@@ -1337,7 +1337,7 @@ text {
 
 .timeline-header p {
   margin: 4px 0 0 0;
-  font-size: 12px;
+  font-size: 14px;
   color: hsl(var(--muted-foreground));
 }
 

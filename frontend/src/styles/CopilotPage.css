@@ -589,7 +589,7 @@ html:not(.dark)
 }
 
 .copilot-admin-badge {
-  font-size: 12px;
+  font-size: 14px;
   color: hsl(var(--primary));
   margin: 4px 0 0 0;
   font-weight: 500;

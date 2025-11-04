@@ -17,15 +17,15 @@ The FilterGroup component provides a reusable, collapsible filter section with c
 
 The FilterGroup component accepts the following props:
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `title` | string | Required | The title displayed in the filter group header |
-| `sectionKey` | string | Required | A unique identifier for this filter section |
-| `isExpanded` | boolean | Required | Controls whether the filter options are visible |
-| `toggleSection` | function | Required | Function called when the section header is clicked |
-| `items` | array | Required | Array of items to display as filterable options |
-| `selectedItems` | array | `[]` | Array of currently selected items |
-| `onItemChange` | function | Required | Function called when an item is selected/deselected |
+| Prop            | Type     | Default  | Description                                         |
+| --------------- | -------- | -------- | --------------------------------------------------- |
+| `title`         | string   | Required | The title displayed in the filter group header      |
+| `sectionKey`    | string   | Required | A unique identifier for this filter section         |
+| `isExpanded`    | boolean  | Required | Controls whether the filter options are visible     |
+| `toggleSection` | function | Required | Function called when the section header is clicked  |
+| `items`         | array    | Required | Array of items to display as filterable options     |
+| `selectedItems` | array    | `[]`     | Array of currently selected items                   |
+| `onItemChange`  | function | Required | Function called when an item is selected/deselected |
 
 ## Usage
 
@@ -36,58 +36,56 @@ function FilterableList() {
   // State for tracking expanded sections
   const [expandedSections, setExpandedSections] = useState({
     category: true,
-    status: false
+    status: false,
   });
-  
+
   // State for tracking selected filters
   const [filters, setFilters] = useState({
     category: [],
-    status: []
+    status: [],
   });
-  
+
   // Toggle section expansion
   const toggleSection = (section) => {
-    setExpandedSections(prev => ({
+    setExpandedSections((prev) => ({
       ...prev,
-      [section]: !prev[section]
+      [section]: !prev[section],
     }));
   };
-  
+
   // Handle filter changes
   const handleFilterChange = (category, value) => {
-    setFilters(prevFilters => {
+    setFilters((prevFilters) => {
       const updatedFilters = { ...prevFilters };
-      
+
       if (updatedFilters[category].includes(value)) {
-        updatedFilters[category] = updatedFilters[category].filter(
-          (item) => item !== value
-        );
+        updatedFilters[category] = updatedFilters[category].filter((item) => item !== value);
       } else {
         updatedFilters[category] = [...updatedFilters[category], value];
       }
-      
+
       return updatedFilters;
     });
   };
-  
+
   return (
     <div className="filters-container">
-      <FilterGroup 
+      <FilterGroup
         title="Categories"
         sectionKey="category"
         isExpanded={expandedSections.category}
         toggleSection={toggleSection}
-        items={["Web", "Mobile", "Desktop", "Infrastructure"]}
+        items={['Web', 'Mobile', 'Desktop', 'Infrastructure']}
         selectedItems={filters.category}
         onItemChange={handleFilterChange}
       />
-      
-      <FilterGroup 
+
+      <FilterGroup
         title="Status"
         sectionKey="status"
         isExpanded={expandedSections.status}
         toggleSection={toggleSection}
-        items={["Active", "Archived", "Planned"]}
+        items={['Active', 'Archived', 'Planned']}
         selectedItems={filters.status}
         onItemChange={handleFilterChange}
       />
@@ -101,11 +99,13 @@ function FilterableList() {
 The FilterGroup component consists of two main parts:
 
 ### Header Section
+
 - Contains the filter category title
 - Includes a chevron icon that rotates based on expanded state
 - Serves as a clickable button to toggle the visibility of filter options
 
 ### Filter Options Section
+
 - Contains a list of checkboxes for individual filter options
 - Displays a custom checkbox design with checkmark icons
 - Shows or hides based on the `isExpanded` prop

@@ -6,23 +6,23 @@ The InfoBox component provides a draggable, resizable information panel that dis
 
 The InfoBox component accepts the following props:
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `isAdmin` | boolean | `false` | Whether the current user has administrative privileges |
-| `selectedItem` | object | `undefined` | The technology item to display details for |
-| `initialPosition` | object | `{ x: 24, y: 80 }` | Starting coordinates for the InfoBox |
-| `onClose` | function | Required | Handler function called when the InfoBox is closed |
-| `timelineAscending` | boolean | Required | Whether to display timeline in ascending order |
-| `setTimelineAscending` | function | Required | Function to toggle timeline sort order |
-| `selectedTimelineItem` | object | `undefined` | Currently selected timeline entry |
-| `setSelectedTimelineItem` | function | Required | Function to update selected timeline entry |
-| `projectsForTech` | array | `undefined` | List of projects using this technology |
-| `handleProjectClick` | function | Required | Handler for project selection |
-| `onEditConfirm` | function | `undefined` | Handler for confirming edits (admin only) |
-| `onEditCancel` | function | `undefined` | Handler for cancelling edits (admin only) |
-| `isHighlighted` | boolean | `false` | Whether the selected technology is highlighted (this indicates a directorate specific move) |
-| `selectedDirectorate` | string | `Digital Services (DS)` | The currently selected directorate. This is used to provide a context message on the position of the selected technology (i.e. if the directorate isn't Digital Services (DS), say whether the position was imported from Digital Services or if it was moved specifically for the selected directorate) |
-| `timeline` | array | `selectedItem ? selectedItem.timeline : []` | The timeline data for the selected technology. This allows us to pass in a timeline if we don't want to use the one that comes with the `selectedItem` (i.e. on the Review Page). |
+| Prop                      | Type     | Default                                     | Description                                                                                                                                                                                                                                                                                              |
+| ------------------------- | -------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `isAdmin`                 | boolean  | `false`                                     | Whether the current user has administrative privileges                                                                                                                                                                                                                                                   |
+| `selectedItem`            | object   | `undefined`                                 | The technology item to display details for                                                                                                                                                                                                                                                               |
+| `initialPosition`         | object   | `{ x: 24, y: 80 }`                          | Starting coordinates for the InfoBox                                                                                                                                                                                                                                                                     |
+| `onClose`                 | function | Required                                    | Handler function called when the InfoBox is closed                                                                                                                                                                                                                                                       |
+| `timelineAscending`       | boolean  | Required                                    | Whether to display timeline in ascending order                                                                                                                                                                                                                                                           |
+| `setTimelineAscending`    | function | Required                                    | Function to toggle timeline sort order                                                                                                                                                                                                                                                                   |
+| `selectedTimelineItem`    | object   | `undefined`                                 | Currently selected timeline entry                                                                                                                                                                                                                                                                        |
+| `setSelectedTimelineItem` | function | Required                                    | Function to update selected timeline entry                                                                                                                                                                                                                                                               |
+| `projectsForTech`         | array    | `undefined`                                 | List of projects using this technology                                                                                                                                                                                                                                                                   |
+| `handleProjectClick`      | function | Required                                    | Handler for project selection                                                                                                                                                                                                                                                                            |
+| `onEditConfirm`           | function | `undefined`                                 | Handler for confirming edits (admin only)                                                                                                                                                                                                                                                                |
+| `onEditCancel`            | function | `undefined`                                 | Handler for cancelling edits (admin only)                                                                                                                                                                                                                                                                |
+| `isHighlighted`           | boolean  | `false`                                     | Whether the selected technology is highlighted (this indicates a directorate specific move)                                                                                                                                                                                                              |
+| `selectedDirectorate`     | string   | `Digital Services (DS)`                     | The currently selected directorate. This is used to provide a context message on the position of the selected technology (i.e. if the directorate isn't Digital Services (DS), say whether the position was imported from Digital Services or if it was moved specifically for the selected directorate) |
+| `timeline`                | array    | `selectedItem ? selectedItem.timeline : []` | The timeline data for the selected technology. This allows us to pass in a timeline if we don't want to use the one that comes with the `selectedItem` (i.e. on the Review Page).                                                                                                                        |
 
 ## Usage
 
@@ -33,11 +33,11 @@ function TechRadarView() {
   const [selectedTech, setSelectedTech] = useState(null);
   const [timelineAscending, setTimelineAscending] = useState(true);
   const [selectedTimelineItem, setSelectedTimelineItem] = useState(null);
-  
+
   return (
     <div className="radar-container">
       {/* Radar visualisation */}
-      
+
       {selectedTech && (
         <InfoBox
           selectedItem={selectedTech}

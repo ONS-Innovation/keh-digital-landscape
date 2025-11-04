@@ -24,9 +24,7 @@ const Layout = ({ children }) => {
       <Header />
       <div className="layout-content">
         <Sidebar />
-        <main className="main-content">
-          {children}
-        </main>
+        <main className="main-content">{children}</main>
       </div>
     </div>
   );
@@ -37,8 +35,8 @@ export default Layout;
 
 ## Props
 
-| Prop | Type | Description |
-|------|------|-------------|
+| Prop       | Type            | Description                                    |
+| ---------- | --------------- | ---------------------------------------------- |
 | `children` | React.ReactNode | The content to render in the main content area |
 
 ## Usage
@@ -72,4 +70,4 @@ The Layout uses dedicated CSS defined in `../../styles/Layout.css` that handles:
 
 - Grid-based positioning of elements
 - Proper spacing and alignment
-- Overflow handling for scrollable content 
+- Overflow handling for scrollable content

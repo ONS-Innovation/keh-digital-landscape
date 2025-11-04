@@ -19,25 +19,25 @@ The TechManage component is the primary interface for managing technologies in t
 The component is implemented with the following key elements:
 
 - **Data Sources**:
-    - Tech Radar JSON from S3
-    - Project CSV data from S3
-    - Reference list array data from API
+  - Tech Radar JSON from S3
+  - Project CSV data from S3
+  - Reference list array data from API
 
 - **Similarity Algorithm**:
-    - Configurable threshold (default 80%)
-    - Case-insensitive matching
-    - Acronym detection
-    - Common prefix handling
+  - Configurable threshold (default 80%)
+  - Case-insensitive matching
+  - Acronym detection
+  - Common prefix handling
 
 - **Technology Status**:
-    - Technologies can be tracked in the reference list, Tech Radar, both, or untracked
-    - Tracked status is visually indicated with different colors
+  - Technologies can be tracked in the reference list, Tech Radar, both, or untracked
+  - Tracked status is visually indicated with different colors
 
 - **Sorting Options**:
-    - Name (A-Z or Z-A)
-    - Project count (high to low or low to high)
-    - Quadrant
-    - Location (where the technology is tracked)
+  - Name (A-Z or Z-A)
+  - Project count (high to low or low to high)
+  - Quadrant
+  - Location (where the technology is tracked)
 
 ## SimilarityModal Component
 
@@ -69,4 +69,4 @@ The SimilarityModal component integrates with the main TechManage component thro
 4. TechManage component handles the normalisation process
 5. Projects using the normalised technology are updated
 
-This interaction flow ensures efficient technology normalisation while providing clear visibility into the potential impacts of normalisation decisions. 
+This interaction flow ensures efficient technology normalisation while providing clear visibility into the potential impacts of normalisation decisions.

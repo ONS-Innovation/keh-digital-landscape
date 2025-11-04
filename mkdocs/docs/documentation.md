@@ -34,21 +34,21 @@ In order to build an MkDocs deployment or serve the documentation locally, we ne
 
 2. Activate the virtual environment.
 
-    ```bash
-    source venv/bin/activate
-    ```
+   ```bash
+   source venv/bin/activate
+   ```
 
 3. Install MkDocs and its dependencies.
 
-    ```bash
-    pip install -r mkdocs_requirements.txt
-    ```
+   ```bash
+   pip install -r mkdocs_requirements.txt
+   ```
 
 4. You can now use MkDocs. To see a list of commands run the following:
 
-    ```bash
-    mkdocs --help
-    ```
+   ```bash
+   mkdocs --help
+   ```
 
 **Please Note:** Python's package manager, PIP, is required to install MkDocs. Please make sure you have Python installed beforehand.
 

@@ -28,7 +28,7 @@ const verifier = AlbJwtVerifier.create({
 
 // Cognito JWT Verifier - validates access tokens containing group information
 const cognitoVerifier = CognitoJwtVerifier.create({
-  tokenUse: "access",
+  tokenUse: 'access',
   userPoolId: process.env.COGNITO_USER_POOL_ID,
   clientId: process.env.COGNITO_USER_POOL_CLIENT_ID,
 });
@@ -103,8 +103,8 @@ When `NODE_ENV=development`, the service:
 
 ```javascript
 const getDevUser = () => ({
-  email: "dev@ons.gov.uk",
-  groups: process.env.DEV_USER_GROUPS?.split(",") || ["admin", "reviewer"]
+  email: 'dev@ons.gov.uk',
+  groups: process.env.DEV_USER_GROUPS?.split(',') || ['admin', 'reviewer'],
 });
 ```
 
@@ -162,6 +162,7 @@ The service provides comprehensive error handling:
 The service requires the following environment variables:
 
 ### Required (Production)
+
 ```bash
 ALB_ARN=arn:aws:elasticloadbalancing:region:account:loadbalancer/app/name
 AWS_REGION=eu-west-2
@@ -170,6 +171,7 @@ COGNITO_USER_POOL_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 ### Optional (Development)
+
 ```bash
 NODE_ENV=development
 DEV_USER_GROUPS=admin,reviewer
@@ -274,6 +276,7 @@ LOG_LEVEL=debug
 ```
 
 This will provide detailed information about:
+
 - Token verification attempts
 - Group membership checks
 - Authentication bypass events

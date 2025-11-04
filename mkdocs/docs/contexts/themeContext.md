@@ -22,11 +22,7 @@ The `ThemeProvider` is a wrapper component that establishes the theme context fo
 import { ThemeProvider } from '../contexts/ThemeContext';
 
 function App() {
-  return (
-    <ThemeProvider>
-      {/* Your application components */}
-    </ThemeProvider>
-  );
+  return <ThemeProvider>{/* Your application components */}</ThemeProvider>;
 }
 ```
 
@@ -46,12 +42,8 @@ import { useTheme } from '../contexts/ThemeContext';
 
 function ThemeToggleButton() {
   const { theme, toggleTheme } = useTheme();
-  
-  return (
-    <button onClick={toggleTheme}>
-      Current theme: {theme}
-    </button>
-  );
+
+  return <button onClick={toggleTheme}>Current theme: {theme}</button>;
 }
 ```
 
@@ -81,4 +73,3 @@ The ThemeProvider includes a pre-configured toast notification system (using rea
 - Place the `ThemeProvider` at the root of your application
 - Use the `useTheme` hook to access theme information rather than creating separate state
 - Leverage CSS variables defined in your theme to ensure consistent styling
-

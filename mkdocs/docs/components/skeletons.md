@@ -14,9 +14,9 @@ The `SkeletonStatCard` component renders a placeholder for statistical cards tha
 
 #### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `minWidth` | string | `"0"` | Minimum width of the skeleton card |
+| Prop       | Type   | Default | Description                        |
+| ---------- | ------ | ------- | ---------------------------------- |
+| `minWidth` | string | `"0"`   | Minimum width of the skeleton card |
 
 #### Usage
 
@@ -26,9 +26,9 @@ import SkeletonStatCard from '../components/Statistics/Skeletons/SkeletonStatCar
 function StatisticsPanel() {
   const [isLoading, setIsLoading] = useState(true);
   const [stats, setStats] = useState(null);
-  
+
   // Fetch data and update loading state
-  
+
   return (
     <div className="statistics-panel">
       {isLoading ? (
@@ -57,9 +57,9 @@ import SkeletonLanguageCard from '../components/Statistics/Skeletons/SkeletonLan
 function LanguagePanel() {
   const [isLoading, setIsLoading] = useState(true);
   const [languages, setLanguages] = useState([]);
-  
+
   // Fetch data and update loading state
-  
+
   return (
     <div className="language-panel">
       {isLoading ? (
@@ -109,5 +109,7 @@ Skeleton components are designed to be:
 Skeleton components are typically used in conditional rendering patterns:
 
 ```jsx
-{isLoading ? <SkeletonComponent /> : <ActualComponent data={data} />}
+{
+  isLoading ? <SkeletonComponent /> : <ActualComponent data={data} />;
+}
 ```
