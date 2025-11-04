@@ -64,7 +64,7 @@
 }
 
 .stat-card h2 {
-  font-size: 12px;
+  font-size: 14px;
   margin: 0;
   color: hsl(var(--muted-foreground));
 }
@@ -290,7 +290,7 @@
 
 .metadata {
   text-align: right;
-  font-size: 12px;
+  font-size: 14px;
   color: hsl(var(--muted-foreground));
   margin-bottom: 8px;
 }
@@ -324,7 +324,7 @@
 
 .date-selector select {
   height: 27px;
-  font-size: 12px;
+  font-size: 14px;
   padding: 4px 8px;
   background: hsl(var(--card));
   border: 1px solid hsl(var(--border));
@@ -356,7 +356,7 @@
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
   color: hsl(var(--foreground));
-  font-size: 12px;
+  font-size: 14px;
   padding: 4px 8px;
   outline: none;
   width: 150px;
@@ -417,7 +417,7 @@
 
 .archive-toggle {
   height: 27px;
-  font-size: 12px;
+  font-size: 14px;
   padding: 4px 8px;
   background: hsl(var(--card));
   border: 1px solid hsl(var(--border));

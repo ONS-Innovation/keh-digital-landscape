@@ -36,7 +36,7 @@
 }
 
 .sidebar-section-title {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
   color: hsl(var(--foreground));
   letter-spacing: 0.5px;
@@ -71,7 +71,7 @@
 
 .sidebar-label {
   white-space: nowrap;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .sidebar.collapsed .sidebar-link {

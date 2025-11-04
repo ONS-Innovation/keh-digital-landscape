@@ -135,7 +135,7 @@
 }
 
 .programme-name-full {
-  font-size: 12px;
+  font-size: 14px;
   color: hsl(var(--secondary-foreground));
   cursor: pointer;
   transition: all 0.2s ease;
@@ -144,7 +144,7 @@
 .programme-badge {
   display: inline-block;
   border-radius: var(--radius);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 500;
   white-space: nowrap;
   background-color: inherit;
@@ -156,7 +156,7 @@
 }
 
 .project-documentation-link {
-  font-size: 10px;
+  font-size: 14px;
   color: hsl(var(--card-foreground));
   font-weight: 400;
   padding: 1px 12px;
@@ -178,7 +178,7 @@
 }
 
 .project-item-description {
-  font-size: 12px;
+  font-size: 14px;
   color: hsl(var(--muted-foreground));
   line-height: 1.4;
   font-weight: 400;
@@ -323,7 +323,7 @@
 }
 
 .projects-search-count {
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .projects-filter-wrapper {
@@ -386,7 +386,7 @@
   border-radius: 50%;
   height: 18px;
   width: 18px;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 500;
   margin-left: 4px;
 }
@@ -402,7 +402,7 @@
 }
 
 .filter-group-title {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   color: hsl(var(--muted-foreground));
   padding: 8px;
@@ -465,7 +465,7 @@
 
 .checkbox-icon {
   color: hsl(var(--primary-foreground));
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .custom-checkbox:has(+ input:checked) {
@@ -522,7 +522,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
+  font-size: 14px;
   color: hsl(var(--destructive));
   background: none;
   border: none;
@@ -695,7 +695,7 @@
   justify-content: center;
   padding: 2rem;
   color: hsl(var(--muted-foreground));
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 @keyframes shimmer {
@@ -718,7 +718,7 @@
 }
 
 .project-badge {
-  font-size: 10px;
+  font-size: 14px;
   color: hsl(var(--secondary-foreground));
   background-color: hsl(var(--secondary));
   font-weight: 400;
@@ -877,7 +877,7 @@
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
   padding: 8px 12px;
-  font-size: 12px;
+  font-size: 14px;
   box-shadow: 0 2px 8px hsl(var(--foreground) / 0.1);
 }
 
@@ -905,5 +905,5 @@
 
 .recharts-legend-item-text {
   font-weight: 300;
-  font-size: 12px;
+  font-size: 14px;
 }
