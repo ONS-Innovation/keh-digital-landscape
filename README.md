@@ -174,6 +174,29 @@ Backend tests are run with PyTest (Python). To run the tests, refer to the [READ
 
 Frontend (accessibility) tests are run with Playwright and AxeCore (JS). To run the tests, refer to the [README.md](/testing/frontend/README.md) in the `/testing/frontend/` folder. In the same [README.md](/testing/frontend/README.md#ui-tests), other UI frontend tests are run with Playwright. The tests are also part of the GitHub Actions under "Frontend Tests".
 
+### Unit Tests
+
+Backend and Frontend unit tests are written using Vitest. To run the unit tests:
+
+1. Ensure the dependencies are installed for both backend and frontend: From root, run the following:
+
+   ```bash
+   cd frontend && npm install && \
+   cd ../backend && npm install && cd ..
+   ```
+
+2. Run the tests:
+
+   ```bash
+   make test
+   ```
+
+   This will execute all unit tests and display the results in the terminal.
+
+### Notes
+
+- Ensure that the environment variables are correctly set up before running the tests (see running locally)
+
 ## Linting
 
 Linting is run with ESLint. To run the linting, run the following commands:
