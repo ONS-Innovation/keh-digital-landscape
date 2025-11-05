@@ -48,7 +48,7 @@ describe('App', () => {
     expect(await screen.getByText(/Restricted/i)).toBeInTheDocument();
   });
 
-  it('shows the "Report a Bug" link and can click it', async () => {
+  it('shows the "Report a Bug" link and can be clicked to the Report Bug information', async () => {
     render(
       <ThemeProvider>
         <MemoryRouter initialEntries={['/']}>
