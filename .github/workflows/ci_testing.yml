@@ -5,14 +5,14 @@ on:
   workflow_dispatch:
   push:
     branches: ['make_test']
-    paths:
-      - 'testing/backend/**'
-      - 'testing/frontend/**'
+    # paths:
+    #   - 'testing/backend/**'
+    #   - 'testing/frontend/**'
   pull_request:
     branches: ['make_test']
-    paths:
-      - 'testing/backend/**'
-      - 'testing/frontend/**'
+    # paths:
+    #   - 'testing/backend/**'
+    #   - 'testing/frontend/**'
 
 concurrency:
   group: "${{ github.head_ref || github.ref }}-${{ github.workflow }}"
