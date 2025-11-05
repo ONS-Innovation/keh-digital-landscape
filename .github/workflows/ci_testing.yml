@@ -3,16 +3,8 @@ name: CI Testing
 
 on:
   workflow_dispatch:
-  push:
-    branches: ['make_test']
-    # paths:
-    #   - 'testing/backend/**'
-    #   - 'testing/frontend/**'
   pull_request:
-    branches: ['make_test']
-    # paths:
-    #   - 'testing/backend/**'
-    #   - 'testing/frontend/**'
+    branches: ['**']
 
 concurrency:
   group: "${{ github.head_ref || github.ref }}-${{ github.workflow }}"
@@ -30,23 +22,18 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.12"]
-    
     steps:
       - uses: actions/checkout@v4
-      
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
           cache-dependency-path: testing/backend/req_dev.txt
-        
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
-
       - name: Install dependencies
         run: make setup-dev
-
       - name: Run linting
         run: make lint
   ui-frontend-test:
@@ -56,18 +43,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24'
-      
       - name: Install dependencies
         run: make install-dev
-
       - name: Start app in background
         run: make dev-ci &
-
       - name: Run Playwright tests
         run: cd testing/frontend && make setup && make test-ui
   unit-testing:
@@ -77,14 +60,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24'
-      
       - name: Install dependencies
         run: make install-dev
-
       - name: Run unit tests
         run: make test
