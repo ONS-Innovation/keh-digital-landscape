@@ -1,27 +1,68 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { act } from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
+import { ThemeProvider } from '../src/contexts/ThemeContext';
+
+// Mock DataContext to prevent actual data fetching
+vi.mock('../src/contexts/DataContext', () => ({
+  DataProvider: ({ children }) => children,
+  useData: () => ({ data: {}, loading: false, error: null }),
+}));
+
+// Mock ProtectedRoute to always render children
+vi.mock('../src/components/ProtectedRoute/ProtectedRoute', () => ({
+  default: ({ children }) => children,
+}));
+
+// Mock components that cause user profile fetch & banners & sidebar
+vi.mock('../src/components/UserProfile/UserProfile', () => ({
+  default: () => null,
+}));
+vi.mock('../src/components/HomePage/RecentBanners', () => ({
+  default: () => null,
+}));
+
+// Mock userService to prevent actual API calls
+vi.mock(
+  '../src/services/userService',
+  () => ({
+    getUserData: vi.fn().mockResolvedValue({ name: 'Test User' }),
+  }),
+  { virtual: true }
+);
+
 import App from '../src/App';
 
 describe('App', () => {
-  it('renders the Home page by default', () => {
-    // Mock the ProtectedRoute component
-    vi.mock('../src/components/ProtectedRoute/ProtectedRoute', () => ({
-      default: ({ children, requiredRoles }) => {
-        // Simulate role-checking logic
-        const userRoles = ['reviewer']; // Mock user roles
-        const hasAccess = requiredRoles.every(role => userRoles.includes(role));
-        return hasAccess ? children : <div>Access Denied</div>;
-      },
-    }));
-
+  it('renders the Home page', async () => {
     render(
-      <MemoryRouter initialEntries={['/']}>
-        <App />
-      </MemoryRouter>
+      <ThemeProvider>
+        <MemoryRouter initialEntries={['/']}>
+          <App />
+        </MemoryRouter>
+      </ThemeProvider>
     );
+    expect(await screen.getByText(/Home/i)).toBeInTheDocument();
+    expect(await screen.getByText(/Restricted/i)).toBeInTheDocument();
+  });
 
-    // Check if the Home page content is rendered
-    expect(screen.getByText(/Home/i)).toBeInTheDocument();
+  it('shows the "Report a Bug" link and can click it', async () => {
+    render(
+      <ThemeProvider>
+        <MemoryRouter initialEntries={['/']}>
+          <App />
+        </MemoryRouter>
+      </ThemeProvider>
+    );
+    const reportBugLink = await screen.findByText(/Report a bug/i);
+    expect(reportBugLink).toBeInTheDocument();
+    await act(async () => {
+      await userEvent.click(reportBugLink);
+    });
+    expect(
+      await screen.findByText(/You will be redirected to GitHub/i)
+    ).toBeInTheDocument();
   });
 });
