@@ -42,9 +42,6 @@ export default defineConfig({
     setupFiles: ['./src/setupTests.js'],
     // Ensure vitest treats .js with JSX as web (transform)
     transformMode: { web: [/\.jsx?$/] },
-    includeSource: [
-      'src/**/*.{js,jsx}',
-      'tests/**/*.{js,jsx}',
-    ],
+    includeSource: ['src/**/*.{js,jsx}', 'tests/**/*.{js,jsx}'],
   },
 });
