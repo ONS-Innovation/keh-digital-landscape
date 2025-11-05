@@ -16,7 +16,7 @@ vi.mock('../src/components/ProtectedRoute/ProtectedRoute', () => ({
   default: ({ children }) => children,
 }));
 
-// Mock components that cause user profile fetch & banners & sidebar
+// Mock components that cause user profile fetch & banners
 vi.mock('../src/components/UserProfile/UserProfile', () => ({
   default: () => null,
 }));
