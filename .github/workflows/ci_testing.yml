@@ -3,12 +3,12 @@ name: CI Testing
 
 on:
   push:
-    branches: ['**']
+    branches: ['make_test']
     paths:
       - 'testing/backend/**'
       - 'testing/frontend/**'
   pull_request:
-    branches: ['**']
+    branches: ['make_test']
     paths:
       - 'testing/backend/**'
       - 'testing/frontend/**'
@@ -91,4 +91,3 @@ jobs:
 
       - name: Run unit tests
         run: make tests
-  
