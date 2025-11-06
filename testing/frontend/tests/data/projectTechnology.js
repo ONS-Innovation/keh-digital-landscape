@@ -1,6 +1,7 @@
 // Sample Project Technology Data to test projects page + modal
 export const csvData = [
-  {
+  { 
+    ID: '#project-sample-project',
     Project: 'Sample Project',
     Project_Short: 'SP',
     Programme: 'Sample Programme',
@@ -38,6 +39,7 @@ export const csvData = [
     Publishing_Target: 'NPM; PyPI',
   },
   {
+    ID: '#project-sample-project-2',
     Project: 'Sample Project 2',
     Project_Short: 'SP2',
     Programme: 'Sample Programme',

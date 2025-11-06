@@ -17,6 +17,7 @@ const groups = {
     'Hosted',
     'Architectures',
     'Environments',
+    'Publishing_Target',
   ],
   security: ['IAM_Services', 'Source_Control', 'Branching_Strategy'],
   quality: ['Static_Analysis', 'Code_Formatter', 'Monitoring'],
@@ -96,7 +97,7 @@ test.describe('Projects Page Tests', () => {
     test(`Test that ${csvData[i].Project}'s modal displays correct data`, async ({
       page,
     }) => {
-      const projectItem = page.locator('#project-sample-project');
+      const projectItem = page.locator(csvData[i].ID);
       await expect(projectItem).toBeVisible();
       await projectItem.click();
 
@@ -124,33 +125,37 @@ test.describe('Projects Page Tests', () => {
             continue;
           }
 
-          if (csvData[0][field] === '') {
+          if (csvData[i][field] === '') {
             await expect(contents).toHaveText('No data captured');
-          } else {
-            if (field === 'Miscellaneous') {
-              const miscItems = detailItem.locator('.misc-item');
-              const miscData = csvData[0][field]
-                .split(';')
-                .map(item => item.trim());
+          } else if (field === 'Miscellaneous') {
+            const miscItems = detailItem.locator('.misc-item');
+            const miscData = csvData[i][field]
+              .split(';')
+              .map(item => item.trim());
 
-              const miscCount = await miscItems.count();
-              await expect(miscCount).toBe(miscData.length);
+            const miscCount = await miscItems.count();
+            await expect(miscCount).toBe(miscData.length);
 
-              // This for loop will only check the first half of the misc items to avoid duplicates
-              for (let i = 0; i < miscCount; i++) {
-                // Remove the space after the colon for comparison
-                await expect(miscItems.nth(i)).toHaveText(
-                  miscData[i].replace(': ', ':')
-                );
-              }
-            } else if (field === 'Repo') {
-              // TODO: Implement repository list testing
-              // TODO: Make repository list in the modal have a placeholder if No data
-              continue;
-            } else {
-              await expect(contents).not.toHaveText('No data captured');
-              await expect(contents).toHaveText(csvData[0][field]);
+            // This for loop will only check the first half of the misc items to avoid duplicates
+            for (let i = 0; i < miscCount; i++) {
+              // Remove the space after the colon for comparison
+              await expect(miscItems.nth(i)).toHaveText(
+                miscData[i].replace(': ', ':')
+              );
             }
+          } else if (field === 'Publishing_Target') {
+            const expectedItems = csvData[i][field]
+              .split(';')
+              .map(s => s.trim())
+              .filter(Boolean);
+            const expectedJoined = expectedItems.join('; ');
+            await expect(contents).toHaveText(expectedJoined);
+          } else if (field === 'Repo') {
+            // TODO: Implement repository list testing
+            // TODO: Make repository list in the modal have a placeholder if No data
+            continue;
+          } else {
+            await expect(contents).toHaveText(csvData[i][field]);
           }
         }
       }
