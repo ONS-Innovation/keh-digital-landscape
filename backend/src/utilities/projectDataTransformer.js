@@ -127,6 +127,18 @@ function transformProjectToCSVFormat(project, reverseDependencyMap = {}) {
           .map(item => `${item.name}: ${item.description}`)
           .join('; ')
       : '',
+    Publishing_Target: project.architecture.publishing
+      ? [
+          ...(Array.isArray(project.architecture.publishing.main)
+            ? project.architecture.publishing.main
+            : []),
+          ...(Array.isArray(project.architecture.publishing.others)
+            ? project.architecture.publishing.others
+            : []),
+        ]
+          .filter(Boolean)
+          .join('; ')
+      : '',
   };
 }
 
