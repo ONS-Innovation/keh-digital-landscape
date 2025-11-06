@@ -35,6 +35,7 @@ export const csvData = [
     Diagram_Tools: 'Lucidchart',
     Miscellaneous:
       'Podman: Build images during CI/CD; Colima: Build images locally; TFSec: Static code analysis for HCL; Black: Python Linter; isort: Python Linter; mypy: Python Linter',
+    Publishing_Target: 'NPM; PyPI',
   },
   {
     Project: 'Sample Project 2',
@@ -70,5 +71,6 @@ export const csvData = [
     UI_Tools: '',
     Diagram_Tools: 'Lucidchart',
     Miscellaneous: '',
+    Publishing_Target: '',
   },
 ];
