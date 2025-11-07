@@ -203,6 +203,11 @@ variable "healthcheck_start_period" {
   default     = 120
 }
 
+variable "support_mail" {
+  description = "Support email"
+  type        = string
+}
+
 locals {
   url         = "${var.domain}.${var.domain_extension}"
   service_url = "${var.service_subdomain}.${local.url}"

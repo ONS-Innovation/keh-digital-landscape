@@ -48,13 +48,14 @@
   position: relative;
 }
 
-.modal-header {
+.bug-modal-header {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
+  margin-bottom: 10px;
 }
 
-.modal-close-button {
+.bug-modal-close-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -67,16 +68,27 @@
   border: 1px solid hsl(var(--border));
   font-size: 1.5rem;
   color: hsl(var(--foreground));
+  outline: none;
 }
 
-.modal-close-button:hover {
+.bug-modal-close-button:hover {
   background: hsl(var(--muted));
   color: hsl(var(--foreground));
 }
 
-.modal-header h2 {
+.bug-modal-close-button:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+  background: hsl(var(--muted));
+}
+
+.bug-modal-close-button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.bug-modal-header h2 {
   color: hsl(var(--foreground));
-  margin-top: 0;
+  margin: 0;
   font-size: 20px;
 }
 
@@ -87,7 +99,7 @@
   font-size: 16px;
 }
 
-.modal-action-button {
+.bug-modal-action-button {
   background-color: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
   border: none;
@@ -98,9 +110,69 @@
   font-weight: 500;
   width: 100%;
   transition: all 0.2s ease;
+  outline: none;
 }
 
-.modal-action-button:hover {
+.bug-modal-action-button:hover {
   background: hsl(var(--primary) / 0.9);
   color: hsl(var(--primary-foreground));
+}
+
+.bug-modal-action-button:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px hsl(var(--ring) / 0.2);
+}
+
+.bug-modal-action-button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.bug-modal-divider {
+  height: 1px;
+  background: hsl(var(--border));
+  margin: 16px 0;
+}
+
+.bug-modal-email-text {
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.bug-modal-email-button {
+  background-color: hsl(var(--muted));
+  color: hsl(var(--foreground));
+}
+
+.bug-modal-email-button:hover {
+  background: hsl(var(--muted) / 0.8);
+  color: hsl(var(--foreground));
+}
+
+.bug-modal-email-button:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px hsl(var(--ring) / 0.2);
+}
+
+.bug-modal-email-button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .bug-modal-close-button,
+  .bug-modal-action-button {
+    transition: none;
+  }
+
+  .modal-overlay {
+    animation: none;
+  }
+}
+
+/* Ensure modal content is keyboard accessible */
+.bug-modal-content:focus-within {
+  outline: none;
 }
