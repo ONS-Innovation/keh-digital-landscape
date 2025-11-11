@@ -44,8 +44,10 @@ describe('App', () => {
         </MemoryRouter>
       </ThemeProvider>
     );
-    expect(await screen.getByText(/Home/i)).toBeInTheDocument();
-    expect(await screen.getByText(/Restricted/i)).toBeInTheDocument();
+    // expect(await screen.getByText(/Home/i)).toBeInTheDocument();
+    // expect(await screen.getByText(/Restricted/i)).toBeInTheDocument();
+    expect(screen.getByText(/Home/i)).toBeInTheDocument();
+    expect(screen.getByText(/Restricted/i)).toBeInTheDocument();
   });
 
   it('shows the "Report a Bug" link and can be clicked to the Report Bug information', async () => {
@@ -56,8 +58,10 @@ describe('App', () => {
         </MemoryRouter>
       </ThemeProvider>
     );
+    const user = userEvent.setup();
     const reportBugLink = await screen.findByText(/Report a bug/i);
-    await userEvent.click(reportBugLink);
+    await user.click(reportBugLink);
+    // await userEvent.click(reportBugLink);
     // expect(reportBugLink).toBeInTheDocument();
     // await act(async () => {
     //   await userEvent.click(reportBugLink);
