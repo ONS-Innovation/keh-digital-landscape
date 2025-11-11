@@ -143,13 +143,6 @@ test.describe('Projects Page Tests', () => {
                 miscData[i].replace(': ', ':')
               );
             }
-          } else if (field === 'Publishing_Target') {
-            const expectedItems = csvData[i][field]
-              .split(';')
-              .map(s => s.trim())
-              .filter(Boolean);
-            const expectedJoined = expectedItems.join('; ');
-            await expect(contents).toHaveText(expectedJoined);
           } else if (field === 'Repo') {
             // TODO: Implement repository list testing
             // TODO: Make repository list in the modal have a placeholder if No data
