@@ -44,8 +44,6 @@ describe('App', () => {
         </MemoryRouter>
       </ThemeProvider>
     );
-    // expect(await screen.getByText(/Home/i)).toBeInTheDocument();
-    // expect(await screen.getByText(/Restricted/i)).toBeInTheDocument();
     expect(screen.getByText(/Home/i)).toBeInTheDocument();
     expect(screen.getByText(/Restricted/i)).toBeInTheDocument();
   });
@@ -59,9 +57,6 @@ describe('App', () => {
       </ThemeProvider>
     );
     const reportBugLink = await screen.findByText(/Report a bug/i);
-    // await userEvent.click(reportBugLink);
-    // await userEvent.click(reportBugLink);
-    // expect(reportBugLink).toBeInTheDocument();
     await act(() => {
       userEvent.click(reportBugLink);
     });
