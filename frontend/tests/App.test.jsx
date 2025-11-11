@@ -1,6 +1,6 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { act } from 'react';
+// import { act } from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider } from '../src/contexts/ThemeContext';
@@ -57,10 +57,11 @@ describe('App', () => {
       </ThemeProvider>
     );
     const reportBugLink = await screen.findByText(/Report a bug/i);
-    expect(reportBugLink).toBeInTheDocument();
-    await act(async () => {
-      await userEvent.click(reportBugLink);
-    });
+    await userEvent.click(reportBugLink);
+    // expect(reportBugLink).toBeInTheDocument();
+    // await act(async () => {
+    //   await userEvent.click(reportBugLink);
+    // });
     expect(
       await screen.findByText(/You will be redirected to GitHub/i)
     ).toBeInTheDocument();
