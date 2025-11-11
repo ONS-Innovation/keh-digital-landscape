@@ -91,8 +91,8 @@ format-frontend-testing:
 	cd testing/frontend && npm run format ./tests
 
 format-check:
-	cd frontend && npm run format:check ./src
-	cd backend && npm run format:check ./src
+	cd frontend && npm run format:check .
+	cd backend && npm run format:check .
 	cd testing/frontend && npm run format:check ./tests
 
 # Default help command
