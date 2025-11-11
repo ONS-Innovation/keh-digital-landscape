@@ -4,7 +4,6 @@ const {
   PutObjectCommand,
 } = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
-const fetch = require('node-fetch');
 const logger = require('../config/logger');
 
 /**

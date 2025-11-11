@@ -174,6 +174,29 @@ Backend tests are run with PyTest (Python). To run the tests, refer to the [READ
 
 Frontend (accessibility) tests are run with Playwright and AxeCore (JS). To run the tests, refer to the [README.md](/testing/frontend/README.md) in the `/testing/frontend/` folder. In the same [README.md](/testing/frontend/README.md#ui-tests), other UI frontend tests are run with Playwright. The tests are also part of the GitHub Actions under "Frontend Tests".
 
+### Unit Tests
+
+Backend and Frontend unit tests are written using Vitest. To run the unit tests:
+
+1. Ensure the dependencies are installed for both backend and frontend: From root, run the following:
+
+   ```bash
+   cd frontend && npm install && \
+   cd ../backend && npm install && cd ..
+   ```
+
+2. Run the tests:
+
+   ```bash
+   make test
+   ```
+
+   This will execute all unit tests and display the results in the terminal.
+
+### Notes
+
+- Ensure that the environment variables are correctly set up before running the tests (see running locally)
+
 ## Linting
 
 Linting is run with ESLint. To run the linting, run the following commands:
@@ -280,7 +303,7 @@ The pipeline name itself will usually follow a pattern as follows: `digital-land
 
 #### Prod deployment
 
-To deploy to prod, it is required that a Github Release is made on Github. The release is required to follow semantic versioning of vX.Y.Z. 
+To deploy to prod, it is required that a Github Release is made on Github. The release is required to follow semantic versioning of vX.Y.Z.
 
 A manual trigger is to be made on the pipeline name `digital-landscape > deploy-after-github-release` job through the Concourse CI UI. This will create a github-create-tag resource that is required on the `digital-landscape > build-and-push-prod` job. Then the prod deployment job is also through a manual trigger ensuring that prod is only deployed using the latest GitHub release tag in the form of vX.Y.Z and is manually controlled.
 

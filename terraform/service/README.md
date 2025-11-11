@@ -2,7 +2,7 @@
 
 This terraform must be run to provision the ECS Fargate service and task definition used to run the Github Audit Tool.
 
-The IaC is separated from the storage terraform so that the file store can persist if the service is destroyed.  This gives greater flexibility, e.g allowing the service to be destroyed to save costs without losing the data that has been output by the tool.
+The IaC is separated from the storage terraform so that the file store can persist if the service is destroyed. This gives greater flexibility, e.g allowing the service to be destroyed to save costs without losing the data that has been output by the tool.
 
 ## Prerequisites
 
@@ -36,7 +36,7 @@ terraform apply -var-file=env/prod/prod.tfvars
 Apply the S3 bucket storage terraform first
 
 ```bash
-cd terraform/storage 
+cd terraform/storage
 
 terraform init -backend-config=env/prod/backend-prod.tfbackend -reconfigure
 
@@ -50,7 +50,7 @@ terraform apply -var-file=env/prod/prod.tfvars
 Apply the Authentication terraform second
 
 ```bash
-cd terraform/authentication 
+cd terraform/authentication
 
 terraform init -backend-config=env/prod/backend-prod.tfbackend -reconfigure
 
@@ -66,7 +66,7 @@ terraform apply -var-file=env/prod/prod.tfvars
 Apply the terraform for this service
 
 ```bash
-cd terraform/service 
+cd terraform/service
 
 terraform init -backend-config=env/prod/backend-prod.tfbackend -reconfigure
 
@@ -87,4 +87,4 @@ The IaC creates the following resources:
 - Route 53 Record to map service URL through to Application Load Balancer
 - Security Group to apply to Service restricting traffic on designated ports
 - ECS Task Definition
-- ECS Service  
+- ECS Service
