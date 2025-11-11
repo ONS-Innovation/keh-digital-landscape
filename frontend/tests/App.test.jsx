@@ -58,9 +58,8 @@ describe('App', () => {
         </MemoryRouter>
       </ThemeProvider>
     );
-    const user = userEvent.setup();
     const reportBugLink = await screen.findByText(/Report a bug/i);
-    await user.click(reportBugLink);
+    await userEvent.click(reportBugLink);
     // await userEvent.click(reportBugLink);
     // expect(reportBugLink).toBeInTheDocument();
     // await act(async () => {
