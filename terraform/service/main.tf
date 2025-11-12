@@ -27,7 +27,7 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
     {
       # Frontend Container
       name      = "${var.service_subdomain}-task-application"
-      image     = "${var.aws_account_id}.dkr.ecr.${var.region}.amazonaws.com/${var.frontend_ecr_repo}:${var.container_ver}"
+      image     = "${var.aws_account_id}.dkr.ecr.${var.region}.amazonaws.com/${var.frontend_ecr_repo}@${data.aws_ecr_image.frontend_image.image_digest}"
       cpu       = var.service_cpu / 2
       memory    = var.service_memory / 2
       essential = true
@@ -60,7 +60,7 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
     {
       # Backend Container
       name      = "${var.service_subdomain}-backend"
-      image     = "${var.aws_account_id}.dkr.ecr.${var.region}.amazonaws.com/${var.backend_ecr_repo}:${var.container_ver_backend}"
+      image     = "${var.aws_account_id}.dkr.ecr.${var.region}.amazonaws.com/${var.backend_ecr_repo}@${data.aws_ecr_image.backend_image.image_digest}"
       cpu       = var.service_cpu / 2
       memory    = var.service_memory / 2
       essential = true
@@ -166,7 +166,9 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
         {
           containerName = "${var.service_subdomain}-task-application"
           condition     = "START"
-        }
+        },
+        data.aws_ecr_image.backend_image,
+        data.aws_ecr_image.frontend_image
       ]
     }
   ])
