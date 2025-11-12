@@ -39,5 +39,5 @@ data "aws_ecr_image" "backend_image" {
 # Resolve the pushed frontend image
 data "aws_ecr_image" "frontend_image" {
   repository_name = var.frontend_ecr_repo
-  image_tag       = var.container_ver_frontend
+  image_tag       = var.container_ver
 }
