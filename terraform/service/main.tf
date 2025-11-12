@@ -182,9 +182,7 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
         {
           containerName = "${var.service_subdomain}-task-application"
           condition     = "START"
-        },
-        data.aws_ecr_image.backend_image,
-        data.aws_ecr_image.frontend_image
+        }
       ]
     }
   ])
