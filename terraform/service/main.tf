@@ -54,6 +54,14 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
         {
           name  = "VITE_SUPPORT_MAIL",
           value = var.support_mail
+        },
+        {
+          name  = "IMAGE_TAG",
+          value = data.aws_ecr_image.frontend_image.image_tag
+        },
+        {
+          name  = "IMAGE_DIGEST",
+          value = data.aws_ecr_image.frontend_image.image_digest
         }
       ]
     },
@@ -143,6 +151,14 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
         {
           name  = "SIGN_OUT_URL",
           value = data.terraform_remote_state.ecs_auth.outputs.cognito_user_pool_sign_out_urls[0]
+        },
+        {
+          name  = "IMAGE_TAG",
+          value = data.aws_ecr_image.backend_image.image_tag
+        },
+        {
+          name  = "IMAGE_DIGEST",
+          value = data.aws_ecr_image.backend_image.image_digest
         }
       ],
       logConfiguration = {
