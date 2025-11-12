@@ -30,4 +30,14 @@ data "aws_route53_zone" "route53_domain" {
   name = local.url
 }
 
+# Resolve the pushed backend image
+data "aws_ecr_image" "backend_image" {
+  repository_name = var.backend_ecr_repo
+  image_tag       = var.container_ver_backend
+}
 
+# Resolve the pushed frontend image
+data "aws_ecr_image" "frontend_image" {
+  repository_name = var.frontend_ecr_repo
+  image_tag       = var.container_ver
+}

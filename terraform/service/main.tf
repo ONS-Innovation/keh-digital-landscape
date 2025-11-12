@@ -27,7 +27,7 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
     {
       # Frontend Container
       name      = "${var.service_subdomain}-task-application"
-      image     = "${var.aws_account_id}.dkr.ecr.${var.region}.amazonaws.com/${var.frontend_ecr_repo}:${var.container_ver}"
+      image     = "${var.aws_account_id}.dkr.ecr.${var.region}.amazonaws.com/${var.frontend_ecr_repo}@${data.aws_ecr_image.frontend_image.image_digest}"
       cpu       = var.service_cpu / 2
       memory    = var.service_memory / 2
       essential = true
@@ -54,13 +54,21 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
         {
           name  = "VITE_SUPPORT_MAIL",
           value = var.support_mail
+        },
+        {
+          name  = "IMAGE_TAG",
+          value = data.aws_ecr_image.frontend_image.image_tag
+        },
+        {
+          name  = "IMAGE_DIGEST",
+          value = data.aws_ecr_image.frontend_image.image_digest
         }
       ]
     },
     {
       # Backend Container
       name      = "${var.service_subdomain}-backend"
-      image     = "${var.aws_account_id}.dkr.ecr.${var.region}.amazonaws.com/${var.backend_ecr_repo}:${var.container_ver_backend}"
+      image     = "${var.aws_account_id}.dkr.ecr.${var.region}.amazonaws.com/${var.backend_ecr_repo}@${data.aws_ecr_image.backend_image.image_digest}"
       cpu       = var.service_cpu / 2
       memory    = var.service_memory / 2
       essential = true
@@ -143,6 +151,14 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
         {
           name  = "SIGN_OUT_URL",
           value = data.terraform_remote_state.ecs_auth.outputs.cognito_user_pool_sign_out_urls[0]
+        },
+        {
+          name  = "IMAGE_TAG",
+          value = data.aws_ecr_image.backend_image.image_tag
+        },
+        {
+          name  = "IMAGE_DIGEST",
+          value = data.aws_ecr_image.backend_image.image_digest
         }
       ],
       logConfiguration = {
