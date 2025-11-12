@@ -109,7 +109,7 @@ variable "region" {
 variable "log_retention_days" {
   description = "Log retention days"
   type        = number
-  default     = 90
+  default     = 365
 }
 
 variable "github_org" {
