@@ -28,6 +28,8 @@ container_image_backend=$(echo "$secrets" | jq -r .container_image_backend)
 
 copilot_bucket_name=$(echo "$secrets" | jq -r .copilot_bucket_name)
 
+support_mail=$(echo "$secrets" | jq -r .support_mail)
+
 export AWS_ACCESS_KEY_ID=$aws_access_key_id
 export AWS_SECRET_ACCESS_KEY=$aws_secret_access_key
 
@@ -65,4 +67,5 @@ terraform apply \
 -var "frontend_ecr_repo=${container_image_frontend}" \
 -var "backend_ecr_repo=${container_image_backend}" \
 -var "copilot_bucket_name=${copilot_bucket_name}" \
+-var "support_mail=${support_mail}" \
 -auto-approve
