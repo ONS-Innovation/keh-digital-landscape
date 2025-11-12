@@ -2,8 +2,7 @@ import React from 'react';
 import '../../styles/components/BugReport.css';
 
 const BugReport = () => {
-  const supportMail =
-    import.meta.env.VITE_SUPPORT_MAIL || 'support_mail@example.org';
+  const supportEmail = import.meta.env.VITE_SUPPORT_MAIL || '';
   return (
     <div className="bug-report-container">
       <h2>Bug Report</h2>
@@ -23,7 +22,7 @@ const BugReport = () => {
       <span>
         Or send an email to the{' '}
         <a
-          href={`mailto:${supportMail}`}
+          href={`mailto:${supportEmail}`}
           target="_blank"
           rel="noopener noreferrer"
         >
