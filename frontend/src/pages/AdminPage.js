@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Header from '../components/Header/Header';
 import BannerManage from '../components/Admin/BannerManage';
 import TechManage from '../components/Admin/TechManage';
