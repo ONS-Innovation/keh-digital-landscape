@@ -2,7 +2,8 @@ import React from 'react';
 import '../../styles/components/BugReport.css';
 
 const BugReport = () => {
-  const supportMail = import.meta.env.VITE_SUPPORT_MAIL || 'support_mail@example.org';
+  const supportMail =
+    import.meta.env.VITE_SUPPORT_MAIL || 'support_mail@example.org';
   return (
     <div className="bug-report-container">
       <h2>Bug Report</h2>
@@ -20,13 +21,16 @@ const BugReport = () => {
       </span>
       <p />
       <span>
-        Or send an email to the {' '}
+        Or send an email to the{' '}
         <a
           href={`mailto:${supportMail}`}
           target="_blank"
           rel="noopener noreferrer"
-        > Team
-        </a>.
+        >
+          {' '}
+          Team
+        </a>
+        .
       </span>
     </div>
   );
