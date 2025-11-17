@@ -85,10 +85,22 @@ test.describe('Check projects available under Tech Radar', () => {
       await page.locator(`g#blip-${techId}`).locator('circle').first().click();
 
       const blipInfo = page.getByRole('heading', { name: heading });
-      const noOfProjects = page.getByText(projectsCountText);
-
       await expect(blipInfo).toBeVisible();
-      await expect(noOfProjects).toBeVisible();
+
+      // Wait for InfoBox to appear
+      const infoBox = page.locator('.info-box');
+      await expect(infoBox).toBeVisible();
+
+      // Wait for the projects section to be visible
+      const projectsSection = infoBox.locator('.info-box-projects');
+      await expect(projectsSection).toBeVisible({ timeout: 10000 });
+
+      // The text format is "{count} {project/projects} using this technology:"
+      const noOfProjects = projectsSection
+        .locator('h4')
+        .filter({ hasText: projectsCountText });
+
+      await expect(noOfProjects).toBeVisible({ timeout: 10000 });
 
       for (const project of projects) {
         await expect(page.getByText(project, { exact: true })).toBeVisible();
