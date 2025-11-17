@@ -31,7 +31,7 @@ const interceptAPICall = async ({ page }) => {
   };
 
   const interceptAPIDirectoratesCall = async ({ page }) => {
-    // Intercept and mock the teams API response with teamsDummyData
+    // Intercept and mock the directorates API response with directorateData
     await page.route('**/api/directorates/json', async route => {
       await route.fulfill({
         status: 200,
@@ -82,10 +82,24 @@ test.describe('Check technologies and project count available under Tech Reviewe
       // Click on the respective technology heading to expand
       await page.getByText(heading, { exact: true }).click();
 
-      // Verify the number of projects displayed matches expected projects and count
+      // Wait for InfoBox to appear
+      const infoBox = page.locator('.info-box');
+      await expect(infoBox).toBeVisible();
+
+      // Wait for the projects section to be visible
+      const projectsSection = infoBox.locator('.info-box-projects');
+      await expect(projectsSection).toBeVisible({ timeout: 10000 });
+
+      // Wait for the project count text to be visible in the InfoBox
+      // The text format is "{count} {project/projects} using this technology:"
+      // Use a locator filter to find text containing the project count
+      const noOfProjects = projectsSection
+        .locator('h4')
+        .filter({ hasText: projectsCountText });
+      await expect(noOfProjects).toBeVisible({ timeout: 10000 });
+
+      // Verify the number of projects displayed matches expected projects
       for (const project of projects) {
-        const noOfProjects = page.getByText(projectsCountText);
-        await expect(noOfProjects).toBeVisible();
         await expect(page.getByText(project, { exact: true })).toBeVisible();
       }
     });
