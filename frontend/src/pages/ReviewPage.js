@@ -203,6 +203,7 @@ const ReviewPage = () => {
 
       return projectsData.filter(project => {
         const allTechColumns = [
+          'Architectures',
           'Language_Main',
           'Language_Others',
           'Language_Frameworks',
