@@ -103,6 +103,9 @@ function CopilotDashboard() {
 
   // Cancellation ref for fetchTeamData
   const fetchTeamDataCancelRef = useRef({ cancelled: false });
+  // Ref to track OAuth code processing to prevent duplicate requests
+  const oauthCodeProcessingRef = useRef(false);
+  const processedCodeRef = useRef(null);
 
   const fetchTeamData = useCallback(
     async slug => {
@@ -354,21 +357,42 @@ function CopilotDashboard() {
     const authenticateGitHubUser = async () => {
       // Exchange code for token (this will set httpOnly cookie)
       if (code) {
+        // Prevent duplicate processing: check if we're already processing or have processed this code
+        if (
+          oauthCodeProcessingRef.current ||
+          processedCodeRef.current === code
+        ) {
+          return;
+        }
+
+        // Mark as processing and store the code
+        oauthCodeProcessingRef.current = true;
+        processedCodeRef.current = code;
+
+        // Remove code from URL immediately to prevent duplicate requests
+        const url = new URL(window.location);
+        url.searchParams.delete('code');
+        window.history.replaceState({}, '', url);
+
         try {
           const success = await exchangeCodeForToken(code);
 
           if (!success) {
             console.error('Failed to exchange code for token');
+            // Reset processing state on failure so it can be retried
+            oauthCodeProcessingRef.current = false;
+            processedCodeRef.current = null;
             return;
           }
-
-          // Remove code from URL after use
-          const url = new URL(window.location);
-          url.searchParams.delete('code');
-          window.history.replaceState({}, '', url);
         } catch (err) {
           console.error('OAuth token exchange failed', err);
+          // Reset processing state on error so it can be retried
+          oauthCodeProcessingRef.current = false;
+          processedCodeRef.current = null;
           return;
+        } finally {
+          // Reset processing flag after completion
+          oauthCodeProcessingRef.current = false;
         }
       } else {
         console.log('No OAuth code found, checking existing authentication');
