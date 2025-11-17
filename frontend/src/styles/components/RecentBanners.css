@@ -16,7 +16,7 @@
 
 .recent-banners-container span {
   color: hsl(var(--muted-foreground));
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .recent-banners-list {
@@ -74,7 +74,7 @@
 
 .recent-banner-pages {
   color: hsl(var(--muted-foreground));
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .recent-banner-body {
@@ -84,7 +84,7 @@
 .recent-banner-line {
   margin: 0;
   line-height: 1.5;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .recent-banners-loading,

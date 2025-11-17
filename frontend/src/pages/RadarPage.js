@@ -1403,11 +1403,32 @@ function RadarPage() {
                 </span>
               </div>
             </div>
-            <ul tabIndex="0">
+            <ul tabIndex="0" role="list" aria-label="Frameworks technologies">
               {numberedEntries['2']?.map(entry => (
                 <li
                   key={entry.id}
                   onClick={() => handleBlipClick(entry)}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      handleBlipClick(entry);
+                      e.preventDefault();
+                    } else if (e.key === 'ArrowDown') {
+                      const nextItem = e.target.nextElementSibling;
+                      if (nextItem) {
+                        nextItem.focus();
+                      }
+                      e.preventDefault();
+                    } else if (e.key === 'ArrowUp') {
+                      const prevItem = e.target.previousElementSibling;
+                      if (prevItem) {
+                        prevItem.focus();
+                      }
+                      e.preventDefault();
+                    }
+                  }}
+                  tabIndex="0"
+                  role="listitem"
+                  aria-label={`${entry.title}, ${getMostRecentRing(entry.timeline)} ring`}
                   style={{
                     cursor: 'pointer',
                     borderLeft: getShouldBeHighlighted(entry.timeline)

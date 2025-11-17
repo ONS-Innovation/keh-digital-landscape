@@ -18,7 +18,7 @@
 .changelog-container span {
   color: hsl(var(--muted-foreground));
   margin-bottom: 16px;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .changelog-container span a {
@@ -67,7 +67,7 @@
 
 .changelog-date {
   color: hsl(var(--muted-foreground));
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .changelog-body {
@@ -132,7 +132,7 @@
 
 .changelog-link {
   color: hsl(var(--primary));
-  font-size: 0.9rem;
+  font-size: 1rem;
   display: inline-block;
   text-decoration: underline;
 }
@@ -145,7 +145,7 @@
   background: none;
   border: none;
   color: hsl(var(--primary));
-  font-size: 0.9rem;
+  font-size: 1rem;
   padding: 0;
   cursor: pointer;
   border-radius: var(--radius);
@@ -174,7 +174,7 @@
   border: none;
   border-radius: var(--radius);
   padding: 0.5rem 1.5rem;
-  font-size: 0.9rem;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
 }

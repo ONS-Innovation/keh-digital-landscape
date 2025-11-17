@@ -1,6 +1,7 @@
 import '../../styles/components/BugReport.css';
 
 const BugReport = () => {
+  const supportEmail = import.meta.env.VITE_SUPPORT_MAIL || '';
   return (
     <div className="bug-report-container">
       <h2>Bug Report</h2>
@@ -15,6 +16,19 @@ const BugReport = () => {
           GitHub
         </a>
         . You will require a GitHub account to open an issue.
+      </span>
+      <p />
+      <span>
+        Or send an email to the{' '}
+        <a
+          href={`mailto:${supportEmail}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {' '}
+          Team
+        </a>
+        .
       </span>
     </div>
   );

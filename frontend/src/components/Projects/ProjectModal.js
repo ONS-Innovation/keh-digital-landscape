@@ -255,6 +255,7 @@ const ProjectModal = ({
       'Hosted',
       'Architectures',
       'Environments',
+      'Publishing_Target',
     ],
     security: ['IAM_Services', 'Source_Control', 'Branching_Strategy'],
     quality: ['Static_Analysis', 'Code_Formatter', 'Monitoring'],

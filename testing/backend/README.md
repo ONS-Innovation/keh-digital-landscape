@@ -17,12 +17,14 @@ cd testing/backend
 ## Setup
 
 1. Create a virtual environment (recommended but not required):
+
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
 
 2. Install dependencies:
+
 ```bash
 make setup
 ```
@@ -34,6 +36,7 @@ Make sure the backend server is running on localhost:5001 before running tests.
 ### Running All Tests
 
 To run all tests:
+
 ```bash
 make test
 ```
@@ -43,21 +46,25 @@ make test
 The tests are organized into three main categories:
 
 1. **Main API tests** - Core API endpoints like health check, CSV data, and repository statistics:
+
 ```bash
 make test-main
 ```
 
 2. **Admin API tests** - Admin banner management endpoints:
+
 ```bash
 make test-admin
 ```
 
 3. **Review API tests** - Tech radar update endpoints:
+
 ```bash
 make test-review
 ```
 
 4. **Copilot API tests** - Copilot endpoints:
+
 ```bash
 make test-copilot
 ```
@@ -73,12 +80,14 @@ Some Copilot API endpoints require authentication. To test these endpoints, you 
    - Find the `githubUserToken` cookie and copy its value
 
 2. Set the environment variables:
+
 ```bash
 export TEST_GITHUBUSERTOKEN="your_github_token"
 export TEST_GITHUBTEAM="your_team_slug"  # defaults to "keh-dev" if not set
 ```
 
 3. Run the Copilot tests:
+
 ```bash
 make test-copilot
 ```
@@ -109,6 +118,7 @@ Ensure tests are passing before committing.
 ### Linting
 
 To run linting checks on all test files:
+
 ```bash
 make lint
 ```
@@ -116,6 +126,7 @@ make lint
 ### Cleaning Up
 
 To clean Python cache files:
+
 ```bash
 make clean
 ```
@@ -124,11 +135,11 @@ make clean
 
 The tests cover these main endpoint groups:
 
-| Test File | Endpoint Group | Description |
-|---|---|---|
-| `test_main.py` | `/api/*` | Core API endpoints (health, CSV, JSON, repository) |
-| `test_admin.py` | `/admin/api/*` | Admin API endpoints for banner management |
-| `test_review.py` | `/review/api/*` | Review API endpoints for tech radar updates |
+| Test File         | Endpoint Group   | Description                                         |
+| ----------------- | ---------------- | --------------------------------------------------- |
+| `test_main.py`    | `/api/*`         | Core API endpoints (health, CSV, JSON, repository)  |
+| `test_admin.py`   | `/admin/api/*`   | Admin API endpoints for banner management           |
+| `test_review.py`  | `/review/api/*`  | Review API endpoints for tech radar updates         |
 | `test_copilot.py` | `/copilot/api/*` | Copilot API endpoints (some require authentication) |
 
 ## Making changes to the tests
@@ -136,6 +147,7 @@ The tests cover these main endpoint groups:
 To make changes to the tests, edit the appropriate test file in the `backend/` directory.
 
 After making changes, run the specific test set or all tests to verify they still pass:
+
 ```bash
 make test
 ```

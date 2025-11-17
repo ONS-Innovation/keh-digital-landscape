@@ -109,7 +109,7 @@ variable "region" {
 variable "log_retention_days" {
   description = "Log retention days"
   type        = number
-  default     = 90
+  default     = 365
 }
 
 variable "github_org" {
@@ -201,6 +201,11 @@ variable "healthcheck_start_period" {
   description = "Healthcheck start period"
   type        = number
   default     = 120
+}
+
+variable "support_mail" {
+  description = "Support email"
+  type        = string
 }
 
 locals {
