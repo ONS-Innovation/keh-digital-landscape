@@ -106,41 +106,74 @@ function CopilotDashboard() {
   // Ref to track OAuth code processing to prevent duplicate requests
   const oauthCodeProcessingRef = useRef(false);
   const processedCodeRef = useRef(null);
+  // Refs to track authentication and teams fetching to prevent duplicate requests
+  const authCheckInProgressRef = useRef(false);
+  const teamsFetchInProgressRef = useRef(false);
+  const hasCheckedAuthRef = useRef(false);
+  // Ref to track team data fetching to prevent duplicate requests
+  const teamDataFetchingRef = useRef(null);
 
   const fetchTeamData = useCallback(
     async slug => {
-      fetchTeamDataCancelRef.current.cancelled = false;
-      setIsTeamLoading(true);
-
-      const liveUsage = await fetchTeamLiveUsageData(slug);
-      if (fetchTeamDataCancelRef.current.cancelled) return;
-      if (!liveUsage) {
-        toast.error('You do not have permission to view this team');
-        setTeamSlug(null);
-        navigate('/copilot/team', { replace: true });
-        return null;
+      // Prevent duplicate requests for the same team slug
+      if (teamDataFetchingRef.current === slug) {
+        return;
       }
 
-      const { start, end } = initialiseDateRange(liveUsage);
-      setStartDate(start);
-      setEndDate(end);
-      setSliderValues([1, getEndSliderValue(liveUsage)]);
-      const teamSeats = await fetchTeamSeatData(slug);
-      if (fetchTeamDataCancelRef.current.cancelled) return;
-      const activeTeamSeats = filterInactiveUsers(teamSeats, startDate);
+      // Cancel any previous fetch
+      fetchTeamDataCancelRef.current.cancelled = true;
+      fetchTeamDataCancelRef.current.cancelled = false;
 
-      setLiveTeamData({
-        allUsage: liveUsage ?? [],
-        filteredUsage: liveUsage ?? [],
-        processedUsage: liveUsage ? processUsageData(liveUsage) : [],
-        allSeatData: teamSeats,
-        activeSeatData: activeTeamSeats,
-      });
+      // Mark this slug as being fetched
+      teamDataFetchingRef.current = slug;
+      setIsTeamLoading(true);
 
-      // Ensure we're showing the team data view
-      setIsSelectingTeam(false);
-      setTeamSlug(slug);
-      setIsTeamLoading(false);
+      try {
+        const liveUsage = await fetchTeamLiveUsageData(slug);
+        if (fetchTeamDataCancelRef.current.cancelled) {
+          teamDataFetchingRef.current = null;
+          return;
+        }
+        if (!liveUsage) {
+          toast.error('You do not have permission to view this team');
+          setTeamSlug(null);
+          navigate('/copilot/team', { replace: true });
+          teamDataFetchingRef.current = null;
+          return null;
+        }
+
+        const { start, end } = initialiseDateRange(liveUsage);
+        setStartDate(start);
+        setEndDate(end);
+        setSliderValues([1, getEndSliderValue(liveUsage)]);
+        const teamSeats = await fetchTeamSeatData(slug);
+        if (fetchTeamDataCancelRef.current.cancelled) {
+          teamDataFetchingRef.current = null;
+          return;
+        }
+        const activeTeamSeats = filterInactiveUsers(teamSeats, start);
+
+        setLiveTeamData({
+          allUsage: liveUsage ?? [],
+          filteredUsage: liveUsage ?? [],
+          processedUsage: liveUsage ? processUsageData(liveUsage) : [],
+          allSeatData: teamSeats,
+          activeSeatData: activeTeamSeats,
+        });
+
+        // Ensure we're showing the team data view
+        setIsSelectingTeam(false);
+        setTeamSlug(slug);
+        setIsTeamLoading(false);
+      } catch (error) {
+        console.error('Error fetching team data:', error);
+        setIsTeamLoading(false);
+      } finally {
+        // Clear the fetching ref only if this is still the current fetch
+        if (teamDataFetchingRef.current === slug) {
+          teamDataFetchingRef.current = null;
+        }
+      }
     },
     [
       fetchTeamDataCancelRef,
@@ -154,7 +187,6 @@ function CopilotDashboard() {
       navigate,
       initialiseDateRange,
       getEndSliderValue,
-      startDate,
     ]
   );
 
@@ -287,7 +319,12 @@ function CopilotDashboard() {
       setScope('team');
       setTeamSlug(teamParam || null);
       setIsSelectingTeam(!teamParam);
-      if (teamParam) {
+      // Only fetch team data if we have a team param and it's different from what we're currently fetching
+      if (
+        teamParam &&
+        teamDataFetchingRef.current !== teamParam &&
+        teamSlug !== teamParam
+      ) {
         fetchTeamData(teamParam);
       }
     } else {
@@ -296,7 +333,7 @@ function CopilotDashboard() {
       setViewMode('live');
       navigate('/copilot/org/live', { replace: true });
     }
-  }, [location.pathname, navigate, fetchTeamData]);
+  }, [location.pathname, navigate, fetchTeamData, teamSlug]);
 
   /**
    * Trigger data filter upon slider completion
@@ -384,6 +421,9 @@ function CopilotDashboard() {
             processedCodeRef.current = null;
             return;
           }
+
+          // Reset auth check ref after successful token exchange so auth status can be rechecked
+          hasCheckedAuthRef.current = false;
         } catch (err) {
           console.error('OAuth token exchange failed', err);
           // Reset processing state on error so it can be retried
@@ -397,22 +437,46 @@ function CopilotDashboard() {
       } else {
         console.log('No OAuth code found, checking existing authentication');
       }
-      try {
-        const isAuthenticated = await checkAuthStatus();
-        if (isAuthenticated) {
-          setIsAuthenticated(true);
-          const teamsData = await fetchUserTeams();
-          if (teamsData && teamsData.teams && teamsData.teams.length >= 0) {
-            setAvailableTeams(teamsData.teams);
-            setIsCopilotAdmin(teamsData.isAdmin);
-            setUserTeamSlugs(teamsData.userTeamSlugs || []);
+
+      // Only check auth status if we haven't already checked and aren't currently checking
+      if (!hasCheckedAuthRef.current && !authCheckInProgressRef.current) {
+        authCheckInProgressRef.current = true;
+        try {
+          const isAuthenticated = await checkAuthStatus();
+          hasCheckedAuthRef.current = true;
+
+          if (isAuthenticated) {
+            setIsAuthenticated(true);
+            // Only fetch teams if we're not already fetching
+            if (!teamsFetchInProgressRef.current) {
+              teamsFetchInProgressRef.current = true;
+              try {
+                const teamsData = await fetchUserTeams();
+                if (
+                  teamsData &&
+                  teamsData.teams &&
+                  teamsData.teams.length >= 0
+                ) {
+                  setAvailableTeams(teamsData.teams);
+                  setIsCopilotAdmin(teamsData.isAdmin);
+                  setUserTeamSlugs(teamsData.userTeamSlugs || []);
+                }
+              } catch (err) {
+                console.error('Failed to fetch teams:', err);
+              } finally {
+                teamsFetchInProgressRef.current = false;
+              }
+            }
+          } else {
+            setIsAuthenticated(false);
           }
-        } else {
+        } catch (err) {
+          console.error('Failed to check authentication status:', err);
           setIsAuthenticated(false);
+          hasCheckedAuthRef.current = true; // Mark as checked even on error to prevent retries
+        } finally {
+          authCheckInProgressRef.current = false;
         }
-      } catch (err) {
-        console.error('Failed to check authentication status:', err);
-        setIsAuthenticated(false);
       }
     };
 
@@ -532,6 +596,10 @@ function CopilotDashboard() {
       setUserTeamSlugs([]);
       setTeamSlug(null);
       setIsSelectingTeam(true);
+      // Reset auth check refs to allow re-authentication
+      hasCheckedAuthRef.current = false;
+      authCheckInProgressRef.current = false;
+      teamsFetchInProgressRef.current = false;
       navigate('/copilot/team', { replace: true });
     } catch (err) {
       console.error('Logout failed:', err);
