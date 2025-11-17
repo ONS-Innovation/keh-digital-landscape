@@ -4,11 +4,6 @@ import { csvData } from './data/csvData';
 import { nodeBlipCases } from './data/nodeBlipCases';
 import { directorateData } from './data/directorateData';
 
-const extractNumber = phrase => {
-  const match = phrase.match(/\d+/);
-  return match ? parseInt(match[0], 10) : null;
-};
-
 // Function to intercept and mock the API call
 const interceptAPICall = async ({ page }) => {
   // Function to intercept and mock the API radarData call
