@@ -130,3 +130,58 @@ test('Check technologies appear in the correct areas for different directorates'
     }
   }
 });
+
+test('Technology cards show border for directorate-specific positions', async ({ page }) => {
+  await interceptAPICall({ page });
+
+  // Build tech → position → directorates map
+  const techPositionMap = {};
+  for (const dir of Object.keys(reviewPositionCases)) {
+    const positions = reviewPositionCases[dir];
+    for (const position of Object.keys(positions)) {
+      for (const techId of positions[position]) {
+        if (!techPositionMap[techId]) techPositionMap[techId] = {};
+        if (!techPositionMap[techId][position]) techPositionMap[techId][position] = new Set();
+        techPositionMap[techId][position].add(dir);
+      }
+    }
+  }
+
+  const directorateSelect = page.locator('#directorate-select');
+
+  for (const dir of Object.keys(reviewPositionCases)) {
+    await directorateSelect.selectOption(dir);
+
+    const positions = reviewPositionCases[dir];
+    for (const position of Object.keys(positions)) {
+      for (const techId of positions[position]) {
+        // Directorate-specific if only this directorate has tech in this position
+        const isDirectorateSpecific =
+          techPositionMap[techId] &&
+          techPositionMap[techId][position] &&
+          techPositionMap[techId][position].size === 1;
+
+        if (isDirectorateSpecific) {
+          const card = page.locator(`#technology-${techId}`);
+          await expect(card).toBeVisible();
+
+          // Check class or computed border style
+          const hasBorder = await card.evaluate(el => {
+            const style = window.getComputedStyle(el);
+            const borderWidth =
+              parseFloat(style.borderTopWidth) +
+              parseFloat(style.borderRightWidth) +
+              parseFloat(style.borderBottomWidth) +
+              parseFloat(style.borderLeftWidth);
+            return (
+              el.classList.contains('directorate-specific') ||
+              (borderWidth > 0 && style.borderStyle !== 'none')
+            );
+          });
+
+          expect(hasBorder).toBe(true);
+        }
+      }
+    }
+  }
+});
