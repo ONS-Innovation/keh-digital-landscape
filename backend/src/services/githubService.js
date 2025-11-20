@@ -2,6 +2,7 @@ const {
   getAppAndInstallation,
 } = require('../utilities/getAppAndInstallation.js');
 const logger = require('../config/logger');
+const { CompleteMultipartUploadOutputFilterSensitiveLog, CompleteMultipartUploadRequestFilterSensitiveLog } = require('@aws-sdk/client-s3');
 
 /**
  * GitHubService class for managing GitHub operations
@@ -107,6 +108,18 @@ class GitHubService {
         allSeats.push(...currentSeats);
         currentSeats.length < 100 ? (hasMore = false) : (page += 1);
       }
+
+      const emailList = [];
+
+      // Call exchangeUsernameToEmail for each seat
+      for (let i = 0; i < allSeats.length; i++) {
+        emailList.push(allSeats[i].assignee.login);
+      }
+
+      const emailResponse = await Promise.all(emailList.map((email, i) => {
+        allSeats[i].assignee.email = this.exchangeUsernameToEmail(email)
+        })
+      );
 
       return allSeats;
     } catch (error) {
@@ -250,6 +263,56 @@ class GitHubService {
         error: error.message,
       });
       throw error;
+    }
+  }
+
+  /**
+   * Get the user's email from their username, using octokit GraphQL
+   * @param {string} username - The Github username for the user
+   * @param {string} organisation - The organisation name
+   * @returns {Promise<string>} Email/s of the user (excluding all none organisation main emails addresses)
+   */
+  async exchangeUsernameToEmail(username) {
+    try {
+      // collect the Octokit
+      const octokit = await getAppAndInstallation();
+
+      // Create the Github GraphQL query 
+      const query = `
+      query($org: String!, $username: String!) {
+        user(login: $username) {
+          login
+          organizationVerifiedDomainEmails(login: $org)
+        }
+      }
+      `;
+
+      const parameters = {
+        username: username,
+        org: this.org
+      };
+
+      // Send API request to Github GraphQL
+      const response = await octokit.graphql(query, parameters);
+
+      // Only collect the ONS emails
+      let userEmail = response?.user?.organizationVerifiedDomainEmails;
+      
+      if (!userEmail || userEmail.length === 0) {
+        logger.error(`User: ${username} does not have an ONS specific email attached to their account.`);
+        return null;
+      } 
+
+      // If the user has a "@ext..." ons email remove it, aslong as they have another one
+      if (userEmail.length > 1) {
+        userEmail.filter(email => email.endsWith("@ons.gov.uk"));
+      }
+
+      return userEmail;
+    } catch (error) {
+      logger.error('GitHub API error while fetching organisation verified emails:', {
+        error: error.message,
+      });
     }
   }
 }
