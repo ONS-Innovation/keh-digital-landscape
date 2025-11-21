@@ -1,5 +1,5 @@
 setup:
-	npm install && npx playwright install --with-deps chromium
+	PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install && npx playwright install chromium
 
 test:
 	node test.js wcag2a wcag2aa wcag21a wcag21aa
