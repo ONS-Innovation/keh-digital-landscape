@@ -265,6 +265,7 @@ make
 
    # Ensure the environment variable is set in the terminal that is running the frontend
    export VITE_BACKEND_URL=http://localhost:5001
+   export VITE_SUPPORT_MAIL=digital-landscape@ons.gov.uk
 
    # Run the frontend
    npm start
