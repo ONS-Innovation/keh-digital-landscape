@@ -124,6 +124,35 @@ export const radarData = {
         },
       ],
     },
+    {
+      id: 'test-pl/sql',
+      title: 'PL/SQL',
+      quadrant: '1',
+      description: 'Languages',
+      timeline: [
+        {
+          moved: 0,
+          ringId: 'review',
+          date: '2025-07-01 00:00:00',
+          description: 'Moved Specifically for Data Growth and Operations (DGO)',
+        },
+        {
+          moved: 3,
+          ringId: 'trial',
+          date: '2025-07-05 00:00:00',
+          description: 'Technology Radar Update: R Categorised as **TRIAL**\n.',
+        },
+        {
+          moved: 1,
+          ringId: 'adopt',
+          date: '2025-11-17 00:00:00',
+          description:
+            'Technology Radar Update ABCD: PL/SQL Categorised as **ADOPT**\n.',
+          author: 'test@ons.gov.uk',
+          directorate: 2,
+        },
+      ],
+    },
     // The below technology should appear in review for all directorates
     // and in adopt for Data Science only.
     // This tests that the last entry in the timeline is picked correctly

@@ -237,3 +237,37 @@ test('Check that C# is not on the radar for Digital Services and DGO, but is in 
   const blipC_DGO = await page.locator('g#blip-test-Csharp');
   await expect(blipC_DGO).toHaveCount(0);
 });
+
+test('Verify that highlighted technologies appear in the list for each directorate', async ({
+  page,
+}) => {
+  await interceptAPICall({ page });
+
+  await page.pause();
+  const directorateSelector = page.locator('select#directorate-select');
+
+  //
+  // 2. Data Science Campus (DSC) – R
+  //
+  await directorateSelector.selectOption({ label: 'Data Science Campus (DSC)' });
+
+  const rItemDSC = page.getByRole('listitem', { name: 'R, adopt ring' });
+
+  await expect(rItemDSC).toHaveCSS('border-left-width', '4px');
+  await expect(rItemDSC).toHaveCSS('border-left-style', 'solid');
+  await expect(rItemDSC).toHaveCSS('border-left-color', 'rgb(255, 127, 14)');
+
+  //
+  // 3. Data Growth and Operations (DGO) – PL/SQL highlighted
+  //
+  await directorateSelector.selectOption({ label: 'Data Growth and Operations (DGO)' });
+
+  const plsqlItemDGO = page.getByRole('listitem', { name: 'PL/SQL, adopt ring' });
+
+
+  await expect(plsqlItemDGO).toHaveCSS('border-left-width', '4px');
+  await expect(plsqlItemDGO).toHaveCSS('border-left-style', 'solid');
+  await expect(plsqlItemDGO).toHaveCSS('border-left-color', 'rgb(44, 160, 44)');
+});
+
+
