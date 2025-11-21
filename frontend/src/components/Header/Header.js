@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import MenuDropdown from '../MenuDropdown/MenuDropdown';
 import HelpModal from './HelpModal';
@@ -37,13 +37,11 @@ function Header({
   const location = useLocation();
   const [showHelpModal, setShowHelpModal] = useState(false);
   const searchInputRef = useRef(null);
-  const [shortcutKey, setShortcutKey] = useState('⌘');
-
-  useEffect(() => {
+  const shortcutKey = useMemo(() => {
     // More reliable OS detection
     const userAgent = navigator.userAgent.toLowerCase();
     const isMac = /macintosh|macintel|macppc|mac68k|darwin/i.test(userAgent);
-    setShortcutKey(isMac ? '⌘' : 'CTRL');
+    return isMac ? '⌘' : 'CTRL';
   }, []);
 
   useEffect(() => {
@@ -118,6 +116,7 @@ function Header({
               value={searchTerm}
               onChange={e => onSearchChange(e.target.value)}
               className="search-input"
+              name="search"
             />
             {searchTerm ? (
               <button className="search-clear" onClick={clearSearch}>

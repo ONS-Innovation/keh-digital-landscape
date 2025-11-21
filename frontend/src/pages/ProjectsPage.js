@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header/Header';
 import Projects from '../components/Projects/Projects';
@@ -33,7 +33,8 @@ function ProjectsPage() {
         setProjectsData(csvData);
         setRadarData(techData);
       } catch (error) {
-        toast.error('Unexpected error occurred.');
+        console.error('Error fetching data:', error);
+        toast.error('Error fetching data.');
       }
     };
 
@@ -62,6 +63,7 @@ function ProjectsPage() {
       setProjectsData(newData);
       toast.success('Data refreshed successfully.');
     } catch (error) {
+      console.error('Error refreshing data:', error);
       toast.error('Error refreshing data.');
     }
   };

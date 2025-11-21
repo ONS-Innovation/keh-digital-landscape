@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IoInformationCircle, IoWarning, IoAlertCircle } from 'react-icons/io5';
 import '../../styles/components/RecentBanners.css';
 
@@ -55,11 +55,7 @@ const RecentBanners = () => {
         }
         const data = await response.json();
 
-        const recentBanners = data.messages.sort((a, b) => {
-          return 0;
-        });
-
-        setBanners(recentBanners);
+        setBanners(data.messages);
       } catch (err) {
         setError(err.message);
       } finally {

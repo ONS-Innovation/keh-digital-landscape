@@ -32,7 +32,6 @@ export const fetchTeamSeatData = async teamSlug => {
     return [];
   }
   try {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
     const response = await customFetch(
       `/copilot/api/team/seats?teamSlug=${teamSlug}`,
       {

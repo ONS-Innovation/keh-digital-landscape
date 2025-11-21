@@ -110,6 +110,9 @@ test('Check technologies appear in the correct areas for different directorates'
     // Select the directorate
     await directorateSelect.selectOption(directorate);
 
+    // Wait for the UI to update after directorate selection
+    await page.waitForTimeout(500);
+
     // Get the expected positions for this directorate
     const expectedPositions = reviewPositionCases[directorate];
 
