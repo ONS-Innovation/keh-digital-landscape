@@ -48,10 +48,16 @@ jobs:
         with:
           node-version: '24'
       - name: Install dependencies
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: make install-dev
+      - name: Install Chromium only
+        run: npx playwright install --with-deps chromium
       - name: Start app in background
         run: make dev-ci &
       - name: Run Playwright tests
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: cd testing/frontend && make setup && make test-ui
   unit-testing:
     name: Unit Tests
