@@ -25,6 +25,7 @@ FROM node:22-alpine
 WORKDIR /app
 
 ENV NODE_ENV=production
+ENV VITE_SUPPORT_MAIL=$VITE_SUPPORT_MAIL
 # Install serve for production
 RUN npm install -g serve
 
