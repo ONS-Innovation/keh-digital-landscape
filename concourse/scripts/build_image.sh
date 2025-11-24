@@ -5,12 +5,17 @@ export PODMAN_SYSTEMD_UNIT=concourse-task
 
 aws ecr get-login-password --region eu-west-2 | podman --storage-driver=vfs login --username AWS --password-stdin ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com
 
+support_mail=$(echo "$secrets" | jq -r .support_mail)
+if [ -z "$support_mail" ] || [ "$support_mail" = "null" ]; then
+  echo "support_mail variable missing"
+fi
+
 container_image_frontend=$(echo "$secrets" | jq -r .container_image_frontend)
 container_image_backend=$(echo "$secrets" | jq -r .container_image_backend)
 
 # Build images in parallel
 echo "Building images in parallel..."
-podman build -t ${container_image_frontend}:${tag} resource-repo/frontend &
+podman build --build-arg VITE_SUPPORT_MAIL=${support_mail} -t ${container_image_frontend}:${tag} resource-repo/frontend &
 pid1=$!
 podman build -t ${container_image_backend}:${tag} resource-repo/backend &
 pid2=$!
