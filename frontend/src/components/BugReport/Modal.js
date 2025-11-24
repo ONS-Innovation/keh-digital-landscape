@@ -1,4 +1,3 @@
-import React from 'react';
 import { TbX } from 'react-icons/tb';
 import { toast } from 'react-hot-toast';
 

@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useEffect, useState, useMemo, useRef, useCallback } from 'react';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import Header from '../components/Header/Header';
 import LiveDashboard from '../components/Copilot/Dashboards/LiveDashboard';
 import HistoricDashboard from '../components/Copilot/Dashboards/HistoricDashboard';
@@ -32,145 +32,15 @@ import { BannerContainer } from '../components/Banner';
 import { toast } from 'react-hot-toast';
 
 function CopilotDashboard() {
-  const navigate = useNavigate();
-  const { scope: urlScope } = useParams();
-  const [searchParams] = useSearchParams();
-
-  const initialiseDateRange = data => {
-    let end = data[data.length - 1]?.date
-      ? new Date(data[data.length - 1].date)
-      : new Date();
-    let start = data[0]?.date ? new Date(data[0].date) : new Date();
-
-    return {
-      start: start.toISOString().slice(0, 10),
-      end: end.toISOString().slice(0, 10),
-    };
-  };
-
-  const getEndSliderValue = data => {
-    const startDateStr = data[0]?.date;
-    const endDateStr = data[data.length - 1]?.date;
-
-    const start = new Date(startDateStr);
-    const end = new Date(endDateStr);
-
-    // Calculate number of days between the two dates, inclusive
-    const diffDays =
-      Math.abs(Math.ceil((end - start) / (1000 * 60 * 60 * 24))) + 1;
-    return diffDays;
-  };
-
-  // Cancellation ref for fetchTeamData
-  const fetchTeamDataCancelRef = React.useRef({ cancelled: false });
-
-  const fetchTeamData = async slug => {
-    fetchTeamDataCancelRef.current.cancelled = false;
-    setIsTeamLoading(true);
-
-    const liveUsage = await fetchTeamLiveUsageData(slug);
-    if (fetchTeamDataCancelRef.current.cancelled) return;
-    if (!liveUsage) {
-      toast.error('You do not have permission to view this team');
-      setTeamSlug(null);
-      navigate('/copilot/team', { replace: true });
-      return null;
-    }
-
-    const { start, end } = initialiseDateRange(liveUsage);
-    setStartDate(start);
-    setEndDate(end);
-    setSliderValues([1, getEndSliderValue(liveUsage)]);
-    const teamSeats = await fetchTeamSeatData(slug);
-    if (fetchTeamDataCancelRef.current.cancelled) return;
-    const activeTeamSeats = filterInactiveUsers(teamSeats, startDate);
-
-    setLiveTeamData({
-      allUsage: liveUsage ?? [],
-      filteredUsage: liveUsage ?? [],
-      processedUsage: liveUsage ? processUsageData(liveUsage) : [],
-      allSeatData: teamSeats,
-      activeSeatData: activeTeamSeats,
-    });
-
-    // Ensure we're showing the team data view
-    setIsSelectingTeam(false);
-    setTeamSlug(slug);
-    setIsTeamLoading(false);
-  };
-
-  const getDashboardData = () => {
-    if (viewMode === 'live' && scope === 'organisation') return liveOrgData;
-    if (viewMode === 'live' && scope === 'team') return liveTeamData;
-    if (viewMode === 'historic' && scope === 'organisation')
-      return historicOrgData;
-    if (viewMode === 'historic' && scope === 'team') return historicTeamData; // TODO: Add team historic data support
-  };
-
-  const getGroupedData = () => {
-    if (scope === 'team') {
-      // TODO: Add team historic data support
-      if (viewDatesBy === 'Day') return historicTeamData.allUsage;
-      if (viewDatesBy === 'Week') return historicTeamData.weekUsage;
-      if (viewDatesBy === 'Month') return historicTeamData.monthUsage;
-      if (viewDatesBy === 'Year') return historicTeamData.yearUsage;
-    } else {
-      if (viewDatesBy === 'Day') return historicOrgData.allUsage;
-      if (viewDatesBy === 'Week') return historicOrgData.weekUsage;
-      if (viewDatesBy === 'Month') return historicOrgData.monthUsage;
-      if (viewDatesBy === 'Year') return historicOrgData.yearUsage;
-    }
-  };
-
-  const setFilteredData = (data, setData) => {
-    if (!data || !startDate || !endDate || !sliderFinished) return;
-    const filteredData = filterUsageData(data, startDate, endDate);
-    setData(prev => ({
-      ...prev,
-      filteredUsage: filteredData,
-      processedUsage: processUsageData(filteredData),
-    }));
-  };
-
-  const setActiveSeats = (data, setData) => {
-    if (!data || !inactivityDate) return;
-    const activeSeats = filterInactiveUsers(data, inactivityDate);
-    setData(prev => ({
-      ...prev,
-      activeSeatData: activeSeats,
-    }));
-  };
-
-  const [liveOrgData, setLiveOrgData] = useState({
+  const [historicTeamData] = useState({
     allUsage: [],
-    filteredUsage: [],
-    processedUsage: [],
-    allSeatData: [],
-    activeSeatData: [],
-  });
-
-  const [historicOrgData, setHistoricOrgData] = useState({
-    allUsage: [], // Equivalent of day usage
     weekUsage: [],
     monthUsage: [],
     yearUsage: [],
-  });
-
-  const [liveTeamData, setLiveTeamData] = useState({
-    allUsage: [],
-    filteredUsage: [],
-    processedUsage: [],
-    allSeatData: [],
-    activeSeatData: [],
-  });
-
-  const dateOptions = [
-    { value: 'Day', label: 'Day' },
-    { value: 'Week', label: 'Week' },
-    { value: 'Month', label: 'Month' },
-    { value: 'Year', label: 'Year' },
-  ];
-
+  }); // TODO: Add team historic data support
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
   const [sliderValues, setSliderValues] = useState(null);
   const [inactiveDays, setInactiveDays] = useState(28);
   const inactivityDate = useMemo(() => {
@@ -194,10 +64,178 @@ function CopilotDashboard() {
   const [availableTeams, setAvailableTeams] = useState([]);
   const [isTeamLoading, setIsTeamLoading] = useState(false);
   const [teamSlug, setTeamSlug] = useState(null);
-  const [isInitialised, setIsInitialised] = useState(false);
   const [isCopilotAdmin, setIsCopilotAdmin] = useState(false);
   const [userTeamSlugs, setUserTeamSlugs] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+
+  const [liveTeamData, setLiveTeamData] = useState({
+    allUsage: [],
+    filteredUsage: [],
+    processedUsage: [],
+    allSeatData: [],
+    activeSeatData: [],
+  });
+
+  const initialiseDateRange = useCallback(data => {
+    let end = data[data.length - 1]?.date
+      ? new Date(data[data.length - 1].date)
+      : new Date();
+    let start = data[0]?.date ? new Date(data[0].date) : new Date();
+
+    return {
+      start: start.toISOString().slice(0, 10),
+      end: end.toISOString().slice(0, 10),
+    };
+  }, []);
+
+  const getEndSliderValue = useCallback(data => {
+    const startDateStr = data[0]?.date;
+    const endDateStr = data[data.length - 1]?.date;
+
+    const start = new Date(startDateStr);
+    const end = new Date(endDateStr);
+
+    // Calculate number of days between the two dates, inclusive
+    const diffDays =
+      Math.abs(Math.ceil((end - start) / (1000 * 60 * 60 * 24))) + 1;
+    return diffDays;
+  }, []);
+
+  // Cancellation ref for fetchTeamData
+  const fetchTeamDataCancelRef = useRef({ cancelled: false });
+  // Ref to track OAuth code processing to prevent duplicate requests
+  const oauthCodeProcessingRef = useRef(false);
+  const processedCodeRef = useRef(null);
+  // Refs to track authentication and teams fetching to prevent duplicate requests
+  const authCheckInProgressRef = useRef(false);
+  const teamsFetchInProgressRef = useRef(false);
+  const hasCheckedAuthRef = useRef(false);
+  // Ref to track team data fetching to prevent duplicate requests
+  const teamDataFetchingRef = useRef(null);
+
+  const fetchTeamData = useCallback(
+    async slug => {
+      // Prevent duplicate requests for the same team slug
+      if (teamDataFetchingRef.current === slug) {
+        return;
+      }
+
+      // Cancel any previous fetch
+      fetchTeamDataCancelRef.current.cancelled = true;
+      fetchTeamDataCancelRef.current.cancelled = false;
+
+      // Mark this slug as being fetched
+      teamDataFetchingRef.current = slug;
+      setIsTeamLoading(true);
+
+      try {
+        const liveUsage = await fetchTeamLiveUsageData(slug);
+        if (fetchTeamDataCancelRef.current.cancelled) {
+          teamDataFetchingRef.current = null;
+          return;
+        }
+        if (!liveUsage) {
+          toast.error('You do not have permission to view this team');
+          setTeamSlug(null);
+          navigate('/copilot/team', { replace: true });
+          teamDataFetchingRef.current = null;
+          return null;
+        }
+
+        const { start, end } = initialiseDateRange(liveUsage);
+        setStartDate(start);
+        setEndDate(end);
+        setSliderValues([1, getEndSliderValue(liveUsage)]);
+        const teamSeats = await fetchTeamSeatData(slug);
+        if (fetchTeamDataCancelRef.current.cancelled) {
+          teamDataFetchingRef.current = null;
+          return;
+        }
+        const activeTeamSeats = filterInactiveUsers(teamSeats, start);
+
+        setLiveTeamData({
+          allUsage: liveUsage ?? [],
+          filteredUsage: liveUsage ?? [],
+          processedUsage: liveUsage ? processUsageData(liveUsage) : [],
+          allSeatData: teamSeats,
+          activeSeatData: activeTeamSeats,
+        });
+
+        // Ensure we're showing the team data view
+        setIsSelectingTeam(false);
+        setTeamSlug(slug);
+        setIsTeamLoading(false);
+      } catch (error) {
+        console.error('Error fetching team data:', error);
+        setIsTeamLoading(false);
+      } finally {
+        // Clear the fetching ref only if this is still the current fetch
+        if (teamDataFetchingRef.current === slug) {
+          teamDataFetchingRef.current = null;
+        }
+      }
+    },
+    [
+      fetchTeamDataCancelRef,
+      setIsTeamLoading,
+      setTeamSlug,
+      setStartDate,
+      setEndDate,
+      setSliderValues,
+      setLiveTeamData,
+      setIsSelectingTeam,
+      navigate,
+      initialiseDateRange,
+      getEndSliderValue,
+    ]
+  );
+
+  const setFilteredData = useCallback(
+    (data, setData) => {
+      if (!data || !startDate || !endDate || !sliderFinished) return;
+      const filteredData = filterUsageData(data, startDate, endDate);
+      setData(prev => ({
+        ...prev,
+        filteredUsage: filteredData,
+        processedUsage: processUsageData(filteredData),
+      }));
+    },
+    [startDate, endDate, sliderFinished]
+  );
+
+  const setActiveSeats = useCallback(
+    (data, setData) => {
+      if (!data || !inactivityDate) return;
+      const activeSeats = filterInactiveUsers(data, inactivityDate);
+      setData(prev => ({
+        ...prev,
+        activeSeatData: activeSeats,
+      }));
+    },
+    [inactivityDate]
+  );
+
+  const [liveOrgData, setLiveOrgData] = useState({
+    allUsage: [],
+    filteredUsage: [],
+    processedUsage: [],
+    allSeatData: [],
+    activeSeatData: [],
+  });
+
+  const [historicOrgData, setHistoricOrgData] = useState({
+    allUsage: [], // Equivalent of day usage
+    weekUsage: [],
+    monthUsage: [],
+    yearUsage: [],
+  });
+
+  const dateOptions = [
+    { value: 'Day', label: 'Day' },
+    { value: 'Week', label: 'Week' },
+    { value: 'Month', label: 'Month' },
+    { value: 'Year', label: 'Year' },
+  ];
 
   // Filter listed available teams based on search term
   const filteredAvailableTeams = useMemo(() => {
@@ -209,44 +247,93 @@ function CopilotDashboard() {
     );
   }, [availableTeams, searchTerm]);
 
-  const data = getDashboardData();
+  const groupedData = useMemo(() => {
+    if (scope === 'team') {
+      // TODO: Add team historic data support
+      switch (viewDatesBy) {
+        case 'Day':
+          return historicTeamData.allUsage;
+        case 'Week':
+          return historicTeamData.weekUsage;
+        case 'Month':
+          return historicTeamData.monthUsage;
+        case 'Year':
+          return historicTeamData.yearUsage;
+        default:
+          return [];
+      }
+    } else {
+      switch (viewDatesBy) {
+        case 'Day':
+          return historicOrgData.allUsage;
+        case 'Week':
+          return historicOrgData.weekUsage;
+        case 'Month':
+          return historicOrgData.monthUsage;
+        case 'Year':
+          return historicOrgData.yearUsage;
+        default:
+          return [];
+      }
+    }
+  }, [scope, viewDatesBy, historicTeamData, historicOrgData]);
+
+  const dashboardData = useMemo(() => {
+    if (viewMode === 'live' && scope === 'organisation') return liveOrgData;
+    if (viewMode === 'live' && scope === 'team') return liveTeamData;
+    if (viewMode === 'historic' && scope === 'organisation')
+      return historicOrgData;
+    if (viewMode === 'historic' && scope === 'team') return historicTeamData; // TODO: Add team historic data support
+    return null;
+  }, [
+    viewMode,
+    scope,
+    liveOrgData,
+    liveTeamData,
+    historicOrgData,
+    historicTeamData,
+  ]);
+
+  const sliderMaxValue = useMemo(() => {
+    const usageData =
+      scope === 'organisation' ? liveOrgData.allUsage : liveTeamData.allUsage;
+    return getEndSliderValue(usageData);
+  }, [scope, liveOrgData.allUsage, liveTeamData.allUsage, getEndSliderValue]);
 
   /**
-   * Initialise state from URL parameters (only runs once on component mount)
+   * Sync state from URL changes (browser navigation, back/forward, direct URL, tab clicks)
+   * This effect makes URL the single source of truth for routing state
    */
   useEffect(() => {
-    const pathParts = window.location.pathname.split('/');
+    const pathParts = location.pathname.split('/');
     const currentUrlScope = pathParts[2]; // Get scope from pathname
 
     if (currentUrlScope === 'org') {
+      const urlViewMode = pathParts[3] === 'historic' ? 'historic' : 'live';
       setScope('organisation');
-      const viewMode = pathParts[3];
-      if (viewMode === 'historic') {
-        setViewMode('historic');
-      } else {
-        setViewMode('live');
-      }
+      setViewMode(urlViewMode);
+      setTeamSlug(null);
+      setIsSelectingTeam(false);
     } else if (currentUrlScope === 'team') {
-      setScope('team');
       const teamParam = pathParts[3];
-      if (teamParam) {
-        setTeamSlug(teamParam);
-        setIsSelectingTeam(false);
-        // Fetch team data if we have a team slug from URL
+      setScope('team');
+      setTeamSlug(teamParam || null);
+      setIsSelectingTeam(!teamParam);
+      // Only fetch team data if we have a team param and it's different from what we're currently fetching
+      if (
+        teamParam &&
+        teamDataFetchingRef.current !== teamParam &&
+        teamSlug !== teamParam
+      ) {
         fetchTeamData(teamParam);
-      } else {
-        setIsSelectingTeam(true);
       }
     } else {
-      // Default to organisation live view
+      // Default to organisation/live if path doesn't match expected format
       setScope('organisation');
       setViewMode('live');
       navigate('/copilot/org/live', { replace: true });
     }
-
-    // Mark as initialised after processing URL parameters
-    setIsInitialised(true);
-  }, []); // Empty dependency array - only run once on mount
+  }, [location.pathname, navigate, fetchTeamData, teamSlug]);
 
   /**
    * Trigger data filter upon slider completion
@@ -264,13 +351,9 @@ function CopilotDashboard() {
     setSliderValues(values);
 
     const newStart = new Date();
-    newStart.setDate(
-      newStart.getDate() - getEndSliderValue(data.allUsage) - 1 + values[0]
-    );
+    newStart.setDate(newStart.getDate() - sliderMaxValue - 1 + values[0]);
     const newEnd = new Date();
-    newEnd.setDate(
-      newEnd.getDate() - getEndSliderValue(data.allUsage) + values[1]
-    );
+    newEnd.setDate(newEnd.getDate() - sliderMaxValue + values[1]);
 
     setStartDate(newStart.toISOString().slice(0, 10));
     setEndDate(newEnd.toISOString().slice(0, 10));
@@ -311,47 +394,101 @@ function CopilotDashboard() {
     const authenticateGitHubUser = async () => {
       // Exchange code for token (this will set httpOnly cookie)
       if (code) {
+        // Prevent duplicate processing: check if we're already processing or have processed this code
+        if (
+          oauthCodeProcessingRef.current ||
+          processedCodeRef.current === code
+        ) {
+          return;
+        }
+
+        // Mark as processing and store the code
+        oauthCodeProcessingRef.current = true;
+        processedCodeRef.current = code;
+
+        // Remove code from URL immediately to prevent duplicate requests
+        const url = new URL(window.location);
+        url.searchParams.delete('code');
+        window.history.replaceState({}, '', url);
+
         try {
           const success = await exchangeCodeForToken(code);
 
           if (!success) {
             console.error('Failed to exchange code for token');
+            // Reset processing state on failure so it can be retried
+            oauthCodeProcessingRef.current = false;
+            processedCodeRef.current = null;
             return;
           }
 
-          // Remove code from URL after use
-          const url = new URL(window.location);
-          url.searchParams.delete('code');
-          window.history.replaceState({}, '', url);
+          // Reset auth check ref after successful token exchange so auth status can be rechecked
+          hasCheckedAuthRef.current = false;
         } catch (err) {
           console.error('OAuth token exchange failed', err);
+          // Reset processing state on error so it can be retried
+          oauthCodeProcessingRef.current = false;
+          processedCodeRef.current = null;
           return;
+        } finally {
+          // Reset processing flag after completion
+          oauthCodeProcessingRef.current = false;
         }
       } else {
         console.log('No OAuth code found, checking existing authentication');
       }
-      try {
-        const isAuthenticated = await checkAuthStatus();
-        if (isAuthenticated) {
-          setIsAuthenticated(true);
-          const teamsData = await fetchUserTeams();
-          if (teamsData && teamsData.teams && teamsData.teams.length >= 0) {
-            setAvailableTeams(teamsData.teams);
-            setIsCopilotAdmin(teamsData.isAdmin);
-            setUserTeamSlugs(teamsData.userTeamSlugs || []);
+
+      // Only check auth status if we haven't already checked and aren't currently checking
+      if (!hasCheckedAuthRef.current && !authCheckInProgressRef.current) {
+        authCheckInProgressRef.current = true;
+        try {
+          const isAuthenticated = await checkAuthStatus();
+          hasCheckedAuthRef.current = true;
+
+          if (isAuthenticated) {
+            setIsAuthenticated(true);
+            // Only fetch teams if we're not already fetching
+            if (!teamsFetchInProgressRef.current) {
+              teamsFetchInProgressRef.current = true;
+              try {
+                const teamsData = await fetchUserTeams();
+                if (
+                  teamsData &&
+                  teamsData.teams &&
+                  teamsData.teams.length >= 0
+                ) {
+                  setAvailableTeams(teamsData.teams);
+                  setIsCopilotAdmin(teamsData.isAdmin);
+                  setUserTeamSlugs(teamsData.userTeamSlugs || []);
+                }
+              } catch (err) {
+                console.error('Failed to fetch teams:', err);
+              } finally {
+                teamsFetchInProgressRef.current = false;
+              }
+            }
+          } else {
+            setIsAuthenticated(false);
           }
-        } else {
+        } catch (err) {
+          console.error('Failed to check authentication status:', err);
           setIsAuthenticated(false);
+          hasCheckedAuthRef.current = true; // Mark as checked even on error to prevent retries
+        } finally {
+          authCheckInProgressRef.current = false;
         }
-      } catch (err) {
-        console.error('Failed to check authentication status:', err);
-        setIsAuthenticated(false);
       }
     };
 
     fetchLiveAndSeatsData();
     authenticateGitHubUser();
-  }, []);
+  }, [
+    getLiveUsageData,
+    getSeatsData,
+    searchParams,
+    initialiseDateRange,
+    getEndSliderValue,
+  ]);
 
   /**
    * Fetch historic data if view mode is set to historic and has not been fetched yet
@@ -378,17 +515,20 @@ function CopilotDashboard() {
       }
     };
     fetchHistoricData();
-  }, [viewMode, hasFetchedHistoric]);
+  }, [viewMode, hasFetchedHistoric, getHistoricUsageData]);
 
   /**
    * Filter and then process live usage data based on start and end date
    */
+  // Process filtered data when dependencies change
   useEffect(() => {
-    scope === 'organisation'
-      ? setFilteredData(liveOrgData.allUsage, setLiveOrgData)
-      : setFilteredData(liveTeamData.allUsage, setLiveTeamData);
+    if (!sliderFinished) return;
 
-    setSliderFinished(false);
+    if (scope === 'organisation') {
+      setFilteredData(liveOrgData.allUsage, setLiveOrgData);
+    } else {
+      setFilteredData(liveTeamData.allUsage, setLiveTeamData);
+    }
   }, [
     scope,
     liveOrgData.allUsage,
@@ -396,6 +536,7 @@ function CopilotDashboard() {
     startDate,
     endDate,
     sliderFinished,
+    setFilteredData,
   ]);
 
   /**
@@ -411,24 +552,40 @@ function CopilotDashboard() {
     inactivityDate,
     liveOrgData.allSeatData,
     liveTeamData.allSeatData,
+    setActiveSeats,
+    inactiveDays,
+    inactivityDate,
   ]);
 
   /**
    * Display team selection UI to choose a team to fetch data for
    */
+  // Compute team selection state and date range based on scope and team slug
+  const teamSelectionState = useMemo(() => {
+    const usageData =
+      scope === 'organisation' ? liveOrgData.allUsage : liveTeamData.allUsage;
+    const { start, end } = initialiseDateRange(usageData);
+    return {
+      isSelectingTeam: scope === 'team' && !teamSlug,
+      dateRange: { start, end },
+      sliderValues: [1, getEndSliderValue(usageData)],
+    };
+  }, [
+    scope,
+    teamSlug,
+    initialiseDateRange,
+    getEndSliderValue,
+    liveOrgData.allUsage,
+    liveTeamData.allUsage,
+  ]);
+
+  // Apply team selection state
   useEffect(() => {
-    if (scope === 'organisation') {
-      setIsSelectingTeam(false);
-    } else if (scope === 'team' && !teamSlug) {
-      // Only set to true if we don't have a team slug
-      setIsSelectingTeam(true);
-    }
-    //Reset start and end dates when switching scopes
-    const { start, end } = initialiseDateRange(data.allUsage);
-    setStartDate(start);
-    setEndDate(end);
-    setSliderValues([1, getEndSliderValue(data.allUsage)]);
-  }, [scope, teamSlug]);
+    setIsSelectingTeam(teamSelectionState.isSelectingTeam);
+    setStartDate(teamSelectionState.dateRange.start);
+    setEndDate(teamSelectionState.dateRange.end);
+    setSliderValues(teamSelectionState.sliderValues);
+  }, [teamSelectionState]);
 
   const handleLogout = async () => {
     try {
@@ -439,6 +596,10 @@ function CopilotDashboard() {
       setUserTeamSlugs([]);
       setTeamSlug(null);
       setIsSelectingTeam(true);
+      // Reset auth check refs to allow re-authentication
+      hasCheckedAuthRef.current = false;
+      authCheckInProgressRef.current = false;
+      teamsFetchInProgressRef.current = false;
       navigate('/copilot/team', { replace: true });
     } catch (err) {
       console.error('Logout failed:', err);
@@ -473,20 +634,12 @@ function CopilotDashboard() {
             { id: 'team', label: 'Team Usage' },
           ]}
           activeTab={scope}
-          onTabChange={() => {
-            setViewMode('live'); // TODO: Add team historic data support
-            setScope(prevScope => {
-              const newScope =
-                prevScope === 'organisation' ? 'team' : 'organisation';
-              if (newScope === 'team') {
-                setIsSelectingTeam(true);
-                setTeamSlug(null);
-                navigate('/copilot/team', { replace: true });
-              } else {
-                navigate('/copilot/org/live', { replace: true });
-              }
-              return newScope;
-            });
+          onTabChange={tabId => {
+            if (tabId === 'team') {
+              navigate('/copilot/team', { replace: true });
+            } else if (tabId === 'organisation') {
+              navigate('/copilot/org/live', { replace: true });
+            }
           }}
         />
         <div className="admin-container" tabIndex="0">
@@ -504,10 +657,14 @@ function CopilotDashboard() {
                       setIsSelectingTeam(true);
                       setTeamSlug(null);
                       navigate('/copilot/team', { replace: true });
-                      const { start, end } = initialiseDateRange(data.allUsage);
+                      const usageData =
+                        scope === 'organisation'
+                          ? liveOrgData.allUsage
+                          : liveTeamData.allUsage;
+                      const { start, end } = initialiseDateRange(usageData);
                       setStartDate(start);
                       setEndDate(end);
-                      setSliderValues([1, getEndSliderValue(data.allUsage)]);
+                      setSliderValues([1, getEndSliderValue(usageData)]);
                     }}
                     aria-label={`Return to team selection`}
                   >
@@ -528,7 +685,7 @@ function CopilotDashboard() {
                         <Slider
                           range
                           min={1}
-                          max={getEndSliderValue(data.allUsage)}
+                          max={sliderMaxValue}
                           value={sliderValues}
                           onChange={updateSlider}
                           onChangeComplete={handleSliderCompletion}
@@ -538,7 +695,10 @@ function CopilotDashboard() {
                             'End date selector',
                           ]}
                           ariaValueTextFormatterForHandle={(value, index) => {
-                            const usage = data?.allUsage;
+                            const usage =
+                              scope === 'organisation'
+                                ? liveOrgData.allUsage
+                                : liveTeamData.allUsage;
                             if (!usage?.length)
                               return `${index === 0 ? 'Start' : 'End'} date: Unknown`;
 
@@ -586,7 +746,6 @@ function CopilotDashboard() {
                       ]}
                       activeTab={viewMode}
                       onTabChange={mode => {
-                        setViewMode(mode);
                         navigate(`/copilot/org/${mode}`, { replace: true });
                       }}
                     />
@@ -711,7 +870,7 @@ function CopilotDashboard() {
           ) : viewMode === 'live' ? (
             <LiveDashboard
               scope={scope}
-              data={data}
+              data={dashboardData}
               isLiveLoading={
                 scope === 'organisation' ? isLiveLoading : isTeamLoading
               }
@@ -723,7 +882,7 @@ function CopilotDashboard() {
           ) : (
             <HistoricDashboard
               scope={scope}
-              data={getGroupedData()}
+              data={groupedData}
               isLoading={isHistoricLoading}
               viewDatesBy={viewDatesBy}
             />

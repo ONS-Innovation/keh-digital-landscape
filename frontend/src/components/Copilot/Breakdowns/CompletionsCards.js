@@ -1,4 +1,3 @@
-import React from 'react';
 import { getPercentage } from '../../../utilities/getPercentage';
 import { formatNumberWithCommas } from '../../../utilities/getCommaSeparated';
 

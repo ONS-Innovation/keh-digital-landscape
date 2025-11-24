@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Statistics from '../components/Statistics/Statistics';
 import Header from '../components/Header/Header';
@@ -51,148 +51,169 @@ function StatisticsPage() {
    * @param {string|null} date - The date to fetch the statistics for.
    * @param {string} repoView - The repository view to fetch the statistics for.
    */
-  const fetchStatistics = async (date = null, repoView = 'unarchived') => {
-    setIsLoading(true);
-    try {
-      let statsResponse;
-      const radarResponse = await getTechRadarData();
 
-      if (selectedRepositories.length > 0) {
-        const repoNames = selectedRepositories
-          .map(repoUrl => {
-            const match = repoUrl.match(/github\.com\/[^/]+\/([^/]+)/);
-            return match ? match[1] : null;
-          })
-          .filter(Boolean);
+  const fetchStatistics = useCallback(
+    async (date = null, repoView = 'unarchived') => {
+      setIsLoading(true);
+      try {
+        let statsResponse;
+        const radarResponse = await getTechRadarData();
 
-        const archived =
-          repoView === 'archived'
-            ? 'true'
-            : repoView === 'unarchived'
-              ? 'false'
-              : null;
+        if (selectedRepositories.length > 0) {
+          const repoNames = selectedRepositories
+            .map(repoUrl => {
+              const match = repoUrl.match(/github\.com\/[^/]+\/([^/]+)/);
+              return match ? match[1] : null;
+            })
+            .filter(Boolean);
 
-        const repoResponse = await getRepositoryData(repoNames, date, archived);
+          const archived =
+            repoView === 'archived'
+              ? 'true'
+              : repoView === 'unarchived'
+                ? 'false'
+                : null;
 
-        if (!repoResponse?.repositories) {
-          throw new Error('Failed to fetch repository data');
+          const repoResponse = await getRepositoryData(
+            repoNames,
+            date,
+            archived
+          );
+
+          if (!repoResponse?.repositories) {
+            throw new Error('Failed to fetch repository data');
+          }
+
+          statsResponse = {
+            stats: repoResponse.stats,
+            language_statistics: repoResponse.language_statistics,
+            metadata: repoResponse.metadata,
+          };
+        } else {
+          // Use context for general statistics
+          statsResponse = await getRepositoryStats(
+            date,
+            repoView === 'archived'
+              ? 'true'
+              : repoView === 'unarchived'
+                ? 'false'
+                : null
+          );
         }
 
-        statsResponse = {
-          stats: repoResponse.stats,
-          language_statistics: repoResponse.language_statistics,
-          metadata: repoResponse.metadata,
+        if (!statsResponse || !radarResponse) {
+          throw new Error('Failed to fetch data');
+        }
+
+        const mappedStats = {
+          stats_unarchived:
+            repoView === 'unarchived'
+              ? {
+                  total: statsResponse.stats?.total_repos || 0,
+                  private: statsResponse.stats?.total_private_repos || 0,
+                  public: statsResponse.stats?.total_public_repos || 0,
+                  internal: statsResponse.stats?.total_internal_repos || 0,
+                  active_last_month: 0,
+                  active_last_3months: 0,
+                  active_last_6months: 0,
+                }
+              : {},
+          stats_archived:
+            repoView === 'archived'
+              ? {
+                  total: statsResponse.stats?.total_repos || 0,
+                  private: statsResponse.stats?.total_private_repos || 0,
+                  public: statsResponse.stats?.total_public_repos || 0,
+                  internal: statsResponse.stats?.total_internal_repos || 0,
+                  active_last_month: 0,
+                  active_last_3months: 0,
+                  active_last_6months: 0,
+                }
+              : {},
+          stats:
+            repoView === 'total'
+              ? {
+                  total: statsResponse.stats?.total_repos || 0,
+                  private: statsResponse.stats?.total_private_repos || 0,
+                  public: statsResponse.stats?.total_public_repos || 0,
+                  internal: statsResponse.stats?.total_internal_repos || 0,
+                  active_last_month: 0,
+                  active_last_3months: 0,
+                  active_last_6months: 0,
+                }
+              : null,
+          language_statistics_unarchived:
+            repoView === 'unarchived'
+              ? statsResponse.language_statistics || {}
+              : {},
+          language_statistics_archived:
+            repoView === 'archived'
+              ? statsResponse.language_statistics || {}
+              : {},
+          language_statistics:
+            repoView === 'total' ? statsResponse.language_statistics || {} : {},
+          radar_entries: radarResponse.entries,
+          metadata: statsResponse.metadata || {
+            last_updated: new Date().toISOString(),
+          },
         };
-      } else {
-        // Use context for general statistics
-        statsResponse = await getRepositoryStats(
-          date,
-          repoView === 'archived'
-            ? 'true'
-            : repoView === 'unarchived'
-              ? 'false'
-              : null
-        );
+
+        setStatsData(mappedStats);
+      } catch (error) {
+        console.error('Error fetching statistics:', error);
+        toast.error('Failed to load statistics.');
+        setStatsData({
+          stats_unarchived: {
+            total: 0,
+            private: 0,
+            public: 0,
+            internal: 0,
+            active_last_month: 0,
+            active_last_3months: 0,
+            active_last_6months: 0,
+          },
+          stats_archived: {
+            total: 0,
+            private: 0,
+            public: 0,
+            internal: 0,
+            active_last_month: 0,
+            active_last_3months: 0,
+            active_last_6months: 0,
+          },
+          stats: null,
+          language_statistics_unarchived: {},
+          language_statistics_archived: {},
+          language_statistics: {},
+          radar_entries: [],
+          metadata: { last_updated: new Date().toISOString() },
+        });
+      } finally {
+        setIsLoading(false);
       }
-
-      if (!statsResponse || !radarResponse) {
-        throw new Error('Failed to fetch data');
-      }
-
-      const mappedStats = {
-        stats_unarchived:
-          repoView === 'unarchived'
-            ? {
-                total: statsResponse.stats?.total_repos || 0,
-                private: statsResponse.stats?.total_private_repos || 0,
-                public: statsResponse.stats?.total_public_repos || 0,
-                internal: statsResponse.stats?.total_internal_repos || 0,
-                active_last_month: 0,
-                active_last_3months: 0,
-                active_last_6months: 0,
-              }
-            : {},
-        stats_archived:
-          repoView === 'archived'
-            ? {
-                total: statsResponse.stats?.total_repos || 0,
-                private: statsResponse.stats?.total_private_repos || 0,
-                public: statsResponse.stats?.total_public_repos || 0,
-                internal: statsResponse.stats?.total_internal_repos || 0,
-                active_last_month: 0,
-                active_last_3months: 0,
-                active_last_6months: 0,
-              }
-            : {},
-        stats:
-          repoView === 'total'
-            ? {
-                total: statsResponse.stats?.total_repos || 0,
-                private: statsResponse.stats?.total_private_repos || 0,
-                public: statsResponse.stats?.total_public_repos || 0,
-                internal: statsResponse.stats?.total_internal_repos || 0,
-                active_last_month: 0,
-                active_last_3months: 0,
-                active_last_6months: 0,
-              }
-            : null,
-        language_statistics_unarchived:
-          repoView === 'unarchived'
-            ? statsResponse.language_statistics || {}
-            : {},
-        language_statistics_archived:
-          repoView === 'archived'
-            ? statsResponse.language_statistics || {}
-            : {},
-        language_statistics:
-          repoView === 'total' ? statsResponse.language_statistics || {} : {},
-        radar_entries: radarResponse.entries,
-        metadata: statsResponse.metadata || {
-          last_updated: new Date().toISOString(),
-        },
-      };
-
-      setStatsData(mappedStats);
-    } catch (error) {
-      console.error('Error fetching statistics:', error);
-      toast.error('Failed to load statistics.');
-      setStatsData({
-        stats_unarchived: {
-          total: 0,
-          private: 0,
-          public: 0,
-          internal: 0,
-          active_last_month: 0,
-          active_last_3months: 0,
-          active_last_6months: 0,
-        },
-        stats_archived: {
-          total: 0,
-          private: 0,
-          public: 0,
-          internal: 0,
-          active_last_month: 0,
-          active_last_3months: 0,
-          active_last_6months: 0,
-        },
-        stats: null,
-        language_statistics_unarchived: {},
-        language_statistics_archived: {},
-        language_statistics: {},
-        radar_entries: [],
-        metadata: { last_updated: new Date().toISOString() },
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    },
+    [
+      getTechRadarData,
+      selectedRepositories,
+      getRepositoryData,
+      getRepositoryStats,
+      setIsLoading,
+      setStatsData,
+    ]
+  );
 
   // Update useEffect to use current filters and refetch when radar data changes
   useEffect(() => {
     if (radarData) {
       fetchStatistics(currentDate, currentRepoView);
     }
-  }, [selectedRepositories, currentDate, currentRepoView, radarData]);
+  }, [
+    selectedRepositories,
+    currentDate,
+    currentRepoView,
+    radarData,
+    fetchStatistics,
+  ]);
 
   const handleDateChange = (date, repoView = 'unarchived') => {
     setCurrentDate(date === 'all' ? null : date);

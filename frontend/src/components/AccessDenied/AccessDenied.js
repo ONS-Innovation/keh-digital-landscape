@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { TbLock, TbHome, TbUserX, TbInfoCircle } from 'react-icons/tb';
 import '../../styles/components/AccessDenied.css';
@@ -9,14 +8,12 @@ import '../../styles/components/AccessDenied.css';
  * @param {string} props.pageName - Name of the page being accessed
  * @param {string} props.userEmail - Current user's email
  * @param {string[]} props.userGroups - Current user's groups
- * @param {string[]} props.requiredRoles - Required roles for access
  * @param {boolean} props.isDevelopmentMode - Whether in development mode
  */
 const AccessDenied = ({
   pageName,
   userEmail,
   userGroups,
-  requiredRoles,
   isDevelopmentMode,
 }) => {
   const isGuest = !userEmail || userEmail === null;

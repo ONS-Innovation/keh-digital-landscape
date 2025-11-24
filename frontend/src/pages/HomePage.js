@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useData } from '../contexts/dataContext';
 import Header from '../components/Header/Header';
 import Changelog from '../components/HomePage/Changelog';
 import RecentBanners from '../components/HomePage/RecentBanners';
@@ -10,7 +9,6 @@ import {
   TbUserShield,
   TbUsers,
   TbChartBar,
-  TbHelp,
 } from 'react-icons/tb';
 import { MdOutlineRadar } from 'react-icons/md';
 import { VscCopilot } from 'react-icons/vsc';

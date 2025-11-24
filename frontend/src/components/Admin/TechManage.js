@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import MultiSelect from '../MultiSelect/MultiSelect';
 import { fetchTechRadarJSONFromS3 } from '../../utilities/getTechRadarJson';
@@ -18,35 +18,38 @@ import { format } from 'date-fns';
 
 const TechManage = () => {
   // Fields to scan from CSV and their corresponding categories
-  const fieldsToScan = {
-    Language_Main: 'Languages',
-    Language_Others: 'Languages',
-    Language_Frameworks: 'Frameworks',
-    Testing_Frameworks: 'Supporting Tools',
-    CICD: 'Supporting Tools',
-    CICD_Orchestration: 'Infrastructure',
-    Monitoring: 'Infrastructure',
-    Infrastructure: 'Infrastructure',
-    Cloud_Services: 'Infrastructure',
-    IAM_Services: 'Infrastructure',
-    Containers: 'Infrastructure',
-    Datastores: 'Infrastructure',
-    Static_Analysis: 'Supporting Tools',
-    Source_Control: 'Supporting Tools',
-    Code_Formatter: 'Supporting Tools',
-    Database_Technologies: 'Infrastructure',
-    Data_Output_Formats: 'Supporting Tools',
-    Integrations_ONS: 'Supporting Tools',
-    Integrations_External: 'Supporting Tools',
-    Project_Tools: 'Supporting Tools',
-    Code_Editors: 'Supporting Tools',
-    Communication: 'Supporting Tools',
-    Collaboration: 'Supporting Tools',
-    Incident_Management: 'Supporting Tools',
-    Documentation_Tools: 'Supporting Tools',
-    UI_Tools: 'Supporting Tools',
-    Diagram_Tools: 'Supporting Tools',
-  };
+  const fieldsToScan = useMemo(
+    () => ({
+      Language_Main: 'Languages',
+      Language_Others: 'Languages',
+      Language_Frameworks: 'Frameworks',
+      Testing_Frameworks: 'Supporting Tools',
+      CICD: 'Supporting Tools',
+      CICD_Orchestration: 'Infrastructure',
+      Monitoring: 'Infrastructure',
+      Infrastructure: 'Infrastructure',
+      Cloud_Services: 'Infrastructure',
+      IAM_Services: 'Infrastructure',
+      Containers: 'Infrastructure',
+      Datastores: 'Infrastructure',
+      Static_Analysis: 'Supporting Tools',
+      Source_Control: 'Supporting Tools',
+      Code_Formatter: 'Supporting Tools',
+      Database_Technologies: 'Infrastructure',
+      Data_Output_Formats: 'Supporting Tools',
+      Integrations_ONS: 'Supporting Tools',
+      Integrations_External: 'Supporting Tools',
+      Project_Tools: 'Supporting Tools',
+      Code_Editors: 'Supporting Tools',
+      Communication: 'Supporting Tools',
+      Collaboration: 'Supporting Tools',
+      Incident_Management: 'Supporting Tools',
+      Documentation_Tools: 'Supporting Tools',
+      UI_Tools: 'Supporting Tools',
+      Diagram_Tools: 'Supporting Tools',
+    }),
+    []
+  );
 
   // Similarity threshold for matching technologies
   const SIMILARITY_THRESHOLD = 0.8;
@@ -85,9 +88,7 @@ const TechManage = () => {
   const [normaliseFrom, setNormaliseFrom] = useState('');
   const [normaliseTo, setNormaliseTo] = useState('');
   const [affectedProjects, setAffectedProjects] = useState([]);
-  const textareaRef = useRef(null);
   const [newTechnology, setNewTechnology] = useState('');
-  const [showAddForm, setShowAddForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedAddOption, setSelectedAddOption] = useState('');
   const [selectedTargetCategory, setSelectedTargetCategory] = useState('');
@@ -118,7 +119,47 @@ const TechManage = () => {
     }
   };
 
-  const fetchAllData = async () => {
+  /**
+   * Updates the editor content for the selected category
+   */
+  const updateEditorContent = useCallback((category, data) => {
+    if (!category || !data || !data[category]) return;
+
+    const technologies = data[category] || [];
+    // Convert array to line-by-line format
+    const formattedContent = technologies.join('\n');
+    setEditorContent(formattedContent);
+  }, []);
+
+  /**
+   * Fetches array data from the backend
+   */
+  const fetchArrayData = useCallback(async () => {
+    try {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
+      const baseUrl = `${backendUrl}/admin/api/array-data`;
+
+      const response = await fetch(baseUrl);
+      if (!response.ok) {
+        throw new Error('Failed to fetch technology data');
+      }
+
+      const data = await response.json();
+      setArrayData(data);
+
+      // Set the first category as selected by default
+      if (Object.keys(data).length > 0 && !selectedCategory) {
+        const firstCategory = Object.keys(data)[0];
+        setSelectedCategory(firstCategory);
+        updateEditorContent(firstCategory, data);
+      }
+    } catch (error) {
+      console.error('Error fetching array data:', error);
+      toast.error('Failed to load technology data');
+    }
+  }, [selectedCategory, updateEditorContent]);
+
+  const fetchAllData = useCallback(async () => {
     try {
       setIsLoading(true);
       const [radarData, csvData] = await Promise.all([
@@ -137,7 +178,28 @@ const TechManage = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [fetchArrayData]);
+
+  // Filter technologies based on selected quadrants and search term
+  const getFilteredTechnologies = useCallback(() => {
+    let technologies = Array.from(untrackedTechnologies.entries());
+
+    // Filter by search term
+    if (searchTerm.trim()) {
+      technologies = technologies.filter(([tech]) =>
+        tech.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Filter by quadrants
+    if (selectedQuadrants.length > 0) {
+      technologies = technologies.filter(([info]) =>
+        selectedQuadrants.some(quadrant => quadrant.value === info.category)
+      );
+    }
+
+    return technologies;
+  }, [untrackedTechnologies, searchTerm, selectedQuadrants]);
 
   // Check if all visible technologies are selected
   useEffect(() => {
@@ -146,13 +208,348 @@ const TechManage = () => {
       filteredTechs.length > 0 &&
       filteredTechs.every(tech => selectedTechIds.includes(tech));
     setSelectAll(allSelected);
-  }, [selectedTechIds, selectedQuadrants, untrackedTechnologies]);
+  }, [
+    selectedTechIds,
+    selectedQuadrants,
+    untrackedTechnologies,
+    getFilteredTechnologies,
+  ]);
 
   // Fetch both data sources on mount
   useEffect(() => {
     fetchAllData();
-  }, []);
+  }, [fetchAllData]);
 
+  /**
+   * Checks if two technology names are similar using string similarity
+   */
+  const areSimilarTechnologies = useCallback(
+    (tech1, tech2) => {
+      if (!tech1 || !tech2) return false;
+
+      // Normalize tech names - remove common separators and lowercase
+      const normalize = str => {
+        return str
+          .toLowerCase()
+          .replace(/[-_/.]/g, ' ') // Replace common separators with spaces
+          .replace(/\s+/g, ' ') // Normalize spaces
+          .trim();
+      };
+
+      const normalizedTech1 = normalize(tech1);
+      const normalizedTech2 = normalize(tech2);
+
+      // Direct case-insensitive match after normalization
+      if (normalizedTech1 === normalizedTech2) return true;
+
+      // Handle acronyms and abbreviations (e.g., "AWS" vs "Amazon Web Services")
+      const isAcronym = (shorter, longer) => {
+        const acronym = longer
+          .split(/\s+/)
+          .map(word => word[0])
+          .join('')
+          .toLowerCase();
+
+        return acronym === shorter.toLowerCase();
+      };
+
+      if (normalizedTech1.length < normalizedTech2.length) {
+        if (isAcronym(normalizedTech1, normalizedTech2)) return true;
+      } else if (normalizedTech2.length < normalizedTech1.length) {
+        if (isAcronym(normalizedTech2, normalizedTech1)) return true;
+      }
+
+      // Check if one is a subset of the other (e.g., "AWS S3" vs "AWS S3 Bucket")
+      if (
+        normalizedTech1.includes(normalizedTech2) ||
+        normalizedTech2.includes(normalizedTech1)
+      ) {
+        // If one is a subset of the other, and it's a significant portion
+        const longerString =
+          normalizedTech1.length > normalizedTech2.length
+            ? normalizedTech1
+            : normalizedTech2;
+        const shorterString =
+          normalizedTech1.length > normalizedTech2.length
+            ? normalizedTech2
+            : normalizedTech1;
+
+        // Check if the shorter string is at least 60% of the longer one
+        // or if it's at least 3 characters and the longer string starts with it
+        if (
+          shorterString.length / longerString.length > 0.6 ||
+          (shorterString.length >= 3 && longerString.startsWith(shorterString))
+        ) {
+          return true;
+        }
+      }
+
+      // Common technology prefixes to ignore in comparisons
+      const commonPrefixes = [
+        'aws',
+        'azure',
+        'google cloud',
+        'gcp',
+        'microsoft',
+        'ibm',
+        'oracle',
+      ];
+
+      // Remove common prefixes for a secondary check
+      let cleanTech1 = normalizedTech1;
+      let cleanTech2 = normalizedTech2;
+
+      commonPrefixes.forEach(prefix => {
+        if (normalizedTech1.startsWith(prefix + ' ')) {
+          cleanTech1 = normalizedTech1.substring(prefix.length + 1);
+        }
+        if (normalizedTech2.startsWith(prefix + ' ')) {
+          cleanTech2 = normalizedTech2.substring(prefix.length + 1);
+        }
+      });
+
+      // Check if services are the same after removing provider prefix
+      if (cleanTech1 === cleanTech2 && cleanTech1 !== normalizedTech1) {
+        return true;
+      }
+
+      // Check string similarity for both original and cleaned versions
+      const similarity1 = stringSimilarity.compareTwoStrings(
+        normalizedTech1,
+        normalizedTech2
+      );
+      const similarity2 = stringSimilarity.compareTwoStrings(
+        cleanTech1,
+        cleanTech2
+      );
+
+      return (
+        similarity1 >= similarityThreshold || similarity2 >= similarityThreshold
+      );
+    },
+    [similarityThreshold]
+  );
+
+  /**
+   * Find technologies similar to the given technology
+   */
+  const findSimilarTechnologies = useCallback(
+    (tech, existingTechs) => {
+      const similarTechs = [];
+
+      existingTechs.forEach(existingTech => {
+        if (existingTech.name === tech) return; // Skip exact match (case-sensitive)
+
+        // Check for case-insensitive exact match first (highest priority)
+        const isCaseMatch =
+          tech.toLowerCase() === existingTech.name.toLowerCase();
+
+        // Then check for other similarity
+        const isSimilar =
+          isCaseMatch || areSimilarTechnologies(tech, existingTech.name);
+
+        if (isSimilar) {
+          // Calculate similarity score for sorting
+          let similarity = isCaseMatch
+            ? 0.99
+            : stringSimilarity.compareTwoStrings(
+                tech.toLowerCase(),
+                existingTech.name.toLowerCase()
+              );
+
+          // Boost score for case differences to make them appear first
+          if (isCaseMatch) {
+            similarity = 0.99; // Just below 1.0 (exact match)
+          }
+
+          // Only add if similarity is above the threshold (but always include case matches)
+          if (similarity >= similarityThreshold || isCaseMatch) {
+            similarTechs.push({
+              name: existingTech.name,
+              source: existingTech.source,
+              category: existingTech.category || existingTech.quadrant,
+              similarity: similarity,
+              isCaseMatch: isCaseMatch,
+            });
+          }
+        }
+      });
+
+      // Sort by similarity score in descending order and limit to top matches
+      return similarTechs
+        .sort((a, b) => {
+          // First sort by case match (true comes first)
+          if (a.isCaseMatch && !b.isCaseMatch) return -1;
+          if (!a.isCaseMatch && b.isCaseMatch) return 1;
+
+          // Then by similarity
+          return b.similarity - a.similarity;
+        })
+        .slice(0, 3); // Limit to top 3 matches
+    },
+    [areSimilarTechnologies, similarityThreshold]
+  );
+  /**
+   * Scans CSV data for technologies and compares against both data sources
+   */
+  const scanForNewTechnologies = useCallback(
+    csvData => {
+      // Create sets for both data sources (case insensitive)
+      if (Object.keys(arrayData).length === 0) {
+        console.log('Waiting for array data before scanning CSV...');
+        return;
+      }
+
+      // Collect all technologies from both sources with their origin
+      const existingTechnologies = [];
+
+      // Also create a quick lookup Set for case-insensitive checking
+      const exactMatchSet = new Set();
+      const caseInsensitiveSet = new Set();
+
+      // Add technologies from reference list (array data)
+      Object.entries(arrayData).forEach(([category, technologies]) => {
+        technologies.forEach(tech => {
+          const trimmedTech = tech.trim();
+          existingTechnologies.push({
+            name: trimmedTech,
+            source: 'Reference List',
+            category,
+          });
+          exactMatchSet.add(trimmedTech);
+          caseInsensitiveSet.add(trimmedTech.toLowerCase());
+        });
+      });
+
+      // Add technologies from radar data
+      radarData.entries.forEach(entry => {
+        const trimmedTitle = entry.title.trim();
+        existingTechnologies.push({
+          name: trimmedTitle,
+          source: 'Tech Radar',
+          quadrant: entry.quadrant,
+        });
+        exactMatchSet.add(trimmedTitle);
+        caseInsensitiveSet.add(trimmedTitle.toLowerCase());
+      });
+
+      const newTechnologies = new Map();
+      const techOccurrences = new Map(); // Track tech occurrences across all projects
+
+      // Process CSV data - first pass to count occurrences
+      csvData.forEach(project => {
+        Object.entries(fieldsToScan).forEach(([field]) => {
+          if (project[field]) {
+            const technologies = project[field].split(';');
+
+            technologies.forEach(tech => {
+              const trimmedTech = tech.trim();
+              if (!trimmedTech) return;
+
+              // Count occurrences of each technology
+              if (!techOccurrences.has(trimmedTech)) {
+                techOccurrences.set(trimmedTech, 1);
+              } else {
+                techOccurrences.set(
+                  trimmedTech,
+                  techOccurrences.get(trimmedTech) + 1
+                );
+              }
+            });
+          }
+        });
+      });
+
+      // Process CSV data - second pass to collect untracked tech
+      csvData.forEach(project => {
+        Object.entries(fieldsToScan).forEach(([field, category]) => {
+          if (project[field]) {
+            const technologies = project[field].split(';');
+
+            technologies.forEach(tech => {
+              const trimmedTech = tech.trim();
+              if (!trimmedTech) return;
+
+              // Skip if tech exactly matches in both sources
+              const exactMatchInArrayData =
+                exactMatchSet.has(trimmedTech) &&
+                existingTechnologies.some(
+                  existingTech =>
+                    existingTech.name === trimmedTech &&
+                    existingTech.source === 'Reference List'
+                );
+
+              const exactMatchInRadarData =
+                exactMatchSet.has(trimmedTech) &&
+                existingTechnologies.some(
+                  existingTech =>
+                    existingTech.name === trimmedTech &&
+                    existingTech.source === 'Tech Radar'
+                );
+
+              // If it's already tracked in both sources, skip it entirely
+              if (exactMatchInArrayData && exactMatchInRadarData) {
+                return;
+              }
+
+              // Find similar technologies (only if not an exact match)
+              let similarTechnologies = [];
+
+              // We only do similarity checks if the tech isn't an exact match in either source
+              // But we still want to identify case differences, so we check if the lowercase version exists
+              const isTrackedDifferentCase =
+                !exactMatchSet.has(trimmedTech) &&
+                caseInsensitiveSet.has(trimmedTech.toLowerCase());
+
+              if (
+                !exactMatchInArrayData ||
+                !exactMatchInRadarData ||
+                isTrackedDifferentCase
+              ) {
+                similarTechnologies = findSimilarTechnologies(
+                  trimmedTech,
+                  existingTechnologies
+                );
+              }
+
+              // Determine the tech's status
+              const status = {
+                inArrayData: exactMatchInArrayData,
+                inRadarData: exactMatchInRadarData,
+              };
+
+              const occurrenceCount = techOccurrences.get(trimmedTech);
+
+              if (!newTechnologies.has(trimmedTech)) {
+                const techInfo = {
+                  category,
+                  sources: new Set([field]),
+                  status,
+                  occurrenceCount,
+                  similarTechnologies,
+                };
+                newTechnologies.set(trimmedTech, techInfo);
+              } else {
+                const techInfo = newTechnologies.get(trimmedTech);
+                techInfo.sources.add(field);
+
+                // Update with similar technologies if not already set
+                if (
+                  !techInfo.similarTechnologies ||
+                  techInfo.similarTechnologies.length === 0
+                ) {
+                  techInfo.similarTechnologies = similarTechnologies;
+                }
+              }
+            });
+          }
+        });
+      });
+
+      setUntrackedTechnologies(newTechnologies);
+    },
+    [arrayData, radarData, findSimilarTechnologies, fieldsToScan]
+  );
   // Update scanning when data changes
   useEffect(() => {
     if (
@@ -163,7 +560,7 @@ const TechManage = () => {
     ) {
       scanForNewTechnologies(csvData);
     }
-  }, [arrayData, radarData, csvData]);
+  }, [arrayData, radarData, csvData, scanForNewTechnologies]);
 
   // Rescan when similarity threshold changes
   useEffect(() => {
@@ -175,359 +572,13 @@ const TechManage = () => {
     ) {
       scanForNewTechnologies(csvData);
     }
-  }, [similarityThreshold]);
-
-  /**
-   * Fetches array data from the backend
-   */
-  const fetchArrayData = async () => {
-    try {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
-      const baseUrl = `${backendUrl}/admin/api/array-data`;
-
-      const response = await fetch(baseUrl);
-      if (!response.ok) {
-        throw new Error('Failed to fetch technology data');
-      }
-
-      const data = await response.json();
-      console.log(data);
-      setArrayData(data);
-
-      // Set the first category as selected by default
-      if (Object.keys(data).length > 0 && !selectedCategory) {
-        const firstCategory = Object.keys(data)[0];
-        setSelectedCategory(firstCategory);
-        updateEditorContent(firstCategory, data);
-      }
-    } catch (error) {
-      console.error('Error fetching array data:', error);
-      toast.error('Failed to load technology data');
-    }
-  };
-
-  /**
-   * Checks if two technology names are similar using string similarity
-   */
-  const areSimilarTechnologies = (tech1, tech2) => {
-    if (!tech1 || !tech2) return false;
-
-    // Normalize tech names - remove common separators and lowercase
-    const normalize = str => {
-      return str
-        .toLowerCase()
-        .replace(/[-_/.]/g, ' ') // Replace common separators with spaces
-        .replace(/\s+/g, ' ') // Normalize spaces
-        .trim();
-    };
-
-    const normalizedTech1 = normalize(tech1);
-    const normalizedTech2 = normalize(tech2);
-
-    // Direct case-insensitive match after normalization
-    if (normalizedTech1 === normalizedTech2) return true;
-
-    // Handle acronyms and abbreviations (e.g., "AWS" vs "Amazon Web Services")
-    const isAcronym = (shorter, longer) => {
-      const acronym = longer
-        .split(/\s+/)
-        .map(word => word[0])
-        .join('')
-        .toLowerCase();
-
-      return acronym === shorter.toLowerCase();
-    };
-
-    if (normalizedTech1.length < normalizedTech2.length) {
-      if (isAcronym(normalizedTech1, normalizedTech2)) return true;
-    } else if (normalizedTech2.length < normalizedTech1.length) {
-      if (isAcronym(normalizedTech2, normalizedTech1)) return true;
-    }
-
-    // Check if one is a subset of the other (e.g., "AWS S3" vs "AWS S3 Bucket")
-    if (
-      normalizedTech1.includes(normalizedTech2) ||
-      normalizedTech2.includes(normalizedTech1)
-    ) {
-      // If one is a subset of the other, and it's a significant portion
-      const longerString =
-        normalizedTech1.length > normalizedTech2.length
-          ? normalizedTech1
-          : normalizedTech2;
-      const shorterString =
-        normalizedTech1.length > normalizedTech2.length
-          ? normalizedTech2
-          : normalizedTech1;
-
-      // Check if the shorter string is at least 60% of the longer one
-      // or if it's at least 3 characters and the longer string starts with it
-      if (
-        shorterString.length / longerString.length > 0.6 ||
-        (shorterString.length >= 3 && longerString.startsWith(shorterString))
-      ) {
-        return true;
-      }
-    }
-
-    // Common technology prefixes to ignore in comparisons
-    const commonPrefixes = [
-      'aws',
-      'azure',
-      'google cloud',
-      'gcp',
-      'microsoft',
-      'ibm',
-      'oracle',
-    ];
-
-    // Remove common prefixes for a secondary check
-    let cleanTech1 = normalizedTech1;
-    let cleanTech2 = normalizedTech2;
-
-    commonPrefixes.forEach(prefix => {
-      if (normalizedTech1.startsWith(prefix + ' ')) {
-        cleanTech1 = normalizedTech1.substring(prefix.length + 1);
-      }
-      if (normalizedTech2.startsWith(prefix + ' ')) {
-        cleanTech2 = normalizedTech2.substring(prefix.length + 1);
-      }
-    });
-
-    // Check if services are the same after removing provider prefix
-    if (cleanTech1 === cleanTech2 && cleanTech1 !== normalizedTech1) {
-      return true;
-    }
-
-    // Check string similarity for both original and cleaned versions
-    const similarity1 = stringSimilarity.compareTwoStrings(
-      normalizedTech1,
-      normalizedTech2
-    );
-    const similarity2 = stringSimilarity.compareTwoStrings(
-      cleanTech1,
-      cleanTech2
-    );
-
-    return (
-      similarity1 >= similarityThreshold || similarity2 >= similarityThreshold
-    );
-  };
-
-  /**
-   * Find technologies similar to the given technology
-   */
-  const findSimilarTechnologies = (tech, existingTechs) => {
-    const similarTechs = [];
-
-    existingTechs.forEach(existingTech => {
-      if (existingTech.name === tech) return; // Skip exact match (case-sensitive)
-
-      // Check for case-insensitive exact match first (highest priority)
-      const isCaseMatch =
-        tech.toLowerCase() === existingTech.name.toLowerCase();
-
-      // Then check for other similarity
-      const isSimilar =
-        isCaseMatch || areSimilarTechnologies(tech, existingTech.name);
-
-      if (isSimilar) {
-        // Calculate similarity score for sorting
-        let similarity = isCaseMatch
-          ? 0.99
-          : stringSimilarity.compareTwoStrings(
-              tech.toLowerCase(),
-              existingTech.name.toLowerCase()
-            );
-
-        // Boost score for case differences to make them appear first
-        if (isCaseMatch) {
-          similarity = 0.99; // Just below 1.0 (exact match)
-        }
-
-        // Only add if similarity is above the threshold (but always include case matches)
-        if (similarity >= similarityThreshold || isCaseMatch) {
-          similarTechs.push({
-            name: existingTech.name,
-            source: existingTech.source,
-            category: existingTech.category || existingTech.quadrant,
-            similarity: similarity,
-            isCaseMatch: isCaseMatch,
-          });
-        }
-      }
-    });
-
-    // Sort by similarity score in descending order and limit to top matches
-    return similarTechs
-      .sort((a, b) => {
-        // First sort by case match (true comes first)
-        if (a.isCaseMatch && !b.isCaseMatch) return -1;
-        if (!a.isCaseMatch && b.isCaseMatch) return 1;
-
-        // Then by similarity
-        return b.similarity - a.similarity;
-      })
-      .slice(0, 3); // Limit to top 3 matches
-  };
-
-  /**
-   * Scans CSV data for technologies and compares against both data sources
-   */
-  const scanForNewTechnologies = csvData => {
-    // Create sets for both data sources (case insensitive)
-    if (Object.keys(arrayData).length === 0) {
-      console.log('Waiting for array data before scanning CSV...');
-      return;
-    }
-
-    // Collect all technologies from both sources with their origin
-    const existingTechnologies = [];
-
-    // Also create a quick lookup Set for case-insensitive checking
-    const exactMatchSet = new Set();
-    const caseInsensitiveSet = new Set();
-
-    // Add technologies from reference list (array data)
-    Object.entries(arrayData).forEach(([category, technologies]) => {
-      technologies.forEach(tech => {
-        const trimmedTech = tech.trim();
-        existingTechnologies.push({
-          name: trimmedTech,
-          source: 'Reference List',
-          category,
-        });
-        exactMatchSet.add(trimmedTech);
-        caseInsensitiveSet.add(trimmedTech.toLowerCase());
-      });
-    });
-
-    // Add technologies from radar data
-    radarData.entries.forEach(entry => {
-      const trimmedTitle = entry.title.trim();
-      existingTechnologies.push({
-        name: trimmedTitle,
-        source: 'Tech Radar',
-        quadrant: entry.quadrant,
-      });
-      exactMatchSet.add(trimmedTitle);
-      caseInsensitiveSet.add(trimmedTitle.toLowerCase());
-    });
-
-    const newTechnologies = new Map();
-    const techOccurrences = new Map(); // Track tech occurrences across all projects
-
-    // Process CSV data - first pass to count occurrences
-    csvData.forEach(project => {
-      Object.entries(fieldsToScan).forEach(([field, category]) => {
-        if (project[field]) {
-          const technologies = project[field].split(';');
-
-          technologies.forEach(tech => {
-            const trimmedTech = tech.trim();
-            if (!trimmedTech) return;
-
-            // Count occurrences of each technology
-            if (!techOccurrences.has(trimmedTech)) {
-              techOccurrences.set(trimmedTech, 1);
-            } else {
-              techOccurrences.set(
-                trimmedTech,
-                techOccurrences.get(trimmedTech) + 1
-              );
-            }
-          });
-        }
-      });
-    });
-
-    // Process CSV data - second pass to collect untracked tech
-    csvData.forEach(project => {
-      Object.entries(fieldsToScan).forEach(([field, category]) => {
-        if (project[field]) {
-          const technologies = project[field].split(';');
-
-          technologies.forEach(tech => {
-            const trimmedTech = tech.trim();
-            if (!trimmedTech) return;
-
-            // Skip if tech exactly matches in both sources
-            const exactMatchInArrayData =
-              exactMatchSet.has(trimmedTech) &&
-              existingTechnologies.some(
-                existingTech =>
-                  existingTech.name === trimmedTech &&
-                  existingTech.source === 'Reference List'
-              );
-
-            const exactMatchInRadarData =
-              exactMatchSet.has(trimmedTech) &&
-              existingTechnologies.some(
-                existingTech =>
-                  existingTech.name === trimmedTech &&
-                  existingTech.source === 'Tech Radar'
-              );
-
-            // If it's already tracked in both sources, skip it entirely
-            if (exactMatchInArrayData && exactMatchInRadarData) {
-              return;
-            }
-
-            // Find similar technologies (only if not an exact match)
-            let similarTechnologies = [];
-
-            // We only do similarity checks if the tech isn't an exact match in either source
-            // But we still want to identify case differences, so we check if the lowercase version exists
-            const isTrackedDifferentCase =
-              !exactMatchSet.has(trimmedTech) &&
-              caseInsensitiveSet.has(trimmedTech.toLowerCase());
-
-            if (
-              !exactMatchInArrayData ||
-              !exactMatchInRadarData ||
-              isTrackedDifferentCase
-            ) {
-              similarTechnologies = findSimilarTechnologies(
-                trimmedTech,
-                existingTechnologies
-              );
-            }
-
-            // Determine the tech's status
-            const status = {
-              inArrayData: exactMatchInArrayData,
-              inRadarData: exactMatchInRadarData,
-            };
-
-            const occurrenceCount = techOccurrences.get(trimmedTech);
-
-            if (!newTechnologies.has(trimmedTech)) {
-              const techInfo = {
-                category,
-                sources: new Set([field]),
-                status,
-                occurrenceCount,
-                similarTechnologies,
-              };
-              newTechnologies.set(trimmedTech, techInfo);
-            } else {
-              const techInfo = newTechnologies.get(trimmedTech);
-              techInfo.sources.add(field);
-
-              // Update with similar technologies if not already set
-              if (
-                !techInfo.similarTechnologies ||
-                techInfo.similarTechnologies.length === 0
-              ) {
-                techInfo.similarTechnologies = similarTechnologies;
-              }
-            }
-          });
-        }
-      });
-    });
-
-    setUntrackedTechnologies(newTechnologies);
-  };
+  }, [
+    similarityThreshold,
+    arrayData,
+    radarData,
+    csvData,
+    scanForNewTechnologies,
+  ]);
 
   /**
    * Gets quadrant options from radar data
@@ -550,33 +601,6 @@ const TechManage = () => {
       value: category,
       id: category,
     }));
-  };
-
-  /**
-   * Handles category change for MultiSelect
-   */
-  const handleCategoryChange = selected => {
-    setSelectedCategories(selected);
-    if (selected.length === 1) {
-      const category = selected[0].value;
-      setSelectedCategory(category);
-      updateEditorContent(category, arrayData);
-    } else if (selected.length === 0) {
-      setSelectedCategory('');
-      setEditorContent('');
-    }
-  };
-
-  /**
-   * Updates the editor content for the selected category
-   */
-  const updateEditorContent = (category, data) => {
-    if (!category || !data || !data[category]) return;
-
-    const technologies = data[category] || [];
-    // Convert array to line-by-line format
-    const formattedContent = technologies.join('\n');
-    setEditorContent(formattedContent);
   };
 
   /**
@@ -608,19 +632,6 @@ const TechManage = () => {
       console.error('Error updating technology lists:', error);
       toast.error('Failed to update technology lists. Please try again.');
     }
-  };
-
-  // Add a new technology to the editor
-  const handleAddNewTechnology = () => {
-    if (!newTechnology.trim()) return;
-
-    const updatedContent = editorContent.trim()
-      ? `${editorContent}\n${newTechnology}`
-      : newTechnology;
-
-    setEditorContent(updatedContent);
-    setNewTechnology('');
-    setShowAddForm(false);
   };
 
   // Handle removing a technology from the reference list
@@ -726,200 +737,6 @@ const TechManage = () => {
       console.error('Error updating technology:', error);
       toast.error('Failed to update technology');
     }
-  };
-
-  /**
-   * Render the editor content with a table instead of a textarea
-   */
-  const renderEditorContent = () => {
-    const technologies = getFilteredEditorContent();
-
-    return (
-      <div className="editor-table-container">
-        <table className="tech-table editor-table">
-          <thead>
-            <tr>
-              <th>Technology ({technologies.length})</th>
-            </tr>
-          </thead>
-          <tbody>
-            {technologies.map((tech, index) => (
-              <tr key={`${tech}-${index}`}>
-                <td className="name-cell">
-                  {editingTech === tech ? (
-                    <input
-                      type="text"
-                      value={editValue}
-                      onChange={e => setEditValue(e.target.value)}
-                      className="add-tech-input"
-                      autoFocus
-                      onKeyDown={e => {
-                        if (e.key === 'Enter') {
-                          handleEditTechnology(tech, editValue);
-                        } else if (e.key === 'Escape') {
-                          setEditingTech(null);
-                          setEditValue('');
-                        }
-                      }}
-                    />
-                  ) : (
-                    tech
-                  )}
-                </td>
-                <td className="actions-cell">
-                  {editingTech === tech ? (
-                    <>
-                      <button
-                        className="table-action-btn confirm-btn"
-                        onClick={() => handleEditTechnology(tech, editValue)}
-                        disabled={!editValue.trim() || editValue === tech}
-                      >
-                        <FaCheck />
-                      </button>
-                      <button
-                        className="table-action-btn cancel-btn"
-                        onClick={() => {
-                          setEditingTech(null);
-                          setEditValue('');
-                        }}
-                      >
-                        <FaRegTimesCircle />
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button
-                        className="table-action-btn edit-btn"
-                        onClick={() => {
-                          setEditingTech(tech);
-                          setEditValue(tech);
-                        }}
-                        title="Edit technology"
-                      >
-                        <FaPencilAlt />
-                      </button>
-                      <button
-                        className="table-action-btn remove-btn"
-                        onClick={() => handleRemoveTechnology(tech)}
-                        title="Remove technology"
-                      >
-                        <FaTrash />
-                      </button>
-                    </>
-                  )}
-                </td>
-              </tr>
-            ))}
-            {showAddForm ? (
-              <tr className="add-tech-form-row">
-                <td>
-                  <input
-                    type="text"
-                    value={newTechnology}
-                    onChange={e => setNewTechnology(e.target.value)}
-                    className="add-tech-input"
-                    placeholder="Enter technology name"
-                    autoFocus
-                  />
-                </td>
-                <td>
-                  <div className="add-tech-actions">
-                    <button
-                      className="table-action-btn confirm-btn"
-                      onClick={handleAddNewTechnology}
-                      disabled={!newTechnology.trim()}
-                    >
-                      <FaCheck />
-                    </button>
-                    <button
-                      className="table-action-btn cancel-btn"
-                      onClick={() => {
-                        setShowAddForm(false);
-                        setNewTechnology('');
-                      }}
-                    >
-                      <FaRegTimesCircle />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ) : (
-              <tr className="add-tech-row">
-                <td colSpan={2}>
-                  <button
-                    className="add-tech-btn"
-                    onClick={() => setShowAddForm(true)}
-                  >
-                    <FaPlus /> Add Technology
-                  </button>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    );
-  };
-
-  /**
-   * Sorts the editor content based on the selected sort type
-   */
-  const handleSort = sortType => {
-    const lines = editorContent.split('\n').filter(line => line.trim());
-    let sortedLines;
-
-    switch (sortType) {
-      case 'alpha-asc':
-        sortedLines = lines.sort((a, b) => a.localeCompare(b));
-        break;
-      case 'alpha-desc':
-        sortedLines = lines.sort((a, b) => b.localeCompare(a));
-        break;
-      case 'length-desc':
-        sortedLines = lines.sort((a, b) => b.length - a.length);
-        break;
-      case 'length-asc':
-        sortedLines = lines.sort((a, b) => a.length - b.length);
-        break;
-      default:
-        return;
-    }
-
-    setEditorContent(sortedLines.join('\n'));
-  };
-
-  // Filter technologies based on selected quadrants and search term
-  const getFilteredTechnologies = () => {
-    let technologies = Array.from(untrackedTechnologies.entries());
-
-    // Filter by search term
-    if (searchTerm.trim()) {
-      technologies = technologies.filter(([tech]) =>
-        tech.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    // Filter by quadrants
-    if (selectedQuadrants.length > 0) {
-      technologies = technologies.filter(([_, info]) =>
-        selectedQuadrants.some(quadrant => quadrant.value === info.category)
-      );
-    }
-
-    return technologies;
-  };
-
-  // Filter reference list based on search term
-  const getFilteredEditorContent = () => {
-    const technologies = editorContent.split('\n').filter(tech => tech.trim());
-
-    if (!searchTerm.trim()) {
-      return technologies;
-    }
-
-    return technologies.filter(tech =>
-      tech.toLowerCase().includes(searchTerm.toLowerCase())
-    );
   };
 
   // Handle search term changes
@@ -1250,34 +1067,6 @@ const TechManage = () => {
       console.error('Error updating technology list:', error);
       toast.error('Failed to update technology list');
     }
-  };
-
-  // Sort technologies in a specific category
-  const handleSortCategory = (category, sortType) => {
-    const technologies = [...arrayData[category]];
-    let sortedTechs;
-
-    switch (sortType) {
-      case 'alpha-asc':
-        sortedTechs = technologies.sort((a, b) => a.localeCompare(b));
-        break;
-      case 'alpha-desc':
-        sortedTechs = technologies.sort((a, b) => b.localeCompare(a));
-        break;
-      case 'length-desc':
-        sortedTechs = technologies.sort((a, b) => b.length - a.length);
-        break;
-      case 'length-asc':
-        sortedTechs = technologies.sort((a, b) => a.length - b.length);
-        break;
-      default:
-        return;
-    }
-
-    setArrayData({
-      ...arrayData,
-      [category]: sortedTechs,
-    });
   };
 
   // Render all categories content

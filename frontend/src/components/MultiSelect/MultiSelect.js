@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { IoClose } from 'react-icons/io5';
 import '../../styles/components/MultiSelect.css';
 

@@ -15,10 +15,9 @@ const getGuestUser = () => ({
 
 /**
  * Makes API call to fetch user info
- * @param {string} url - The API endpoint URL
  * @returns {Promise<Object>} User data or guest user on error
  */
-export const fetchUserInfo = async url => {
+export const fetchUserInfo = async () => {
   try {
     const response = await customFetch('/user/api/info');
 

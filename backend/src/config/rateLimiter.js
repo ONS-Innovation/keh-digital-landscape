@@ -1,6 +1,11 @@
 const rateLimit = require('express-rate-limit');
 const logger = require('./logger');
 
+// Maximum number of requests per minute (60000 milliseconds (60 seconds)) for each rate limiter
+// Increased to 600 for local development and testing
+const maximumRequestsPerMinute =
+  process.env.NODE_ENV === 'production' ? 60 : 600;
+
 /**
  * Rate limiting configurations for different route groups
  *
@@ -31,7 +36,7 @@ const logger = require('./logger');
 // General API rate limiter - for public endpoints
 const generalApiLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: 60, // Limit each IP to 60 requests per minute (1 per second)
+  max: maximumRequestsPerMinute,
   message: {
     error: 'Too many requests from this IP, please try again later.',
     retryAfter: '1 minute',
@@ -54,7 +59,7 @@ const generalApiLimiter = rateLimit({
 // Stricter rate limiter for admin endpoints
 const adminApiLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: 60, // Limit each IP to 60 requests per minute (1 per second)
+  max: maximumRequestsPerMinute,
   message: {
     error: 'Too many admin requests from this IP, please try again later.',
     retryAfter: '1 minute',
@@ -77,7 +82,7 @@ const adminApiLimiter = rateLimit({
 // More lenient rate limiter for authenticated user endpoints
 const userApiLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: 60, // Limit each IP to 60 requests per minute (1 per second)
+  max: maximumRequestsPerMinute,
   message: {
     error: 'Too many requests from this IP, please try again later.',
     retryAfter: '1 minute',
@@ -100,7 +105,7 @@ const userApiLimiter = rateLimit({
 // Very lenient rate limiter for health checks
 const healthCheckLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: 60, // Allow 60 health checks per minute
+  max: maximumRequestsPerMinute, // Allow 60 health checks per minute
   message: {
     error: 'Too many health check requests.',
     retryAfter: '1 minute',
@@ -123,7 +128,7 @@ const healthCheckLimiter = rateLimit({
 // Strict rate limiter for potentially expensive operations like GitHub API calls
 const externalApiLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: 60, // Limit each IP to 60 requests per minute (1 per second)
+  max: maximumRequestsPerMinute,
   message: {
     error: 'Too many requests to external APIs, please try again later.',
     retryAfter: '1 minute',

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Radar from './pages/RadarPage';
 import Statistics from './pages/StatisticsPage';
