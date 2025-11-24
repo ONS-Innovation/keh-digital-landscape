@@ -248,7 +248,9 @@ test('Verify that highlighted technologies appear in the list for each directora
   //
   // 1. Data Science Campus (DSC) – R
   //
-  await directorateSelector.selectOption({ label: 'Data Science Campus (DSC)' });
+  await directorateSelector.selectOption({
+    label: 'Data Science Campus (DSC)',
+  });
 
   const rItemDSC = page.getByRole('listitem', { name: 'R, adopt ring' });
 
@@ -259,10 +261,13 @@ test('Verify that highlighted technologies appear in the list for each directora
   //
   // 2. Data Growth and Operations (DGO) – PL/SQL highlighted
   //
-  await directorateSelector.selectOption({ label: 'Data Growth and Operations (DGO)' });
+  await directorateSelector.selectOption({
+    label: 'Data Growth and Operations (DGO)',
+  });
 
-  const plsqlItemDGO = page.getByRole('listitem', { name: 'PL/SQL, adopt ring' });
-
+  const plsqlItemDGO = page.getByRole('listitem', {
+    name: 'PL/SQL, adopt ring',
+  });
 
   await expect(plsqlItemDGO).toHaveCSS('border-left-width', '4px');
   await expect(plsqlItemDGO).toHaveCSS('border-left-style', 'solid');
@@ -276,7 +281,9 @@ test('Verify that blips on the radar get highlighted', async ({ page }) => {
   const directorateSelector = page.locator('select#directorate-select');
 
   // 1. Select DSC (R is ADOPT and should be highlighted)
-  await directorateSelector.selectOption({ label: 'Data Science Campus (DSC)' });
+  await directorateSelector.selectOption({
+    label: 'Data Science Campus (DSC)',
+  });
 
   // Radar blip (circle) for R
   const rBlipCircleDSC = page.locator('g#blip-test-r circle').first();
@@ -309,7 +316,9 @@ test('Verify that blips on the radar get highlighted', async ({ page }) => {
   expect(rBorderPresentDS).toBe(false);
 
   // 3. Switch to DGO (R remains TRIAL, still not highlighted)
-  await directorateSelector.selectOption({ label: 'Data Growth and Operations (DGO)' });
+  await directorateSelector.selectOption({
+    label: 'Data Growth and Operations (DGO)',
+  });
 
   const rBlipCircleDGO = page.locator('g#blip-test-r circle').first();
   await expect(rBlipCircleDGO).toHaveClass(/trial/);
@@ -323,4 +332,3 @@ test('Verify that blips on the radar get highlighted', async ({ page }) => {
   });
   expect(rBorderPresentDGO).toBe(false);
 });
-

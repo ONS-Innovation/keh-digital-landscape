@@ -131,7 +131,9 @@ test('Check technologies appear in the correct areas for different directorates'
   }
 });
 
-test('Technology cards show border for directorate-specific positions', async ({ page }) => {
+test('Technology cards show border for directorate-specific positions', async ({
+  page,
+}) => {
   await interceptAPICall({ page });
 
   // Build tech → position → directorates map
@@ -141,7 +143,8 @@ test('Technology cards show border for directorate-specific positions', async ({
     for (const position of Object.keys(positions)) {
       for (const techId of positions[position]) {
         if (!techPositionMap[techId]) techPositionMap[techId] = {};
-        if (!techPositionMap[techId][position]) techPositionMap[techId][position] = new Set();
+        if (!techPositionMap[techId][position])
+          techPositionMap[techId][position] = new Set();
         techPositionMap[techId][position].add(dir);
       }
     }

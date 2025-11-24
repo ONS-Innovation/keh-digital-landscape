@@ -134,7 +134,8 @@ export const radarData = {
           moved: 0,
           ringId: 'review',
           date: '2025-07-01 00:00:00',
-          description: 'Moved Specifically for Data Growth and Operations (DGO)',
+          description:
+            'Moved Specifically for Data Growth and Operations (DGO)',
         },
         {
           moved: 3,
