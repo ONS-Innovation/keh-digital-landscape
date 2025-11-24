@@ -143,8 +143,8 @@ Current existing tests include:
   - **Languages:**
     - Checks that JavaScript/TypeScript and Java languages are present
     - Verifies projects using these languages are displayed
-    - Verifies Technologies in the list does get highlighted
-    - Verifies that blips on the Techradar get highlighted
+    - Verifies technologies in the list does get highlighted
+    - Verifies that blips on the Tech Radar get highlighted
 
 - **Reviewer Dashboard**
   - Uses the same data as Tech Radar
