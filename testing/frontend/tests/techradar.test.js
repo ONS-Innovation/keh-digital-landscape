@@ -277,7 +277,6 @@ test('Verify that highlighted technologies appear in the list for each directora
 test('Verify that blips on the radar get highlighted', async ({ page }) => {
   await interceptAPICall({ page });
 
-  await page.pause();
   const directorateSelector = page.locator('select#directorate-select');
 
   // 1. Select DSC (R is ADOPT and should be highlighted)
