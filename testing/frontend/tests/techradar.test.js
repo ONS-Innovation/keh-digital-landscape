@@ -243,11 +243,10 @@ test('Verify that highlighted technologies appear in the list for each directora
 }) => {
   await interceptAPICall({ page });
 
-  await page.pause();
   const directorateSelector = page.locator('select#directorate-select');
 
   //
-  // 2. Data Science Campus (DSC) – R
+  // 1. Data Science Campus (DSC) – R
   //
   await directorateSelector.selectOption({ label: 'Data Science Campus (DSC)' });
 
@@ -258,7 +257,7 @@ test('Verify that highlighted technologies appear in the list for each directora
   await expect(rItemDSC).toHaveCSS('border-left-color', 'rgb(255, 127, 14)');
 
   //
-  // 3. Data Growth and Operations (DGO) – PL/SQL highlighted
+  // 2. Data Growth and Operations (DGO) – PL/SQL highlighted
   //
   await directorateSelector.selectOption({ label: 'Data Growth and Operations (DGO)' });
 
@@ -270,4 +269,58 @@ test('Verify that highlighted technologies appear in the list for each directora
   await expect(plsqlItemDGO).toHaveCSS('border-left-color', 'rgb(44, 160, 44)');
 });
 
+test('Verify that blips on the radar get highlighted', async ({ page }) => {
+  await interceptAPICall({ page });
+
+  await page.pause();
+  const directorateSelector = page.locator('select#directorate-select');
+
+  // 1. Select DSC (R is ADOPT and should be highlighted)
+  await directorateSelector.selectOption({ label: 'Data Science Campus (DSC)' });
+
+  // Radar blip (circle) for R
+  const rBlipCircleDSC = page.locator('g#blip-test-r circle').first();
+  await expect(rBlipCircleDSC).toHaveClass(/adopt/);
+
+  // List item for R (accessible name uses uppercase ring in aria-label)
+  const rListItemDSC = page.getByRole('listitem', { name: /R, ADOPT ring/i });
+  await expect(rListItemDSC).toBeVisible();
+
+  // Highlight (border-left) should be present
+  const rBorderPresentDSC = await rListItemDSC.evaluate(el => {
+    const s = getComputedStyle(el);
+    return s.borderLeftStyle !== 'none' && parseFloat(s.borderLeftWidth) > 0;
+  });
+  expect(rBorderPresentDSC).toBe(true);
+
+  // 2. Switch to Digital Services (DS) (R becomes TRIAL, should lose highlight)
+  await directorateSelector.selectOption({ label: 'Digital Services (DS)' });
+
+  const rBlipCircleDS = page.locator('g#blip-test-r circle').first();
+  await expect(rBlipCircleDS).toHaveClass(/trial/);
+
+  const rListItemDS = page.getByRole('listitem', { name: /R, TRIAL ring/i });
+  await expect(rListItemDS).toBeVisible();
+
+  const rBorderPresentDS = await rListItemDS.evaluate(el => {
+    const s = getComputedStyle(el);
+    return s.borderLeftStyle !== 'none' && parseFloat(s.borderLeftWidth) > 0;
+  });
+  expect(rBorderPresentDS).toBe(false);
+
+  // 3. Switch to DGO (R remains TRIAL, still not highlighted)
+  await directorateSelector.selectOption({ label: 'Data Growth and Operations (DGO)' });
+
+  const rBlipCircleDGO = page.locator('g#blip-test-r circle').first();
+  await expect(rBlipCircleDGO).toHaveClass(/trial/);
+
+  const rListItemDGO = page.getByRole('listitem', { name: /R, TRIAL ring/i });
+  await expect(rListItemDGO).toBeVisible();
+
+  const rBorderPresentDGO = await rListItemDGO.evaluate(el => {
+    const s = getComputedStyle(el);
+    return s.borderLeftStyle !== 'none' && parseFloat(s.borderLeftWidth) > 0;
+  });
+  expect(rBorderPresentDGO).toBe(false);
+});
 
