@@ -177,6 +177,26 @@ html:not(.dark)
   width: 100%;
 }
 
+.seat-breakdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.seat-breakdown-header button {
+  background: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  color: hsl(var(--foreground));
+  padding: 8px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1;
+  transition: all 0.2s ease;
+  min-width: 36px;
+}
+
 .inactivity-toggle {
   display: flex;
   flex-direction: row;

@@ -18,6 +18,7 @@ function LiveDashboard({
   inactiveDays,
   setInactiveDays,
   inactivityDate,
+
 }) {
   let completions, chats, seats, inactiveUsers;
   if (!isLiveLoading) {
@@ -47,6 +48,44 @@ function LiveDashboard({
   const handleInactivityIncrease = () => {
     setInactiveDays(prev => prev + 1);
   };
+
+  const exportEngagedUserData = async () => {
+    try {
+     const response = await fetch('/copilot/api/seats/export', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      credentials: 'include',
+      body: JSON.stringify({
+        seats: seats.activeSeatData,
+        engaged: true,
+      }),
+     });
+    
+     const result = await response.json();
+     console.log('Exported:', result);
+    } catch (Exception) {
+      console.error(Exception);
+    }
+  }
+
+  const exportUnengagedUserData = async () => {
+   try {
+     const response = await fetch('/copilot/api/seats/export', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      credentials: 'include',
+      body: JSON.stringify({
+        seats: inactiveUsers,
+        engaged: false,
+      }),
+     });
+    
+     const result = await response.json();
+     console.log('Exported:', result);
+    } catch (Exception) {
+      console.error(Exception);
+    }
+  }  
 
   const handleKeyDown = (event, action) => {
     if (event.key === 'Enter' || event.key === ' ') {
@@ -277,7 +316,14 @@ function LiveDashboard({
           </div>
           <div className="seat-breakdown">
             <div className="seat-breakdown-item">
-              <h3>Engaged Users</h3>
+              <div className="seat-breakdown-header">
+                <h3>Engaged Users</h3>
+                <button 
+                className="export-engaged-button"
+                onClick={exportEngagedUserData}
+                type="button"
+                aria-label="Exported the data for all Engaged users">Export Engaged Users</button>
+              </div>
               <TableBreakdown
                 data={seats.activeSeatData.reduce((acc, user, i) => {
                   acc[i] = {
@@ -305,7 +351,14 @@ function LiveDashboard({
               />
             </div>
             <div className="seat-breakdown-item">
-              <h3>Inactive Users</h3>
+              <div className="seat-breakdown-header">
+                <h3>Inactive Users</h3>
+                <button 
+                className="export-unengaged-button"
+                onClick={exportUnengagedUserData}
+                type="button"
+                aria-label="Exported the data for all Unengaged users">Export Inactive Users</button>
+              </div>
               <TableBreakdown
                 data={inactiveUsers.reduce((acc, user, i) => {
                   acc[i] = {

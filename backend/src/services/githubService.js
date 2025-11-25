@@ -112,14 +112,13 @@ class GitHubService {
       const emailList = [];
 
       // Call exchangeUsernameToEmail for each seat
-      for (let i = 0; i < allSeats.length; i++) {
-        emailList.push(allSeats[i].assignee.login);
-      }
+      const emailPromises = allSeats.map(async (seat) => {
+        const email = await this.exchangeUsernameToEmail(seat.assignee.login);
+        seat.assignee.email = email;
+        return seat;
+      });
 
-      const emailResponse = await Promise.all(emailList.map((email, i) => {
-        allSeats[i].assignee.email = this.exchangeUsernameToEmail(email)
-        })
-      );
+      await Promise.all(emailPromises);
 
       return allSeats;
     } catch (error) {
@@ -303,12 +302,8 @@ class GitHubService {
         return null;
       } 
 
-      // If the user has a "@ext..." ons email remove it, aslong as they have another one
-      if (userEmail.length > 1) {
-        userEmail.filter(email => email.endsWith("@ons.gov.uk"));
-      }
-
       return userEmail;
+      
     } catch (error) {
       logger.error('GitHub API error while fetching organisation verified emails:', {
         error: error.message,

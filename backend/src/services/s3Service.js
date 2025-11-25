@@ -50,7 +50,7 @@ class S3Service {
   }
 
   /**
-   * Put an object to S3 bucket
+   * Put an JSON object to S3 bucket
    * @param {string} bucket - Bucket name or bucket key from this.buckets
    * @param {string} key - Object key
    * @param {Object} data - Data to store
@@ -75,6 +75,35 @@ class S3Service {
       throw error;
     }
   }
+
+
+  /**
+   * Put an CSV object to S3 bucket
+   * @param {string} bucket - Bucket name or bucket key from this.buckets
+   * @param {string} key - Object key
+   * @param {Object} data - Data to store
+   * @returns {Promise<void>}
+   */
+  async putCSVObject(bucket, key, data) {
+    try {
+      const bucketName = this.buckets[bucket] || bucket;
+      const command = new PutObjectCommand({
+        Bucket: bucketName,
+        Key: key,
+        Body: data,
+        ContentType: 'text/csv',
+      });
+
+      await this.s3Client.send(command);
+      logger.info(`Successfully put object to S3: ${bucket}/${key}`);
+    } catch (error) {
+      logger.error(`Error putting object to S3: ${bucket}/${key}`, {
+        error: error.message,
+      });
+      throw error;
+    }
+  }
+
 
   /**
    * Get a signed URL for an S3 object and fetch its content
