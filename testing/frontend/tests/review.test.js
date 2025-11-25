@@ -131,20 +131,27 @@ test('Check technologies appear in the correct areas for different directorates'
   }
 });
 
-test('Technology cards show border for directorate-specific positions', async ({
+test('Technology cards show coloured border for directorate-specific positions', async ({
   page,
 }) => {
   await interceptAPICall({ page });
 
-  // Build tech → position → directorates map
+  // 'technology-name': {
+  //  'ring': [
+  //      'directorate-1',
+  //      'directorate-2',
+  //  ]
+  //}
+  
   const techPositionMap = {};
   for (const dir of Object.keys(reviewPositionCases)) {
     const positions = reviewPositionCases[dir];
     for (const position of Object.keys(positions)) {
       for (const techId of positions[position]) {
         if (!techPositionMap[techId]) techPositionMap[techId] = {};
-        if (!techPositionMap[techId][position])
+        if (!techPositionMap[techId][position]) {
           techPositionMap[techId][position] = new Set();
+        }
         techPositionMap[techId][position].add(dir);
       }
     }
@@ -164,25 +171,34 @@ test('Technology cards show border for directorate-specific positions', async ({
           techPositionMap[techId][position] &&
           techPositionMap[techId][position].size === 1;
 
-        if (isDirectorateSpecific) {
-          const card = page.locator(`#technology-${techId}`);
-          await expect(card).toBeVisible();
+        if (!isDirectorateSpecific) continue;
 
-          // Check class or computed border style
-          const hasBorder = await card.evaluate(el => {
-            const style = window.getComputedStyle(el);
-            const borderWidth =
-              parseFloat(style.borderTopWidth) +
-              parseFloat(style.borderRightWidth) +
-              parseFloat(style.borderBottomWidth) +
-              parseFloat(style.borderLeftWidth);
-            return (
-              el.classList.contains('directorate-specific') ||
-              (borderWidth > 0 && style.borderStyle !== 'none')
-            );
-          });
+        // Use attribute selector so techIds with "/" etc. don't break CSS
+        const safeDomId = `technology-${techId}`;
+        const card = page.locator(`[id="${safeDomId}"]`);
+        await expect(card).toBeVisible();
 
-          expect(hasBorder).toBe(true);
+        // Read computed border colour & width
+        const borderInfo = await card.evaluate(el => {
+          const style = window.getComputedStyle(el);
+          const color = style.borderLeftColor || style.borderColor;
+          const width = style.borderLeftWidth || style.borderWidth;
+          return {
+            borderColor: color,
+            borderWidth: width,
+          };
+        });
+
+        const { borderColor, borderWidth } = borderInfo;
+
+        // Border should exist and be non-transparent
+        expect(borderWidth).not.toBe('0px');
+        expect(borderColor).not.toMatch(/transparent|rgba\(0,\s*0,\s*0,\s*0\)/i);
+        console.log(techId);
+        // For R specifically, assert the exact colour & width from your example
+        if (techId === 'test-r') {
+          expect(borderColor.toLowerCase()).toBe('rgb(255, 127, 14)');
+          expect(borderWidth).toBe('2px');
         }
       }
     }

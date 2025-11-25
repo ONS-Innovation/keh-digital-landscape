@@ -124,6 +124,10 @@ export const radarData = {
         },
       ],
     },
+    // The below technology should appear in review for all directorates
+    // and in adopt for Data Growth and Operations (DGO) only.
+    // This tests that the last entry in the timeline is picked correctly
+    // when there are multiple entries for different directorates.
     {
       id: 'test-pl/sql',
       title: 'PL/SQL',
@@ -135,7 +139,7 @@ export const radarData = {
           ringId: 'review',
           date: '2025-07-01 00:00:00',
           description:
-            'Moved Specifically for Data Growth and Operations (DGO)',
+            'Added for review from tech audit (Languages)',
         },
         {
           moved: 3,
