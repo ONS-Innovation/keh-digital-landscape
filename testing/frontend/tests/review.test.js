@@ -142,7 +142,7 @@ test('Technology cards show coloured border for directorate-specific positions',
   //      'directorate-2',
   //  ]
   //}
-  
+
   const techPositionMap = {};
   for (const dir of Object.keys(reviewPositionCases)) {
     const positions = reviewPositionCases[dir];
@@ -194,7 +194,6 @@ test('Technology cards show coloured border for directorate-specific positions',
         // Border should exist and be non-transparent
         expect(borderWidth).not.toBe('0px');
         expect(borderColor).not.toMatch(/transparent|rgba\(0,\s*0,\s*0,\s*0\)/i);
-        console.log(techId);
         // For R specifically, assert the exact colour & width from your example
         if (techId === 'test-r') {
           expect(borderColor.toLowerCase()).toBe('rgb(255, 127, 14)');
