@@ -281,15 +281,14 @@ test('Verify that highlighted technologies appear in the list for each directora
       }
     }
 
-    const highlightedCount = await page
-      .getByRole('listitem')
-      .evaluateAll(els =>
+    const highlightedCount = await page.getByRole('listitem').evaluateAll(
+      els =>
         els.filter(el => {
           const style = window.getComputedStyle(el);
           const width = parseFloat(style.borderLeftWidth || '0');
           return style.borderLeftStyle !== 'none' && width > 0;
         }).length
-      );
+    );
 
     expect(highlightedCount).toBe(directorateSpecificCount);
   }
@@ -301,7 +300,9 @@ test('Verify that blips on the radar get highlighted', async ({ page }) => {
   const directorateSelector = page.locator('select#directorate-select');
 
   // Select DSC → R is ADOPT → should be highlighted
-  await directorateSelector.selectOption({ label: 'Data Science Campus (DSC)' });
+  await directorateSelector.selectOption({
+    label: 'Data Science Campus (DSC)',
+  });
 
   const rBlipDSC = page.locator('g#blip-test-r');
 
@@ -311,9 +312,8 @@ test('Verify that blips on the radar get highlighted', async ({ page }) => {
 
   // Highlight circle exists
   const rHighlightCircleDSC = rBlipDSC.locator('circle.blip-highlight');
-  await expect(rHighlightCircleDSC).toHaveCount(1);       // highlighted
+  await expect(rHighlightCircleDSC).toHaveCount(1); // highlighted
   await expect(rBlipDSC.locator('circle')).toHaveCount(2); // base + highlight
-
 
   // Switch to DS → R is TRIAL → should NOT be highlighted
   await directorateSelector.selectOption({ label: 'Digital Services (DS)' });
@@ -323,9 +323,8 @@ test('Verify that blips on the radar get highlighted', async ({ page }) => {
   await expect(rBaseCircleDS).toHaveClass(/trial/);
 
   const rHighlightCircleDS = rBlipDS.locator('circle.blip-highlight');
-  await expect(rHighlightCircleDS).toHaveCount(0);         // NOT highlighted
-  await expect(rBlipDS.locator('circle')).toHaveCount(1);  // only base circle
-
+  await expect(rHighlightCircleDS).toHaveCount(0); // NOT highlighted
+  await expect(rBlipDS.locator('circle')).toHaveCount(1); // only base circle
 
   // Switch to DGO → R is TRIAL → still not highlighted
   await directorateSelector.selectOption({
@@ -341,4 +340,3 @@ test('Verify that blips on the radar get highlighted', async ({ page }) => {
   await expect(rHighlightCircleDGO).toHaveCount(0);
   await expect(rBlipDGO.locator('circle')).toHaveCount(1);
 });
-
