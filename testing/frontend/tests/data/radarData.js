@@ -138,8 +138,7 @@ export const radarData = {
           moved: 0,
           ringId: 'review',
           date: '2025-07-01 00:00:00',
-          description:
-            'Added for review from tech audit (Languages)',
+          description: 'Added for review from tech audit (Languages)',
         },
         {
           moved: 3,

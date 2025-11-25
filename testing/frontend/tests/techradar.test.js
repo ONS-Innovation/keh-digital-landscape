@@ -281,15 +281,14 @@ test('Verify that highlighted technologies appear in the list for each directora
       }
     }
 
-    const highlightedCount = await page
-      .getByRole('listitem')
-      .evaluateAll(els =>
+    const highlightedCount = await page.getByRole('listitem').evaluateAll(
+      els =>
         els.filter(el => {
           const style = window.getComputedStyle(el);
           const width = parseFloat(style.borderLeftWidth || '0');
           return style.borderLeftStyle !== 'none' && width > 0;
         }).length
-      );
+    );
 
     expect(highlightedCount).toBe(directorateSpecificCount);
   }
@@ -300,55 +299,50 @@ test('Verify that blips on the radar get highlighted', async ({ page }) => {
 
   const directorateSelector = page.locator('select#directorate-select');
 
-  // 1. Select DSC (R is ADOPT and should be highlighted)
+  //
+  // 1. Select DSC → R is ADOPT → should be highlighted
+  //
   await directorateSelector.selectOption({
     label: 'Data Science Campus (DSC)',
   });
 
-  // Radar blip (circle) for R
-  const rBlipCircleDSC = page.locator('g#blip-test-r circle').first();
-  await expect(rBlipCircleDSC).toHaveClass(/adopt/);
+  const rBlipDSC = page.locator('g#blip-test-r');
 
-  // List item for R (accessible name uses uppercase ring in aria-label)
-  const rListItemDSC = page.getByRole('listitem', { name: /R, ADOPT ring/i });
-  await expect(rListItemDSC).toBeVisible();
+  // Base ring class check
+  const rBaseCircleDSC = rBlipDSC.locator('circle').first();
+  await expect(rBaseCircleDSC).toHaveClass(/adopt/);
 
-  // Highlight (border-left) should be present
-  const rBorderPresentDSC = await rListItemDSC.evaluate(el => {
-    const s = getComputedStyle(el);
-    return s.borderLeftStyle !== 'none' && parseFloat(s.borderLeftWidth) > 0;
-  });
-  expect(rBorderPresentDSC).toBe(true);
+  // Highlight circle exists
+  const rHighlightCircleDSC = rBlipDSC.locator('circle.blip-highlight');
+  await expect(rHighlightCircleDSC).toHaveCount(1); // highlighted
+  await expect(rBlipDSC.locator('circle')).toHaveCount(2); // base + highlight
 
-  // 2. Switch to Digital Services (DS) (R becomes TRIAL, should lose highlight)
+  //
+  // 2. Switch to DS → R is TRIAL → should NOT be highlighted
+  //
   await directorateSelector.selectOption({ label: 'Digital Services (DS)' });
 
-  const rBlipCircleDS = page.locator('g#blip-test-r circle').first();
-  await expect(rBlipCircleDS).toHaveClass(/trial/);
+  const rBlipDS = page.locator('g#blip-test-r');
+  const rBaseCircleDS = rBlipDS.locator('circle').first();
+  await expect(rBaseCircleDS).toHaveClass(/trial/);
 
-  const rListItemDS = page.getByRole('listitem', { name: /R, TRIAL ring/i });
-  await expect(rListItemDS).toBeVisible();
+  const rHighlightCircleDS = rBlipDS.locator('circle.blip-highlight');
+  await expect(rHighlightCircleDS).toHaveCount(0); // NOT highlighted
+  await expect(rBlipDS.locator('circle')).toHaveCount(1); // only base circle
 
-  const rBorderPresentDS = await rListItemDS.evaluate(el => {
-    const s = getComputedStyle(el);
-    return s.borderLeftStyle !== 'none' && parseFloat(s.borderLeftWidth) > 0;
-  });
-  expect(rBorderPresentDS).toBe(false);
-
-  // 3. Switch to DGO (R remains TRIAL, still not highlighted)
+  //
+  // 3. Switch to DGO → R is TRIAL → still not highlighted
+  //
   await directorateSelector.selectOption({
     label: 'Data Growth and Operations (DGO)',
   });
 
-  const rBlipCircleDGO = page.locator('g#blip-test-r circle').first();
-  await expect(rBlipCircleDGO).toHaveClass(/trial/);
+  const rBlipDGO = page.locator('g#blip-test-r');
 
-  const rListItemDGO = page.getByRole('listitem', { name: /R, TRIAL ring/i });
-  await expect(rListItemDGO).toBeVisible();
+  const rBaseCircleDGO = rBlipDGO.locator('circle').first();
+  await expect(rBaseCircleDGO).toHaveClass(/trial/);
 
-  const rBorderPresentDGO = await rListItemDGO.evaluate(el => {
-    const s = getComputedStyle(el);
-    return s.borderLeftStyle !== 'none' && parseFloat(s.borderLeftWidth) > 0;
-  });
-  expect(rBorderPresentDGO).toBe(false);
+  const rHighlightCircleDGO = rBlipDGO.locator('circle.blip-highlight');
+  await expect(rHighlightCircleDGO).toHaveCount(0); // NOT highlighted
+  await expect(rBlipDGO.locator('circle')).toHaveCount(1); // only base circle
 });
