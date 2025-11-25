@@ -2,6 +2,7 @@ import { test, expect } from 'playwright/test';
 import { radarData } from './data/radarData';
 import { csvData } from './data/csvData';
 import { nodeBlipCases } from './data/nodeBlipCases';
+import { reviewPositionCases } from './data/reviewPositionCases';
 import { directorateData } from './data/directorateData';
 
 // Function to intercept and mock the API call
@@ -243,35 +244,55 @@ test('Verify that highlighted technologies appear in the list for each directora
 }) => {
   await interceptAPICall({ page });
 
-  const directorateSelector = page.locator('select#directorate-select');
+  const techPositionMap = {};
+  for (const dir of Object.keys(reviewPositionCases)) {
+    const positions = reviewPositionCases[dir];
+    for (const position of Object.keys(positions)) {
+      for (const techId of positions[position]) {
+        if (!techPositionMap[techId]) techPositionMap[techId] = {};
+        if (!techPositionMap[techId][position]) {
+          techPositionMap[techId][position] = new Set();
+        }
+        techPositionMap[techId][position].add(dir);
+      }
+    }
+  }
 
-  //
-  // 1. Data Science Campus (DSC) – R
-  //
-  await directorateSelector.selectOption({
-    label: 'Data Science Campus (DSC)',
-  });
+  const directorateSelect = page.locator('#directorate-select');
 
-  const rItemDSC = page.getByRole('listitem', { name: 'R, adopt ring' });
+  // Iterate through each directorate
+  for (const dir of Object.keys(reviewPositionCases)) {
+    await directorateSelect.selectOption(dir);
 
-  await expect(rItemDSC).toHaveCSS('border-left-width', '4px');
-  await expect(rItemDSC).toHaveCSS('border-left-style', 'solid');
-  await expect(rItemDSC).toHaveCSS('border-left-color', 'rgb(255, 127, 14)');
+    const positions = reviewPositionCases[dir];
 
-  //
-  // 2. Data Growth and Operations (DGO) – PL/SQL highlighted
-  //
-  await directorateSelector.selectOption({
-    label: 'Data Growth and Operations (DGO)',
-  });
+    let directorateSpecificCount = 0;
+    // Count how many techs are directorate-specific in this directorate
+    for (const position of Object.keys(positions)) {
+      for (const techId of positions[position]) {
+        const isDirectorateSpecific =
+          techPositionMap[techId] &&
+          techPositionMap[techId][position] &&
+          techPositionMap[techId][position].size === 1;
 
-  const plsqlItemDGO = page.getByRole('listitem', {
-    name: 'PL/SQL, adopt ring',
-  });
+        if (isDirectorateSpecific) {
+          directorateSpecificCount += 1;
+        }
+      }
+    }
 
-  await expect(plsqlItemDGO).toHaveCSS('border-left-width', '4px');
-  await expect(plsqlItemDGO).toHaveCSS('border-left-style', 'solid');
-  await expect(plsqlItemDGO).toHaveCSS('border-left-color', 'rgb(44, 160, 44)');
+    const highlightedCount = await page
+      .getByRole('listitem')
+      .evaluateAll(els =>
+        els.filter(el => {
+          const style = window.getComputedStyle(el);
+          const width = parseFloat(style.borderLeftWidth || '0');
+          return style.borderLeftStyle !== 'none' && width > 0;
+        }).length
+      );
+
+    expect(highlightedCount).toBe(directorateSpecificCount);
+  }
 });
 
 test('Verify that blips on the radar get highlighted', async ({ page }) => {
