@@ -244,6 +244,13 @@ test('Verify that highlighted technologies appear in the list for each directora
 }) => {
   await interceptAPICall({ page });
 
+  // 'technology-name': {
+  //  'ring': [
+  //      'directorate-1',
+  //      'directorate-2',
+  //  ]
+  //}
+
   const techPositionMap = {};
   for (const dir of Object.keys(reviewPositionCases)) {
     const positions = reviewPositionCases[dir];

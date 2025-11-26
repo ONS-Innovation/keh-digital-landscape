@@ -196,10 +196,53 @@ test('Technology cards show coloured border for directorate-specific positions',
         expect(borderColor).not.toMatch(
           /transparent|rgba\(0,\s*0,\s*0,\s*0\)/i
         );
-        // For R specifically, assert the exact colour & width from your example
-        if (techId === 'test-r') {
-          expect(borderColor.toLowerCase()).toBe('rgb(255, 127, 14)');
+
+        // Resolve expected directorate highlight color from directorateData for the currently selected directorate (dir)
+        const dirList = directorateData?.directorates ?? [];
+        const expectedDir = dirList.find(
+          d => String(d.id) === String(dir) || d.name === dir
+        );
+
+        const expectedColorRaw = expectedDir?.color;
+
+        // Normalize expected color to computed rgb(...) to compare with getComputedStyle value
+        const normalizeToRgb = color => {
+          if (!color) return null;
+          // Already rgb/rgba
+          if (/^rgb(a)?\(/i.test(color)) return color.toLowerCase();
+          // Hex (#rrggbb or #rgb)
+          const hex = color.replace('#', '').toLowerCase();
+          const to255 = h => parseInt(h.length === 1 ? h + h : h, 16);
+          const r = to255(hex.length === 3 ? hex[0] : hex.slice(0, 2));
+          const g = to255(hex.length === 3 ? hex[1] : hex.slice(2, 4));
+          const b = to255(hex.length === 3 ? hex[2] : hex.slice(4, 6));
+          return `rgb(${r}, ${g}, ${b})`;
+        };
+
+        const expectedBorderColor = normalizeToRgb(expectedColorRaw);
+
+        // If we have an expected color, assert it; otherwise just assert a non-transparent border exists
+        if (expectedBorderColor) {
+          expect(borderColor.toLowerCase()).toBe(expectedBorderColor);
+        } else {
+          expect(borderColor).not.toMatch(/transparent|rgba\(0,\s*0,\s*0,\s*0\)/i);
+        }
+
+        // Optional: specific check for R by tech id, but using directorateData color instead of hardcoded
+        if (techId.toLowerCase() === 'test-r' || techId.toLowerCase() === 'r') {
           expect(borderWidth).toBe('2px');
+          if (expectedBorderColor) {
+            expect(borderColor.toLowerCase()).toBe(expectedBorderColor);
+          }
+        }
+
+        if (
+          techId.toLowerCase() === 'test-pl/sql'
+        ) {
+          expect(borderWidth).toBe('2px');
+          if (expectedBorderColor) {
+            expect(borderColor.toLowerCase()).toBe(expectedBorderColor);
+          }
         }
       }
     }

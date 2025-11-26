@@ -124,7 +124,7 @@ export const radarData = {
         },
       ],
     },
-    // The below technology should appear in review for all directorates
+    // The below technology should appear in trial for all directorates
     // and in adopt for Data Growth and Operations (DGO) only.
     // This tests that the last entry in the timeline is picked correctly
     // when there are multiple entries for different directorates.
