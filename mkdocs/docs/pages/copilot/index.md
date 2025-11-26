@@ -34,6 +34,10 @@ Use the dual range slider to filter live data by a custom date range. The slider
 
 Adjust the inactivity threshold, measured by number of days, to see active/inactive breakdowns for users with Copilot licenses based on their recent activity.
 
+### Downloading Seat Data To S3
+
+Click either the "Export Enagaged Users" or "Export Inactive Users" to upload the current respective table to S3, whereby adjusting the inactivity threshold adjusts who is on either file upload.
+
 ### Authentication
 
 Users must authenticate with GitHub to view and select their teams. The dashboard displays a GitHub login button if the user is not authenticated or their session has expired.

@@ -108,6 +108,15 @@ class GitHubService {
         currentSeats.length < 100 ? (hasMore = false) : (page += 1);
       }
 
+      // Call exchangeUsernameToEmail for each seat
+      const emailPromises = allSeats.map(async seat => {
+        const email = await this.exchangeUsernameToEmail(seat.assignee.login);
+        seat.assignee.email = email;
+        return seat;
+      });
+
+      await Promise.all(emailPromises);
+
       return allSeats;
     } catch (error) {
       logger.error('GitHub API error while fetching Copilot seats:', {
@@ -250,6 +259,56 @@ class GitHubService {
         error: error.message,
       });
       throw error;
+    }
+  }
+
+  /**
+   * Get the user's email from their username, using octokit GraphQL
+   * @param {string} username - The Github username for the user
+   * @param {string} organisation - The organisation name
+   * @returns {Promise<string>} Email/s of the user (excluding all none organisation main emails addresses)
+   */
+  async exchangeUsernameToEmail(username) {
+    try {
+      // collect the Octokit
+      const octokit = await getAppAndInstallation();
+
+      // Create the Github GraphQL query
+      const query = `
+      query($org: String!, $username: String!) {
+        user(login: $username) {
+          login
+          organizationVerifiedDomainEmails(login: $org)
+        }
+      }
+      `;
+
+      const parameters = {
+        username: username,
+        org: this.org,
+      };
+
+      // Send API request to Github GraphQL
+      const response = await octokit.graphql(query, parameters);
+
+      // Only collect the ONS emails
+      let userEmail = response?.user?.organizationVerifiedDomainEmails;
+
+      if (!userEmail || userEmail.length === 0) {
+        logger.error(
+          `User: ${username} does not have an ONS specific email attached to their account.`
+        );
+        return null;
+      }
+
+      return userEmail;
+    } catch (error) {
+      logger.error(
+        'GitHub API error while fetching organisation verified emails:',
+        {
+          error: error.message,
+        }
+      );
     }
   }
 }
