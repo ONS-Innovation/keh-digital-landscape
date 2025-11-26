@@ -88,6 +88,38 @@ const interceptAPICall = async ({ page }) => {
   await page.reload();
 };
 
+// Mock repository API response data
+const mockRepositoryData = {
+  repositories: [
+    {
+      name: 'sample-project-4',
+      url: 'https://github.com/ONSDigital/sample-project-4',
+      visibility: 'PUBLIC',
+      is_archived: false,
+      last_commit: '2025-11-20T10:30:00Z',
+      technologies: {
+        languages: [
+          { name: 'Fortran', size: 70000, percentage: 70 },
+          { name: 'Assembly', size: 20000, percentage: 20 },
+          { name: 'PHP', size: 10000, percentage: 10 },
+        ],
+      },
+    },
+  ],
+  stats: {
+    total_repos: 1,
+    total_private_repos: 0,
+    total_public_repos: 1,
+    total_internal_repos: 0,
+  },
+  language_statistics: {},
+  metadata: {
+    last_updated: '2025-11-26T00:00:00Z',
+    requested_repos: ['sample-project-4'],
+    found_repos: ['sample-project-4'],
+  },
+};
+
 test.describe('Projects Page Tests', () => {
   test.beforeEach(async ({ page }) => {
     await interceptAPICall({ page });
@@ -125,7 +157,7 @@ test.describe('Projects Page Tests', () => {
             continue;
           }
 
-          if (csvData[i][field] === '') {
+          if (csvData[i][field] === '' && field !== 'Repo') {
             await expect(contents).toHaveText('No data captured');
           } else if (field === 'Miscellaneous') {
             const miscItems = detailItem.locator('.misc-item');
@@ -144,8 +176,6 @@ test.describe('Projects Page Tests', () => {
               );
             }
           } else if (field === 'Repo') {
-            // TODO: Implement repository list testing
-            // TODO: Make repository list in the modal have a placeholder if No data
             continue;
           } else {
             await expect(contents).toHaveText(csvData[i][field]);
@@ -154,4 +184,313 @@ test.describe('Projects Page Tests', () => {
       }
     });
   }
+});
+
+test.describe('Repository Section Tests', () => {
+  test('Repositories accordion exists and is visible when a project with repos is clicked', async ({
+    page,
+  }) => {
+    // Intercept API calls
+    await page.route('**/api/csv', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(csvData),
+      });
+    });
+
+    await page.route('**/api/repository/project/json*', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(mockRepositoryData),
+      });
+    });
+
+    await page.goto('http://localhost:3000/projects');
+
+    // Set authentication cookie
+    await page.context().clearCookies();
+    await page.context().addCookies([
+      {
+        name: 'githubUserToken',
+        value: 'dummy-token',
+        domain: 'localhost',
+        path: '/',
+        httpOnly: true,
+        secure: false,
+        sameSite: 'Lax',
+      },
+    ]);
+    await page.reload();
+
+    // Click on Sample Project 4 (which has ONSDigital repo)
+    const projectItem = page.locator('#project-sample-project-4');
+    await expect(projectItem).toBeVisible();
+    await projectItem.click();
+
+    // Check that Repositories accordion header exists
+    const repoAccordion = page.locator('.accordion-header', {
+      hasText: 'Repositories',
+    });
+    await expect(repoAccordion).toBeVisible();
+  });
+
+  test('Repositories accordion expands and collapses correctly', async ({
+    page,
+  }) => {
+    // Intercept API calls
+    await page.route('**/api/csv', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(csvData),
+      });
+    });
+
+    await page.route('**/api/repository/project/json*', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(mockRepositoryData),
+      });
+    });
+
+    await page.goto('http://localhost:3000/projects');
+
+    // Set authentication cookie
+    await page.context().clearCookies();
+    await page.context().addCookies([
+      {
+        name: 'githubUserToken',
+        value: 'dummy-token',
+        domain: 'localhost',
+        path: '/',
+        httpOnly: true,
+        secure: false,
+        sameSite: 'Lax',
+      },
+    ]);
+    await page.reload();
+
+    // Click on Sample Project 4
+    const projectItem = page.locator('#project-sample-project-4');
+    await projectItem.click();
+
+    // Wait for the accordion to appear
+    const repoAccordion = page.locator('.accordion-header', {
+      hasText: 'Repositories',
+    });
+    await expect(repoAccordion).toBeVisible();
+
+    // Repositories should be expanded by default
+    const repoGrid = page.locator('.repo-grid');
+    await expect(repoGrid).toBeVisible();
+
+    // Click to collapse
+    await repoAccordion.click();
+    await expect(repoGrid).not.toBeVisible();
+
+    // Click to expand again
+    await repoAccordion.click();
+    await expect(repoGrid).toBeVisible();
+  });
+
+  test('Placeholder message appears when project.Repo is empty', async ({
+    page,
+  }) => {
+    // Intercept API calls
+    await page.route('**/api/csv', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(csvData),
+      });
+    });
+
+    await page.goto('http://localhost:3000/projects');
+
+    // Set authentication cookie
+    await page.context().clearCookies();
+    await page.context().addCookies([
+      {
+        name: 'githubUserToken',
+        value: 'dummy-token',
+        domain: 'localhost',
+        path: '/',
+        httpOnly: true,
+        secure: false,
+        sameSite: 'Lax',
+      },
+    ]);
+    await page.reload();
+
+    // Click on Sample Project 3 (which has empty Repo field)
+    const projectItem = page.locator('#project-sample-project-3');
+    await expect(projectItem).toBeVisible();
+    await projectItem.click();
+
+    // Expand repositories section if collapsed
+    const repoAccordion = page.locator('.accordion-header', {
+      hasText: 'Repositories',
+    });
+    await expect(repoAccordion).toBeVisible();
+
+    // Check for placeholder message
+    const placeholderMessage = page.locator('.repo-info-loading');
+    await expect(placeholderMessage).toBeVisible();
+    await expect(placeholderMessage).toContainText(
+      'No repository information available'
+    );
+  });
+
+  test('Non-ONSDigital repos display without detailed information', async ({
+    page,
+  }) => {
+    // Intercept API calls
+    await page.route('**/api/csv', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(csvData),
+      });
+    });
+
+    // Return empty repositories array for non-ONSDigital repos
+    await page.route('**/api/repository/project/json*', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          repositories: [],
+          stats: {
+            total_repos: 0,
+            total_private_repos: 0,
+            total_public_repos: 0,
+            total_internal_repos: 0,
+          },
+          language_statistics: {},
+          metadata: {
+            last_updated: '2024-11-26T00:00:00Z',
+            requested_repos: [],
+            found_repos: [],
+          },
+        }),
+      });
+    });
+
+    await page.goto('http://localhost:3000/projects');
+
+    // Set authentication cookie
+    await page.context().clearCookies();
+    await page.context().addCookies([
+      {
+        name: 'githubUserToken',
+        value: 'dummy-token',
+        domain: 'localhost',
+        path: '/',
+        httpOnly: true,
+        secure: false,
+        sameSite: 'Lax',
+      },
+    ]);
+    await page.reload();
+
+    // Click on Sample Project 1 (which has non-ONSDigital repo)
+    const projectItem = page.locator('#project-sample-project');
+    await expect(projectItem).toBeVisible();
+    await projectItem.click();
+
+    // Wait for repo grid to appear
+    const repoGrid = page.locator('.repo-grid');
+    await expect(repoGrid).toBeVisible();
+
+    // Should have at least one repo card (the non-ONSDigital one)
+    const repoCards = page.locator('.repo-card');
+    const count = await repoCards.count();
+    await expect(count).toBeGreaterThan(0);
+
+    // Check that the non-ONSDigital repo displays with basic info
+    const firstCard = repoCards.first();
+    await expect(firstCard).toBeVisible();
+
+    // Should have a badge indicating it's from GitHub or GitLab
+    const badge = firstCard.locator('.repo-badge');
+    await expect(badge).toBeVisible();
+  });
+
+  test('ONSDigital repos display with correct number of repo cards', async ({
+    page,
+  }) => {
+    // Intercept API calls
+    await page.route('**/api/csv', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(csvData),
+      });
+    });
+
+    await page.route('**/api/repository/project/json*', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(mockRepositoryData),
+      });
+    });
+
+    await page.goto('http://localhost:3000/projects');
+
+    // Set authentication cookie
+    await page.context().clearCookies();
+    await page.context().addCookies([
+      {
+        name: 'githubUserToken',
+        value: 'dummy-token',
+        domain: 'localhost',
+        path: '/',
+        httpOnly: true,
+        secure: false,
+        sameSite: 'Lax',
+      },
+    ]);
+    await page.reload();
+
+    // Click on Sample Project 4 (which has ONSDigital repo)
+    const projectItem = page.locator('#project-sample-project-4');
+    await expect(projectItem).toBeVisible();
+    await projectItem.click();
+
+    // Wait for repo grid to appear
+    const repoGrid = page.locator('.repo-grid');
+    await expect(repoGrid).toBeVisible();
+
+    // Should have exactly 1 repo card (matching mockRepositoryData)
+    const repoCards = page.locator('.repo-card');
+    const count = await repoCards.count();
+    await expect(count).toBe(mockRepositoryData.repositories.length);
+
+    // Verify the repo card has detailed information
+    const firstCard = repoCards.first();
+
+    // Check repo name
+    const repoName = firstCard.locator('.repo-name');
+    await expect(repoName).toHaveText('sample-project-4');
+
+    // Check repo badges (visibility and archived status)
+    const badges = firstCard.locator('.repo-badge');
+    await expect(badges).toHaveCount(2);
+
+    // Check language labels exist
+    const languageLabels = firstCard.locator('.language-label');
+    await expect(languageLabels).toHaveCount(
+      mockRepositoryData.repositories[0].technologies.languages.length
+    );
+
+    // Check language bars exist
+    const languageBars = firstCard.locator('.language-bar');
+    await expect(languageBars).toHaveCount(
+      mockRepositoryData.repositories[0].technologies.languages.length
+    );
+  });
 });

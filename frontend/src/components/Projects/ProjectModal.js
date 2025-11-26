@@ -60,6 +60,9 @@ const ProjectModal = ({
         let repoDataResults = [];
         if (onsDigitalRepos.length > 0) {
           const data = await fetchRepositoryData(onsDigitalRepos);
+          console.log('===============================================');
+          console.log(data);
+          console.log('===============================================');
           if (data?.repositories) {
             repoDataResults = data.repositories;
             setRepoData(data.repositories);
@@ -97,7 +100,6 @@ const ProjectModal = ({
   if (!isOpen || !project) return null;
 
   const renderRepoInfo = () => {
-    if (!project.Repo) return null;
     return (
       <div>
         <div
@@ -229,10 +231,10 @@ const ProjectModal = ({
               </>
             )}
           </div>
-        ) : !project.Repo ? (
+        ) : !project.Repo && expandedItems.repositories ? (
           <div className="repo-info-loading">
-            No repository information available. The repositories may not have
-            been found yet or from another organisation.
+            No repository information available. Please ensure repositories are
+            added to this project.
           </div>
         ) : null}
       </div>
