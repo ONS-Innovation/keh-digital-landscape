@@ -225,9 +225,7 @@ test('Technology cards show coloured border for directorate-specific positions',
         if (expectedBorderColor) {
           expect(borderColor.toLowerCase()).toBe(expectedBorderColor);
         } else {
-          expect(borderColor).not.toMatch(
-            /transparent|rgba\(0,\s*0,\s*0,\s*0\)/i
-          );
+          expect(borderColor).not.toMatch(/transparent|rgba\(0,\s*0,\s*0,\s*0\)/i);
         }
 
         // Optional: specific check for R by tech id, but using directorateData color instead of hardcoded
@@ -238,7 +236,9 @@ test('Technology cards show coloured border for directorate-specific positions',
           }
         }
 
-        if (techId.toLowerCase() === 'test-pl/sql') {
+        if (
+          techId.toLowerCase() === 'test-pl/sql'
+        ) {
           expect(borderWidth).toBe('2px');
           if (expectedBorderColor) {
             expect(borderColor.toLowerCase()).toBe(expectedBorderColor);
