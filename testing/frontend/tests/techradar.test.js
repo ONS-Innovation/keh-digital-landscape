@@ -347,3 +347,63 @@ test('Verify that blips on the radar get highlighted', async ({ page }) => {
   await expect(rHighlightCircleDGO).toHaveCount(0);
   await expect(rBlipDGO.locator('circle')).toHaveCount(1);
 });
+
+test('Verify that blips on the radar get highlighted for directorate-specific positions', async ({ page }) => {
+  await interceptAPICall({ page });
+
+  const techPositionMap = {};
+  for (const dir of Object.keys(reviewPositionCases)) {
+    const positions = reviewPositionCases[dir];
+    for (const ring of Object.keys(positions)) {
+      for (const techId of positions[ring]) {
+        if (!techPositionMap[techId]) techPositionMap[techId] = {};
+        if (!techPositionMap[techId][ring]) techPositionMap[techId][ring] = new Set();
+        techPositionMap[techId][ring].add(dir);
+      }
+    }
+  }
+
+  const directorateSelector = page.locator('select#directorate-select');
+
+  // Iterate all directorates
+  for (const dir of Object.keys(reviewPositionCases)) {
+    // Support both label and value selection (names vs ids)
+    try {
+      await directorateSelector.selectOption({ label: dir });
+    } catch {
+      await directorateSelector.selectOption(dir);
+    }
+
+    const positions = reviewPositionCases[dir];
+
+    // For each ring/position and technology in this directorate
+    for (const ring of Object.keys(positions)) {
+      for (const techId of positions[ring]) {
+        const isDirectorateSpecific =
+          techPositionMap[techId] &&
+          techPositionMap[techId][ring] &&
+          techPositionMap[techId][ring].size === 1;
+
+        // Use attribute selector to handle ids containing '/'
+        const blip = page.locator(`[id="blip-${techId}"]`);
+        const present = await blip.count();
+        if (present === 0) {
+          // Tech not on radar for this directorate; skip
+          continue;
+        }
+
+        // Base circle should have ring class (adopt/trial/assess/hold)
+        const baseCircle = blip.locator('circle').first();
+        await expect(baseCircle).toHaveClass(new RegExp(ring));
+
+        // Highlight circle is rendered when directorate-specific
+        const highlightCircle = blip.locator('circle.blip-highlight');
+        if (isDirectorateSpecific) {
+          await expect(highlightCircle).toHaveCount(1); // highlighted
+        } else {
+          await expect(highlightCircle).toHaveCount(0); // not highlighted
+        }
+      }
+    }
+  }
+});
