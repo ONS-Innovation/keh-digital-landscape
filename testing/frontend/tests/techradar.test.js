@@ -348,7 +348,9 @@ test('Verify that blips on the radar get highlighted', async ({ page }) => {
   await expect(rBlipDGO.locator('circle')).toHaveCount(1);
 });
 
-test('Verify that blips on the radar get highlighted for directorate-specific positions', async ({ page }) => {
+test('Verify that blips on the radar get highlighted for directorate-specific positions', async ({
+  page,
+}) => {
   await interceptAPICall({ page });
 
   const techPositionMap = {};
@@ -357,7 +359,8 @@ test('Verify that blips on the radar get highlighted for directorate-specific po
     for (const ring of Object.keys(positions)) {
       for (const techId of positions[ring]) {
         if (!techPositionMap[techId]) techPositionMap[techId] = {};
-        if (!techPositionMap[techId][ring]) techPositionMap[techId][ring] = new Set();
+        if (!techPositionMap[techId][ring])
+          techPositionMap[techId][ring] = new Set();
         techPositionMap[techId][ring].add(dir);
       }
     }
