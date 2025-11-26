@@ -307,7 +307,7 @@ class GitHubService {
         'GitHub API error while fetching organisation verified emails:',
         {
           error: error.message,
-        } 
+        }
       );
     }
   }
