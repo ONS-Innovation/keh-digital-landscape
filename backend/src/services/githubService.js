@@ -2,10 +2,6 @@ const {
   getAppAndInstallation,
 } = require('../utilities/getAppAndInstallation.js');
 const logger = require('../config/logger');
-const {
-  CompleteMultipartUploadOutputFilterSensitiveLog,
-  CompleteMultipartUploadRequestFilterSensitiveLog,
-} = require('@aws-sdk/client-s3');
 
 /**
  * GitHubService class for managing GitHub operations
@@ -311,7 +307,7 @@ class GitHubService {
         'GitHub API error while fetching organisation verified emails:',
         {
           error: error.message,
-        }
+        } 
       );
     }
   }
