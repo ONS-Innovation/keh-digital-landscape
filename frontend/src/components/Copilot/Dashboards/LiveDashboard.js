@@ -9,6 +9,7 @@ import TableBreakdown from '../Breakdowns/TableBreakdown';
 import { getFormattedTime } from '../../../utilities/getFormattedTime';
 import CompletionsCards from '../Breakdowns/CompletionsCards';
 import ChatCards from '../Breakdowns/ChatCards';
+import { formatNumberWithCommas } from '../../../utilities/getCommaSeparated';
 
 function LiveDashboard({
   scope,
@@ -18,6 +19,7 @@ function LiveDashboard({
   inactiveDays,
   setInactiveDays,
   inactivityDate,
+  notify,
 
 }) {
   let completions, chats, seats, inactiveUsers;
@@ -49,43 +51,45 @@ function LiveDashboard({
     setInactiveDays(prev => prev + 1);
   };
 
-  const exportEngagedUserData = async () => {
+  // Export the Seat data to S3 as CSV
+  const exportUserSeatData = async (engaged) => {
+    let seatsData;
+    let engagedMessage;
+
+    if (engaged) {
+      seatsData = seats.activeSeatData;
+      engagedMessage = "Engaged";
+    } else if (!engaged) {
+      seatsData = inactiveUsers;
+      engagedMessage = "Inactive";
+    } else {
+      notify('error', 'Failed to export engaged user activity');
+    }
+
+    // Format all Last activity times to be readable
+    seatsData.forEach(user => {
+      user.last_activity_at = getFormattedTime(user.last_activity_at);
+    });
+
+    // Send API request to backend
     try {
-     const response = await fetch('/copilot/api/seats/export', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      credentials: 'include',
-      body: JSON.stringify({
-        seats: seats.activeSeatData,
-        engaged: true,
-      }),
-     });
-    
-     const result = await response.json();
-     console.log('Exported:', result);
-    } catch (Exception) {
-      console.error(Exception);
+      const response = await fetch('/copilot/api/seats/export', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          seats: seatsData,
+          engaged: engaged,
+        }),
+      });
+
+      const result = await response.json();
+      notify('success', `Exported ${engagedMessage} user activity!`);
+    } catch (error) {
+      notify('error', `Failed to export ${engagedMessage} user activity`);
     }
   }
 
-  const exportUnengagedUserData = async () => {
-   try {
-     const response = await fetch('/copilot/api/seats/export', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      credentials: 'include',
-      body: JSON.stringify({
-        seats: inactiveUsers,
-        engaged: false,
-      }),
-     });
-    
-     const result = await response.json();
-     console.log('Exported:', result);
-    } catch (Exception) {
-      console.error(Exception);
-    }
-  }  
 
   const handleKeyDown = (event, action) => {
     if (event.key === 'Enter' || event.key === ' ') {
@@ -320,7 +324,8 @@ function LiveDashboard({
                 <h3>Engaged Users</h3>
                 <button 
                 className="export-engaged-button"
-                onClick={exportEngagedUserData}
+                onClick={() => exportUserSeatData(true)}
+                onKeyDown={e => handleKeyDown(e, () => exportUserSeatData(true))}
                 type="button"
                 aria-label="Exported the data for all Engaged users">Export Engaged Users</button>
               </div>
@@ -355,7 +360,8 @@ function LiveDashboard({
                 <h3>Inactive Users</h3>
                 <button 
                 className="export-unengaged-button"
-                onClick={exportUnengagedUserData}
+                onClick={() => exportUserSeatData(false)}
+                onKeyDown={e => handleKeyDown(e, () => exportUserSeatData(false))}
                 type="button"
                 aria-label="Exported the data for all Unengaged users">Export Inactive Users</button>
               </div>

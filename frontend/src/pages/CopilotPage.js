@@ -211,6 +211,20 @@ function CopilotDashboard() {
 
   const data = getDashboardData();
 
+  // Centralized notification handler for child components
+  const notify = (type, message, options) => {
+    switch (type) {
+      case 'success':
+        return toast.success(message, options);
+      case 'error':
+        return toast.error(message, options);
+      case 'loading':
+        return toast.loading(message, options);
+      default:
+        return toast(message, options);
+    }
+  };
+
   /**
    * Initialise state from URL parameters (only runs once on component mount)
    */
@@ -719,6 +733,7 @@ function CopilotDashboard() {
               inactiveDays={inactiveDays}
               setInactiveDays={setInactiveDays}
               inactivityDate={inactivityDate}
+              notify={notify}
             />
           ) : (
             <HistoricDashboard
