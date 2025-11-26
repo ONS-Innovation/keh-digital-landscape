@@ -20,7 +20,6 @@ function LiveDashboard({
   setInactiveDays,
   inactivityDate,
   notify,
-
 }) {
   let completions, chats, seats, inactiveUsers;
   if (!isLiveLoading) {
@@ -52,16 +51,16 @@ function LiveDashboard({
   };
 
   // Export the Seat data to S3 as CSV
-  const exportUserSeatData = async (engaged) => {
+  const exportUserSeatData = async engaged => {
     let seatsData;
     let engagedMessage;
 
     if (engaged) {
       seatsData = seats.activeSeatData;
-      engagedMessage = "Engaged";
+      engagedMessage = 'engaged';
     } else if (!engaged) {
       seatsData = inactiveUsers;
-      engagedMessage = "Inactive";
+      engagedMessage = 'inactive';
     } else {
       notify('error', 'Failed to export engaged user activity');
     }
@@ -84,12 +83,14 @@ function LiveDashboard({
       });
 
       const result = await response.json();
-      notify('success', `Exported ${engagedMessage} user activity!`);
+      notify(
+        'success',
+        `Success: exported ${engagedMessage} user activity to S3`
+      );
     } catch (error) {
-      notify('error', `Failed to export ${engagedMessage} user activity`);
+      notify('error', `Failed to export ${engagedMessage} user activity to S3`);
     }
-  }
-
+  };
 
   const handleKeyDown = (event, action) => {
     if (event.key === 'Enter' || event.key === ' ') {
@@ -322,12 +323,17 @@ function LiveDashboard({
             <div className="seat-breakdown-item">
               <div className="seat-breakdown-header">
                 <h3>Engaged Users</h3>
-                <button 
-                className="export-engaged-button"
-                onClick={() => exportUserSeatData(true)}
-                onKeyDown={e => handleKeyDown(e, () => exportUserSeatData(true))}
-                type="button"
-                aria-label="Exported the data for all Engaged users">Export Engaged Users</button>
+                <button
+                  className="export-engaged-button"
+                  onClick={() => exportUserSeatData(true)}
+                  onKeyDown={e =>
+                    handleKeyDown(e, () => exportUserSeatData(true))
+                  }
+                  type="button"
+                  aria-label="Exported the data for all Engaged users"
+                >
+                  Export Engaged Users
+                </button>
               </div>
               <TableBreakdown
                 data={seats.activeSeatData.reduce((acc, user, i) => {
@@ -358,12 +364,17 @@ function LiveDashboard({
             <div className="seat-breakdown-item">
               <div className="seat-breakdown-header">
                 <h3>Inactive Users</h3>
-                <button 
-                className="export-unengaged-button"
-                onClick={() => exportUserSeatData(false)}
-                onKeyDown={e => handleKeyDown(e, () => exportUserSeatData(false))}
-                type="button"
-                aria-label="Exported the data for all Unengaged users">Export Inactive Users</button>
+                <button
+                  className="export-unengaged-button"
+                  onClick={() => exportUserSeatData(false)}
+                  onKeyDown={e =>
+                    handleKeyDown(e, () => exportUserSeatData(false))
+                  }
+                  type="button"
+                  aria-label="Exported the data for all Unengaged users"
+                >
+                  Export Inactive Users
+                </button>
               </div>
               <TableBreakdown
                 data={inactiveUsers.reduce((acc, user, i) => {
@@ -395,8 +406,8 @@ function LiveDashboard({
           <div>
             <p style={{ textAlign: 'center', marginTop: '16px' }}>
               <small style={{ color: '#888' }}>
-                Users with a last activity of <b>{inactivityDate}</b> have{' '}
-                <b>not</b> used their license.
+                Users with a last activity of <b>1 January 1900 at 00:00</b>{' '}
+                have <b>not</b> used their license.
               </small>
             </p>
           </div>

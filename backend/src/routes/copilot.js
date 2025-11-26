@@ -307,7 +307,6 @@ router.get('/github/oauth/login', (req, res) => {
   res.redirect(loginUrl);
 });
 
-
 /**
  * Endpoint for redirecting to upload seat data to S3
  * @route POST /copilot/api/seats/export
@@ -316,25 +315,23 @@ router.get('/github/oauth/login', (req, res) => {
 router.post('/seats/export', async (req, res) => {
   try {
     // Retrieve seats and engaged data
-    const {seats, engaged} = req.body;
+    const { seats, engaged } = req.body;
 
     if (!Array.isArray(seats) || seats.length === 0) {
-      logger.error("No seat rows provided");
-      return res.status(400).json({error:'no seat rows provided'})
+      logger.error('No seat rows provided');
+      return res.status(400).json({ error: 'no seat rows provided' });
     }
 
-    const isEngaged = engaged
+    const isEngaged = engaged;
 
     const result = await seatDataUpload(seats, isEngaged);
 
     // Return a response
-    return res.status(201).json({ ok: true, ...result});
-
+    return res.status(201).json({ ok: true, ...result });
   } catch (Exception) {
     logger.error(Exception);
-    return res.status(500).json({error: 'Upload failed'});
+    return res.status(500).json({ error: 'Upload failed' });
   }
 });
-
 
 module.exports = router;

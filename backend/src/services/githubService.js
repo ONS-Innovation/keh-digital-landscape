@@ -2,7 +2,10 @@ const {
   getAppAndInstallation,
 } = require('../utilities/getAppAndInstallation.js');
 const logger = require('../config/logger');
-const { CompleteMultipartUploadOutputFilterSensitiveLog, CompleteMultipartUploadRequestFilterSensitiveLog } = require('@aws-sdk/client-s3');
+const {
+  CompleteMultipartUploadOutputFilterSensitiveLog,
+  CompleteMultipartUploadRequestFilterSensitiveLog,
+} = require('@aws-sdk/client-s3');
 
 /**
  * GitHubService class for managing GitHub operations
@@ -109,10 +112,8 @@ class GitHubService {
         currentSeats.length < 100 ? (hasMore = false) : (page += 1);
       }
 
-      const emailList = [];
-
       // Call exchangeUsernameToEmail for each seat
-      const emailPromises = allSeats.map(async (seat) => {
+      const emailPromises = allSeats.map(async seat => {
         const email = await this.exchangeUsernameToEmail(seat.assignee.login);
         seat.assignee.email = email;
         return seat;
@@ -276,7 +277,7 @@ class GitHubService {
       // collect the Octokit
       const octokit = await getAppAndInstallation();
 
-      // Create the Github GraphQL query 
+      // Create the Github GraphQL query
       const query = `
       query($org: String!, $username: String!) {
         user(login: $username) {
@@ -288,7 +289,7 @@ class GitHubService {
 
       const parameters = {
         username: username,
-        org: this.org
+        org: this.org,
       };
 
       // Send API request to Github GraphQL
@@ -296,18 +297,22 @@ class GitHubService {
 
       // Only collect the ONS emails
       let userEmail = response?.user?.organizationVerifiedDomainEmails;
-      
+
       if (!userEmail || userEmail.length === 0) {
-        logger.error(`User: ${username} does not have an ONS specific email attached to their account.`);
+        logger.error(
+          `User: ${username} does not have an ONS specific email attached to their account.`
+        );
         return null;
-      } 
+      }
 
       return userEmail;
-      
     } catch (error) {
-      logger.error('GitHub API error while fetching organisation verified emails:', {
-        error: error.message,
-      });
+      logger.error(
+        'GitHub API error while fetching organisation verified emails:',
+        {
+          error: error.message,
+        }
+      );
     }
   }
 }

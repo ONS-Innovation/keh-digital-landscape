@@ -76,7 +76,6 @@ class S3Service {
     }
   }
 
-
   /**
    * Put an CSV object to S3 bucket
    * @param {string} bucket - Bucket name or bucket key from this.buckets
@@ -103,7 +102,6 @@ class S3Service {
       throw error;
     }
   }
-
 
   /**
    * Get a signed URL for an S3 object and fetch its content
