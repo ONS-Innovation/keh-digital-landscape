@@ -2,6 +2,7 @@ import { test, expect } from 'playwright/test';
 import { radarData } from './data/radarData';
 import { csvData } from './data/csvData';
 import { nodeBlipCases } from './data/nodeBlipCases';
+import { reviewPositionCases } from './data/reviewPositionCases';
 import { directorateData } from './data/directorateData';
 
 // Function to intercept and mock the API call
@@ -236,4 +237,176 @@ test('Check that C# is not on the radar for Digital Services and DGO, but is in 
   // Check that C# is not present for DGO
   const blipC_DGO = await page.locator('g#blip-test-Csharp');
   await expect(blipC_DGO).toHaveCount(0);
+});
+
+test('Verify that highlighted technologies appear in the list for each directorate', async ({
+  page,
+}) => {
+  await interceptAPICall({ page });
+
+  // 'technology-name': {
+  //  'ring': [
+  //      'directorate-1',
+  //      'directorate-2',
+  //  ]
+  //}
+
+  const techPositionMap = {};
+  for (const dir of Object.keys(reviewPositionCases)) {
+    const positions = reviewPositionCases[dir];
+    for (const position of Object.keys(positions)) {
+      for (const techId of positions[position]) {
+        if (!techPositionMap[techId]) techPositionMap[techId] = {};
+        if (!techPositionMap[techId][position]) {
+          techPositionMap[techId][position] = new Set();
+        }
+        techPositionMap[techId][position].add(dir);
+      }
+    }
+  }
+
+  const directorateSelect = page.locator('#directorate-select');
+
+  // Iterate through each directorate
+  for (const dir of Object.keys(reviewPositionCases)) {
+    await directorateSelect.selectOption(dir);
+
+    const positions = reviewPositionCases[dir];
+
+    let directorateSpecificCount = 0;
+    // Count how many techs are directorate-specific in this directorate
+    for (const position of Object.keys(positions)) {
+      for (const techId of positions[position]) {
+        const isDirectorateSpecific =
+          techPositionMap[techId] &&
+          techPositionMap[techId][position] &&
+          techPositionMap[techId][position].size === 1;
+
+        if (isDirectorateSpecific) {
+          directorateSpecificCount += 1;
+        }
+      }
+    }
+
+    const highlightedCount = await page.getByRole('listitem').evaluateAll(
+      els =>
+        els.filter(el => {
+          const style = window.getComputedStyle(el);
+          const width = parseFloat(style.borderLeftWidth || '0');
+          return style.borderLeftStyle !== 'none' && width > 0;
+        }).length
+    );
+
+    expect(highlightedCount).toBe(directorateSpecificCount);
+  }
+});
+
+test('Verify that blips on the radar get highlighted', async ({ page }) => {
+  await interceptAPICall({ page });
+
+  const directorateSelector = page.locator('select#directorate-select');
+
+  // Select DSC → R is ADOPT → should be highlighted
+  await directorateSelector.selectOption({
+    label: 'Data Science Campus (DSC)',
+  });
+
+  const rBlipDSC = page.locator('g#blip-test-r');
+
+  // Base ring class check
+  const rBaseCircleDSC = rBlipDSC.locator('circle').first();
+  await expect(rBaseCircleDSC).toHaveClass(/adopt/);
+
+  // Highlight circle exists
+  const rHighlightCircleDSC = rBlipDSC.locator('circle.blip-highlight');
+  await expect(rHighlightCircleDSC).toHaveCount(1); // highlighted
+  await expect(rBlipDSC.locator('circle')).toHaveCount(2); // base + highlight
+
+  // Switch to DS → R is TRIAL → should NOT be highlighted
+  await directorateSelector.selectOption({ label: 'Digital Services (DS)' });
+
+  const rBlipDS = page.locator('g#blip-test-r');
+  const rBaseCircleDS = rBlipDS.locator('circle').first();
+  await expect(rBaseCircleDS).toHaveClass(/trial/);
+
+  const rHighlightCircleDS = rBlipDS.locator('circle.blip-highlight');
+  await expect(rHighlightCircleDS).toHaveCount(0); // NOT highlighted
+  await expect(rBlipDS.locator('circle')).toHaveCount(1); // only base circle
+
+  // Switch to DGO → R is TRIAL → still not highlighted
+  await directorateSelector.selectOption({
+    label: 'Data Growth and Operations (DGO)',
+  });
+
+  const rBlipDGO = page.locator('g#blip-test-r');
+
+  const rBaseCircleDGO = rBlipDGO.locator('circle').first();
+  await expect(rBaseCircleDGO).toHaveClass(/trial/);
+
+  const rHighlightCircleDGO = rBlipDGO.locator('circle.blip-highlight');
+  await expect(rHighlightCircleDGO).toHaveCount(0);
+  await expect(rBlipDGO.locator('circle')).toHaveCount(1);
+});
+
+test('Verify that blips on the radar get highlighted for directorate-specific positions', async ({
+  page,
+}) => {
+  await interceptAPICall({ page });
+
+  const techPositionMap = {};
+  for (const dir of Object.keys(reviewPositionCases)) {
+    const positions = reviewPositionCases[dir];
+    for (const ring of Object.keys(positions)) {
+      for (const techId of positions[ring]) {
+        if (!techPositionMap[techId]) techPositionMap[techId] = {};
+        if (!techPositionMap[techId][ring])
+          techPositionMap[techId][ring] = new Set();
+        techPositionMap[techId][ring].add(dir);
+      }
+    }
+  }
+
+  const directorateSelector = page.locator('select#directorate-select');
+
+  // Iterate all directorates
+  for (const dir of Object.keys(reviewPositionCases)) {
+    // Support both label and value selection (names vs ids)
+    try {
+      await directorateSelector.selectOption({ label: dir });
+    } catch {
+      await directorateSelector.selectOption(dir);
+    }
+
+    const positions = reviewPositionCases[dir];
+
+    // For each ring/position and technology in this directorate
+    for (const ring of Object.keys(positions)) {
+      for (const techId of positions[ring]) {
+        const isDirectorateSpecific =
+          techPositionMap[techId] &&
+          techPositionMap[techId][ring] &&
+          techPositionMap[techId][ring].size === 1;
+
+        // Use attribute selector to handle ids containing '/'
+        const blip = page.locator(`[id="blip-${techId}"]`);
+        const present = await blip.count();
+        if (present === 0) {
+          // Tech not on radar for this directorate; skip
+          continue;
+        }
+
+        // Base circle should have ring class (adopt/trial/assess/hold)
+        const baseCircle = blip.locator('circle').first();
+        await expect(baseCircle).toHaveClass(new RegExp(ring));
+
+        // Highlight circle is rendered when directorate-specific
+        const highlightCircle = blip.locator('circle.blip-highlight');
+        if (isDirectorateSpecific) {
+          await expect(highlightCircle).toHaveCount(1); // highlighted
+        } else {
+          await expect(highlightCircle).toHaveCount(0); // not highlighted
+        }
+      }
+    }
+  }
 });
