@@ -152,9 +152,7 @@ jobs:
                 export CONTAINERS_STORAGE_CONF="/tmp/containers-storage.conf"
                 cat > "$CONTAINERS_STORAGE_CONF" <<'EOF'
                 [storage]
-                driver = "overlay"
-                [storage.options.overlay]
-                mount_program = "/usr/bin/fuse-overlayfs"
+                driver = "vfs"
                 EOF
 
                 export repo_name=((repo_name))
