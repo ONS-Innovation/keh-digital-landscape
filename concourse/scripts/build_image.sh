@@ -29,8 +29,8 @@ if [ -z "${shared_ecr_folder:-}" ]; then
   podman tag ${container_image_frontend}:${tag} ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${container_image_frontend}:${tag}
   podman tag ${container_image_backend}:${tag} ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${container_image_backend}:${tag}
 else
-  podman tag ${container_image_frontend}:${tag} ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${spaces}/${container_image_frontend}:${tag}
-  podman tag ${container_image_backend}:${tag} ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${spaces}/${container_image_backend}:${tag}
+  podman tag ${container_image_frontend}:${tag} ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${container_image_frontend}:${tag}
+  podman tag ${container_image_backend}:${tag} ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${container_image_backend}:${tag}
 fi
 # Push images in parallel
 echo "Pushing images to AWS in parallel..."
@@ -41,9 +41,9 @@ if [ -z "${shared_ecr_folder:-}" ]; then
   pid4=$!
   wait $pid3 $pid4
 else
-  podman push ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${spaces}/${container_image_frontend}:${tag} &
+  podman push ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${container_image_frontend}:${tag} &
   pid5=$!
-  podman push ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${spaces}/${container_image_backend}:${tag} &
+  podman push ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${container_image_backend}:${tag} &
   pid6=$!
   wait $pid5 $pid6
 fi

@@ -83,6 +83,7 @@ jobs:
             - name: github-release
           outputs:
             - name: tag-output # Output directory for the tag
+            - name: built-images # Output directory for built images
           params:
             branch: ((branch))
           run:
@@ -151,6 +152,9 @@ jobs:
                 chmod u+x ./resource-repo/concourse/scripts/build_image.sh
                 source ./resource-repo/concourse/scripts/assume_role.sh
                 ./resource-repo/concourse/scripts/build_image.sh
+                echo "Saving images as tar for next task..."
+                podman save "${container_image_frontend}:${tag}" -o built-images/frontend.tar
+                podman save "${container_image_backend}:${tag}" -o built-images/backend.tar
         timeout: 15m
       - task: push-image-to-shared-ecr
         privileged: true
@@ -163,6 +167,7 @@ jobs:
           inputs:
             - name: resource-repo
             - name: github-release-tag
+            - name: built-images
           params:
             aws_account_id: ((aws_account_ecr_shared_account))
             aws_role_arn: arn:aws:iam::((aws_account_sdp_dev)):role/sdp-concourse-dev
@@ -179,10 +184,18 @@ jobs:
                 # Write the tag to a file for output
                 echo "${tag}" > release-tag-output/tag
                 echo "Using tag: ${tag}"
-                chmod u+x ./resource-repo/concourse/scripts/assume_role.sh
-                chmod u+x ./resource-repo/concourse/scripts/build_image.sh
-                source ./resource-repo/concourse/scripts/assume_role.sh
-                ./resource-repo/concourse/scripts/build_image.sh
+                echo "Loading previously built images (tag=${tag})"
+                podman load -i built-images/frontend.tar
+                podman load -i built-images/backend.tar
+                frontend_repo=$(echo "$secrets" | jq -r .container_image_frontend)
+                backend_repo=$(echo "$secrets" | jq -r .container_image_backend)
+                aws ecr get-login-password --region eu-west-2 | podman login --username AWS --password-stdin ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com
+                echo "Retagging for shared ECR folder..."
+                podman tag "${frontend_repo}:${tag}" "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${frontend_repo}:${tag}"
+                podman tag "${backend_repo}:${tag}" "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${backend_repo}:${tag}"
+                echo "Pushing retagged images..."
+                podman push "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${frontend_repo}:${tag}"
+                podman push "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${backend_repo}:${tag}"
       - <<: *terraform-task
         params:
           github_access_token: ((github_access_token))
