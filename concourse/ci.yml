@@ -221,17 +221,17 @@ jobs:
                 echo "${tag}" > release-tag-output/tag
                 echo "Using tag: ${tag}"
                 echo "Loading previously built images (tag=${tag})"
-                podman load -i built-images/frontend.tar
-                podman load -i built-images/backend.tar
+                podman --storage-driver=vfs load -i built-images/frontend.tar
+                podman --storage-driver=vfs load -i built-images/backend.tar
                 frontend_repo=$(echo "$secrets" | jq -r .container_image_frontend)
                 backend_repo=$(echo "$secrets" | jq -r .container_image_backend)
-                aws ecr get-login-password --region eu-west-2 | podman login --username AWS --password-stdin ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com
+                aws ecr get-login-password --region eu-west-2 | podman --storage-driver=vfs login --username AWS --password-stdin ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com
                 echo "Retagging for shared ECR folder..."
-                podman tag "${frontend_repo}:${tag}" "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${frontend_repo}:${tag}"
-                podman tag "${backend_repo}:${tag}" "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${backend_repo}:${tag}"
+                podman --storage-driver=vfs tag "${frontend_repo}:${tag}" "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${frontend_repo}:${tag}"
+                podman --storage-driver=vfs tag "${backend_repo}:${tag}" "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${backend_repo}:${tag}"
                 echo "Pushing retagged images..."
-                podman push --compression-format=gzip "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${frontend_repo}:${tag}"
-                podman push --compression-format=gzip "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${backend_repo}:${tag}"
+                podman --storage-driver=vfs push --compression-format=gzip "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${frontend_repo}:${tag}"
+                podman --storage-driver=vfs push --compression-format=gzip "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${backend_repo}:${tag}"
       - <<: *terraform-task
         params:
           github_access_token: ((github_access_token))
