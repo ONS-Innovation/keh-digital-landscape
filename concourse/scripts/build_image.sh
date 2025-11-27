@@ -1,5 +1,6 @@
 set -euo pipefail
 
+rm -rf /var/lib/containers/storage
 aws ecr get-login-password --region eu-west-2 | podman --storage-driver=vfs login --username AWS --password-stdin ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com
 
 if [ -z "${shared_ecr_folder:-}" ]; then

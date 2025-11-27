@@ -173,7 +173,6 @@ jobs:
                 fi
 
                 echo "Saving images as tar for next task..."
-                rm -rf /var/lib/containers/storage
                 podman --storage-driver=vfs save "${frontend_repo}:${tag}" -o built-images/frontend.tar
                 podman --storage-driver=vfs save "${backend_repo}:${tag}" -o built-images/backend.tar
         timeout: 15m
