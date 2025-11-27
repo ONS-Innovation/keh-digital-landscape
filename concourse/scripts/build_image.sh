@@ -1,7 +1,7 @@
 set -euo pipefail
 
-# export STORAGE_DRIVER=vfs
-# export PODMAN_SYSTEMD_UNIT=concourse-task
+export STORAGE_DRIVER=vfs
+export PODMAN_SYSTEMD_UNIT=concourse-task
 
 aws ecr get-login-password --region eu-west-2 | podman login --username AWS --password-stdin ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com
 
@@ -35,15 +35,15 @@ fi
 # Push images in parallel
 echo "Pushing images to AWS in parallel..."
 if [ -z "${shared_ecr_folder:-}" ]; then
-  podman push --force-compression ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${container_image_frontend}:${tag} &
+  podman push --compression-format=gzip ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${container_image_frontend}:${tag} &
   pid3=$!
-  podman push --force-compression ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${container_image_backend}:${tag} &
+  podman push --compression-format=gzip ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${container_image_backend}:${tag} &
   pid4=$!
   wait $pid3 $pid4
 else
-  podman push --force-compression ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${container_image_frontend}:${tag} &
+  podman push --compression-format=gzip ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${container_image_frontend}:${tag} &
   pid5=$!
-  podman push --force-compression ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${container_image_backend}:${tag} &
+  podman push --compression-format=gzip ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${container_image_backend}:${tag} &
   pid6=$!
   wait $pid5 $pid6
 fi
