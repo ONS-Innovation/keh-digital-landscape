@@ -45,3 +45,7 @@ else
   pid6=$!
   wait $pid5 $pid6
 fi
+
+echo "Saving images as tar for next task..."
+podman --storage-driver=vfs save "${container_image_frontend}:${tag}" -o built-images/frontend.tar
+podman --storage-driver=vfs save "${container_image_backend}:${tag}" -o built-images/backend.tar
