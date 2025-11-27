@@ -14,6 +14,8 @@ fi
 
 container_image_frontend=$(echo "$secrets" | jq -r .container_image_frontend)
 container_image_backend=$(echo "$secrets" | jq -r .container_image_backend)
+export container_image_frontend
+export container_image_backend
 
 # Build images in parallel
 echo "Building images in parallel..."
