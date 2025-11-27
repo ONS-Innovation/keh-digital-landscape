@@ -149,11 +149,6 @@ jobs:
 
                 export XDG_RUNTIME_DIR="/tmp/podman-run"
                 mkdir -p "$XDG_RUNTIME_DIR"
-                export CONTAINERS_STORAGE_CONF="/tmp/containers-storage.conf"
-                cat > "$CONTAINERS_STORAGE_CONF" <<'EOF'
-                [storage]
-                driver = "vfs"
-                EOF
 
                 export repo_name=((repo_name))
                 export tag=$(cat github-release-tag/tag)
@@ -207,11 +202,6 @@ jobs:
 
                 export XDG_RUNTIME_DIR="/tmp/podman-run"
                 mkdir -p "$XDG_RUNTIME_DIR"
-                export CONTAINERS_STORAGE_CONF="/tmp/containers-storage.conf"
-                cat > "$CONTAINERS_STORAGE_CONF" <<'EOF'
-                [storage]
-                driver = "vfs"
-                EOF
 
                 export repo_name=((repo_name))
                 export tag=$(cat github-release-tag/tag)
