@@ -232,8 +232,8 @@ jobs:
                 podman tag "${frontend_repo}:${tag}" "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${frontend_repo}:${tag}"
                 podman tag "${backend_repo}:${tag}" "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${backend_repo}:${tag}"
                 echo "Pushing retagged images..."
-                podman push --disable-content-trust "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${frontend_repo}:${tag}"
-                podman push --disable-content-trust "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${backend_repo}:${tag}"
+                podman push --force-compression "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${frontend_repo}:${tag}"
+                podman push --force-compression "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${backend_repo}:${tag}"
       - <<: *terraform-task
         params:
           github_access_token: ((github_access_token))
