@@ -156,8 +156,6 @@ jobs:
                 [storage.options.overlay]
                 mount_program = "/usr/bin/fuse-overlayfs"
                 EOF
-                # Clean state per task
-                podman system reset -f || true
 
                 export repo_name=((repo_name))
                 export tag=$(cat github-release-tag/tag)
@@ -218,8 +216,6 @@ jobs:
                 [storage.options.overlay]
                 mount_program = "/usr/bin/fuse-overlayfs"
                 EOF
-                # Clean state per task
-                podman system reset -f || true
 
                 export repo_name=((repo_name))
                 export tag=$(cat github-release-tag/tag)
@@ -236,8 +232,8 @@ jobs:
                 podman tag "${frontend_repo}:${tag}" "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${frontend_repo}:${tag}"
                 podman tag "${backend_repo}:${tag}" "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${backend_repo}:${tag}"
                 echo "Pushing retagged images..."
-                podman push "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${frontend_repo}:${tag}"
-                podman push "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${backend_repo}:${tag}"
+                podman push --disable-content-trust "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${frontend_repo}:${tag}"
+                podman push --disable-content-trust "${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${backend_repo}:${tag}"
       - <<: *terraform-task
         params:
           github_access_token: ((github_access_token))
