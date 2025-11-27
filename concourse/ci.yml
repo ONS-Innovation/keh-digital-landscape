@@ -152,6 +152,37 @@ jobs:
                 source ./resource-repo/concourse/scripts/assume_role.sh
                 ./resource-repo/concourse/scripts/build_image.sh
         timeout: 15m
+      - task: push-image-to-shared-ecr
+        privileged: true
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: hashicorp/terraform
+          inputs:
+            - name: resource-repo
+            - name: github-release-tag
+          params:
+            aws_account_id: ((aws_account_ecr_shared_account))
+            aws_role_arn: arn:aws:iam::((aws_account_sdp_dev)):role/sdp-concourse-dev
+            secrets: ((sdp_dev_digital_landscape_secrets))
+            shared_ecr_folder: keh-digital-landscape
+          run:
+            path: sh
+            args:
+              - -cx
+              - |
+                apk add --no-cache aws-cli podman jq iptables curl
+                export repo_name=((repo_name))
+                export tag=$(cat github-release-tag/tag)
+                # Write the tag to a file for output
+                echo "${tag}" > release-tag-output/tag
+                echo "Using tag: ${tag}"
+                chmod u+x ./resource-repo/concourse/scripts/assume_role.sh
+                chmod u+x ./resource-repo/concourse/scripts/build_image.sh
+                source ./resource-repo/concourse/scripts/assume_role.sh
+                ./resource-repo/concourse/scripts/build_image.sh
       - <<: *terraform-task
         params:
           github_access_token: ((github_access_token))

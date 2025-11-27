@@ -5,9 +5,11 @@ export PODMAN_SYSTEMD_UNIT=concourse-task
 
 aws ecr get-login-password --region eu-west-2 | podman --storage-driver=vfs login --username AWS --password-stdin ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com
 
-support_mail=$(echo "$secrets" | jq -r .support_mail)
-if [ -z "$support_mail" ] || [ "$support_mail" = "null" ]; then
-  echo "support_mail variable missing"
+if [ -z "$shared_ecr_folder" ]; then
+  support_mail=$(echo "$secrets" | jq -r .support_mail)
+  if [ -z "$support_mail" ] || [ "$support_mail" = "null" ]; then
+    echo "support_mail variable missing"
+  fi
 fi
 
 container_image_frontend=$(echo "$secrets" | jq -r .container_image_frontend)
@@ -23,13 +25,25 @@ wait $pid1 $pid2
 
 # Tag images
 echo "Tagging images..."
-podman tag ${container_image_frontend}:${tag} ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${container_image_frontend}:${tag}
-podman tag ${container_image_backend}:${tag} ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${container_image_backend}:${tag}
-
+if [ -z "$shared_ecr_folder" ]; then
+  podman tag ${container_image_frontend}:${tag} ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${container_image_frontend}:${tag}
+  podman tag ${container_image_backend}:${tag} ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${container_image_backend}:${tag}
+else
+  podman tag ${container_image_frontend}:${tag} ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${spaces}/${container_image_frontend}:${tag}
+  podman tag ${container_image_backend}:${tag} ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${spaces}/${container_image_backend}:${tag}
+fi
 # Push images in parallel
 echo "Pushing images to AWS in parallel..."
-podman push ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${container_image_frontend}:${tag} &
-pid3=$!
-podman push ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${container_image_backend}:${tag} &
-pid4=$!
-wait $pid3 $pid4
+if [ -z "$shared_ecr_folder" ]; then
+  podman push ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${container_image_frontend}:${tag} &
+  pid3=$!
+  podman push ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${container_image_backend}:${tag} &
+  pid4=$!
+  wait $pid3 $pid4
+else
+  podman push ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${spaces}/${container_image_frontend}:${tag} &
+  pid5=$!
+  podman push ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${spaces}/${container_image_backend}:${tag} &
+  pid6=$!
+  wait $pid5 $pid6
+fi
