@@ -146,6 +146,19 @@ jobs:
               - -cx
               - |
                 apk add --no-cache aws-cli fuse-overlayfs podman jq iptables curl
+
+                export XDG_RUNTIME_DIR="/tmp/podman-run"
+                mkdir -p "$XDG_RUNTIME_DIR"
+                export CONTAINERS_STORAGE_CONF="/tmp/containers-storage.conf"
+                cat > "$CONTAINERS_STORAGE_CONF" <<'EOF'
+                [storage]
+                driver = "overlay"
+                [storage.options.overlay]
+                mount_program = "/usr/bin/fuse-overlayfs"
+                EOF
+                # Clean state per task
+                podman system reset -f || true
+
                 export repo_name=((repo_name))
                 export tag=$(cat github-release-tag/tag)
                 # Write the tag to a file for output
@@ -195,6 +208,19 @@ jobs:
               - -cx
               - |
                 apk add --no-cache aws-cli fuse-overlayfs podman jq iptables curl
+
+                export XDG_RUNTIME_DIR="/tmp/podman-run"
+                mkdir -p "$XDG_RUNTIME_DIR"
+                export CONTAINERS_STORAGE_CONF="/tmp/containers-storage.conf"
+                cat > "$CONTAINERS_STORAGE_CONF" <<'EOF'
+                [storage]
+                driver = "overlay"
+                [storage.options.overlay]
+                mount_program = "/usr/bin/fuse-overlayfs"
+                EOF
+                # Clean state per task
+                podman system reset -f || true
+
                 export repo_name=((repo_name))
                 export tag=$(cat github-release-tag/tag)
                 # Write the tag to a file for output
