@@ -155,9 +155,22 @@ jobs:
                 chmod u+x ./resource-repo/concourse/scripts/build_image.sh
                 source ./resource-repo/concourse/scripts/assume_role.sh
                 ./resource-repo/concourse/scripts/build_image.sh
+                
+                # Resolve repos again from secrets (this shell has them)
+                mkdir -p built-images
+                frontend_repo=$(echo "$secrets" | jq -r .container_image_frontend)
+                backend_repo=$(echo "$secrets" | jq -r .container_image_backend)
+
+                if [ -z "$frontend_repo" ] || [ "$frontend_repo" = "null" ]; then
+                  echo "ERROR: container_image_frontend missing"; exit 1
+                fi
+                if [ -z "$backend_repo" ] || [ "$backend_repo" = "null" ]; then
+                  echo "ERROR: container_image_backend missing"; exit 1
+                fi
+
                 echo "Saving images as tar for next task..."
-                podman save "${container_image_frontend}:${tag}" -o built-images/frontend.tar
-                podman save "${container_image_backend}:${tag}" -o built-images/backend.tar
+                podman save "${frontend_repo}:${tag}" -o built-images/frontend.tar
+                podman save "${backend_repo}:${tag}" -o built-images/backend.tar
         timeout: 15m
       - task: push-image-to-shared-ecr
         privileged: true
