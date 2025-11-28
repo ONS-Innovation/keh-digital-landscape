@@ -8,15 +8,15 @@ The frontend testing is run using Playwright. Playwright is an end-to-end test f
 
 The tests are implemented in the `testing/frontend/tests` directory using the Playwright framework. The tests are organised into the following files:
 
-| Test File | Description |
-|-----------|-------------|
-| `project.test.js` | Tests for Projects page and ProjectModal component, including field validation, miscellaneous items, and repository display |
-| `review.test.js` | Tests for Tech Review functionality |
-| `search.test.js` | Tests for search teams functionality |
-| `techradar.test.js` | Tests for Tech Radar (Infrastructure GCP & AWS nodes, Languages JavaScript/TypeScript and Java nodes) |
-| `techreviewer.test.js` | Tests for Tech Reviewer functionality |
-| `bugreport.test.js` | Tests for Bug Report component |
-| `toast-error.test.js` | Tests for Toast error notifications |
+| Test File              | Description                                                                                                                 |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `project.test.js`      | Tests for Projects page and ProjectModal component, including field validation, miscellaneous items, and repository display |
+| `review.test.js`       | Tests for Tech Review functionality                                                                                         |
+| `search.test.js`       | Tests for search teams functionality                                                                                        |
+| `techradar.test.js`    | Tests for Tech Radar (Infrastructure GCP & AWS nodes, Languages JavaScript/TypeScript and Java nodes)                       |
+| `techreviewer.test.js` | Tests for Tech Reviewer functionality                                                                                       |
+| `bugreport.test.js`    | Tests for Bug Report component                                                                                              |
+| `toast-error.test.js`  | Tests for Toast error notifications                                                                                         |
 
 ### Running Tests
 
