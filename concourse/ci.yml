@@ -145,13 +145,7 @@ jobs:
             args:
               - -cx
               - |
-                apk add --no-cache aws-cli fuse-overlayfs podman jq iptables curl
-
-                export XDG_RUNTIME_DIR="/tmp/podman-run"
-                mkdir -p "$XDG_RUNTIME_DIR"
-
-                mkdir -p built-images
-
+                apk add --no-cache aws-cli podman jq iptables curl
                 export repo_name=((repo_name))
                 export tag=$(cat github-release-tag/tag)
                 # Write the tag to a file for output
