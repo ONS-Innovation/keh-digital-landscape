@@ -1,3 +1,5 @@
+# NOT in USE at the moment
+
 set -euo pipefail
 
 #This script is to push the images to the shared ECR repo
