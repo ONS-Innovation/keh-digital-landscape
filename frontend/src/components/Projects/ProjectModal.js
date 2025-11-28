@@ -60,9 +60,6 @@ const ProjectModal = ({
         let repoDataResults = [];
         if (onsDigitalRepos.length > 0) {
           const data = await fetchRepositoryData(onsDigitalRepos);
-          console.log('===============================================');
-          console.log(data);
-          console.log('===============================================');
           if (data?.repositories) {
             repoDataResults = data.repositories;
             setRepoData(data.repositories);
