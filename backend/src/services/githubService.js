@@ -79,44 +79,7 @@ class GitHubService {
       throw error;
     }
   }
-
-  /**
-   * Get GitHub Copilot seat data with pagination
-   * @returns {Promise<Array>} Array of all seats
-   */
-  async getCopilotSeats() {
-    try {
-      const octokit = await getAppAndInstallation();
-      let allSeats = [];
-      let page = 1;
-      let hasMore = true;
-
-      while (hasMore) {
-        const response = await octokit.request(
-          `GET /orgs/${this.org}/copilot/billing/seats`,
-          {
-            per_page: 100,
-            page,
-            headers: {
-              'X-GitHub-Api-Version': '2022-11-28',
-            },
-          }
-        );
-
-        const currentSeats = response.data.seats ?? [];
-        allSeats.push(...currentSeats);
-        currentSeats.length < 100 ? (hasMore = false) : (page += 1);
-      }
-
-      return allSeats;
-    } catch (error) {
-      logger.error('GitHub API error while fetching Copilot seats:', {
-        error: error.message,
-      });
-      throw error;
-    }
-  }
-
+  
   /**
    * Get team members for a specific team in the organisation
    * @param {string} teamSlug - The slug of the team to fetch members for
