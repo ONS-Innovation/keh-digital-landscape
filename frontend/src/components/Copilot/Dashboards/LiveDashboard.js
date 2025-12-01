@@ -231,10 +231,9 @@ function LiveDashboard({
         </div>
       )}
 
-      <h1 className="title">Seat Information</h1>
       {isSeatsLoading ? (
         <h3>Loading seat data...</h3>
-      ) : (
+      ) :  scope === 'team' && (
         <div>
           <div>
             <p>
