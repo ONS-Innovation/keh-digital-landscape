@@ -81,16 +81,11 @@ function CopilotDashboard() {
     setStartDate(start);
     setEndDate(end);
     setSliderValues([1, getEndSliderValue(liveUsage)]);
-    const teamSeats = await fetchTeamSeatData(slug);
-    if (fetchTeamDataCancelRef.current.cancelled) return;
-    const activeTeamSeats = filterInactiveUsers(teamSeats, startDate);
 
     setLiveTeamData({
       allUsage: liveUsage ?? [],
       filteredUsage: liveUsage ?? [],
       processedUsage: liveUsage ? processUsageData(liveUsage) : [],
-      allSeatData: teamSeats,
-      activeSeatData: activeTeamSeats,
     });
 
     // Ensure we're showing the team data view
@@ -129,15 +124,6 @@ function CopilotDashboard() {
       ...prev,
       filteredUsage: filteredData,
       processedUsage: processUsageData(filteredData),
-    }));
-  };
-
-  const setActiveSeats = (data, setData) => {
-    if (!data || !inactivityDate) return;
-    const activeSeats = filterInactiveUsers(data, inactivityDate);
-    setData(prev => ({
-      ...prev,
-      activeSeatData: activeSeats,
     }));
   };
 
@@ -183,10 +169,9 @@ function CopilotDashboard() {
   const [viewMode, setViewMode] = useState('live');
   const [scope, setScope] = useState('organisation');
   const [isLiveLoading, setIsLiveLoading] = useState(true);
-  const [isSeatsLoading, setIsSeatsLoading] = useState(true);
   const [isHistoricLoading, setIsHistoricLoading] = useState(false);
   const [hasFetchedHistoric, setHasFetchedHistoric] = useState(false);
-  const { getLiveUsageData, getHistoricUsageData, getSeatsData } = useData();
+  const { getLiveUsageData, getHistoricUsageData } = useData(); //HERE
   const [sliderFinished, setSliderFinished] = useState(true);
   const [viewDatesBy, setViewDatesBy] = useState('Day');
   const [isSelectingTeam, setIsSelectingTeam] = useState(false);
@@ -282,13 +267,11 @@ function CopilotDashboard() {
   useEffect(() => {
     const code = searchParams.get('code');
 
-    const fetchLiveAndSeatsData = async () => {
+    const fetchLiveData = async () => {
       setIsLiveLoading(true);
-      setIsSeatsLoading(true);
 
-      const [liveUsage, seats] = await Promise.all([
+      const [liveUsage] = await Promise.all([
         getLiveUsageData(),
-        getSeatsData(),
       ]);
 
       const { start, end } = initialiseDateRange(liveUsage);
@@ -300,12 +283,9 @@ function CopilotDashboard() {
         allUsage: liveUsage ?? [],
         filteredUsage: liveUsage ?? [],
         processedUsage: liveUsage ? processUsageData(liveUsage) : [],
-        allSeatData: seats ?? [],
-        activeSeatData: seats ? filterInactiveUsers(seats, start) : [],
       });
 
       setIsLiveLoading(false);
-      setIsSeatsLoading(false);
     };
 
     const authenticateGitHubUser = async () => {
@@ -349,7 +329,7 @@ function CopilotDashboard() {
       }
     };
 
-    fetchLiveAndSeatsData();
+    fetchLiveData();
     authenticateGitHubUser();
   }, []);
 
@@ -396,21 +376,6 @@ function CopilotDashboard() {
     startDate,
     endDate,
     sliderFinished,
-  ]);
-
-  /**
-   * Update active seats
-   */
-  useEffect(() => {
-    scope === 'organisation'
-      ? setActiveSeats(liveOrgData.allSeatData, setLiveOrgData)
-      : setActiveSeats(liveTeamData.allSeatData, setLiveTeamData);
-  }, [
-    scope,
-    inactiveDays,
-    inactivityDate,
-    liveOrgData.allSeatData,
-    liveTeamData.allSeatData,
   ]);
 
   /**
@@ -715,10 +680,6 @@ function CopilotDashboard() {
               isLiveLoading={
                 scope === 'organisation' ? isLiveLoading : isTeamLoading
               }
-              isSeatsLoading={isSeatsLoading}
-              inactiveDays={inactiveDays}
-              setInactiveDays={setInactiveDays}
-              inactivityDate={inactivityDate}
             />
           ) : (
             <HistoricDashboard
