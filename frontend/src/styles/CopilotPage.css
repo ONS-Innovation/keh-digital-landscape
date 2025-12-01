@@ -166,17 +166,6 @@ html:not(.dark)
   padding-top: 50px;
 }
 
-.seat-breakdown {
-  display: flex;
-  flex-direction: row;
-  gap: 16px;
-  align-items: center;
-}
-
-.seat-breakdown-item {
-  width: 100%;
-}
-
 .inactivity-toggle {
   display: flex;
   flex-direction: row;
@@ -562,23 +551,6 @@ html:not(.dark)
 .team-card-button:active {
   transform: translateY(0);
   box-shadow: none;
-}
-
-@media (max-width: 1024px) {
-  .seat-breakdown {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .teams-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  }
-}
-
-@media (max-width: 640px) {
-  .teams-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 .team-selection-header {

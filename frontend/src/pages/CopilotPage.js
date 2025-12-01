@@ -4,10 +4,6 @@ import Header from '../components/Header/Header';
 import LiveDashboard from '../components/Copilot/Dashboards/LiveDashboard';
 import HistoricDashboard from '../components/Copilot/Dashboards/HistoricDashboard';
 import {
-  filterInactiveUsers,
-  fetchTeamSeatData,
-} from '../utilities/getSeatData';
-import {
   filterUsageData,
   processUsageData,
   fetchTeamLiveUsageData,
@@ -131,8 +127,6 @@ function CopilotDashboard() {
     allUsage: [],
     filteredUsage: [],
     processedUsage: [],
-    allSeatData: [],
-    activeSeatData: [],
   });
 
   const [historicOrgData, setHistoricOrgData] = useState({
@@ -146,8 +140,6 @@ function CopilotDashboard() {
     allUsage: [],
     filteredUsage: [],
     processedUsage: [],
-    allSeatData: [],
-    activeSeatData: [],
   });
 
   const dateOptions = [
@@ -158,12 +150,6 @@ function CopilotDashboard() {
   ];
 
   const [sliderValues, setSliderValues] = useState(null);
-  const [inactiveDays, setInactiveDays] = useState(28);
-  const inactivityDate = useMemo(() => {
-    const date = new Date();
-    date.setDate(date.getDate() - inactiveDays);
-    return date.toISOString().slice(0, 10);
-  }, [inactiveDays]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [viewMode, setViewMode] = useState('live');
@@ -670,7 +656,7 @@ function CopilotDashboard() {
               <p className="disclaimer-banner">
                 {isCopilotAdmin
                   ? 'As a Copilot Admin, you can view any valid team. The GitHub API does not return Copilot team usage data if there are fewer than 5 members with Copilot licenses.'
-                  : 'The GitHub API does not return Copilot team usage data if there are fewer than 5 members with Copilot licenses. This may result in only seat statistics being viewable on the dashboard.'}
+                  : 'The GitHub API does not return Copilot team usage data if there are fewer than 5 members with Copilot licenses.'}
               </p>
             </>
           ) : viewMode === 'live' ? (
