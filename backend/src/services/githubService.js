@@ -79,7 +79,7 @@ class GitHubService {
       throw error;
     }
   }
-  
+
   /**
    * Get team members for a specific team in the organisation
    * @param {string} teamSlug - The slug of the team to fetch members for
