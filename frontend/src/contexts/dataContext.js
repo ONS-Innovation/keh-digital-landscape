@@ -33,7 +33,6 @@ export function DataProvider({ children }) {
   const [pageBanners, setPageBanners] = useState(new Map());
   const [liveUsageData, setLiveUsageData] = useState(null);
   const [historicUsageData, setHistoricUsageData] = useState(null);
-  const [seatsData, setSeatsData] = useState(null);
   const [userData, setUserData] = useState(null);
 
   const pendingRequests = useRef({
@@ -44,7 +43,6 @@ export function DataProvider({ children }) {
     banners: new Map(),
     liveUsageData: null,
     historicUsageData: null,
-    seatsData: null,
     userData: null,
   });
 
@@ -258,31 +256,6 @@ export function DataProvider({ children }) {
   };
 
   /**
-   * Fetches and caches seat data for the organisation.
-   *
-   * @param {boolean} [forceRefresh=false] - Whether to force a refresh of the cached data
-   * @returns {Promise<Object>} The seat data
-   */
-  const getSeatsData = async (forceRefresh = false) => {
-    if (!forceRefresh && seatsData) {
-      return seatsData;
-    }
-
-    if (pendingRequests.current.seatsData) {
-      return pendingRequests.current.seatsData;
-    }
-
-    const promise = fetchOrgSeatData().then(data => {
-      setSeatsData(data);
-      pendingRequests.current.seatsData = null;
-      return data;
-    });
-
-    pendingRequests.current.seatsData = promise;
-    return promise;
-  };
-
-  /**
    * Fetches and caches user information.
    *
    * @param {boolean} [forceRefresh=false] - Whether to force a refresh of the cached data
@@ -315,7 +288,6 @@ export function DataProvider({ children }) {
     setPageBanners(new Map());
     setLiveUsageData(null);
     setHistoricUsageData(null);
-    setSeatsData(null);
     setUserData(null);
     pendingRequests.current = {
       csv: null,
@@ -325,7 +297,6 @@ export function DataProvider({ children }) {
       banners: new Map(),
       liveUsageData: null,
       historicUsageData: null,
-      seatsData: null,
       userData: null,
     };
   };
@@ -344,7 +315,6 @@ export function DataProvider({ children }) {
         clearCache,
         getLiveUsageData,
         getHistoricUsageData,
-        getSeatsData,
         getUserData,
       }}
     >
