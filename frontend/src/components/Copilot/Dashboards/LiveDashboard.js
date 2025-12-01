@@ -9,16 +9,12 @@ import TableBreakdown from '../Breakdowns/TableBreakdown';
 import CompletionsCards from '../Breakdowns/CompletionsCards';
 import ChatCards from '../Breakdowns/ChatCards';
 
-function LiveDashboard({
-  scope,
-  data,
-  isLiveLoading,
-}) {
+function LiveDashboard({ scope, data, isLiveLoading }) {
   let completions, chats;
   if (!isLiveLoading) {
     completions = data.processedUsage.completions;
     chats = data.processedUsage.chat;
-  };
+  }
 
   const handleKeyDown = (event, action) => {
     if (event.key === 'Enter' || event.key === ' ') {
