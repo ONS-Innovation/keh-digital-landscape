@@ -262,37 +262,6 @@ This test verifies:
 - Response structure matches live data format
 - All data fields have correct types
 
-#### Organisation Seat Data Retrieval
-
-Tests retrieving Copilot seat data for the organisation:
-
-::: testing.backend.src.test_copilot.test_seats_get
-
-This test verifies:
-
-- Successful retrieval of organisation-wide seat allocation
-- Response contains creation dates, assignees and activity timestamps
-- All data fields have correct types
-
-#### Team Seat Data Retrieval
-
-Tests retrieving Copilot seat data for teams:
-
-::: testing.backend.src.test_copilot.test_team_seats_get_no_auth
-
-::: testing.backend.src.test_copilot.test_team_seats_get_with_auth
-
-::: testing.backend.src.test_copilot.test_team_seats_get_invalid_slug
-
-::: testing.backend.src.test_copilot.test_team_seats_get_missing_slug
-
-These tests verify:
-
-- Authentication is required for team seat data access
-- Successful retrieval of team-specific seat allocation
-- Error handling for invalid team slugs
-- Validation of required parameters
-
 #### Team Listing
 
 Tests retrieving available teams:
