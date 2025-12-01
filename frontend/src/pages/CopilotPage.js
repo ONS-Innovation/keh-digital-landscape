@@ -157,7 +157,7 @@ function CopilotDashboard() {
   const [isLiveLoading, setIsLiveLoading] = useState(true);
   const [isHistoricLoading, setIsHistoricLoading] = useState(false);
   const [hasFetchedHistoric, setHasFetchedHistoric] = useState(false);
-  const { getLiveUsageData, getHistoricUsageData } = useData(); //HERE
+  const { getLiveUsageData, getHistoricUsageData } = useData();
   const [sliderFinished, setSliderFinished] = useState(true);
   const [viewDatesBy, setViewDatesBy] = useState('Day');
   const [isSelectingTeam, setIsSelectingTeam] = useState(false);
