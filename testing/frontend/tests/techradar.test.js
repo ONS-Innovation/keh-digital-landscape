@@ -301,53 +301,6 @@ test('Verify that highlighted technologies appear in the list for each directora
   }
 });
 
-test('Verify that blips on the radar get highlighted', async ({ page }) => {
-  await interceptAPICall({ page });
-
-  const directorateSelector = page.locator('select#directorate-select');
-
-  // Select DSC → R is ADOPT → should be highlighted
-  await directorateSelector.selectOption({
-    label: 'Data Science Campus (DSC)',
-  });
-
-  const rBlipDSC = page.locator('g#blip-test-r');
-
-  // Base ring class check
-  const rBaseCircleDSC = rBlipDSC.locator('circle').first();
-  await expect(rBaseCircleDSC).toHaveClass(/adopt/);
-
-  // Highlight circle exists
-  const rHighlightCircleDSC = rBlipDSC.locator('circle.blip-highlight');
-  await expect(rHighlightCircleDSC).toHaveCount(1); // highlighted
-  await expect(rBlipDSC.locator('circle')).toHaveCount(2); // base + highlight
-
-  // Switch to DS → R is TRIAL → should NOT be highlighted
-  await directorateSelector.selectOption({ label: 'Digital Services (DS)' });
-
-  const rBlipDS = page.locator('g#blip-test-r');
-  const rBaseCircleDS = rBlipDS.locator('circle').first();
-  await expect(rBaseCircleDS).toHaveClass(/trial/);
-
-  const rHighlightCircleDS = rBlipDS.locator('circle.blip-highlight');
-  await expect(rHighlightCircleDS).toHaveCount(0); // NOT highlighted
-  await expect(rBlipDS.locator('circle')).toHaveCount(1); // only base circle
-
-  // Switch to DGO → R is TRIAL → still not highlighted
-  await directorateSelector.selectOption({
-    label: 'Data Growth and Operations (DGO)',
-  });
-
-  const rBlipDGO = page.locator('g#blip-test-r');
-
-  const rBaseCircleDGO = rBlipDGO.locator('circle').first();
-  await expect(rBaseCircleDGO).toHaveClass(/trial/);
-
-  const rHighlightCircleDGO = rBlipDGO.locator('circle.blip-highlight');
-  await expect(rHighlightCircleDGO).toHaveCount(0);
-  await expect(rBlipDGO.locator('circle')).toHaveCount(1);
-});
-
 test('Verify that blips on the radar get highlighted for directorate-specific positions', async ({
   page,
 }) => {
