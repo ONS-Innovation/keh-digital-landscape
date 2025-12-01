@@ -256,9 +256,7 @@ function CopilotDashboard() {
     const fetchLiveData = async () => {
       setIsLiveLoading(true);
 
-      const [liveUsage] = await Promise.all([
-        getLiveUsageData(),
-      ]);
+      const [liveUsage] = await Promise.all([getLiveUsageData()]);
 
       const { start, end } = initialiseDateRange(liveUsage);
       setStartDate(start);
