@@ -323,16 +323,10 @@ test('Verify that blips on the radar get highlighted for directorate-specific po
 
   // Iterate all directorates
   for (const dir of Object.keys(reviewPositionCases)) {
-    // Support both label and value selection (names vs ids)
-    try {
-      await directorateSelector.selectOption({ label: dir });
-    } catch {
-      await directorateSelector.selectOption(dir);
-    }
+    await directorateSelector.selectOption({ label: dir });
 
     const positions = reviewPositionCases[dir];
 
-    // For each ring/position and technology in this directorate
     for (const ring of Object.keys(positions)) {
       for (const techId of positions[ring]) {
         const isDirectorateSpecific =
@@ -343,21 +337,16 @@ test('Verify that blips on the radar get highlighted for directorate-specific po
         // Use attribute selector to handle ids containing '/'
         const blip = page.locator(`[id="blip-${techId}"]`);
         const present = await blip.count();
-        if (present === 0) {
-          // Tech not on radar for this directorate; skip
-          continue;
-        }
+        if (present === 0) continue;
 
-        // Base circle should have ring class (adopt/trial/assess/hold)
         const baseCircle = blip.locator('circle').first();
         await expect(baseCircle).toHaveClass(new RegExp(ring));
 
-        // Highlight circle is rendered when directorate-specific
         const highlightCircle = blip.locator('circle.blip-highlight');
         if (isDirectorateSpecific) {
-          await expect(highlightCircle).toHaveCount(1); // highlighted
+          await expect(highlightCircle).toHaveCount(1);
         } else {
-          await expect(highlightCircle).toHaveCount(0); // not highlighted
+          await expect(highlightCircle).toHaveCount(0);
         }
       }
     }
