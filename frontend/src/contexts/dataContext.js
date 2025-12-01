@@ -10,7 +10,6 @@ import {
   fetchOrgLiveUsageData,
   fetchOrgHistoricUsageData,
 } from '../utilities/getUsageData';
-import { fetchOrgSeatData } from '../utilities/getSeatData';
 import { fetchUserInfo } from '../utilities/getUser';
 /**
  * DataContext provides centralized data management and caching for the application.
