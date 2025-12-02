@@ -23,6 +23,24 @@ resources:
     type: key-value
     source:
       file: tag-output/tag
+  - name: images-to-shared-ecr-frontend
+    type: registry-image
+    source:
+      repository: keh-digital-landscape-frontend
+      aws_role_arn: arn:aws:iam::((aws_account_sdp_((env)))):role/sdp-concourse-((env))
+      aws_account_id: "013353241801"
+      aws_region: eu-west-2
+    params:
+      env: ((env))
+  - name: images-to-shared-ecr-backend
+    type: registry-image
+    source:
+      repository: keh-digital-landscape-backend
+      aws_role_arn: arn:aws:iam::((aws_account_sdp_((env)))):role/sdp-concourse-((env))
+      aws_account_id: "013353241801"
+      aws_region: eu-west-2
+    params:
+      env: ((env))
 
 # Define the common terraform task as an anchor
 terraform-task: &terraform-task
@@ -156,50 +174,21 @@ jobs:
                 source ./resource-repo/concourse/scripts/assume_role.sh
                 ./resource-repo/concourse/scripts/build_image.sh
         timeout: 15m
-      - task: push-image-to-shared-ecr
-        privileged: true
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: hashicorp/terraform
+      - in_parallel:
+        - put: images-to-shared-ecr-frontend
           inputs:
-            - name: resource-repo
-            - name: github-release-tag
-            - name: built-images
+            - built-images
+            - release-tag-output
           params:
-            shared_aws_account_id: ((aws_account_ecr_shared_account))
-            aws_role_arn: arn:aws:iam::((aws_account_sdp_dev)):role/sdp-concourse-dev
-            secrets: ((sdp_dev_digital_landscape_secrets))
-            shared_ecr_folder: keh-digital-landscape
-          run:
-            path: sh
-            args:
-              - -cx
-              - |
-                apk add --no-cache aws-cli fuse-overlayfs podman jq iptables curl
-
-                export XDG_RUNTIME_DIR="/tmp/podman-run"
-                mkdir -p "$XDG_RUNTIME_DIR"
-
-                # export repo_name=((repo_name))
-                export tag=$(cat github-release-tag/tag)
-                echo "Using tag: ${tag}"
-                chmod u+x ./resource-repo/concourse/scripts/assume_role.sh
-                source ./resource-repo/concourse/scripts/assume_role.sh
-                echo "Loading previously built images (tag=${tag})"
-                podman --storage-driver=vfs load -i built-images/frontend.tar
-                podman --storage-driver=vfs load -i built-images/backend.tar
-                frontend_repo=$(echo "$secrets" | jq -r .container_image_frontend)
-                backend_repo=$(echo "$secrets" | jq -r .container_image_backend)
-                aws ecr get-login-password --region eu-west-2 | podman --storage-driver=vfs login --username AWS --password-stdin ${shared_aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com
-                echo "Retagging for shared ECR folder..."
-                podman --storage-driver=vfs tag "${frontend_repo}:${tag}" "${shared_aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${frontend_repo}:${tag}"
-                podman --storage-driver=vfs tag "${backend_repo}:${tag}" "${shared_aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${backend_repo}:${tag}"
-                echo "Pushing retagged images..."
-                podman --storage-driver=vfs push --force-compression "${shared_aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${frontend_repo}:${tag}"
-                podman --storage-driver=vfs push --force-compression "${shared_aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${shared_ecr_folder}/${backend_repo}:${tag}"
+            image: built-images/frontend.tar
+            additional_tags: release-tag-output/tag
+        - put: images-to-shared-ecr-backend
+          inputs:
+            - built-images
+            - release-tag-output
+          params:
+            image: built-images/backend.tar
+            additional_tags: release-tag-output/tag
       - <<: *terraform-task
         params:
           github_access_token: ((github_access_token))
