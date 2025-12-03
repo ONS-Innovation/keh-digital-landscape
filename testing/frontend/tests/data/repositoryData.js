@@ -1,3 +1,4 @@
+// Sample repository data to test the repositories section of the projects page (projects.test.js)
 const mockRepositoryData = {
   repositories: [
     {

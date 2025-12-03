@@ -168,11 +168,12 @@ test.describe('Repository Section Tests', () => {
     project.Repo.includes('github.com/ONSDigital')
   );
 
-  test.describe('With ONSDigital repository data', () => {
-    test.beforeEach(async ({ page }) => {
-      await interceptAPICall({ page }, mockRepositoryData);
-    });
+  // Intercept API call for mock repository data
+  test.beforeEach(async ({ page }) => {
+    await interceptAPICall({ page }, mockRepositoryData);
+  });
 
+  test.describe('Tests for the repositories accordion', () => {
     test('Repositories accordion exists and is visible when a project with repos is clicked', async ({
       page,
     }) => {
@@ -213,7 +214,10 @@ test.describe('Repository Section Tests', () => {
       await repoAccordion.click();
       await expect(repoGrid).toBeVisible();
     });
+  });
 
+  test.describe('Tests that utilise ONSDigital repository data', () => {
+    // Loop through each project that has ONSDigital repos and test that it displays correct repo card details
     for (let i = 0; i < onsDigitalProjects.length; i++) {
       test(`${onsDigitalProjects[i].Project} displays correct repo card details`, async ({
         page,
@@ -227,7 +231,8 @@ test.describe('Repository Section Tests', () => {
         const repoGrid = page.locator('.repo-grid');
         await expect(repoGrid).toBeVisible();
 
-        // Should have exactly 1 repo card (matching mockRepositoryData)
+        // Should have exactly the number of repo cards as the number of repositories
+        // in mockRepositoryData for the respective project that has ONSDigital repos
         const repoCards = page.locator('.repo-card');
         const count = await repoCards.count();
         await expect(count).toBe(mockRepositoryData.repositories.length);
@@ -258,39 +263,7 @@ test.describe('Repository Section Tests', () => {
     }
   });
 
-  test.describe('Without repository data', () => {
-    test.beforeEach(async ({ page }) => {
-      await interceptAPICall({ page });
-    });
-
-    test('Placeholder message appears when project.Repo is empty', async ({
-      page,
-    }) => {
-      // Click on Sample Project 3 (which has empty Repo field)
-      const projectItem = page.locator('#project-sample-project-3');
-      await expect(projectItem).toBeVisible();
-      await projectItem.click();
-
-      // Expand repositories section if collapsed
-      const repoAccordion = page.locator('.accordion-header', {
-        hasText: 'Repositories',
-      });
-      await expect(repoAccordion).toBeVisible();
-
-      // Check for placeholder message
-      const placeholderMessage = page.locator('.repo-info-loading');
-      await expect(placeholderMessage).toBeVisible();
-      await expect(placeholderMessage).toContainText(
-        'No repository information available'
-      );
-    });
-  });
-
-  test.describe('With empty repository data (non-ONSDigital)', () => {
-    test.beforeEach(async ({ page }) => {
-      await interceptAPICall({ page }, emptyRepositoryData);
-    });
-
+  test.describe('Tests that utilise non-ONSDigital repository data', () => {
     test('Non-ONSDigital repos display without detailed information', async ({
       page,
     }) => {
@@ -315,6 +288,30 @@ test.describe('Repository Section Tests', () => {
       // Should have a badge indicating it's from GitHub or GitLab
       const badge = firstCard.locator('.repo-badge');
       await expect(badge).toBeVisible();
+    });
+  });
+
+  test.describe('Tests that utilise empty repository data', () => {
+    test('Placeholder message appears when project.Repo is empty', async ({
+      page,
+    }) => {
+      // Click on Sample Project 3 (which has empty Repo field)
+      const projectItem = page.locator('#project-sample-project-3');
+      await expect(projectItem).toBeVisible();
+      await projectItem.click();
+
+      // Expand repositories section if collapsed
+      const repoAccordion = page.locator('.accordion-header', {
+        hasText: 'Repositories',
+      });
+      await expect(repoAccordion).toBeVisible();
+
+      // Check for placeholder message
+      const placeholderMessage = page.locator('.repo-info-loading');
+      await expect(placeholderMessage).toBeVisible();
+      await expect(placeholderMessage).toContainText(
+        'No repository information available'
+      );
     });
   });
 });
