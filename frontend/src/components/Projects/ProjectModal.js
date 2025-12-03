@@ -23,7 +23,6 @@ const ProjectModal = ({
   renderTechnologyList,
   onTechClick,
 }) => {
-  console.log(JSON.stringify(project, null, 2));
   const [searchQuery, setSearchQuery] = useState('');
   const [repoData, setRepoData] = useState(null);
   const [otherRepoData, setOtherRepoData] = useState(null);
