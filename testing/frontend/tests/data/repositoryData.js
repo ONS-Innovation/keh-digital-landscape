@@ -30,19 +30,4 @@ const mockRepositoryData = {
   },
 };
 
-const emptyRepositoryData = {
-  repositories: [],
-  stats: {
-    total_repos: 0,
-    total_private_repos: 0,
-    total_public_repos: 0,
-    total_internal_repos: 0,
-  },
-  language_statistics: {},
-  metadata: {
-    last_updated: '',
-    requested_repos: [],
-  },
-};
-
-export { mockRepositoryData, emptyRepositoryData };
+export { mockRepositoryData };

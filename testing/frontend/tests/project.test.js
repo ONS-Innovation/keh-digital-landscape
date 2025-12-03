@@ -1,6 +1,6 @@
 import { test, expect } from 'playwright/test';
 import { csvData } from './data/projectTechnology';
-import { mockRepositoryData, emptyRepositoryData } from './data/repositoryData';
+import { mockRepositoryData } from './data/repositoryData';
 
 // Group definitions from ProjectModal.js
 const groups = {
