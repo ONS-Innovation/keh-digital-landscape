@@ -12,7 +12,7 @@ The tests are implemented in the `testing/frontend/tests` directory using the Pl
 | ---------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | `project.test.js`      | Tests for Projects page and ProjectModal component, including field validation, miscellaneous items, and repository display |
 | `review.test.js`       | Tests for Tech Review functionality                                                                                         |
-| `search.test.js`       | Tests for Copilot Teams section                                                                                             |
+| `search.test.js`       | Tests for Copilot Teams Search                                                                                              |
 | `techradar.test.js`    | Tests for the Tech Radar Page                                                                                               |
 | `techreviewer.test.js` | Tests for Tech Reviewer functionality                                                                                       |
 | `bugreport.test.js`    | Tests for Bug Report component                                                                                              |
