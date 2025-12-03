@@ -28,19 +28,15 @@ resources:
     source:
       repository: keh-digital-landscape-frontend
       aws_role_arn: arn:aws:iam::((aws_account_sdp_((env)))):role/sdp-concourse-((env))
-      aws_account_id: "013353241801"
+      aws_account_id: ((aws_account_ecr_shared_account))
       aws_region: eu-west-2
-    params:
-      env: ((env))
   - name: images-to-shared-ecr-backend
     type: registry-image
     source:
       repository: keh-digital-landscape-backend
       aws_role_arn: arn:aws:iam::((aws_account_sdp_((env)))):role/sdp-concourse-((env))
-      aws_account_id: "013353241801"
+      aws_account_id: ((aws_account_ecr_shared_account))
       aws_region: eu-west-2
-    params:
-      env: ((env))
 
 # Define the common terraform task as an anchor
 terraform-task: &terraform-task
