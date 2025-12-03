@@ -185,7 +185,8 @@ export const csvData = [
     Documentation_Tools: 'Sphinx',
     UI_Tools: 'Figma',
     Diagram_Tools: 'Draw.io',
-    Miscellaneous: 'Poetry: Python package management; Pytest: Testing framework',
+    Miscellaneous:
+      'Poetry: Python package management; Pytest: Testing framework',
     Publishing_Target: 'PyPI',
   },
   {
