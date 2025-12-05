@@ -33,3 +33,7 @@ pid3=$!
 podman push ${aws_account_id}.dkr.ecr.eu-west-2.amazonaws.com/${container_image_backend}:${tag} &
 pid4=$!
 wait $pid3 $pid4
+
+echo "Saving images as tar for next task..."
+podman save --format=oci-dir "${container_image_frontend}:${tag}" -o built-images/frontend.tar
+podman save --format=oci-dir "${container_image_backend}:${tag}" -o built-images/backend.tar
