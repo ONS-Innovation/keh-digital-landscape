@@ -35,5 +35,5 @@ pid4=$!
 wait $pid3 $pid4
 
 echo "Saving images as tar for next task..."
-podman save "${container_image_frontend}:${tag}" -o built-images/frontend.tar
-podman save "${container_image_backend}:${tag}" -o built-images/backend.tar
+podman save --format oci-archive "${container_image_frontend}:${tag}" -o built-images/frontend.tar
+podman save --format oci-archive "${container_image_backend}:${tag}" -o built-images/backend.tar
