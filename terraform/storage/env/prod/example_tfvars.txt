@@ -1,0 +1,5 @@
+aws_account_id        = "999999999999"
+aws_access_key_id     = "999999999999"
+aws_secret_access_key = "999999999999"
+domain                = "sdp-prod"
+service_subdomain     = "digital-landscape"
