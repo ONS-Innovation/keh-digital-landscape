@@ -2,44 +2,37 @@ import { test, expect } from 'playwright/test';
 import { csvData } from './data/projectTechnology';
 
 // Group definitions from ProjectModal.js
-const groups = {
-  languages: [
-    'Language_Main',
-    'Language_Others',
-    'Language_Frameworks',
-    'Testing_Frameworks',
-  ],
-  infrastructure: [
-    'Infrastructure',
-    'CICD',
-    'Cloud_Services',
-    'Containers',
-    'Hosted',
-    'Architectures',
-    'Environments',
-    'Publishing_Target',
-  ],
-  security: ['IAM_Services', 'Source_Control', 'Branching_Strategy'],
-  quality: ['Static_Analysis', 'Code_Formatter', 'Monitoring'],
-  data: ['Datastores', 'Database_Technologies', 'Data_Output_Formats'],
-  integrations: ['Integrations_ONS', 'Integrations_External'],
-  general: [
-    'Project_Area',
-    'DST_Area',
-    'Project_Tools',
-    'Other_Tools',
-    'Datasets_Used',
-    'Code_Editors',
-    'Communication',
-    'Collaboration',
-    'Incident_Management',
-    'Documentation_Tools',
-    'UI_Tools',
-    'Diagram_Tools',
-    'Miscellaneous',
-  ],
-  repos: ['Repo'],
-};
+  const groups = {
+    languages: [
+      'Language_Main',
+      'Language_Others',
+      'Language_Frameworks',
+    ],
+    infrastructure: [
+      'Infrastructure',
+      'CICD',
+      'Hosted',
+      'Architectures',
+      'Environments',
+      'Publishing_Target',
+    ],
+    security: ['Source_Control'],
+    quality: [],
+    data: ['Datastores', 'Database_Technologies'],
+    integrations: [],
+    general: [
+      'Project_Tools',
+      'Code_Editors',
+      'Communication',
+      'Collaboration',
+      'Incident_Management',
+      'Documentation_Tools',
+      'UI_Tools',
+      'Diagram_Tools',
+      'Miscellaneous',
+    ],
+    repos: ['Repo'],
+  };
 
 // Translations for group titles
 const groupTranslations = {
