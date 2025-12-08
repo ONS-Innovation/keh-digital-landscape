@@ -241,11 +241,7 @@ const ProjectModal = ({
 
   // Group definitions
   const groups = {
-    languages: [
-      'Language_Main',
-      'Language_Others',
-      'Language_Frameworks',
-    ],
+    languages: ['Language_Main', 'Language_Others', 'Language_Frameworks'],
     infrastructure: [
       'Infrastructure',
       'CICD',
