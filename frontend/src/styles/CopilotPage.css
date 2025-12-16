@@ -211,13 +211,39 @@ html:not(.dark)
   margin-top: 0;
 }
 
-#slider {
+#date-inputs {
   width: 100%;
-  max-width: 500px;
+  max-width: 600px;
 }
 
-#slider-end {
-  justify-self: right;
+#date-inputs input[type='date'] {
+  padding: 6px 12px;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+#date-inputs input[type='date']:hover {
+  border-color: hsl(var(--ring));
+}
+
+#date-inputs input[type='date']:focus {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+  border-color: hsl(var(--ring));
+}
+
+#date-inputs input[type='date']::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(0.5);
+}
+
+:root.dark #date-inputs input[type='date']::-webkit-calendar-picker-indicator {
+  filter: invert(1);
 }
 
 .dashboard-header {
@@ -385,25 +411,6 @@ html:not(.dark)
   outline: 1px solid hsl(var(--primary));
   outline-offset: -1px;
   background-color: hsl(var(--muted) / 0.3);
-}
-
-/* Slider accessibility improvements */
-.rc-slider-handle {
-  border: 1px solid hsl(var(--primary));
-}
-
-.rc-slider-handle:focus {
-  outline: 1px solid hsl(var(--primary));
-  outline-offset: 2px;
-  box-shadow: 0 0 0 4px hsl(var(--ring) / 0.2);
-}
-
-.rc-slider-track {
-  background-color: hsl(var(--primary));
-}
-
-.rc-slider-rail {
-  background-color: hsl(var(--muted));
 }
 
 .custom-cell {
