@@ -10,12 +10,11 @@ import {
 import {
   filterUsageData,
   processUsageData,
-  fetchTeamLiveUsageData,
+  fetchTeamsHistoricData,
+  extractTeamData,
 } from '../utilities/getUsageData';
 import PageBanner from '../components/PageBanner/PageBanner';
 import '../styles/CopilotPage.css';
-import Slider from 'rc-slider';
-import 'rc-slider/assets/index.css';
 import { useData } from '../contexts/dataContext';
 import {
   exchangeCodeForToken,
@@ -48,18 +47,6 @@ function CopilotDashboard() {
     };
   };
 
-  const getEndSliderValue = data => {
-    const startDateStr = data[0]?.date;
-    const endDateStr = data[data.length - 1]?.date;
-
-    const start = new Date(startDateStr);
-    const end = new Date(endDateStr);
-
-    // Calculate number of days between the two dates, inclusive
-    const diffDays =
-      Math.abs(Math.ceil((end - start) / (1000 * 60 * 60 * 24))) + 1;
-    return diffDays;
-  };
 
   // Cancellation ref for fetchTeamData
   const fetchTeamDataCancelRef = React.useRef({ cancelled: false });
@@ -68,27 +55,29 @@ function CopilotDashboard() {
     fetchTeamDataCancelRef.current.cancelled = false;
     setIsTeamLoading(true);
 
-    const liveUsage = await fetchTeamLiveUsageData(slug);
+    // Extract team data from the S3 historic data
+    const teamUsageData = extractTeamData(teamsHistoricData, slug);
     if (fetchTeamDataCancelRef.current.cancelled) return;
-    if (!liveUsage) {
-      toast.error('You do not have permission to view this team');
+    
+    if (!teamUsageData) {
+      toast.error('No data available for this team');
       setTeamSlug(null);
       navigate('/copilot/team', { replace: true });
+      setIsTeamLoading(false);
       return null;
     }
 
-    const { start, end } = initialiseDateRange(liveUsage);
+    const { start, end } = initialiseDateRange(teamUsageData);
     setStartDate(start);
     setEndDate(end);
-    setSliderValues([1, getEndSliderValue(liveUsage)]);
     const teamSeats = await fetchTeamSeatData(slug);
     if (fetchTeamDataCancelRef.current.cancelled) return;
     const activeTeamSeats = filterInactiveUsers(teamSeats, startDate);
 
     setLiveTeamData({
-      allUsage: liveUsage ?? [],
-      filteredUsage: liveUsage ?? [],
-      processedUsage: liveUsage ? processUsageData(liveUsage) : [],
+      allUsage: teamUsageData ?? [],
+      filteredUsage: teamUsageData ?? [],
+      processedUsage: teamUsageData ? processUsageData(teamUsageData) : [],
       allSeatData: teamSeats,
       activeSeatData: activeTeamSeats,
     });
@@ -123,7 +112,7 @@ function CopilotDashboard() {
   };
 
   const setFilteredData = (data, setData) => {
-    if (!data || !startDate || !endDate || !sliderFinished) return;
+    if (!data || !startDate || !endDate) return;
     const filteredData = filterUsageData(data, startDate, endDate);
     setData(prev => ({
       ...prev,
@@ -171,7 +160,6 @@ function CopilotDashboard() {
     { value: 'Year', label: 'Year' },
   ];
 
-  const [sliderValues, setSliderValues] = useState(null);
   const [inactiveDays, setInactiveDays] = useState(28);
   const inactivityDate = useMemo(() => {
     const date = new Date();
@@ -187,7 +175,6 @@ function CopilotDashboard() {
   const [isHistoricLoading, setIsHistoricLoading] = useState(false);
   const [hasFetchedHistoric, setHasFetchedHistoric] = useState(false);
   const { getLiveUsageData, getHistoricUsageData, getSeatsData } = useData();
-  const [sliderFinished, setSliderFinished] = useState(true);
   const [viewDatesBy, setViewDatesBy] = useState('Day');
   const [isSelectingTeam, setIsSelectingTeam] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -198,6 +185,7 @@ function CopilotDashboard() {
   const [isCopilotAdmin, setIsCopilotAdmin] = useState(false);
   const [userTeamSlugs, setUserTeamSlugs] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [teamsHistoricData, setTeamsHistoricData] = useState(null);
 
   // Filter listed available teams based on search term
   const filteredAvailableTeams = useMemo(() => {
@@ -232,8 +220,10 @@ function CopilotDashboard() {
       if (teamParam) {
         setTeamSlug(teamParam);
         setIsSelectingTeam(false);
-        // Fetch team data if we have a team slug from URL
-        fetchTeamData(teamParam);
+        // Fetch team data if we have a team slug from URL and teams data is loaded
+        if (teamsHistoricData) {
+          fetchTeamData(teamParam);
+        }
       } else {
         setIsSelectingTeam(true);
       }
@@ -246,34 +236,17 @@ function CopilotDashboard() {
 
     // Mark as initialised after processing URL parameters
     setIsInitialised(true);
-  }, []); // Empty dependency array - only run once on mount
+  }, [teamsHistoricData]); // Run when teams historic data is loaded
 
   /**
-   * Trigger data filter upon slider completion
-   *
+   * Handle manual date input changes
    */
-  const handleSliderCompletion = () => {
-    setSliderFinished(true);
-  };
-
-  /**
-   * Provide visual feedback on slider positions and dates
-   *
-   */
-  const updateSlider = values => {
-    setSliderValues(values);
-
-    const newStart = new Date();
-    newStart.setDate(
-      newStart.getDate() - getEndSliderValue(data.allUsage) - 1 + values[0]
-    );
-    const newEnd = new Date();
-    newEnd.setDate(
-      newEnd.getDate() - getEndSliderValue(data.allUsage) + values[1]
-    );
-
-    setStartDate(newStart.toISOString().slice(0, 10));
-    setEndDate(newEnd.toISOString().slice(0, 10));
+  const handleDateChange = (type, value) => {
+    if (type === 'start') {
+      setStartDate(value);
+    } else {
+      setEndDate(value);
+    }
   };
 
   /**
@@ -281,6 +254,17 @@ function CopilotDashboard() {
    */
   useEffect(() => {
     const code = searchParams.get('code');
+
+    const fetchTeamsHistoric = async () => {
+      try {
+        const teamsData = await fetchTeamsHistoricData();
+        if (teamsData) {
+          setTeamsHistoricData(teamsData);
+        }
+      } catch (err) {
+        console.error('Failed to fetch teams historic data:', err);
+      }
+    };
 
     const fetchLiveAndSeatsData = async () => {
       setIsLiveLoading(true);
@@ -294,7 +278,6 @@ function CopilotDashboard() {
       const { start, end } = initialiseDateRange(liveUsage);
       setStartDate(start);
       setEndDate(end);
-      setSliderValues([1, getEndSliderValue(liveUsage)]);
 
       setLiveOrgData({
         allUsage: liveUsage ?? [],
@@ -349,6 +332,7 @@ function CopilotDashboard() {
       }
     };
 
+    fetchTeamsHistoric();
     fetchLiveAndSeatsData();
     authenticateGitHubUser();
   }, []);
@@ -387,15 +371,12 @@ function CopilotDashboard() {
     scope === 'organisation'
       ? setFilteredData(liveOrgData.allUsage, setLiveOrgData)
       : setFilteredData(liveTeamData.allUsage, setLiveTeamData);
-
-    setSliderFinished(false);
   }, [
     scope,
     liveOrgData.allUsage,
     liveTeamData.allUsage,
     startDate,
     endDate,
-    sliderFinished,
   ]);
 
   /**
@@ -423,12 +404,11 @@ function CopilotDashboard() {
       // Only set to true if we don't have a team slug
       setIsSelectingTeam(true);
     }
-    //Reset start and end dates when switching scopes
-    const { start, end } = initialiseDateRange(data.allUsage);
-    setStartDate(start);
-    setEndDate(end);
-    setSliderValues([1, getEndSliderValue(data.allUsage)]);
-  }, [scope, teamSlug]);
+      //Reset start and end dates when switching scopes
+      const { start, end } = initialiseDateRange(data.allUsage);
+      setStartDate(start);
+      setEndDate(end);
+    }, [scope, teamSlug]);
 
   const handleLogout = async () => {
     try {
@@ -507,7 +487,6 @@ function CopilotDashboard() {
                       const { start, end } = initialiseDateRange(data.allUsage);
                       setStartDate(start);
                       setEndDate(end);
-                      setSliderValues([1, getEndSliderValue(data.allUsage)]);
                     }}
                     aria-label={`Return to team selection`}
                   >
@@ -518,43 +497,59 @@ function CopilotDashboard() {
               )}
               <div className="dashboard-header">
                 {viewMode === 'live' ? (
-                  <div id="slider">
-                    <p className="header-text">Filter Live Data Range</p>
-                    {isLiveLoading || isTeamLoading ? (
+                  <div id="date-inputs">
+                    <p className="header-text">Filter Data Range</p>
+                    {(scope === 'organisation' && isLiveLoading) ||
+                    (scope === 'team' && isTeamLoading) ? (
                       <p>Loading dates...</p>
                     ) : (
-                      <div>
-                        <p>Start: {startDate}</p>
-                        <Slider
-                          range
-                          min={1}
-                          max={getEndSliderValue(data.allUsage)}
-                          value={sliderValues}
-                          onChange={updateSlider}
-                          onChangeComplete={handleSliderCompletion}
-                          allowCross={false}
-                          ariaLabelForHandle={[
-                            'Start date selector',
-                            'End date selector',
-                          ]}
-                          ariaValueTextFormatterForHandle={(value, index) => {
-                            const usage = data?.allUsage;
-                            if (!usage?.length)
-                              return `${index === 0 ? 'Start' : 'End'} date: Unknown`;
-
-                            const totalRange = getEndSliderValue(usage);
-                            const date = new Date();
-                            date.setDate(
-                              date.getDate() - totalRange - 1 + value
-                            );
-
-                            if (isNaN(date.getTime()))
-                              return `${index === 0 ? 'Start' : 'End'} date: Invalid`;
-
-                            return `${index === 0 ? 'Start' : 'End'} date: ${date.toISOString().slice(0, 10)}`;
-                          }}
-                        />
-                        <p id="slider-end">End: {endDate}</p>
+                      <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          <label htmlFor="start-date" style={{ fontSize: '14px', fontWeight: '500' }}>
+                            Start Date
+                          </label>
+                          <input
+                            id="start-date"
+                            type="date"
+                            value={startDate}
+                            onChange={e => handleDateChange('start', e.target.value)}
+                            min={data?.allUsage?.[0]?.date}
+                            max={endDate}
+                            style={{
+                              padding: '6px 12px',
+                              border: '1px solid hsl(var(--border))',
+                              borderRadius: 'var(--radius)',
+                              backgroundColor: 'hsl(var(--background))',
+                              color: 'hsl(var(--foreground))',
+                              fontSize: '14px',
+                              fontFamily: 'inherit',
+                            }}
+                            aria-label="Start date for data range"
+                          />
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          <label htmlFor="end-date" style={{ fontSize: '14px', fontWeight: '500' }}>
+                            End Date
+                          </label>
+                          <input
+                            id="end-date"
+                            type="date"
+                            value={endDate}
+                            onChange={e => handleDateChange('end', e.target.value)}
+                            min={startDate}
+                            max={data?.allUsage?.[data.allUsage.length - 1]?.date}
+                            style={{
+                              padding: '6px 12px',
+                              border: '1px solid hsl(var(--border))',
+                              borderRadius: 'var(--radius)',
+                              backgroundColor: 'hsl(var(--background))',
+                              color: 'hsl(var(--foreground))',
+                              fontSize: '14px',
+                              fontFamily: 'inherit',
+                            }}
+                            aria-label="End date for data range"
+                          />
+                        </div>
                       </div>
                     )}
                   </div>

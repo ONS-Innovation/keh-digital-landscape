@@ -40,14 +40,14 @@ export const fetchOrgHistoricUsageData = async () => {
   }
 };
 
-export const fetchTeamLiveUsageData = async teamSlug => {
+/**
+ * Fetch all teams' historic usage data from S3
+ *
+ * @returns {Promise<Array>} - Array of team objects with historic usage data
+ */
+export const fetchTeamsHistoricData = async () => {
   try {
-    const response = await customFetch(
-      `/copilot/api/team/live?teamSlug=${teamSlug}`,
-      {
-        credentials: 'include',
-      }
-    );
+    const response = await customFetch(`/copilot/api/teams/historic`);
     if (!response.ok) {
       return null;
     }
@@ -55,9 +55,25 @@ export const fetchTeamLiveUsageData = async teamSlug => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching team usage data:', error);
+    console.error('Error fetching teams historic data:', error);
     return null;
   }
+};
+
+/**
+ * Extract specific team's usage data from the teams historic data array
+ *
+ * @param {Array} teamsData - Array of all team objects
+ * @param {string} teamSlug - The slug of the team to extract
+ * @returns {Array|null} - Array of daily usage data for the specified team, or null if not found
+ */
+export const extractTeamData = (teamsData, teamSlug) => {
+  if (!teamsData || !Array.isArray(teamsData) || !teamSlug) {
+    return null;
+  }
+
+  const teamObject = teamsData.find(team => team.team?.slug === teamSlug);
+  return teamObject?.data || null;
 };
 
 /**

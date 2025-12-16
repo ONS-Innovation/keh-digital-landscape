@@ -82,7 +82,7 @@ function LiveDashboard({
         )
       )}
       {isLiveLoading ? (
-        <h3>Loading live data...</h3>
+        <h3>Loading acceptance and engagement data...</h3>
       ) : (
         <div>
           {completions?.perGroupedPeriod.length > 0 && (
@@ -177,7 +177,7 @@ function LiveDashboard({
       )}
 
       {isLiveLoading ? (
-        <h3>Loading live data...</h3>
+        <h3>Loading engaged users and editor breakdown data...</h3>
       ) : (
         <div className="copilot-chat-container">
           {chats?.perGroupedPeriod.length > 0 && (
