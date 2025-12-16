@@ -25,7 +25,12 @@ export const reviewPositionCases = {
     ignore: [],
   },
   'Data Growth and Operations (DGO)': {
-    adopt: ['test-aws', 'test-gcp', 'test-javascript-typescript'],
+    adopt: [
+      'test-aws',
+      'test-gcp',
+      'test-pl/sql',
+      'test-javascript-typescript',
+    ],
     trial: ['test-r'],
     assess: [],
     hold: [],

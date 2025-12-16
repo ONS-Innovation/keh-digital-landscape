@@ -6,47 +6,15 @@ import AcceptanceGraph from '../Breakdowns/AcceptanceGraph';
 import EngagedUsersGraph from '../Breakdowns/EngagedUsersGraph';
 import PieChart from '../Breakdowns/PieChart';
 import TableBreakdown from '../Breakdowns/TableBreakdown';
-import { getFormattedTime } from '../../../utilities/getFormattedTime';
 import CompletionsCards from '../Breakdowns/CompletionsCards';
 import ChatCards from '../Breakdowns/ChatCards';
 
-function LiveDashboard({
-  scope,
-  data,
-  isLiveLoading,
-  isSeatsLoading,
-  inactiveDays,
-  setInactiveDays,
-  inactivityDate,
-}) {
-  let completions, chats, seats, inactiveUsers;
+function LiveDashboard({ scope, data, isLiveLoading }) {
+  let completions, chats;
   if (!isLiveLoading) {
     completions = data.processedUsage.completions;
     chats = data.processedUsage.chat;
   }
-
-  if (!isSeatsLoading) {
-    seats = {
-      allSeatData: data.allSeatData,
-      activeSeatData: data.activeSeatData,
-    };
-
-    const activeUsers = new Set(
-      seats.activeSeatData.map(user => user.assignee.id)
-    );
-
-    inactiveUsers = seats.allSeatData.filter(
-      user => !activeUsers.has(user.assignee.id)
-    );
-  }
-
-  const handleInactivityDecrease = () => {
-    setInactiveDays(prev => (prev > 0 ? prev - 1 : prev));
-  };
-
-  const handleInactivityIncrease = () => {
-    setInactiveDays(prev => prev + 1);
-  };
 
   const handleKeyDown = (event, action) => {
     if (event.key === 'Enter' || event.key === ' ') {
@@ -60,8 +28,7 @@ function LiveDashboard({
       {scope === 'team' && (
         <p className="disclaimer-banner">
           The GitHub API does not return Copilot team usage data if there are
-          fewer than 5 members with Copilot licenses. This may result in only
-          seat statistics being viewable on the dashboard.
+          fewer than 5 members with Copilot licenses.
         </p>
       )}
       {isLiveLoading ? (
@@ -228,119 +195,6 @@ function LiveDashboard({
               />
             </div>
           )}
-        </div>
-      )}
-
-      <h1 className="title">Seat Information</h1>
-      {isSeatsLoading ? (
-        <h3>Loading seat data...</h3>
-      ) : (
-        <div>
-          <div>
-            <p>
-              Users are considered inactive after {inactiveDays} days (
-              {inactivityDate})
-            </p>
-            <div className="inactivity-toggle">
-              <p>Toggle inactivity threshold:</p>
-              <button
-                className="inactivity-button"
-                onClick={handleInactivityDecrease}
-                onKeyDown={e => handleKeyDown(e, handleInactivityDecrease)}
-                aria-label="Decrease inactivity threshold by one day"
-              >
-                -
-              </button>
-              <button
-                className="inactivity-button"
-                onClick={handleInactivityIncrease}
-                onKeyDown={e => handleKeyDown(e, handleInactivityIncrease)}
-                aria-label="Increase inactivity threshold by one day"
-              >
-                +
-              </button>
-            </div>
-          </div>
-          <div className="copilot-grid">
-            <div className="stat-card">
-              <h2>Number of Seats</h2>
-              <p>{seats.allSeatData.length}</p>
-            </div>
-            <div className="stat-card">
-              <h2>Number of Engaged Users</h2>
-              <p>{seats.activeSeatData.length}</p>
-            </div>
-            <div className="stat-card">
-              <h2>Number of Inactive Users</h2>
-              <p>{seats.allSeatData.length - seats.activeSeatData.length}</p>
-            </div>
-          </div>
-          <div className="seat-breakdown">
-            <div className="seat-breakdown-item">
-              <h3>Engaged Users</h3>
-              <TableBreakdown
-                data={seats.activeSeatData.reduce((acc, user, i) => {
-                  acc[i] = {
-                    avatar: user.assignee.avatar_url,
-                    username: user.assignee.login,
-                    github: `https://github.com/${user.assignee.login}`,
-                    lastActivity: user.last_activity_at
-                      ? new Date(user.last_activity_at).getTime()
-                      : 0, // Use timestamp for sorting
-                    lastActivityDisplay: getFormattedTime(
-                      user.last_activity_at
-                    ), // Use getFormattedTime to format the date and Display it
-                  };
-                  return acc;
-                }, {})}
-                idField="username"
-                idHeader="Username"
-                tableContext="Engaged Users List"
-                columns={['avatar', 'github', 'lastActivity']}
-                headerMap={{
-                  avatar: 'Avatar',
-                  github: 'GitHub Profile',
-                  lastActivity: 'Last Activity',
-                }}
-              />
-            </div>
-            <div className="seat-breakdown-item">
-              <h3>Inactive Users</h3>
-              <TableBreakdown
-                data={inactiveUsers.reduce((acc, user, i) => {
-                  acc[i] = {
-                    avatar: user.assignee.avatar_url,
-                    username: user.assignee.login,
-                    github: `https://github.com/${user.assignee.login}`,
-                    lastActivity: user.last_activity_at
-                      ? new Date(user.last_activity_at).getTime()
-                      : 0, // Use timestamp for sorting
-                    lastActivityDisplay: getFormattedTime(
-                      user.last_activity_at
-                    ), // Use getFormattedTime to format the date and Display it
-                  };
-                  return acc;
-                }, {})}
-                idField="username"
-                idHeader="Username"
-                tableContext="Inactive Users List"
-                columns={['avatar', 'github', 'lastActivity']}
-                headerMap={{
-                  avatar: 'Avatar',
-                  github: 'GitHub Profile',
-                  lastActivity: 'Last Activity',
-                }}
-              />
-            </div>
-          </div>
-          <div>
-            <p style={{ textAlign: 'center', marginTop: '16px' }}>
-              <small style={{ color: '#888' }}>
-                Users with a last activity of <b>1900-01-01 00:00</b> have{' '}
-                <b>not</b> used their license.
-              </small>
-            </p>
-          </div>
         </div>
       )}
     </div>

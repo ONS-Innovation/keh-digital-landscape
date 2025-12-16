@@ -84,22 +84,6 @@ router.get('/teams/historic', async (req, res) => {
 });
 
 /**
- * Endpoint for fetching Copilot seat data from the Github API.
- * @route GET /copilot/api/seats
- * @returns {Object} Copilot seat JSON data
- * @throws {Error} 500 - If JSON fetching fails
- */
-router.get('/seats', async (req, res) => {
-  try {
-    const allSeats = await githubService.getCopilotSeats();
-    res.json(allSeats);
-  } catch (error) {
-    logger.error('GitHub API error:', { error: error.message });
-    res.status(500).json({ error: error.message });
-  }
-});
-
-/**
  * Endpoint for checking if the authenticated user is a copilot admin
  * @route GET /copilot/api/admin/status
  * @returns {Object} Copilot admin status and available teams
@@ -149,45 +133,6 @@ router.get('/teams', async (req, res) => {
   } catch (error) {
     logger.error('GitHub API error:', { error: error.message });
     res.status(500).json({ error: error.message });
-  }
-});
-
-/**
- * Endpoint for fetching Copilot seats for a specific team.
- * @route GET /copilot/api/team/seats
- * @param {string} teamSlug - The slug of the team to fetch seats for
- * @returns {Object} Copilot team seats JSON data
- * @throws {Error} 400 - If team slug is missing
- * @throws {Error} 401 - If authentication is missing
- * @throws {Error} 500 - If fetching fails
- */
-router.get('/team/seats', async (req, res) => {
-  const { teamSlug } = req.query;
-  if (!teamSlug) return res.status(400).json({ error: 'Missing team slug' });
-
-  const userToken = req.cookies?.githubUserToken;
-  if (!userToken) {
-    return res.status(401).json({ error: 'Authentication required' });
-  }
-
-  try {
-    // Check if user is copilot admin
-    const adminStatus = await checkCopilotAdminStatus(userToken);
-
-    const [allSeats, members] = await Promise.all([
-      githubService.getCopilotSeats(),
-      adminStatus.isAdmin
-        ? githubService.getTeamMembersAsAdmin(teamSlug)
-        : githubService.getTeamMembers(teamSlug, userToken),
-    ]);
-
-    const memberIds = new Set(members.map(m => m.id));
-    const teamSeats = allSeats.filter(s => memberIds.has(s.assignee.id));
-
-    res.json(teamSeats);
-  } catch (err) {
-    logger.error('GitHub API error:', { err: err.message });
-    res.status(500).json({ error: err.message });
   }
 });
 
