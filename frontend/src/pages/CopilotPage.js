@@ -47,7 +47,6 @@ function CopilotDashboard() {
     };
   };
 
-
   // Cancellation ref for fetchTeamData
   const fetchTeamDataCancelRef = React.useRef({ cancelled: false });
 
@@ -58,7 +57,7 @@ function CopilotDashboard() {
     // Extract team data from the S3 historic data
     const teamUsageData = extractTeamData(teamsHistoricData, slug);
     if (fetchTeamDataCancelRef.current.cancelled) return;
-    
+
     if (!teamUsageData) {
       toast.error('No data available for this team');
       setTeamSlug(null);
@@ -371,13 +370,7 @@ function CopilotDashboard() {
     scope === 'organisation'
       ? setFilteredData(liveOrgData.allUsage, setLiveOrgData)
       : setFilteredData(liveTeamData.allUsage, setLiveTeamData);
-  }, [
-    scope,
-    liveOrgData.allUsage,
-    liveTeamData.allUsage,
-    startDate,
-    endDate,
-  ]);
+  }, [scope, liveOrgData.allUsage, liveTeamData.allUsage, startDate, endDate]);
 
   /**
    * Update active seats
@@ -404,11 +397,11 @@ function CopilotDashboard() {
       // Only set to true if we don't have a team slug
       setIsSelectingTeam(true);
     }
-      //Reset start and end dates when switching scopes
-      const { start, end } = initialiseDateRange(data.allUsage);
-      setStartDate(start);
-      setEndDate(end);
-    }, [scope, teamSlug]);
+    //Reset start and end dates when switching scopes
+    const { start, end } = initialiseDateRange(data.allUsage);
+    setStartDate(start);
+    setEndDate(end);
+  }, [scope, teamSlug]);
 
   const handleLogout = async () => {
     try {
@@ -503,16 +496,33 @@ function CopilotDashboard() {
                     (scope === 'team' && isTeamLoading) ? (
                       <p>Loading dates...</p>
                     ) : (
-                      <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                          <label htmlFor="start-date" style={{ fontSize: '14px', fontWeight: '500' }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          gap: '16px',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '4px',
+                          }}
+                        >
+                          <label
+                            htmlFor="start-date"
+                            style={{ fontSize: '14px', fontWeight: '500' }}
+                          >
                             Start Date
                           </label>
                           <input
                             id="start-date"
                             type="date"
                             value={startDate}
-                            onChange={e => handleDateChange('start', e.target.value)}
+                            onChange={e =>
+                              handleDateChange('start', e.target.value)
+                            }
                             min={data?.allUsage?.[0]?.date}
                             max={endDate}
                             style={{
@@ -527,17 +537,30 @@ function CopilotDashboard() {
                             aria-label="Start date for data range"
                           />
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                          <label htmlFor="end-date" style={{ fontSize: '14px', fontWeight: '500' }}>
+                        <div
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '4px',
+                          }}
+                        >
+                          <label
+                            htmlFor="end-date"
+                            style={{ fontSize: '14px', fontWeight: '500' }}
+                          >
                             End Date
                           </label>
                           <input
                             id="end-date"
                             type="date"
                             value={endDate}
-                            onChange={e => handleDateChange('end', e.target.value)}
+                            onChange={e =>
+                              handleDateChange('end', e.target.value)
+                            }
                             min={startDate}
-                            max={data?.allUsage?.[data.allUsage.length - 1]?.date}
+                            max={
+                              data?.allUsage?.[data.allUsage.length - 1]?.date
+                            }
                             style={{
                               padding: '6px 12px',
                               border: '1px solid hsl(var(--border))',
