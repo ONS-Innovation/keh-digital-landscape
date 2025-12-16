@@ -30,10 +30,6 @@ Users who are members of teams listed in the `admin_teams.json` configuration fi
 
 Use the date input fields to filter data by selecting a custom start and end date. The date inputs are constrained to the available data range.
 
-### Seat Data Active User Filtering
-
-Adjust the inactivity threshold, measured by number of days, to see active/inactive breakdowns for users with Copilot licenses based on their recent activity.
-
 ### Authentication
 
 Users must authenticate with GitHub to view and select their teams. The dashboard displays a GitHub login button if the user is not authenticated or their session has expired.
@@ -64,7 +60,6 @@ Users must authenticate with GitHub to view and select their teams. The dashboar
 ### Organisation Admins:
 
 - Track Copilot adoption and engagement across all teams.
-- Assess seat usage and identify inactive users for licence management.
 
 ### Copilot Admins:
 
