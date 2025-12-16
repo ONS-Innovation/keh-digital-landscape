@@ -28,7 +28,7 @@ Users who are members of teams listed in the `admin_teams.json` configuration fi
 
 ### Date Range Filtering
 
-Use the dual range slider to filter live data by a custom date range. The slider automatically adjusts to the available data range.
+Use the date input fields to filter data by selecting a custom start and end date. The date inputs are constrained to the available data range.
 
 ### Seat Data Active User Filtering
 
@@ -56,7 +56,7 @@ Users must authenticate with GitHub to view and select their teams. The dashboar
 ### View Data:
 
 - Use the "Live" and "Historic" view mode toggles to switch between recent and historical trends.
-- Adjust the dual range date range slider to focus on specific periods.
+- Adjust the start and end date input fields to focus on specific periods.
 - If viewing "Historic", change the "View Dates By" option to aggregate historic data by day, week, month, or year.
 
 ## Use Cases

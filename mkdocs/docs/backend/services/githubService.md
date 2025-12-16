@@ -44,30 +44,6 @@ try {
 }
 ```
 
-### `getCopilotTeamMetrics(teamSlug)`
-
-Retrieves GitHub Copilot metrics for a team in the organisation.
-
-**Returns:** Promise resolving to Copilot metrics object
-
-**GitHub API Response:**
-
-More information on the response structure can be found [here](https://docs.github.com/en/rest/copilot/copilot-metrics?apiVersion=2022-11-28#get-copilot-metrics-for-a-team).
-
-**Example:**
-
-```javascript
-const githubService = require('./githubService');
-const teamSlug = req.query.teamSlug;
-
-try {
-  const metrics = await githubService.getCopilotTeamMetrics(teamSlug);
-  console.log(`Total Copilot seats for team: ${metrics.seat_breakdown.total}`);
-} catch (error) {
-  console.error('Failed to retrieve Copilot metrics for team:', error);
-}
-```
-
 ### `getTeamMembers(teamSlug)`
 
 Retrieves members of a specific team.
