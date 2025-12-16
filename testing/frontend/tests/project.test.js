@@ -234,8 +234,9 @@ test.describe('Repository Section Tests', () => {
         // Should have exactly the number of repo cards as the number of repositories
         // in mockRepositoryData for the respective project that has ONSDigital repos
         const repoCards = page.locator('.repo-card');
-        const count = await repoCards.count();
-        await expect(count).toBe(mockRepositoryData.repositories.length);
+        
+        // Wait for expected number of repo cards to be displayed
+        await expect(repoCards).toHaveCount(mockRepositoryData.repositories.length);
 
         // Verify the repo card has detailed information
         const firstCard = repoCards.first();
