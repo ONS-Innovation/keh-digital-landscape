@@ -468,7 +468,6 @@ function CopilotDashboard() {
                           <input
                             id="start-date"
                             type="date"
-                            className="copilot-date-input"
                             value={startDate}
                             onChange={e =>
                               handleDateChange('start', e.target.value)
@@ -494,7 +493,6 @@ function CopilotDashboard() {
                           <input
                             id="end-date"
                             type="date"
-                            className="copilot-date-input"
                             value={endDate}
                             onChange={e =>
                               handleDateChange('end', e.target.value)
