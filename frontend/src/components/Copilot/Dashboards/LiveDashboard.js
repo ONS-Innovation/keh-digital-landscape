@@ -144,7 +144,7 @@ function LiveDashboard({ scope, data, isLiveLoading }) {
       )}
 
       {isLiveLoading ? (
-        <h3>Loading engaged users and editor breakdown data...</h3>
+        <h3>Loading editor breakdown data...</h3>
       ) : (
         <div className="copilot-chat-container">
           {chats?.perGroupedPeriod.length > 0 && (
