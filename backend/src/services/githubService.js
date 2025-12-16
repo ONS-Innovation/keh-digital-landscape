@@ -11,6 +11,7 @@ class GitHubService {
     this.org = process.env.GITHUB_ORG || 'ONSdigital';
   }
 
+  // TODO: Remove this method once we refactor organisation usage page
   /**
    * Get GitHub Copilot organisation metrics
    * @returns {Promise<Object>} Organisation metrics data
@@ -31,49 +32,6 @@ class GitHubService {
       return response.data;
     } catch (error) {
       logger.error('GitHub API error while fetching Copilot org metrics:', {
-        error: error.message,
-      });
-      throw error;
-    }
-  }
-
-  /**
-   * Get GitHub Copilot team metrics
-   * @param {string} teamSlug - The slug of the team to fetch metrics for
-   * @param {string} userToken - GitHub access token
-   * @returns {Promise<Object>} Team metrics data
-   */
-  async getCopilotTeamMetrics(teamSlug, userToken) {
-    if (!userToken) {
-      throw new Error('Authentication required to access team metrics');
-    }
-
-    try {
-      // First verify the user is a member of the team using their user token
-      const userTeams = await this.getUserTeams(userToken);
-
-      // Check if the user is a member of the requested team
-      const isTeamMember = userTeams.some(team => team.slug === teamSlug);
-
-      if (!isTeamMember) {
-        throw new Error(`User is not a member of the team: ${teamSlug}`);
-      }
-
-      // Now use the app installation token to access the Copilot metrics
-      const octokit = await getAppAndInstallation();
-
-      const response = await octokit.request(
-        `GET /orgs/${this.org}/teams/${teamSlug}/copilot/metrics`,
-        {
-          headers: {
-            'X-GitHub-Api-Version': '2022-11-28',
-          },
-        }
-      );
-
-      return response.data;
-    } catch (error) {
-      logger.error('GitHub API error while fetching Copilot team metrics:', {
         error: error.message,
       });
       throw error;
@@ -191,36 +149,6 @@ class GitHubService {
       logger.error("GitHub API error while fetching user's teams:", {
         error: error.message,
       });
-      throw error;
-    }
-  }
-
-  /**
-   * Get GitHub Copilot team metrics as admin (using app installation)
-   * @param {string} teamSlug - The slug of the team to fetch metrics for
-   * @returns {Promise<Object>} Team metrics data
-   */
-  async getCopilotTeamMetricsAsAdmin(teamSlug) {
-    try {
-      const octokit = await getAppAndInstallation();
-
-      const response = await octokit.request(
-        `GET /orgs/${this.org}/teams/${teamSlug}/copilot/metrics`,
-        {
-          headers: {
-            'X-GitHub-Api-Version': '2022-11-28',
-          },
-        }
-      );
-
-      return response.data;
-    } catch (error) {
-      logger.error(
-        'GitHub API error while fetching Copilot team metrics as admin:',
-        {
-          error: error.message,
-        }
-      );
       throw error;
     }
   }

@@ -26,6 +26,7 @@ router.get('/auth/status', (req, res) => {
   }
 });
 
+// TODO: Remove this endpoint once we refactor organisation usage page
 /**
  * Endpoint for fetching Copilot organisation usage data from the Github API.
  * @route GET /copilot/api/org/live
@@ -62,43 +63,22 @@ router.get('/org/historic', async (req, res) => {
 });
 
 /**
- * Endpoint for fetching Copilot team live metrics from the Github API.
- * @route GET /copilot/api/team/live
- * @param {string} teamSlug - The slug of the team to fetch metrics for
- * @returns {Object} Team live metrics JSON data
- * @throws {Error} 400 - If team slug is missing
- * @throws {Error} 401 - If authentication is missing
+ * Endpoint for fetching all teams' historic usage data from S3.
+ * @route GET /copilot/api/teams/historic
+ * @returns {Object} All teams historic usage JSON data
  * @throws {Error} 500 - If fetching fails
  */
-router.get('/team/live', async (req, res) => {
-  const teamSlug = req.query.teamSlug;
-  if (!teamSlug) {
-    return res.status(400).json({ error: 'Missing team slug' });
-  }
-
-  const userToken = req.cookies?.githubUserToken;
-  if (!userToken) {
-    return res.status(401).json({ error: 'Authentication required' });
-  }
-
+router.get('/teams/historic', async (req, res) => {
   try {
-    // Check if user is copilot admin
-    const adminStatus = await checkCopilotAdminStatus(userToken);
-
-    if (adminStatus.isAdmin) {
-      // Copilot admin can view any team, use app installation
-      const data = await githubService.getCopilotTeamMetricsAsAdmin(teamSlug);
-      res.json(data);
-    } else {
-      // Regular user, check team membership
-      const data = await githubService.getCopilotTeamMetrics(
-        teamSlug,
-        userToken
-      );
-      res.json(data);
-    }
+    const data = await s3Service.getObjectViaSignedUrl(
+      'copilot',
+      'teams_history.json'
+    );
+    res.json(data);
   } catch (error) {
-    logger.error('GitHub API error:', { error: error.message });
+    logger.error('Error fetching teams historic JSON:', {
+      error: error.message,
+    });
     res.status(500).json({ error: error.message });
   }
 });
