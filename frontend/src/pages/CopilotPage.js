@@ -4,10 +4,6 @@ import Header from '../components/Header/Header';
 import LiveDashboard from '../components/Copilot/Dashboards/LiveDashboard';
 import HistoricDashboard from '../components/Copilot/Dashboards/HistoricDashboard';
 import {
-  filterInactiveUsers,
-  fetchTeamSeatData,
-} from '../utilities/getSeatData';
-import {
   filterUsageData,
   processUsageData,
   fetchTeamsHistoricData,
@@ -69,16 +65,11 @@ function CopilotDashboard() {
     const { start, end } = initialiseDateRange(teamUsageData);
     setStartDate(start);
     setEndDate(end);
-    const teamSeats = await fetchTeamSeatData(slug);
-    if (fetchTeamDataCancelRef.current.cancelled) return;
-    const activeTeamSeats = filterInactiveUsers(teamSeats, startDate);
 
     setLiveTeamData({
       allUsage: teamUsageData ?? [],
       filteredUsage: teamUsageData ?? [],
       processedUsage: teamUsageData ? processUsageData(teamUsageData) : [],
-      allSeatData: teamSeats,
-      activeSeatData: activeTeamSeats,
     });
 
     // Ensure we're showing the team data view
@@ -120,21 +111,10 @@ function CopilotDashboard() {
     }));
   };
 
-  const setActiveSeats = (data, setData) => {
-    if (!data || !inactivityDate) return;
-    const activeSeats = filterInactiveUsers(data, inactivityDate);
-    setData(prev => ({
-      ...prev,
-      activeSeatData: activeSeats,
-    }));
-  };
-
   const [liveOrgData, setLiveOrgData] = useState({
     allUsage: [],
     filteredUsage: [],
     processedUsage: [],
-    allSeatData: [],
-    activeSeatData: [],
   });
 
   const [historicOrgData, setHistoricOrgData] = useState({
@@ -148,8 +128,6 @@ function CopilotDashboard() {
     allUsage: [],
     filteredUsage: [],
     processedUsage: [],
-    allSeatData: [],
-    activeSeatData: [],
   });
 
   const dateOptions = [
@@ -159,21 +137,14 @@ function CopilotDashboard() {
     { value: 'Year', label: 'Year' },
   ];
 
-  const [inactiveDays, setInactiveDays] = useState(28);
-  const inactivityDate = useMemo(() => {
-    const date = new Date();
-    date.setDate(date.getDate() - inactiveDays);
-    return date.toISOString().slice(0, 10);
-  }, [inactiveDays]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [viewMode, setViewMode] = useState('live');
   const [scope, setScope] = useState('organisation');
   const [isLiveLoading, setIsLiveLoading] = useState(true);
-  const [isSeatsLoading, setIsSeatsLoading] = useState(true);
   const [isHistoricLoading, setIsHistoricLoading] = useState(false);
   const [hasFetchedHistoric, setHasFetchedHistoric] = useState(false);
-  const { getLiveUsageData, getHistoricUsageData, getSeatsData } = useData();
+  const { getLiveUsageData, getHistoricUsageData } = useData();
   const [viewDatesBy, setViewDatesBy] = useState('Day');
   const [isSelectingTeam, setIsSelectingTeam] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -265,14 +236,10 @@ function CopilotDashboard() {
       }
     };
 
-    const fetchLiveAndSeatsData = async () => {
+    const fetchLiveData = async () => {
       setIsLiveLoading(true);
-      setIsSeatsLoading(true);
 
-      const [liveUsage, seats] = await Promise.all([
-        getLiveUsageData(),
-        getSeatsData(),
-      ]);
+      const liveUsage = await getLiveUsageData();
 
       const { start, end } = initialiseDateRange(liveUsage);
       setStartDate(start);
@@ -282,12 +249,9 @@ function CopilotDashboard() {
         allUsage: liveUsage ?? [],
         filteredUsage: liveUsage ?? [],
         processedUsage: liveUsage ? processUsageData(liveUsage) : [],
-        allSeatData: seats ?? [],
-        activeSeatData: seats ? filterInactiveUsers(seats, start) : [],
       });
 
       setIsLiveLoading(false);
-      setIsSeatsLoading(false);
     };
 
     const authenticateGitHubUser = async () => {
@@ -332,7 +296,7 @@ function CopilotDashboard() {
     };
 
     fetchTeamsHistoric();
-    fetchLiveAndSeatsData();
+    fetchLiveData();
     authenticateGitHubUser();
   }, []);
 
@@ -371,21 +335,6 @@ function CopilotDashboard() {
       ? setFilteredData(liveOrgData.allUsage, setLiveOrgData)
       : setFilteredData(liveTeamData.allUsage, setLiveTeamData);
   }, [scope, liveOrgData.allUsage, liveTeamData.allUsage, startDate, endDate]);
-
-  /**
-   * Update active seats
-   */
-  useEffect(() => {
-    scope === 'organisation'
-      ? setActiveSeats(liveOrgData.allSeatData, setLiveOrgData)
-      : setActiveSeats(liveTeamData.allSeatData, setLiveTeamData);
-  }, [
-    scope,
-    inactiveDays,
-    inactivityDate,
-    liveOrgData.allSeatData,
-    liveTeamData.allSeatData,
-  ]);
 
   /**
    * Display team selection UI to choose a team to fetch data for
@@ -733,10 +682,6 @@ function CopilotDashboard() {
               isLiveLoading={
                 scope === 'organisation' ? isLiveLoading : isTeamLoading
               }
-              isSeatsLoading={isSeatsLoading}
-              inactiveDays={inactiveDays}
-              setInactiveDays={setInactiveDays}
-              inactivityDate={inactivityDate}
             />
           ) : (
             <HistoricDashboard
