@@ -468,21 +468,13 @@ function CopilotDashboard() {
                           <input
                             id="start-date"
                             type="date"
+                            className="copilot-date-input"
                             value={startDate}
                             onChange={e =>
                               handleDateChange('start', e.target.value)
                             }
                             min={data?.allUsage?.[0]?.date}
                             max={endDate}
-                            style={{
-                              padding: '6px 12px',
-                              border: '1px solid hsl(var(--border))',
-                              borderRadius: 'var(--radius)',
-                              backgroundColor: 'hsl(var(--background))',
-                              color: 'hsl(var(--foreground))',
-                              fontSize: '14px',
-                              fontFamily: 'inherit',
-                            }}
                             aria-label="Start date for data range"
                           />
                         </div>
@@ -502,6 +494,7 @@ function CopilotDashboard() {
                           <input
                             id="end-date"
                             type="date"
+                            className="copilot-date-input"
                             value={endDate}
                             onChange={e =>
                               handleDateChange('end', e.target.value)
@@ -510,15 +503,6 @@ function CopilotDashboard() {
                             max={
                               data?.allUsage?.[data.allUsage.length - 1]?.date
                             }
-                            style={{
-                              padding: '6px 12px',
-                              border: '1px solid hsl(var(--border))',
-                              borderRadius: 'var(--radius)',
-                              backgroundColor: 'hsl(var(--background))',
-                              color: 'hsl(var(--foreground))',
-                              fontSize: '14px',
-                              fontFamily: 'inherit',
-                            }}
                             aria-label="End date for data range"
                           />
                         </div>

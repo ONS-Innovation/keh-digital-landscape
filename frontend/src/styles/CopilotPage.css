@@ -239,6 +239,16 @@ html:not(.dark)
   filter: invert(1);
 }
 
+.copilot-date-input {
+  padding: 6px 12px;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-size: 14px;
+  font-family: inherit;
+}
+
 .dashboard-header {
   display: flex;
   justify-content: space-between;
