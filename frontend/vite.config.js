@@ -19,7 +19,7 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: Object.fromEntries(
-      ['/api', '/user/api', '/copilot/api', '/admin/api', '/review/api'].map(
+      ['/api', '/user/api', '/copilot/api', '/admin/api', '/review/api', '/addressbook/api'].map(
         path => [
           path,
           {
