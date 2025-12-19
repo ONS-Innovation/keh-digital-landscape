@@ -40,7 +40,6 @@ class AddressBookService {
         let output = [];
 
         input.forEach(userDetail =>{
-            userDetail = userDetail.toLowerCase()
             let isUsername = true;
 
             if (String(userDetail).includes('@')) {
