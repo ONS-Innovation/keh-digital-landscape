@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Header from '../components/Header/Header';
 import PageBanner from '../components/PageBanner/PageBanner';
 import ShortUserCard from '../components/AddressBook/ShortUserCard';
+import '../styles/components/PageBanner.css';
 import '../styles/pages/AddressBookPage.css';
 
 const AddressBookPage = () => {
@@ -52,6 +53,30 @@ const AddressBookPage = () => {
         tabs={[]}
       />
 
+      <section
+        className="addressbook-howto"
+        aria-labelledby="addressbook-howto-title"
+      >
+        <h2 id="addressbook-howto-title" className="addressbook-howto__title">
+          How to use
+        </h2>
+        <ol className="addressbook-howto__list">
+          <li>
+            Enter a colleague’s GitHub username or ONS verified email. You’ll
+            see their name, work email, GitHub URL and username in the results.
+          </li>
+          <li>
+            You can enter multiple values separated by commas, e.g.
+            <span className="addressbook-howto__example">
+              username-1, username-2
+            </span>
+            .
+          </li>
+          <li>Click Search or press Enter to submit.</li>
+          <li>Incorrect or duplicate entries will be ignored.</li>
+        </ol>
+      </section>
+
       <div>
         <form
           onSubmit={handleSubmit}
@@ -88,6 +113,7 @@ const AddressBookPage = () => {
               key={index}
               username={userInfo.username}
               email={userInfo.email}
+              avatarUrl={userInfo.avatarUrl}
               githubUrl={userInfo.url}
               fullName={userInfo.fullname}
             />

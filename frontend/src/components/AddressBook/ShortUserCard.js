@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../styles/components/ShortUserCard.css';
 
-const UserCard = ({ username, email, githubUrl, fullName }) => {
+const UserCard = ({ username, email, githubUrl, fullName, avatarUrl }) => {
   const displayName = fullName || username || '';
   const initials = (displayName || '')
     .split(' ')
@@ -14,7 +14,18 @@ const UserCard = ({ username, email, githubUrl, fullName }) => {
   return (
     <article className="user-card" aria-label={`User card for ${displayName}`}>
       <div className="user-card__avatar">
-        <span>{initials}</span>
+        {avatarUrl ? (
+          <img
+            className="user-card__avatar-img"
+            src={avatarUrl}
+            alt=""
+            decoding="async"
+            loading="lazy"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <span>{initials}</span>
+        )}
       </div>
       <div className="user-card__body">
         <div className="user-card__header">

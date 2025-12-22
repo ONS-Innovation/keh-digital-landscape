@@ -8,6 +8,7 @@ class AddressBookService {
   constructor() {
     this.emailKey = 'addressBookEmailKey.json'; // Dictionary for Emails to Usernames
     this.usernameKey = 'addressBookUsernameKey.json'; // Dictionary for Usernames to Emails
+    this.IDKey = 'addressBookIDKey.json'; // Dictionary for Usernames to ID
   }
 
   /**
@@ -17,13 +18,18 @@ class AddressBookService {
    */
   async getAddressBookData() {
     try {
-      const [emailToUsernameRaw, usernameToEmailRaw] = await Promise.all([
-        s3Service.getObject('main', this.emailKey),
-        s3Service.getObject('main', this.usernameKey),
-      ]);
+      let folder = 'AddressBook/';
+
+      const [emailToUsernameRaw, usernameToEmailRaw, usernameToIdRaw] =
+        await Promise.all([
+          s3Service.getObject('main', folder + this.emailKey),
+          s3Service.getObject('main', folder + this.usernameKey),
+          s3Service.getObject('main', folder + this.IDKey),
+        ]);
       const emailToUsernameData = this.normalizeMap(emailToUsernameRaw);
       const usernameToEmailData = this.normalizeMap(usernameToEmailRaw);
-      return { emailToUsernameData, usernameToEmailData };
+      const usernameToIDData = this.normalizeMap(usernameToIdRaw);
+      return { emailToUsernameData, usernameToEmailData, usernameToIDData };
     } catch (error) {
       logger.error('Error fetching Address book data', {
         error: error.message,
@@ -52,11 +58,11 @@ class AddressBookService {
   /**
    * Resolve the counterpart for each identifier.
    * @param {string[]} input - List of usernames or emails.
-   * @returns {Promise<Array<[string|undefined, string|undefined]>>} Pairs as [username, email].
+   * @returns {Promise<Array<[string|undefined, string|undefined, string|undefined]>>} Pairs as [username, email, accountID].
    * @throws {Error} If address book data cannot be fetched.
    */
   async filterAddressBookData(input) {
-    const { emailToUsernameData, usernameToEmailData } =
+    const { emailToUsernameData, usernameToEmailData, usernameToIDData } =
       await this.getAddressBookData();
 
     let output = [];
@@ -68,16 +74,18 @@ class AddressBookService {
 
       if (isUsername) {
         const email = usernameToEmailData?.[key];
-
-        output.push([raw, email]);
+        const accountID = usernameToIDData?.[key];
+        output.push([raw, email, accountID]);
       } else {
         const username = emailToUsernameData?.[key];
-
         const canonicalEmail = username
           ? usernameToEmailData?.[String(username).toLowerCase()] ||
             raw.toLowerCase()
           : raw.toLowerCase();
-        output.push([username, canonicalEmail]);
+        const accountID = username
+          ? usernameToIDData?.[String(username).toLowerCase()]
+          : undefined;
+        output.push([username, canonicalEmail, accountID]);
       }
     });
 
@@ -87,7 +95,7 @@ class AddressBookService {
   /**
    * Build user info objects for the given usernames/emails.
    * @param {string[]} input - Usernames or emails.
-   * @returns {Promise<Array<{username: string|undefined, email: string|undefined, url: string, fullname: string|null}>|null>} User details including username, email, GitHub URL, and derived full name; returns null if no input provided.
+   * @returns {Promise<Array<{username: string|undefined, email: string|undefined, accountID: string|undefined, url: string, fullname: string|null}>|null>} User details including username, email, GitHub URL, and derived full name; returns null if no input provided.
    */
   async formatAddressBookData(input = []) {
     if (input.length === 0) {
@@ -103,16 +111,20 @@ class AddressBookService {
     for (const user of output) {
       const username = user[0];
       const email = user[1];
+      const accountID = user[2];
+      const avatarLink = this.getAvatarLink(accountID);
       const githubLink = this.getGitHubLink(username);
       const fullName = this.getNameByEmail(email);
 
-      if (username && email && githubLink && fullName) {
+      if (username && email && accountID && githubLink && fullName) {
         const key = String(username).toLowerCase();
         if (seenUsernames.has(key)) continue;
         seenUsernames.add(key);
         const userInfo = {
           username,
           email,
+          accountID,
+          avatarUrl: avatarLink,
           url: githubLink,
           fullname: fullName,
         };
@@ -121,6 +133,16 @@ class AddressBookService {
     }
 
     return formattedOutput;
+  }
+
+  /**
+   * Get the employee’s GitHub avatar URL.
+   * @param {string} accountID
+   * @returns {string} GitHub avatar URL.
+   */
+  getAvatarLink(accountID) {
+    if (!accountID) return null;
+    return `https://avatars.githubusercontent.com/u/${accountID}`;
   }
 
   /**
