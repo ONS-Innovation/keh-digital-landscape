@@ -14,9 +14,11 @@
   border-radius: 12px;
   background: #ffffff;
   color: #111827;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   outline: none;
-  transition: box-shadow 120ms ease, border-color 120ms ease;
+  transition:
+    box-shadow 120ms ease,
+    border-color 120ms ease;
 }
 
 .addressbook-search__input::placeholder {
@@ -34,18 +36,21 @@
   padding: 0 16px;
   border: none;
   border-radius: 12px;
-  background: #000000; 
+  background: #000000;
   color: #ffffff;
   font-weight: 600;
   letter-spacing: 0.01em;
   cursor: pointer;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
-  transition: background-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  transition:
+    background-color 120ms ease,
+    box-shadow 120ms ease,
+    transform 120ms ease;
 }
 
 .addressbook-search__button:hover {
-  background: #3b3b3b; 
-  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  background: #3b3b3b;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
 .addressbook-search__button:active {
@@ -53,7 +58,7 @@
 }
 
 .addressbook-search__button:disabled {
-  background: #93c5fd; 
+  background: #93c5fd;
   cursor: not-allowed;
   box-shadow: none;
 }
