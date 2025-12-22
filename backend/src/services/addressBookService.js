@@ -17,14 +17,33 @@ class AddressBookService {
      */
     async getAddressBookData() {
         try {
-            const [emailToUsernameData, usernameToEmailData] = await Promise.all([
+            const [emailToUsernameRaw, usernameToEmailRaw] = await Promise.all([
                 s3Service.getObject('main', this.emailKey),
                 s3Service.getObject('main', this.usernameKey)
             ]);
+            const emailToUsernameData = this.normalizeMap(emailToUsernameRaw);
+            const usernameToEmailData = this.normalizeMap(usernameToEmailRaw);
             return { emailToUsernameData, usernameToEmailData };
         } catch (error) {
             logger.error('Error fetching Address book data', { error: error.message });
             throw error;
+        }
+    }
+
+    /**
+     * Create a new object with all keys lowercased (for case-insensitive lookups).
+     * @param {Record<string, string>} obj
+     * @returns {Record<string, string>}
+     */
+    normalizeMap(obj) {
+        try {
+            const entries = Object.entries(obj || {});
+            return entries.reduce((acc, [k, v]) => {
+                acc[String(k).toLowerCase()] = v;
+                return acc;
+            }, {});
+        } catch (_) {
+            return {};
         }
     }
 
@@ -39,16 +58,23 @@ class AddressBookService {
 
         let output = [];
 
-        input.forEach(userDetail =>{
-            let isUsername = true;
+        input.forEach(userDetail => {
+            const raw = String(userDetail).trim();
+            const isUsername = !raw.includes('@');
+            const key = raw.toLowerCase();
 
-            if (String(userDetail).includes('@')) {
-                isUsername = false;
+            if (isUsername) {
+                const email = usernameToEmailData?.[key];
+                
+                output.push([raw, email]);
+            } else {
+                const username = emailToUsernameData?.[key];
+                
+                const canonicalEmail = username
+                    ? (usernameToEmailData?.[String(username).toLowerCase()] || raw.toLowerCase())
+                    : raw.toLowerCase();
+                output.push([username, canonicalEmail]);
             }
-
-            const data = isUsername === true ? usernameToEmailData : emailToUsernameData;
-
-            output.push((isUsername ? [userDetail, data?.[userDetail]] : [data?.[userDetail], userDetail]));
         });
 
         return output;
@@ -69,6 +95,7 @@ class AddressBookService {
         const output = await this.filterAddressBookData(input);
 
         const formattedOutput = [];
+        const seenUsernames = new Set();
 
         for (const user of output) {
             const username = user[0];
@@ -76,8 +103,13 @@ class AddressBookService {
             const githubLink = this.getGitHubLink(username);
             const fullName = this.getNameByEmail(email);
 
-            const userInfo = {"username": username, "email": email, "url": githubLink, "fullname": fullName};
-            formattedOutput.push(userInfo);
+            if (username && email && githubLink && fullName) {
+                const key = String(username).toLowerCase();
+                if (seenUsernames.has(key)) continue;
+                seenUsernames.add(key);
+                const userInfo = { username, email, url: githubLink, fullname: fullName };
+                formattedOutput.push(userInfo);
+            }
         }
 
         return formattedOutput;
