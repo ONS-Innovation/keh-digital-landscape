@@ -1,7 +1,7 @@
 aws_account_id          = "999999999999"
 aws_access_key_id       = "999999999999"
 aws_secret_access_key   = "999999999999"
-domain                  = "sdp-dev"
+domain                  = "sdp-prod"
 user_groups             = {
     "admin" = "The admin users for the Digital Landscape"
     "reviewer" = "The reviewer users for the Digital Landscape"
