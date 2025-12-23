@@ -251,9 +251,7 @@ const ProjectModal = ({
       'Publishing_Target',
     ],
     security: ['Source_Control'],
-    quality: [],
     data: ['Datastores', 'Database_Technologies'],
-    integrations: [],
     general: [
       'Project_Tools',
       'Code_Editors',
@@ -677,9 +675,7 @@ const ProjectModal = ({
           {renderGroup('Languages & Frameworks', groups.languages)}
           {renderGroup('Infrastructure & Deployment', groups.infrastructure)}
           {renderGroup('Security & Source Control', groups.security)}
-          {renderGroup('Quality & Monitoring', groups.quality)}
           {renderGroup('Data Management', groups.data)}
-          {renderGroup('Integrations', groups.integrations)}
           {renderGroup('General Information', groups.general)}
         </div>
       </div>
