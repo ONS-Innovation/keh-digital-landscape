@@ -4,32 +4,21 @@ import { mockRepositoryData } from './data/repositoryData';
 
 // Group definitions from ProjectModal.js
 const groups = {
-  languages: [
-    'Language_Main',
-    'Language_Others',
-    'Language_Frameworks',
-    'Testing_Frameworks',
-  ],
+  languages: ['Language_Main', 'Language_Others', 'Language_Frameworks'],
   infrastructure: [
     'Infrastructure',
     'CICD',
-    'Cloud_Services',
-    'Containers',
     'Hosted',
     'Architectures',
     'Environments',
     'Publishing_Target',
   ],
-  security: ['IAM_Services', 'Source_Control', 'Branching_Strategy'],
-  quality: ['Static_Analysis', 'Code_Formatter', 'Monitoring'],
-  data: ['Datastores', 'Database_Technologies', 'Data_Output_Formats'],
-  integrations: ['Integrations_ONS', 'Integrations_External'],
+  security: ['Source_Control'],
+  quality: [],
+  data: ['Datastores', 'Database_Technologies'],
+  integrations: [],
   general: [
-    'Project_Area',
-    'DST_Area',
     'Project_Tools',
-    'Other_Tools',
-    'Datasets_Used',
     'Code_Editors',
     'Communication',
     'Collaboration',

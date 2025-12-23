@@ -240,32 +240,19 @@ const ProjectModal = ({
 
   // Group definitions
   const groups = {
-    languages: [
-      'Language_Main',
-      'Language_Others',
-      'Language_Frameworks',
-      'Testing_Frameworks',
-    ],
+    languages: ['Language_Main', 'Language_Others', 'Language_Frameworks'],
     infrastructure: [
       'Infrastructure',
       'CICD',
-      'Cloud_Services',
-      'Containers',
       'Hosted',
       'Architectures',
       'Environments',
       'Publishing_Target',
     ],
-    security: ['IAM_Services', 'Source_Control', 'Branching_Strategy'],
-    quality: ['Static_Analysis', 'Code_Formatter', 'Monitoring'],
-    data: ['Datastores', 'Database_Technologies', 'Data_Output_Formats'],
-    integrations: ['Integrations_ONS', 'Integrations_External'],
+    security: ['Source_Control'],
+    data: ['Datastores', 'Database_Technologies'],
     general: [
-      'Project_Area',
-      'DST_Area',
       'Project_Tools',
-      'Other_Tools',
-      'Datasets_Used',
       'Code_Editors',
       'Communication',
       'Collaboration',
@@ -279,21 +266,12 @@ const ProjectModal = ({
   };
 
   const fieldLabels = {
-    Project_Area: 'Project Area',
-    DST_Area: 'DST Area',
     Language_Main: 'Main Language',
     Language_Others: 'Other Languages',
     Language_Frameworks: 'Frameworks',
-    Testing_Frameworks: 'Testing Frameworks',
     Hosted: 'Hosted On',
     Architectures: 'Architecture',
     Source_Control: 'Source Control',
-    Branching_Strategy: 'Branching Strategy',
-    Static_Analysis: 'Static Analysis',
-    Code_Formatter: 'Code Formatter',
-    Data_Output_Formats: 'Data Output Formats',
-    Integrations_ONS: 'ONS Integrations',
-    Integrations_External: 'External Integrations',
     Miscellaneous: 'Miscellaneous Tools',
   };
 
@@ -303,19 +281,9 @@ const ProjectModal = ({
     'Language_Frameworks',
     'Infrastructure',
     'CICD',
-    'Cloud_Services',
-    'IAM_Services',
-    'Testing_Frameworks',
-    'Containers',
-    'Static_Analysis',
     'Source_Control',
-    'Code_Formatter',
-    'Monitoring',
     'Datastores',
     'Database_Technologies',
-    'Data_Output_Formats',
-    'Integrations_ONS',
-    'Integrations_External',
     'Project_Tools',
     'Code_Editors',
     'Communication',
@@ -706,9 +674,7 @@ const ProjectModal = ({
           {renderGroup('Languages & Frameworks', groups.languages)}
           {renderGroup('Infrastructure & Deployment', groups.infrastructure)}
           {renderGroup('Security & Source Control', groups.security)}
-          {renderGroup('Quality & Monitoring', groups.quality)}
           {renderGroup('Data Management', groups.data)}
-          {renderGroup('Integrations', groups.integrations)}
           {renderGroup('General Information', groups.general)}
         </div>
       </div>
