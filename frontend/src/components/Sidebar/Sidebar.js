@@ -17,7 +17,7 @@ import {
   TbBug,
 } from 'react-icons/tb';
 import { VscCopilot } from 'react-icons/vsc';
-import { FaRegAddressBook } from "react-icons/fa";
+import { FaRegAddressBook } from 'react-icons/fa';
 
 const Sidebar = () => {
   const location = useLocation();
