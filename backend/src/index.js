@@ -21,7 +21,7 @@ const adminRoutes = require('./routes/admin');
 const reviewRoutes = require('./routes/review');
 const copilotRoutes = require('./routes/copilot');
 const userRoutes = require('./routes/user');
-const addressbookRoutes = require('./routes/addressbook');
+const addressbookRoutes = require('./routes/addressBook');
 
 const app = express();
 const port = process.env.PORT || 5001;
