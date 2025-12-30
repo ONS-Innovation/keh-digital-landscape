@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import Header from '../components/Header/Header';
 import PageBanner from '../components/PageBanner/PageBanner';
-import ShortUserCard from '../components/AddressBook/ShortUserCard';
+import ShortUserCard from '../components/AddressBook/UserCard';
 import '../styles/components/PageBanner.css';
-import '../styles/pages/AddressBookPage.css';
+import '../styles/AddressBookPage.css';
 
 const AddressBookPage = () => {
   const [users, setUsers] = useState([]);
@@ -106,7 +106,7 @@ const AddressBookPage = () => {
 
         <div style={{ padding: '1rem' }}>
           {hasSearched && users.length === 0 && !loading && !error && (
-            <div>No results.</div>
+            <div aria-label='No result text'>No results.</div>
           )}
           {users.map((userInfo, index) => (
             <ShortUserCard
@@ -116,6 +116,7 @@ const AddressBookPage = () => {
               avatarUrl={userInfo.avatarUrl}
               githubUrl={userInfo.url}
               fullName={userInfo.fullname}
+              aria-label={`User Card ${index+1}`}
             />
           ))}
         </div>
