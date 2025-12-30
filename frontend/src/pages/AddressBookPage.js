@@ -106,7 +106,7 @@ const AddressBookPage = () => {
 
         <div style={{ padding: '1rem' }}>
           {hasSearched && users.length === 0 && !loading && !error && (
-            <div aria-label='No result text'>No results.</div>
+            <div aria-label="No result text">No results.</div>
           )}
           {users.map((userInfo, index) => (
             <ShortUserCard
@@ -116,7 +116,7 @@ const AddressBookPage = () => {
               avatarUrl={userInfo.avatarUrl}
               githubUrl={userInfo.url}
               fullName={userInfo.fullname}
-              aria-label={`User Card ${index+1}`}
+              aria-label={`User Card ${index + 1}`}
             />
           ))}
         </div>
