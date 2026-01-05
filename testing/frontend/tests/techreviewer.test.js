@@ -57,7 +57,7 @@ const interceptAPICall = async ({ page }) => {
   // Set a dummy authentication cookie to simulate logged-in user
   await page.context().addCookies([
     {
-      name: 'githubUserToken',
+      name: 'githubUserToken', 
       value: 'dummy-token',
       domain: 'localhost',
       path: '/',
