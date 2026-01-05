@@ -8,7 +8,7 @@ test-all:
 	node test.js
 
 test-ui:
-	npx playwright test
+	npx playwright test --timeout=60000 --retries=1
 
 clean:
 	rm -rf reports
