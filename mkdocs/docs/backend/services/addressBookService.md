@@ -49,6 +49,7 @@ Resolve each identifier (username or email) to its counterpart(s).
 **Returns:** `Array<[username|undefined, email|undefined, accountID|undefined]>`
 
 **Notes:**
+
 - Usernames are detected by absence of `@`
 - Emails are canonicalised to lowercase; if an email maps to a username, the canonical email is retrieved from the username map
 
@@ -59,6 +60,7 @@ Build formatted user info objects for the given inputs.
 **Returns:** `Array<{ username, email, accountID, avatarUrl, url, fullname }>`
 
 **Behaviour:**
+
 - Returns `[]` and logs a warning when `input` is empty
 - Deduplicates by lowercase `username`
 - Only includes users where `username`, `email`, `accountID`, `url`, and `fullname` are all present
