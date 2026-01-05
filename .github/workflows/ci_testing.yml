@@ -51,7 +51,7 @@ jobs:
         run: make install-dev
       - name: Start app in background
         run: make dev-ci &
-      - name: export CI variable to enable config tweaks
+      - name: Export CI variable to enable Playwright config tweaks
         run: echo "CI=true" >> $GITHUB_ENV
       - name: Run Playwright tests
         env:

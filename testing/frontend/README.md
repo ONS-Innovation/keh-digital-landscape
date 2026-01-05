@@ -157,6 +157,10 @@ Run the following to run the tests:
 make test-ui
 ```
 
+### Additional Notes
+
+Further information on UI Tests and Playwright can be found in the MkDocs documentation (See: [`testing > frontend`](../../mkdocs/docs/testing/frontend.md)).
+
 ## Cleaning
 
 After tests have finished, remove the `/reports` and `/test-results` folders by using:
