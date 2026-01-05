@@ -48,7 +48,7 @@ const AddressBookPage = () => {
       <Header hideSearch={true} />
 
       <PageBanner
-        title="Address Book"
+        title="GitHub Address Book"
         description="Search for colleague information using a GitHub username or ONS email address"
         tabs={[]}
       />
@@ -62,8 +62,8 @@ const AddressBookPage = () => {
         </h2>
         <ol className="addressbook-howto__list">
           <li>
-            Enter a colleague’s GitHub username or ONS verified email. You’ll
-            see their name, work email, GitHub URL and username in the results.
+            Enter a colleague’s GitHub username or ONS email. You’ll see their
+            name, work email, GitHub Profile URL and username in the results.
           </li>
           <li>
             You can enter multiple values separated by commas, e.g.
