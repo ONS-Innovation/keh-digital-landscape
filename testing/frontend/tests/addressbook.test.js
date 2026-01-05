@@ -284,4 +284,3 @@ test('Same queries, Different inputs, Correct format, gives one result', async (
   await expect(userCards.nth(0)).toBeVisible();
   await expect(userCards.nth(1)).not.toBeVisible();
 });
-
