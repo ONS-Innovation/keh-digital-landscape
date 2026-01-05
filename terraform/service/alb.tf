@@ -261,12 +261,12 @@ resource "aws_lb_listener_rule" "digital_landscape_backend_rule_1" {
     type = "authenticate-cognito"
 
     authenticate_cognito {
-      user_pool_arn       = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_arn
-      user_pool_client_id = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_client_id
-      user_pool_domain    = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_domain
+      user_pool_arn              = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_arn
+      user_pool_client_id        = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_client_id
+      user_pool_domain           = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_domain
       on_unauthenticated_request = "authenticate"
       session_timeout            = 3600
-      session_cookie_name       = "AuthenticatedSession"
+      session_cookie_name        = "AuthenticatedSession"
     }
   }
 
@@ -296,12 +296,12 @@ resource "aws_lb_listener_rule" "digital_landscape_backend_rule_2" {
     type = "authenticate-cognito"
 
     authenticate_cognito {
-      user_pool_arn       = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_arn
-      user_pool_client_id = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_client_id
-      user_pool_domain    = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_domain
+      user_pool_arn              = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_arn
+      user_pool_client_id        = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_client_id
+      user_pool_domain           = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_domain
       on_unauthenticated_request = "authenticate"
       session_timeout            = 3600
-      session_cookie_name       = "AuthenticatedSession"
+      session_cookie_name        = "AuthenticatedSession"
     }
   }
 
@@ -326,12 +326,12 @@ resource "aws_lb_listener_rule" "digital_landscape_frontend_rule" {
     type = "authenticate-cognito"
 
     authenticate_cognito {
-      user_pool_arn       = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_arn
-      user_pool_client_id = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_client_id
-      user_pool_domain    = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_domain
+      user_pool_arn              = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_arn
+      user_pool_client_id        = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_client_id
+      user_pool_domain           = data.terraform_remote_state.ecs_auth.outputs.cognito_reviewer_user_pool_domain
       on_unauthenticated_request = "authenticate"
       session_timeout            = 3600
-      session_cookie_name       = "AuthenticatedSession"
+      session_cookie_name        = "AuthenticatedSession"
     }
   }
 
