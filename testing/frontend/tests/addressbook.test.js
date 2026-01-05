@@ -1,83 +1,90 @@
 import { test, expect } from 'playwright/test';
 
-test.beforeEach(async ({ page }) => {
-  await page.route('**/addressbook/api/request**', async route => {
-    const url = new URL(route.request().url());
-    const q = (url.searchParams.get('q') || '').trim();
+// Function to intercept and mock the API call
+const interceptAPICall = async ({ page }) => {
+  // Function to intercept and mock the Address Book API call
+  const interceptAddressBookAPICall = async ({ page }) => {
+    await page.route('**/addressbook/api/request**', async route => {
+      const url = new URL(route.request().url());
+      const q = (url.searchParams.get('q') || '').trim();
 
-    if (!q) {
+      if (!q) {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify([]),
+        });
+      }
+
+      const hasComma = q.includes(',');
+      if (!hasComma && q.includes(' ')) {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify([]),
+        });
+      }
+
+      const toKey = v =>
+        v
+          .toLowerCase()
+          .replace(/^mailto:/, '')
+          .replace(/\s+/g, '')
+          .replace(/[^a-z0-9@._-]/g, '');
+
+      const tokens = (hasComma ? q.split(',') : [q])
+        .map(t => toKey(t.trim()))
+        .filter(Boolean);
+
+      const resultsMap = new Map();
+
+      const addUser = (key, user) => {
+        const k = key || user.username;
+        if (!resultsMap.has(k)) resultsMap.set(k, user);
+      };
+
+      for (const token of tokens) {
+        if (token === 'username1' || token === 'user.name1@ons.gov.uk') {
+          addUser('username1', {
+            username: 'username1',
+            email: 'user.name1@ons.gov.uk',
+            avatarUrl: 'https://avatars.githubusercontent.com/u/1?v=4',
+            url: 'https://github.com/username1',
+            fullname: 'User Name1',
+          });
+          continue;
+        }
+        if (token === 'username2' || token === 'user.name2@ons.gov.uk') {
+          addUser('username2', {
+            username: 'username2',
+            email: 'user.name2@ons.gov.uk',
+            avatarUrl: 'https://avatars.githubusercontent.com/u/2?v=4',
+            url: 'https://github.com/username2',
+            fullname: 'User Name2',
+          });
+          continue;
+        }
+      }
+
+      const response = Array.from(resultsMap.values());
       return route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify([]),
+        body: JSON.stringify(response),
       });
-    }
-
-    const hasComma = q.includes(',');
-    if (!hasComma && q.includes(' ')) {
-      return route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify([]),
-      });
-    }
-
-    const toKey = v =>
-      v
-        .toLowerCase()
-        .replace(/^mailto:/, '')
-        .replace(/\s+/g, '')
-        .replace(/[^a-z0-9@._-]/g, '');
-
-    const tokens = (hasComma ? q.split(',') : [q])
-      .map(t => toKey(t.trim()))
-      .filter(Boolean);
-
-    const resultsMap = new Map();
-
-    const addUser = (key, user) => {
-      const k = key || user.username;
-      if (!resultsMap.has(k)) resultsMap.set(k, user);
-    };
-
-    for (const token of tokens) {
-      if (token === 'username1' || token === 'user.name1@ons.gov.uk') {
-        addUser('username1', {
-          username: 'username1',
-          email: 'user.name1@ons.gov.uk',
-          avatarUrl: 'https://avatars.githubusercontent.com/u/1?v=4',
-          url: 'https://github.com/username1',
-          fullname: 'User Name1',
-        });
-        continue;
-      }
-      if (token === 'username2' || token === 'user.name2@ons.gov.uk') {
-        addUser('username2', {
-          username: 'username2',
-          email: 'user.name2@ons.gov.uk',
-          avatarUrl: 'https://avatars.githubusercontent.com/u/2?v=4',
-          url: 'https://github.com/username2',
-          fullname: 'User Name2',
-        });
-        continue;
-      }
-    }
-
-    const response = Array.from(resultsMap.values());
-    return route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify(response),
     });
-  });
-});
+  };
 
-const pageLink = 'http://localhost:3000/addressbook';
+  await interceptAddressBookAPICall({ page });
+  await page.goto('http://localhost:3000/addressbook');
+};
+
+test.beforeEach(async ({ page }) => {
+  await interceptAPICall({ page });
+});
 
 // Sidebar icon highlighted
 test('Address book icon is Highlighted', async ({ page }) => {
-  await page.goto(pageLink);
-
   // Choose address book icon on sidebar
   const sideBarIcon = page.getByRole('link', { name: 'Address Book' });
 
@@ -87,8 +94,6 @@ test('Address book icon is Highlighted', async ({ page }) => {
 
 // Input container is highlighted, when clicked.
 test('Active input container is highlighted', async ({ page }) => {
-  await page.goto(pageLink);
-
   // Find Input container
   const inputContainer = page.getByLabel('Address book search');
 
@@ -106,8 +111,6 @@ test('Active input container is highlighted', async ({ page }) => {
 
 // Click search, with empty input, gives 'No results.'
 test('Empty search, gives "No results."', async ({ page }) => {
-  await page.goto(pageLink);
-
   // Find Search button
   const searchButton = page.getByLabel('Submit search');
 
@@ -128,8 +131,6 @@ test('Empty search, gives "No results."', async ({ page }) => {
 test('Valid search, Unknown username, gives "No results."', async ({
   page,
 }) => {
-  await page.goto(pageLink);
-
   // Find the Input container
   const inputContainer = page.getByLabel('Address book search');
 
@@ -154,8 +155,6 @@ test('Valid search, Unknown username, gives "No results."', async ({
 
 // Click search, with vaild input and valid username, gives proper result
 test('Valid search, Known username, gives result', async ({ page }) => {
-  await page.goto(pageLink);
-
   // Input name
   const displayName = 'username1';
 
@@ -185,8 +184,6 @@ test('Valid search, Known username, gives result', async ({ page }) => {
 test('Different queries, Incorrect format, gives "No results."', async ({
   page,
 }) => {
-  await page.goto(pageLink);
-
   // Find the Input container
   const inputContainer = page.getByLabel('Address book search');
 
@@ -211,8 +208,6 @@ test('Different queries, Incorrect format, gives "No results."', async ({
 
 // Two different queries, comma seperated, gives result
 test('Different queries, Correct format, gives result', async ({ page }) => {
-  await page.goto(pageLink);
-
   // Input name
   const displayNames = ['username1', 'username2'];
 
@@ -243,8 +238,6 @@ test('Different queries, Correct format, gives result', async ({ page }) => {
 test('Same queries, Incorrect format, gives "No results."', async ({
   page,
 }) => {
-  await page.goto(pageLink);
-
   // Find the Input container
   const inputContainer = page.getByLabel('Address book search');
 
@@ -269,8 +262,6 @@ test('Same queries, Incorrect format, gives "No results."', async ({
 
 // Two of the same queries, comma seperated, gives one result
 test('Same queries, Correct format, gives one result', async ({ page }) => {
-  await page.goto(pageLink);
-
   // Input name
   const displayNames = ['username1', 'username1'];
 
@@ -301,8 +292,6 @@ test('Same queries, Correct format, gives one result', async ({ page }) => {
 test('Same queries, Different inputs, Incorrect format, gives "No results."', async ({
   page,
 }) => {
-  await page.goto(pageLink);
-
   // Find the Input container
   const inputContainer = page.getByLabel('Address book search');
 
@@ -329,8 +318,6 @@ test('Same queries, Different inputs, Incorrect format, gives "No results."', as
 test('Same queries, Different inputs, Correct format, gives one result', async ({
   page,
 }) => {
-  await page.goto(pageLink);
-
   // Input name
   const displayNames = ['username1', 'user.name1@ons.gov.uk'];
 
