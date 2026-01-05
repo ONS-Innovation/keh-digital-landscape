@@ -1,5 +1,81 @@
 import { test, expect } from 'playwright/test';
 
+test.beforeEach(async ({ page }) => {
+  await page.route('**/addressbook/api/request**', async route => {
+    const url = new URL(route.request().url());
+    const q = (url.searchParams.get('q') || '').trim();
+
+    if (!q) {
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify([]),
+      });
+    }
+
+    const hasComma = q.includes(',');
+    if (!hasComma && q.includes(' ')) {
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify([]),
+      });
+    }
+
+    const toKey = v =>
+      v
+        .toLowerCase()
+        .replace(/^mailto:/, '')
+        .replace(/\s+/g, '')
+        .replace(/[^a-z0-9@._-]/g, '');
+
+    const tokens = (hasComma ? q.split(',') : [q]).map(t => toKey(t.trim())).filter(Boolean);
+
+    const resultsMap = new Map();
+
+    const addUser = (key, user) => {
+      const k = key || user.username;
+      if (!resultsMap.has(k)) resultsMap.set(k, user);
+    };
+
+    for (const token of tokens) {
+      if (
+        token === 'username1' ||
+        token === 'user.name1@ons.gov.uk'
+      ) {
+        addUser('username1', {
+          username: 'username1',
+          email: 'user.name1@ons.gov.uk',
+          avatarUrl: 'https://avatars.githubusercontent.com/u/1?v=4',
+          url: 'https://github.com/username1',
+          fullname: 'User Name1',
+        });
+        continue;
+      }
+      if (
+        token === 'username2' ||
+        token === 'user.name2@ons.gov.uk'
+      ) {
+        addUser('username2', {
+          username: 'username2',
+          email: 'user.name2@ons.gov.uk',
+          avatarUrl: 'https://avatars.githubusercontent.com/u/2?v=4',
+          url: 'https://github.com/username2',
+          fullname: 'User Name2',
+        });
+        continue;
+      }
+    }
+
+    const response = Array.from(resultsMap.values());
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(response),
+    });
+  });
+});
+
 const pageLink = 'http://localhost:3000/addressbook';
 
 // Sidebar icon highlighted
@@ -85,7 +161,7 @@ test('Valid search, Known username, gives result', async ({ page }) => {
   await page.goto(pageLink);
 
   // Input name
-  const displayName = 'cooper-wright';
+  const displayName = 'username1';
 
   // Find the Input container
   const inputContainer = page.getByLabel('Address book search');
@@ -128,7 +204,7 @@ test('Different queries, Incorrect format, gives "No results."', async ({
   await expect(resultText).toHaveCount(0);
 
   // Enter an invalid username
-  await inputContainer.fill('cooper-wright totaldwarf03');
+  await inputContainer.fill('username1 username2');
 
   // Click on Search button with input
   await searchButton.click();
@@ -142,7 +218,7 @@ test('Different queries, Correct format, gives result', async ({ page }) => {
   await page.goto(pageLink);
 
   // Input name
-  const displayNames = ['cooper-wright', 'totaldwarf03'];
+  const displayNames = ['username1', 'username2'];
 
   // Find the Input container
   const inputContainer = page.getByLabel('Address book search');
@@ -186,7 +262,7 @@ test('Same queries, Incorrect format, gives "No results."', async ({
   await expect(resultText).toHaveCount(0);
 
   // Enter an invalid username
-  await inputContainer.fill('cooper-wright cooper-wright');
+  await inputContainer.fill('username1 username1');
 
   // Click on Search button with input
   await searchButton.click();
@@ -200,7 +276,7 @@ test('Same queries, Correct format, gives one result', async ({ page }) => {
   await page.goto(pageLink);
 
   // Input name
-  const displayNames = ['cooper-wright', 'cooper-wright'];
+  const displayNames = ['username1', 'username1'];
 
   // Find the Input container
   const inputContainer = page.getByLabel('Address book search');
@@ -244,7 +320,7 @@ test('Same queries, Different inputs, Incorrect format, gives "No results."', as
   await expect(resultText).toHaveCount(0);
 
   // Enter an invalid username
-  await inputContainer.fill('cooper-wright cooper.wright@ons.gov.uk');
+  await inputContainer.fill('username1 user.name1@ons.gov.uk');
 
   // Click on Search button with input
   await searchButton.click();
@@ -253,14 +329,14 @@ test('Same queries, Different inputs, Incorrect format, gives "No results."', as
   await expect(resultText).toBeVisible();
 });
 
-// Two of the same queries, comma seperated, gives one result
+// Two of the same queries, comma seperapted, gives one result
 test('Same queries, Different inputs, Correct format, gives one result', async ({
   page,
 }) => {
   await page.goto(pageLink);
 
   // Input name
-  const displayNames = ['cooper-wright', 'cooper.wright.ons.gov.uk'];
+  const displayNames = ['username1', 'user.name1@ons.gov.uk'];
 
   // Find the Input container
   const inputContainer = page.getByLabel('Address book search');
