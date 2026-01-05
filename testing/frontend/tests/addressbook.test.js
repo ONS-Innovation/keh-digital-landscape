@@ -29,7 +29,9 @@ test.beforeEach(async ({ page }) => {
         .replace(/\s+/g, '')
         .replace(/[^a-z0-9@._-]/g, '');
 
-    const tokens = (hasComma ? q.split(',') : [q]).map(t => toKey(t.trim())).filter(Boolean);
+    const tokens = (hasComma ? q.split(',') : [q])
+      .map(t => toKey(t.trim()))
+      .filter(Boolean);
 
     const resultsMap = new Map();
 
@@ -39,10 +41,7 @@ test.beforeEach(async ({ page }) => {
     };
 
     for (const token of tokens) {
-      if (
-        token === 'username1' ||
-        token === 'user.name1@ons.gov.uk'
-      ) {
+      if (token === 'username1' || token === 'user.name1@ons.gov.uk') {
         addUser('username1', {
           username: 'username1',
           email: 'user.name1@ons.gov.uk',
@@ -52,10 +51,7 @@ test.beforeEach(async ({ page }) => {
         });
         continue;
       }
-      if (
-        token === 'username2' ||
-        token === 'user.name2@ons.gov.uk'
-      ) {
+      if (token === 'username2' || token === 'user.name2@ons.gov.uk') {
         addUser('username2', {
           username: 'username2',
           email: 'user.name2@ons.gov.uk',
