@@ -11,6 +11,24 @@ const extractNumber = phrase => {
 
 // Function to intercept and mock the API call
 const interceptAPICall = async ({ page }) => {
+  // Function to intercept and mock the user info call for ProtectedRoute
+  const interceptAPIUserCall = async ({ page }) => {
+    await page.route('**/user/api/info', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          user: {
+            email: 'reviewer@example.com',
+            username: 'reviewer',
+            groups: ['reviewer'],
+          },
+          development_mode: true,
+        }),
+      });
+    });
+  };
+
   // Function to intercept and mock the API radarData call
   const interceptAPIJsonCall = async ({ page }) => {
     // Intercept and mock the teams API response with teamsDummyData
@@ -46,6 +64,8 @@ const interceptAPICall = async ({ page }) => {
     });
   };
 
+  // Ensure user route is registered first so initial load is authorized
+  await interceptAPIUserCall({ page });
   await interceptAPIJsonCall({ page });
   await interceptAPICSVCall({ page });
   await interceptAPIDirectoratesCall({ page });
