@@ -1,4 +1,4 @@
-const { test, expect } = require('@playwright/test');
+import { test, expect } from 'playwright/test';
 
 const pageLink = 'http://localhost:3000/addressbook';
 
@@ -285,4 +285,3 @@ test('Same queries, Different inputs, Correct format, gives one result', async (
   await expect(userCards.nth(1)).not.toBeVisible();
 });
 
-// double queries, same username twice, username and email of same person
