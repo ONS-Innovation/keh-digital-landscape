@@ -1,6 +1,32 @@
 const s3Service = require('../services/s3Service');
-const githubService = require('../services/githubService');
+const githubService = require('../services/githubService')
 const logger = require('../config/logger');
+
+let teamsCache = null;
+let teamsCacheTimestamp = null;
+const TEAMS_CACHE_TTL = 60 * 60 * 1000 // 1 houe
+
+/**
+ * Get Copilot teams from S3 with caching
+ * @param {string} bucketName - The S3 bucket name
+ * @returns {Promise<Array>} Array of team objects
+ */
+async function getCopilotTeamsWithCache(bucketName) {
+  const now = Date.now();
+
+  if (teamsCache && teamsCacheTimestamp && (now - teamsCacheTimestamp < TEAMS_CACHE_TTL)) {
+    logger.info('Returning cache')
+    return teamsCache;
+  }
+
+  logger.info('Fetching teams from S3')
+  const teamsHistory = await s3Service.getObject(bucketName, 'teams_history.json');
+  const teams = teamsHistory.map(entry => entry.team);
+
+  teamsCache = teams;
+  teamsCacheTimestamp = now;
+  return teams;
+}
 
 /**
  * Check if a user is a copilot admin by comparing their teams with admin teams
@@ -39,17 +65,14 @@ async function checkCopilotAdminStatus(userToken) {
     );
 
     if (isAdmin) {
-      // User is admin, get copilot teams
+      // User is admin, get copilot teams from teams_history.json
       let copilotTeams = [];
       try {
         const copilotBucketName =
           process.env.COPILOT_BUCKET_NAME || 'sdp-dev-copilot-usage-dashboard';
-        copilotTeams = await s3Service.getObject(
-          copilotBucketName,
-          'copilot_teams.json'
-        );
+        copilotTeams = await getCopilotTeamsWithCache(copilotBucketName);
       } catch (error) {
-        logger.warn('Could not fetch copilot_teams.json from S3:', {
+        logger.warn('Could not fetch teams_history.json from S3:', {
           error: error.message,
         });
         // Fallback to user teams
