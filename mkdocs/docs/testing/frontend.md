@@ -8,11 +8,9 @@ The frontend testing is run using Playwright. Playwright is an end-to-end test f
 
 The tests are implemented in the `testing/frontend/tests` directory using the Playwright framework. We organise our tests by feature/page of the tool, with each test file focusing on a specific aspect of the application. To give some examples:
 
-The tests are implemented in the `testing/frontend/tests` directory using the Playwright framework. The tests are organised into the following files:
-
 | Test File              | Description                                                                                                                 |
 | ---------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `addressbook.test.js`      | Tests for Address Book page including sidebar selection, input and output validation |
+| `addressbook.test.js`  | Tests for Address Book page including sidebar selection, input and output validation                                        |
 | `project.test.js`      | Tests for Projects page and ProjectModal component, including field validation, miscellaneous items, and repository display |
 | `review.test.js`       | Tests for Tech Review functionality                                                                                         |
 | `search.test.js`       | Tests for Copilot Teams Search                                                                                              |

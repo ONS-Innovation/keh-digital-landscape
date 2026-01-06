@@ -97,7 +97,6 @@ const ProjectModal = ({
   if (!isOpen || !project) return null;
 
   const renderRepoInfo = () => {
-    if (!project.Repo) return null;
     return (
       <div>
         <div
@@ -229,10 +228,10 @@ const ProjectModal = ({
               </>
             )}
           </div>
-        ) : !project.Repo ? (
+        ) : !project.Repo && expandedItems.repositories ? (
           <div className="repo-info-loading">
-            No repository information available. The repositories may not have
-            been found yet or from another organisation.
+            No repository information available. Please ensure repositories are
+            added to this project.
           </div>
         ) : null}
       </div>
@@ -251,9 +250,7 @@ const ProjectModal = ({
       'Publishing_Target',
     ],
     security: ['Source_Control'],
-    quality: [],
     data: ['Datastores', 'Database_Technologies'],
-    integrations: [],
     general: [
       'Project_Tools',
       'Code_Editors',
@@ -677,9 +674,7 @@ const ProjectModal = ({
           {renderGroup('Languages & Frameworks', groups.languages)}
           {renderGroup('Infrastructure & Deployment', groups.infrastructure)}
           {renderGroup('Security & Source Control', groups.security)}
-          {renderGroup('Quality & Monitoring', groups.quality)}
           {renderGroup('Data Management', groups.data)}
-          {renderGroup('Integrations', groups.integrations)}
           {renderGroup('General Information', groups.general)}
         </div>
       </div>

@@ -64,8 +64,8 @@ variable "domain_extension" {
 variable "user_groups" {
   description = "Map of user groups to create in the user pool, where key is group name and value is description"
   type        = map(string)
-  default     = {
-    "admin" = "The admin users for the Digital Landscape"
+  default = {
+    "admin"    = "The admin users for the Digital Landscape"
     "reviewer" = "The reviewer users for the Digital Landscape"
   }
 }
@@ -78,9 +78,9 @@ variable "token_validity_values" {
     id_token      = number
   })
   default = {
-    refresh_token = 30  # 30 days
-    access_token  = 3   # 3 hours
-    id_token      = 3   # 3 hours
+    refresh_token = 30 # 30 days
+    access_token  = 3  # 3 hours
+    id_token      = 3  # 3 hours
 
   }
 }
