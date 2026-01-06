@@ -79,7 +79,7 @@ lint-backend:
 lint-fix-backend:
 	cd backend && npm run lint:fix
 
-format: format-frontend format-backend format-frontend-testing
+format: format-frontend format-backend format-frontend-testing format-terraform
 
 format-frontend:
 	cd frontend && npm run format ./src
@@ -90,10 +90,14 @@ format-backend:
 format-frontend-testing:
 	cd testing/frontend && npm run format ./tests
 
+format-terraform:
+	cd terraform && terraform fmt -recursive
+
 format-check:
 	cd frontend && npm run format:check .
 	cd backend && npm run format:check .
 	cd testing/frontend && npm run format:check ./tests
+	cd terraform && terraform fmt -check -recursive
 
 # Default help command
 help:

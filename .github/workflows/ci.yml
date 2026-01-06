@@ -29,6 +29,11 @@ jobs:
       - name: Install Prettier Globally
         run: npm install -g prettier
 
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+        with:
+          terraform_version: '1.14.3'          
+
       - name: Run Linting
         run: make lint
 
