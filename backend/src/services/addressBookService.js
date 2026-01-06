@@ -26,9 +26,9 @@ class AddressBookService {
           s3Service.getObject('main', folder + this.usernameKey),
           s3Service.getObject('main', folder + this.IDKey),
         ]);
-      const emailToUsernameData = this.normalizeMap(emailToUsernameRaw);
-      const usernameToEmailData = this.normalizeMap(usernameToEmailRaw);
-      const usernameToIDData = this.normalizeMap(usernameToIdRaw);
+      const emailToUsernameData = this.normaliseMap(emailToUsernameRaw);
+      const usernameToEmailData = this.normaliseMap(usernameToEmailRaw);
+      const usernameToIDData = this.normaliseMap(usernameToIdRaw);
       return { emailToUsernameData, usernameToEmailData, usernameToIDData };
     } catch (error) {
       logger.error('Error fetching Address book data', {
@@ -39,11 +39,11 @@ class AddressBookService {
   }
 
   /**
-   * Create a new object with all keys lowercased (for case-insensitive lookups).
+   * Create a new object with all keys in lowercase (for case-insensitive lookups).
    * @param {Record<string, string>} obj
    * @returns {Record<string, string>}
    */
-  normalizeMap(obj) {
+  normaliseMap(obj) {
     try {
       const entries = Object.entries(obj || {});
       return entries.reduce((acc, [k, v]) => {

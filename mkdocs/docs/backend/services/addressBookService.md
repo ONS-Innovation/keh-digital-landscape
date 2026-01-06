@@ -1,6 +1,6 @@
 # Address Book Service
 
-The Address Book Service provides centralised functionality for resolving user information from GitHub usernames and ONS email addresses. It loads lookup dictionaries from S3, performs matching for all inputed data and then returns user information including the Profile picture, GitHub profile URL and username, Full name and Email Address.
+The Address Book Service provides centralised functionality for resolving user information from GitHub usernames and ONS email addresses. It loads lookup dictionaries from S3, performs matching for all inputted data and then returns user information including the Profile picture, GitHub profile URL and username, Full name and Email Address.
 
 ## Overview
 
@@ -34,7 +34,7 @@ Fetch the three lookup maps from S3 and normalise their keys to lowercase.
 
 **Errors:** Logs and rethrows if S3 retrieval fails.
 
-### `normalizeMap(obj)`
+### `normaliseMap(obj)`
 
 Create a new object with lowercased keys for case-insensitive lookups.
 
@@ -87,7 +87,7 @@ Derive a lowercase display name from an ONS email, e.g., `john.smith@ons.gov.uk 
 ## Error Handling
 
 - S3 failures are logged and rethrown in `getAddressBookData()`
-- `normalizeMap()` guards against invalid objects and returns `{}`
+- `normaliseMap()` guards against invalid objects and returns `{}`
 - Empty inputs log a warning and return `[]`
 
 ## Usage Examples
