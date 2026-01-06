@@ -193,7 +193,7 @@ function CopilotDashboard() {
         setIsSelectingTeam(false);
         // Fetch team data if we have a team slug from URL and teams data is loaded
         if (teamsHistoricData) {
-        fetchTeamData(teamParam);
+          fetchTeamData(teamParam);
         }
       } else {
         setIsSelectingTeam(true);
@@ -506,7 +506,7 @@ function CopilotDashboard() {
                               data?.allUsage?.[data.allUsage.length - 1]?.date
                             }
                             aria-label="End date for data range"
-                        />
+                          />
                         </div>
                       </div>
                     )}

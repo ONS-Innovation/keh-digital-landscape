@@ -57,16 +57,16 @@ const { checkCopilotAdminStatus } = require('./utilities/copilotAdminChecker');
 
 async function getAvailableTeams(req, res) {
   const userToken = req.cookies.githubUserToken;
-  
+
   try {
     const result = await checkCopilotAdminStatus(userToken);
-    
+
     if (result.isAdmin) {
       console.log(`Admin viewing ${result.teams.length} teams`);
     } else {
       console.log(`User viewing ${result.teams.length} personal teams`);
     }
-    
+
     res.json(result);
   } catch (error) {
     console.error('Authorisation check failed:', error);
