@@ -31,7 +31,7 @@ async function getCopilotTeamsWithCache(bucketName) {
     if (now - teamsCacheTimestamp < TEAMS_CACHE_TTL) {
       logger.info(
         `Returning team slugs from cache, cache is now ${now - teamsCacheTimestamp}ms old`
-      );
+      ); // 1 hour = 3,600,000ms
       return teamsCache;
     } else {
       logger.info('Cache expired, fetching team slugs from S3');
