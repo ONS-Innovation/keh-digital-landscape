@@ -1,5 +1,5 @@
 const s3Service = require('../services/s3Service');
-const githubService = require('../services/githubService')
+const githubService = require('../services/githubService');
 const logger = require('../config/logger');
 
 let teamsCache = null;
