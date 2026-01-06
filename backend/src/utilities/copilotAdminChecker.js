@@ -4,7 +4,7 @@ const logger = require('../config/logger');
 
 let teamsCache = null;
 let teamsCacheTimestamp = null;
-const TEAMS_CACHE_TTL = 60 * 60 * 1000 // 1 houe
+const TEAMS_CACHE_TTL = 60 * 60 * 1000; // 1 houe
 
 /**
  * Get Copilot teams from S3 with caching
@@ -14,13 +14,20 @@ const TEAMS_CACHE_TTL = 60 * 60 * 1000 // 1 houe
 async function getCopilotTeamsWithCache(bucketName) {
   const now = Date.now();
 
-  if (teamsCache && teamsCacheTimestamp && (now - teamsCacheTimestamp < TEAMS_CACHE_TTL)) {
-    logger.info('Returning cache')
+  if (
+    teamsCache &&
+    teamsCacheTimestamp &&
+    now - teamsCacheTimestamp < TEAMS_CACHE_TTL
+  ) {
+    logger.info('Returning cache');
     return teamsCache;
   }
 
-  logger.info('Fetching teams from S3')
-  const teamsHistory = await s3Service.getObject(bucketName, 'teams_history.json');
+  logger.info('Fetching teams from S3');
+  const teamsHistory = await s3Service.getObject(
+    bucketName,
+    'teams_history.json'
+  );
   const teams = teamsHistory.map(entry => entry.team);
 
   teamsCache = teams;
