@@ -6,9 +6,79 @@ The backend utilities provide essential helper functions and transformers that s
 
 The utilities directory contains:
 
+- **Copilot Admin Authorisation** - Managing admin access and team list retrieval with caching
 - **GitHub App Authentication** - Secure authentication with GitHub APIs
 - **Project Data Transformation** - Converting between data formats
 - **Technology Array Management** - Updating technology arrays
+
+## Copilot Admin Authorisation
+
+### `copilotAdminChecker.js`
+
+Manages Copilot admin authorisation and team list retrieval with in-memory caching for performance optimisation.
+
+#### Method: `checkCopilotAdminStatus(userToken)`
+
+Determines if a user has Copilot admin privileges and returns the appropriate team list.
+
+**Parameters:**
+
+- `userToken` (string) - GitHub OAuth access token for the authenticated user
+
+**Returns:** Promise resolving to an object:
+
+```javascript
+{
+  isAdmin: boolean,           // Whether user is a Copilot admin
+  teams: Array<Object>,       // Teams the user can view
+  userTeamSlugs: Array<string> // Team slugs the user is a member of
+}
+```
+
+**Authorisation Logic:**
+
+1. Fetches user's GitHub teams via GitHub API
+2. Checks if user belongs to any teams in `admin_teams.json` (from S3)
+3. **If admin**: Returns teams from `teams_history.json` (cached for 1 hour)
+4. **If not admin**: Returns only user's personal teams
+
+**Caching Behaviour:**
+
+- Team list is cached in memory for 1 hour (configurable via `TEAMS_CACHE_TTL`)
+- First request downloads `teams_history.json` from S3
+- Subsequent requests return instantly from cache
+- Cache automatically expires after TTL
+- Cache resets on server restart
+
+**Example:**
+
+```javascript
+const { checkCopilotAdminStatus } = require('./utilities/copilotAdminChecker');
+
+async function getAvailableTeams(req, res) {
+  const userToken = req.cookies.githubUserToken;
+
+  try {
+    const result = await checkCopilotAdminStatus(userToken);
+
+    if (result.isAdmin) {
+      console.log(`Admin viewing ${result.teams.length} teams`);
+    } else {
+      console.log(`User viewing ${result.teams.length} personal teams`);
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error('Authorisation check failed:', error);
+    res.status(500).json({ error: 'Authorisation failed' });
+  }
+}
+```
+
+**Configuration:**
+
+- `COPILOT_BUCKET_NAME` - S3 bucket containing team data (default: "sdp-dev-copilot-usage-dashboard")
+- `TEAMS_CACHE_TTL` - Cache duration in milliseconds
 
 ## GitHub App Authentication
 

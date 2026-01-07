@@ -150,6 +150,7 @@ function CopilotDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [availableTeams, setAvailableTeams] = useState([]);
   const [isTeamLoading, setIsTeamLoading] = useState(false);
+  const [isTeamsListLoading, setIsTeamsListLoading] = useState(false);
   const [teamSlug, setTeamSlug] = useState(null);
   const [isInitialised, setIsInitialised] = useState(false);
   const [isCopilotAdmin, setIsCopilotAdmin] = useState(false);
@@ -280,18 +281,21 @@ function CopilotDashboard() {
         const isAuthenticated = await checkAuthStatus();
         if (isAuthenticated) {
           setIsAuthenticated(true);
+          setIsTeamsListLoading(true);
           const teamsData = await fetchUserTeams();
           if (teamsData && teamsData.teams && teamsData.teams.length >= 0) {
             setAvailableTeams(teamsData.teams);
             setIsCopilotAdmin(teamsData.isAdmin);
             setUserTeamSlugs(teamsData.userTeamSlugs || []);
           }
+          setIsTeamsListLoading(false);
         } else {
           setIsAuthenticated(false);
         }
       } catch (err) {
         console.error('Failed to check authentication status:', err);
         setIsAuthenticated(false);
+        setIsTeamsListLoading(false);
       }
     };
 
@@ -583,7 +587,9 @@ function CopilotDashboard() {
               </div>
               {isAuthenticated ? (
                 <div>
-                  {availableTeams && availableTeams.length > 0 ? (
+                  {isTeamsListLoading ? (
+                    <p>Loading teams...</p>
+                  ) : availableTeams && availableTeams.length > 0 ? (
                     <div className="teams-grid">
                       {filteredAvailableTeams.map(team => (
                         <div
@@ -635,7 +641,7 @@ function CopilotDashboard() {
                   ) : (
                     <p>
                       {isCopilotAdmin
-                        ? 'No teams available. Please ensure the copilot_teams.json file is configured with team names in S3.'
+                        ? 'No teams available. Please ensure the teams_history.json file contains team data in S3.'
                         : 'No teams available. Please ensure you are a member of at least one team in the organisation with more than 5 active Copilot licenses.'}
                     </p>
                   )}
