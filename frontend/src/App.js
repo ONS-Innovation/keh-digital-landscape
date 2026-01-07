@@ -7,6 +7,7 @@ import Projects from './pages/ProjectsPage';
 import ReviewDashboard from './pages/ReviewPage';
 import AdminPage from './pages/AdminPage';
 import Layout from './components/Layout/Layout';
+import AddressBookPage from './pages/AddressBookPage';
 import CopilotDashboard from './pages/CopilotPage';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/radar" element={<Radar />} />
         <Route path="/statistics" element={<Statistics />} />
         <Route path="/projects" element={<Projects />} />
+        <Route path="/addressbook" element={<AddressBookPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
         <Route
           path="/review/dashboard"

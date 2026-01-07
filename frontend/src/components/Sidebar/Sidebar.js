@@ -17,6 +17,7 @@ import {
   TbBug,
 } from 'react-icons/tb';
 import { VscCopilot } from 'react-icons/vsc';
+import { FaRegAddressBook } from 'react-icons/fa';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -64,6 +65,12 @@ const Sidebar = () => {
       icon: <VscCopilot />,
       isLink: true,
       hasChildren: true,
+    },
+    {
+      path: '/addressbook',
+      label: 'Address Book',
+      icon: <FaRegAddressBook />,
+      isLink: true,
     },
   ];
 

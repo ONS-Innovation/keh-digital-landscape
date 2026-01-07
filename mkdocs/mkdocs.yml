@@ -11,9 +11,11 @@ nav:
       - Review: pages/review/index.md
       - Admin: pages/admin/index.md
       - GitHub Copilot: pages/copilot/index.md
+      - Address Book: pages/addressbook/index.md
   - Backend:
       - Overview: backend/index.md
       - Services:
+          - Address Book Service: backend/services/addressBookService.md
           - Cognito Service: backend/services/cognitoService.md
           - S3 Service: backend/services/s3Service.md
           - GitHub Service: backend/services/githubService.md
@@ -57,6 +59,7 @@ nav:
       - Overview: testing/index.md
       - Frontend: testing/frontend.md
       - Backend: testing/backend.md
+      - Frontend: testing/frontend.md
       - Accessibility: testing/accessibility.md
   - Additional Notes:
       - Multiple Directorates Support: additionalNotes/directorateSupport.md
