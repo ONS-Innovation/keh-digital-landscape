@@ -15,30 +15,13 @@ router.get('/auth/status', (req, res) => {
   try {
     const userToken = req.cookies.githubUserToken;
     if (!userToken) {
-      return res.status(200).json({ response: 'No user token found' });
+      return res.status(401).json({ response: 'No user token found' });
     }
     res.json({
       authenticated: !!userToken,
     });
   } catch (error) {
     logger.error('Error fetching auth status:', { error: error.message });
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// TODO: Remove this endpoint once we refactor organisation usage page
-/**
- * Endpoint for fetching Copilot organisation usage data from the Github API.
- * @route GET /copilot/api/org/live
- * @returns {Object} Organisation usage JSON data
- * @throws {Error} 500 - If fetching fails
- */
-router.get('/org/live', async (req, res) => {
-  try {
-    const data = await githubService.getCopilotOrgMetrics();
-    res.json(data);
-  } catch (error) {
-    logger.error('GitHub API error:', { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });
@@ -66,10 +49,22 @@ router.get('/org/historic', async (req, res) => {
  * Endpoint for fetching all teams' historic usage data from S3.
  * @route GET /copilot/api/teams/historic
  * @returns {Object} All teams historic usage JSON data
- * @throws {Error} 500 - If fetching fails
+ * @throws {Error} 401 - If user token is missing
+ * @throws {Error} 500 - If token validation or fetching fails
  */
 router.get('/teams/historic', async (req, res) => {
+  const userToken = req.cookies?.githubUserToken;
+
+  if (!userToken) {
+    return res.status(401).json({ response: 'No user token found' });
+  }
+
   try {
+    // Validate token by checking copilot admin status
+    // This will throw an error if the token is invalid
+    await checkCopilotAdminStatus(userToken);
+
+    // Token is valid, fetch and return the data
     const data = await s3Service.getObjectViaSignedUrl(
       'copilot',
       'teams_history.json'
