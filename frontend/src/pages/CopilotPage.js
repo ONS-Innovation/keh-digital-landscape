@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Header from '../components/Header/Header';
-import LiveDashboard from '../components/Copilot/Dashboards/LiveDashboard';
 import HistoricDashboard from '../components/Copilot/Dashboards/HistoricDashboard';
 import {
   filterUsageData,
@@ -22,7 +21,6 @@ import {
 import { FaArrowLeft } from 'react-icons/fa';
 import { TbLogout } from 'react-icons/tb';
 import '../styles/components/MultiSelect.css';
-import BannerTabs from '../components/PageBanner/BannerTabs';
 import { BannerContainer } from '../components/Banner';
 import { toast } from 'react-hot-toast';
 
@@ -66,7 +64,7 @@ function CopilotDashboard() {
     setStartDate(start);
     setEndDate(end);
 
-    setLiveTeamData({
+    setTeamData({
       allUsage: teamUsageData ?? [],
       filteredUsage: teamUsageData ?? [],
       processedUsage: teamUsageData ? processUsageData(teamUsageData) : [],
@@ -79,26 +77,15 @@ function CopilotDashboard() {
   };
 
   const getDashboardData = () => {
-    if (viewMode === 'live' && scope === 'organisation') return liveOrgData;
-    if (viewMode === 'live' && scope === 'team') return liveTeamData;
-    if (viewMode === 'historic' && scope === 'organisation')
-      return historicOrgData;
-    if (viewMode === 'historic' && scope === 'team') return historicTeamData; // TODO: Add team historic data support
+    if (scope === 'organisation') return historicOrgData;
+    if (scope === 'team') return teamData;
   };
 
   const getGroupedData = () => {
-    if (scope === 'team') {
-      // TODO: Add team historic data support
-      if (viewDatesBy === 'Day') return historicTeamData.allUsage;
-      if (viewDatesBy === 'Week') return historicTeamData.weekUsage;
-      if (viewDatesBy === 'Month') return historicTeamData.monthUsage;
-      if (viewDatesBy === 'Year') return historicTeamData.yearUsage;
-    } else {
-      if (viewDatesBy === 'Day') return historicOrgData.allUsage;
-      if (viewDatesBy === 'Week') return historicOrgData.weekUsage;
-      if (viewDatesBy === 'Month') return historicOrgData.monthUsage;
-      if (viewDatesBy === 'Year') return historicOrgData.yearUsage;
-    }
+    if (viewDatesBy === 'Day') return historicOrgData.allUsage;
+    if (viewDatesBy === 'Week') return historicOrgData.weekUsage;
+    if (viewDatesBy === 'Month') return historicOrgData.monthUsage;
+    if (viewDatesBy === 'Year') return historicOrgData.yearUsage;
   };
 
   const setFilteredData = (data, setData) => {
@@ -111,12 +98,6 @@ function CopilotDashboard() {
     }));
   };
 
-  const [liveOrgData, setLiveOrgData] = useState({
-    allUsage: [],
-    filteredUsage: [],
-    processedUsage: [],
-  });
-
   const [historicOrgData, setHistoricOrgData] = useState({
     allUsage: [], // Equivalent of day usage
     weekUsage: [],
@@ -124,7 +105,7 @@ function CopilotDashboard() {
     yearUsage: [],
   });
 
-  const [liveTeamData, setLiveTeamData] = useState({
+  const [teamData, setTeamData] = useState({
     allUsage: [],
     filteredUsage: [],
     processedUsage: [],
@@ -139,12 +120,10 @@ function CopilotDashboard() {
 
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [viewMode, setViewMode] = useState('live');
   const [scope, setScope] = useState('organisation');
-  const [isLiveLoading, setIsLiveLoading] = useState(true);
   const [isHistoricLoading, setIsHistoricLoading] = useState(false);
   const [hasFetchedHistoric, setHasFetchedHistoric] = useState(false);
-  const { getLiveUsageData, getHistoricUsageData } = useData();
+  const { getHistoricUsageData } = useData();
   const [viewDatesBy, setViewDatesBy] = useState('Day');
   const [isSelectingTeam, setIsSelectingTeam] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -179,12 +158,6 @@ function CopilotDashboard() {
 
     if (currentUrlScope === 'org') {
       setScope('organisation');
-      const viewMode = pathParts[3];
-      if (viewMode === 'historic') {
-        setViewMode('historic');
-      } else {
-        setViewMode('live');
-      }
     } else if (currentUrlScope === 'team') {
       setScope('team');
       const teamParam = pathParts[3];
@@ -199,10 +172,9 @@ function CopilotDashboard() {
         setIsSelectingTeam(true);
       }
     } else {
-      // Default to organisation live view
+      // Default to organisation historic view
       setScope('organisation');
-      setViewMode('live');
-      navigate('/copilot/org/live', { replace: true });
+      navigate('/copilot/org/historic', { replace: true });
     }
 
     // Mark as initialised after processing URL parameters
@@ -235,24 +207,6 @@ function CopilotDashboard() {
       } catch (err) {
         console.error('Failed to fetch teams historic data:', err);
       }
-    };
-
-    const fetchLiveData = async () => {
-      setIsLiveLoading(true);
-
-      const liveUsage = await getLiveUsageData();
-
-      const { start, end } = initialiseDateRange(liveUsage);
-      setStartDate(start);
-      setEndDate(end);
-
-      setLiveOrgData({
-        allUsage: liveUsage ?? [],
-        filteredUsage: liveUsage ?? [],
-        processedUsage: liveUsage ? processUsageData(liveUsage) : [],
-      });
-
-      setIsLiveLoading(false);
     };
 
     const authenticateGitHubUser = async () => {
@@ -300,16 +254,15 @@ function CopilotDashboard() {
     };
 
     fetchTeamsHistoric();
-    fetchLiveData();
     authenticateGitHubUser();
   }, []);
 
   /**
-   * Fetch historic data if view mode is set to historic and has not been fetched yet
+   * Fetch historic data on mount
    */
   useEffect(() => {
     const fetchHistoricData = async () => {
-      if (!hasFetchedHistoric && viewMode === 'historic') {
+      if (!hasFetchedHistoric) {
         setIsHistoricLoading(true);
         const historicUsage = await getHistoricUsageData();
         setHistoricOrgData({
@@ -329,16 +282,16 @@ function CopilotDashboard() {
       }
     };
     fetchHistoricData();
-  }, [viewMode, hasFetchedHistoric]);
+  }, [hasFetchedHistoric]);
 
   /**
-   * Filter and then process live usage data based on start and end date
+   * Filter and then process team usage data based on start and end date
    */
   useEffect(() => {
-    scope === 'organisation'
-      ? setFilteredData(liveOrgData.allUsage, setLiveOrgData)
-      : setFilteredData(liveTeamData.allUsage, setLiveTeamData);
-  }, [scope, liveOrgData.allUsage, liveTeamData.allUsage, startDate, endDate]);
+    if (scope === 'team') {
+      setFilteredData(teamData.allUsage, setTeamData);
+    }
+  }, [scope, teamData.allUsage, startDate, endDate]);
 
   /**
    * Display team selection UI to choose a team to fetch data for
@@ -400,7 +353,6 @@ function CopilotDashboard() {
           ]}
           activeTab={scope}
           onTabChange={() => {
-            setViewMode('live'); // TODO: Add team historic data support
             setScope(prevScope => {
               const newScope =
                 prevScope === 'organisation' ? 'team' : 'organisation';
@@ -409,7 +361,7 @@ function CopilotDashboard() {
                 setTeamSlug(null);
                 navigate('/copilot/team', { replace: true });
               } else {
-                navigate('/copilot/org/live', { replace: true });
+                navigate('/copilot/org/historic', { replace: true });
               }
               return newScope;
             });
@@ -442,11 +394,10 @@ function CopilotDashboard() {
                 </div>
               )}
               <div className="dashboard-header">
-                {viewMode === 'live' ? (
+                {scope === 'team' ? (
                   <div id="date-inputs">
                     <p className="header-text">Filter Data Range</p>
-                    {(scope === 'organisation' && isLiveLoading) ||
-                    (scope === 'team' && isTeamLoading) ? (
+                    {isTeamLoading ? (
                       <p>Loading dates...</p>
                     ) : (
                       <div
@@ -528,21 +479,6 @@ function CopilotDashboard() {
                         ))}
                       </select>
                     </div>
-                  </div>
-                )}
-                {scope === 'organisation' && (
-                  <div>
-                    <BannerTabs
-                      tabs={[
-                        { id: 'live', label: 'Live' },
-                        { id: 'historic', label: 'Historic' },
-                      ]}
-                      activeTab={viewMode}
-                      onTabChange={mode => {
-                        setViewMode(mode);
-                        navigate(`/copilot/org/${mode}`, { replace: true });
-                      }}
-                    />
                   </div>
                 )}
               </div>
@@ -663,20 +599,19 @@ function CopilotDashboard() {
                   : 'The GitHub API does not return Copilot team usage data if there are fewer than 5 members with Copilot licenses. This may result in only seat statistics being viewable on the dashboard.'}
               </p>
             </>
-          ) : viewMode === 'live' ? (
-            <LiveDashboard
-              scope={scope}
-              data={data}
-              isLiveLoading={
-                scope === 'organisation' ? isLiveLoading : isTeamLoading
-              }
-            />
-          ) : (
+          ) : scope === 'organisation' ? (
             <HistoricDashboard
               scope={scope}
               data={getGroupedData()}
               isLoading={isHistoricLoading}
               viewDatesBy={viewDatesBy}
+            />
+          ) : (
+            <HistoricDashboard
+              scope={scope}
+              data={data.processedUsage}
+              isLoading={isTeamLoading}
+              viewDatesBy={'Day'}
             />
           )}
         </div>
