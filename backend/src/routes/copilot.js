@@ -1,6 +1,6 @@
 const logger = require('../config/logger');
 const express = require('express');
-const s3Service = require('../services/s3Service'); 
+const s3Service = require('../services/s3Service');
 const { checkCopilotAdminStatus } = require('../utilities/copilotAdminChecker');
 
 const router = express.Router();
