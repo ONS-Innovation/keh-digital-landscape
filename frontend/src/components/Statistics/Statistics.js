@@ -148,26 +148,20 @@ function Statistics({
    * @returns {Array} - The sorted and filtered languages.
    */
   const sortedAndFilteredLanguages = useMemo(() => {
-    const languageStats = getCurrentLanguageStats();
-    if (!languageStats) return [];
+    const originalLanguageStats = getCurrentLanguageStats();
+    if (!originalLanguageStats) {
+      return [];
+    }
 
-    let filtered = Object.entries(languageStats).filter(([language]) => {
-      const matchesSearch = language
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
+    let filtered = Object.entries(originalLanguageStats).filter(
+      ([language]) => {
+        const matchesSearch = language
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
 
-      if (showTechRadarOnly) {
-        const status = getTechnologyStatus(mapLanguageToTechRadar(language));
-        return (
-          matchesSearch &&
-          status !== null &&
-          status !== 'review' &&
-          status !== 'ignore'
-        );
+        return matchesSearch;
       }
-
-      return matchesSearch;
-    });
+    );
 
     filtered.sort((a, b) => {
       if (sortConfig.key === 'language') {
@@ -263,6 +257,80 @@ function Statistics({
   const stats = getCurrentStats();
   const languageStats = getCurrentLanguageStats();
 
+  // Count the number of projects for each technology shown on Tech Radar
+  const countProjectsForTech = useCallback(
+    tech => {
+      if (!projectsData || !tech) return 0;
+
+      const allTechColumns = [
+        'Architectures',
+        'Language_Main',
+        'Language_Others',
+        'Language_Frameworks',
+        'Infrastructure',
+        'CICD',
+        'Cloud_Services',
+        'IAM_Services',
+        'Testing_Frameworks',
+        'Containers',
+        'Static_Analysis',
+        'Source_Control',
+        'Code_Formatter',
+        'Monitoring',
+        'Datastores',
+        'Database_Technologies',
+        'Data_Output_Formats',
+        'Integrations_ONS',
+        'Integrations_External',
+        'Project_Tools',
+        'Code_Editors',
+        'Communication',
+        'Collaboration',
+        'Incident_Management',
+        'Documentation_Tools',
+        'UI_Tools',
+        'Diagram_Tools',
+        'Miscellaneous',
+      ];
+
+      const matcher = specialTechMatchers[tech];
+      let allCount = 0;
+      let archivedCount = 0;
+      let unarchivedCount = 0;
+
+      console.log(projectsData);
+
+      for (const project of projectsData) {
+        const usesTech = allTechColumns.some(column => {
+          const value = project[column];
+
+          if (!value) return false;
+          if (matcher) {
+            return value.split(';').some(matcher);
+          }
+
+          return value
+            .split(';')
+            .some(
+              item => item.trim().toLowerCase() === tech.toLowerCase().trim()
+            );
+        });
+
+        if (usesTech) {
+          allCount += 1;
+
+          if (project['Stage'] == 'Unsupported') {
+            archivedCount += 1;
+          } else {
+            unarchivedCount += 1;
+          }
+        }
+      }
+      return [allCount, archivedCount, unarchivedCount];
+    },
+    [projectsData]
+  );
+
   return (
     <div className="statistics-content">
       <div className="statistics-header">
@@ -276,6 +344,7 @@ function Statistics({
                 disabled={isLoading}
                 aria-label="Select a date range"
               >
+                ß
                 {dateOptions.map(option => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -353,6 +422,10 @@ function Statistics({
               <div className="language-header-left">
                 <h2>Language Statistics</h2>
               </div>
+              <p className="helpful-hint-text">
+                Tracked projects are recorded on Tech Audit Tool and shown on
+                Tech Radar.
+              </p>
             </div>
             <div className="language-grid" tabIndex="0">
               <SkeletonLanguageCard />
@@ -378,7 +451,7 @@ function Statistics({
               <p>
                 {hoveredLanguage && languageStats
                   ? getRepoCountDisplay(
-                      languageStats[hoveredLanguage]?.repo_count
+                      languageStats[hoveredLanguage]?.repo_count || 0
                     )
                   : formatNumberWithCommas(stats.total || 0)}
               </p>
@@ -402,6 +475,10 @@ function Statistics({
               <div className="language-header-left">
                 <h2>Language Statistics</h2>
               </div>
+              <p className="helpful-hint-text">
+                Tracked projects are recorded on Tech Audit Tool and shown on
+                Tech Radar.
+              </p>
             </div>
 
             <div className="sort-options">
@@ -464,6 +541,17 @@ function Statistics({
                 const status = getTechnologyStatus(
                   mapLanguageToTechRadar(language)
                 );
+                const mappedName = showTechRadarOnly
+                  ? language
+                  : mapLanguageToTechRadar(language);
+                const [projectCount, archivedCount, unarchivedCount] =
+                  countProjectsForTech(mappedName);
+                const totalTrackedProjects =
+                  repoView === 'archived'
+                    ? archivedCount
+                    : repoView === 'unarchived'
+                      ? unarchivedCount
+                      : projectCount;
                 return (
                   <div
                     key={language}
@@ -478,7 +566,13 @@ function Statistics({
                         <strong>
                           {formatNumberWithCommas(stats.repo_count)}
                         </strong>{' '}
-                        repos
+                        Total Repositories
+                      </p>
+                      <p>
+                        <strong>
+                          {formatNumberWithCommas(totalTrackedProjects)}
+                        </strong>{' '}
+                        Tracked Projects
                       </p>
                       <p>
                         <strong>{stats.average_percentage.toFixed(1)}%</strong>{' '}
