@@ -8,9 +8,12 @@ The Copilot dashboard allows users to analyse GitHub Copilot usage statistics ac
 
 Switch between organisation-wide and team-specific usage data using the tabs at the top of the page.
 
-### Live and Historic Data
+### Historic Data
 
-Toggle between live usage metrics and historic trends (aggregated by day, week, month, or year).
+All Copilot usage data displayed is historic data sourced from S3:
+
+- **Organisation View**: Displays aggregated historic trends with options to view by day, week, month, or year
+- **Team View**: Displays daily usage data with customisable date range filtering
 
 ### Team Selection
 
@@ -51,9 +54,8 @@ Users must authenticate with GitHub to view and select their teams. The dashboar
 
 ### View Data:
 
-- Use the "Live" and "Historic" view mode toggles to switch between recent and historical trends.
-- Adjust the start and end date input fields to focus on specific periods.
-- If viewing "Historic", change the "View Dates By" option to aggregate historic data by day, week, month, or year.
+- **Organisation**: Change the "View Dates By" dropdown to aggregate historic data by day, week, month, or year.
+- **Team**: Adjust the start and end date input fields to focus on specific periods.
 
 ## Use Cases
 
