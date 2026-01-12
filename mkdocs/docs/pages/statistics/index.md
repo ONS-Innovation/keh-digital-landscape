@@ -32,7 +32,6 @@ The Statistics section provides detailed analytics and insights into repository 
   - Size (percentage of that language in a repository) (asc/desc)
 - Toggles:
   - Show Average Size or Total Size on each language card
-  - Show languages only on the Tech Radar (part of the Tech Radar JSON)
 
 #### How to use:
 
