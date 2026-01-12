@@ -227,6 +227,7 @@ Tests retrieving historic Copilot usage data for all teams:
 :::: testing.backend.src.test_copilot.test_teams_historic_get_with_auth
 
 These tests verify:
+
 - Authentication is required to access teams historic data
 - Invalid tokens are rejected with appropriate errors
 - Valid tokens can successfully retrieve team usage data from S3
