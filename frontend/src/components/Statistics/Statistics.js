@@ -298,8 +298,6 @@ function Statistics({
       let archivedCount = 0;
       let unarchivedCount = 0;
 
-      console.log(projectsData);
-
       for (const project of projectsData) {
         const usesTech = allTechColumns.some(column => {
           const value = project[column];
@@ -526,13 +524,6 @@ function Statistics({
                 disabled={isLoading}
               >
                 {showTotalSize ? 'Total Size' : 'Avg Size'}
-              </button>
-              <button
-                className={`${showTechRadarOnly ? 'active' : ''}`}
-                onClick={() => setShowTechRadarOnly(!showTechRadarOnly)}
-                disabled={isLoading}
-              >
-                Tech Radar Only
               </button>
             </div>
 
