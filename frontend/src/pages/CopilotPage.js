@@ -237,17 +237,10 @@ function CopilotDashboard() {
           setIsAuthenticated(true);
           setIsTeamsListLoading(true);
 
-          // Fetch both teams list and historic data in parallel with timing
-          console.log('🚀 Starting parallel fetch...');
-          const startTime = performance.now();
-
           const [teamsData] = await Promise.all([
             fetchUserTeams(),
             fetchTeamsHistoric()
           ]);
-
-          const totalTime = performance.now() - startTime;
-          console.log(`🏁 Total time: ${totalTime.toFixed(2)}ms`);
 
           if (teamsData && teamsData.teams && teamsData.teams.length >= 0) {
             setAvailableTeams(teamsData.teams);
