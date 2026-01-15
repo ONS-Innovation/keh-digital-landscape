@@ -233,7 +233,6 @@ function CopilotDashboard() {
       }
       try {
         const isAuthenticated = await checkAuthStatus();
-        console.log('isAuthenticated', isAuthenticated);
         if (isAuthenticated) {
           fetchTeamsHistoric();
           setIsAuthenticated(true);
