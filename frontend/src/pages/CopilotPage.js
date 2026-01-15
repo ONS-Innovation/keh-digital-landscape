@@ -239,7 +239,7 @@ function CopilotDashboard() {
 
           const [teamsData] = await Promise.all([
             fetchUserTeams(),
-            fetchTeamsHistoric()
+            fetchTeamsHistoric(),
           ]);
 
           if (teamsData && teamsData.teams && teamsData.teams.length >= 0) {
