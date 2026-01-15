@@ -21,29 +21,6 @@ The service relies on:
 
 ## Methods
 
-### `getCopilotOrgMetrics()`
-
-Retrieves comprehensive GitHub Copilot metrics for the organisation.
-
-**Returns:** Promise resolving to Copilot metrics object
-
-**GitHub API Response:**
-
-More information on the response structure can be found [here](https://docs.github.com/en/rest/copilot/copilot-metrics?apiVersion=2022-11-28#get-copilot-metrics-for-an-organization).
-
-**Example:**
-
-```javascript
-const githubService = require('./githubService');
-
-try {
-  const metrics = await githubService.getCopilotOrgMetrics();
-  console.log(`Total Copilot seats: ${metrics.seat_breakdown.total}`);
-} catch (error) {
-  console.error('Failed to retrieve Copilot metrics:', error);
-}
-```
-
 ### `getTeamMembers(teamSlug)`
 
 Retrieves members of a specific team.
@@ -194,29 +171,6 @@ Required environment variables:
 - `AWS_REGION` - AWS region for Secrets Manager
 
 ## Usage Examples
-
-### Retrieve Current Metrics
-
-```javascript
-const githubService = require('../services/githubService');
-
-async function getCopilotSummary() {
-  try {
-    const metrics = await githubService.getCopilotOrgMetrics();
-    const seats = await githubService.getCopilotSeats();
-
-    return {
-      totalSeats: metrics.seat_breakdown.total,
-      activeSeats: metrics.seat_breakdown.active_this_cycle,
-      seatDetails: seats.length,
-      lastUpdate: new Date().toISOString(),
-    };
-  } catch (error) {
-    console.error('Failed to get Copilot summary:', error);
-    throw error;
-  }
-}
-```
 
 ### Monitor Seat Activity
 

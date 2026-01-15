@@ -216,39 +216,22 @@ Tests authentication handling for the API:
 
 ::: testing.backend.src.test_copilot.test_auth_status_with_token
 
-#### Live Organisation Data Retrieval
+#### Teams Historic Data Tests
 
-Tests retrieving live Copilot organisation usage data:
+Tests retrieving historic Copilot usage data for all teams:
 
-::: testing.backend.src.test_copilot.test_org_live_get
+:::: testing.backend.src.test_copilot.test_teams_historic_get_no_auth
 
-This test verifies:
+:::: testing.backend.src.test_copilot.test_teams_historic_get_invalid_token
 
-- Successful retrieval of organisation-wide Copilot usage metrics
-- Response structure contains date, active users, engaged users and IDE metrics
-- All data fields have correct types
-
-#### Live Team Data Retrieval
-
-Tests retrieving live Copilot team usage data:
-
-::: testing.backend.src.test_copilot.test_team_live_get_no_auth
-
-::: testing.backend.src.test_copilot.test_team_live_get_invalid_token
-
-::: testing.backend.src.test_copilot.test_team_live_get_with_auth
-
-::: testing.backend.src.test_copilot.test_team_live_get_invalid_slug
-
-::: testing.backend.src.test_copilot.test_team_live_get_missing_slug
+:::: testing.backend.src.test_copilot.test_teams_historic_get_with_auth
 
 These tests verify:
 
-- Authentication is required for team data access
-- Invalid tokens are handled appropriately
-- Successful retrieval of team-specific usage metrics
-- Error handling for invalid team slugs
-- Validation of required parameters
+- Authentication is required to access teams historic data
+- Invalid tokens are rejected with appropriate errors
+- Valid tokens can successfully retrieve team usage data from S3
+- Response structure contains team metadata and daily usage arrays
 
 #### Historic Organisation Data Retrieval
 
@@ -259,7 +242,7 @@ Tests retrieving historic Copilot organisation usage data:
 This test verifies:
 
 - Successful retrieval of historical organisation-wide metrics
-- Response structure matches live data format
+- Response structure contains date, active users, engaged users and IDE metrics
 - All data fields have correct types
 
 #### Team Listing
