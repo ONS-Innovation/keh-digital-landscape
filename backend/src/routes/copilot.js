@@ -64,13 +64,27 @@ router.get('/teams/historic', async (req, res) => {
   try {
     // Validate token by checking copilot admin status
     // This will throw an error if the token is invalid
-    await checkCopilotAdminStatus(userToken);
+    const adminStatus = await checkCopilotAdminStatus(userToken);
 
-    // Token is valid, fetch and return the cached data (if available)
+    // Fetch the cached data (contains all teams)
     const copilotBucketName =
       process.env.COPILOT_BUCKET_NAME || 'sdp-dev-copilot-usage-dashboard';
-    const data = await getTeamsHistoricDataWithCache(copilotBucketName);
-    res.json(data);
+    const fullData = await getTeamsHistoricDataWithCache(copilotBucketName);
+
+    // Filter data based on permissions
+    let filteredData;
+    if (adminStatus.isAdmin) {
+      // Admin can see all teams
+      filteredData = fullData;
+    } else {
+      // Non-admin can only see their own teams
+      const userTeamSlugs = adminStatus.userTeamSlugs;
+      filteredData = fullData.filter(teamEntry =>
+        userTeamSlugs.includes(teamEntry.team?.slug)
+      );
+    }
+
+    res.json(filteredData);
   } catch (error) {
     logger.error('Error fetching teams historic JSON:', {
       error: error.message,
