@@ -120,6 +120,10 @@
   }
 }
 
+.singular_card {
+  padding-bottom: 3px;
+}
+
 .dark .addressbook-howto {
   background: #23272f;
   border-color: #23272f;
