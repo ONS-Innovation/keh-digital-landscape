@@ -11,33 +11,6 @@ class GitHubService {
     this.org = process.env.GITHUB_ORG || 'ONSdigital';
   }
 
-  // TODO: Remove this method once we refactor organisation usage page
-  /**
-   * Get GitHub Copilot organisation metrics
-   * @returns {Promise<Object>} Organisation metrics data
-   */
-  async getCopilotOrgMetrics() {
-    try {
-      const octokit = await getAppAndInstallation();
-
-      const response = await octokit.request(
-        `GET /orgs/${this.org}/copilot/metrics`,
-        {
-          headers: {
-            'X-GitHub-Api-Version': '2022-11-28',
-          },
-        }
-      );
-
-      return response.data;
-    } catch (error) {
-      logger.error('GitHub API error while fetching Copilot org metrics:', {
-        error: error.message,
-      });
-      throw error;
-    }
-  }
-
   /**
    * Get team members for a specific team in the organisation
    * @param {string} teamSlug - The slug of the team to fetch members for
