@@ -73,7 +73,7 @@ router.get('/teams/historic', async (req, res) => {
 
     // Filter data based on permissions
     let filteredData;
-    if (adminStatus.isAdmin) { 
+    if (adminStatus.isAdmin) {
       // Admin can see data for all teams
       filteredData = fullData;
     } else {
