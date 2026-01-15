@@ -233,7 +233,9 @@ function CopilotDashboard() {
       }
       try {
         const isAuthenticated = await checkAuthStatus();
+        console.log('isAuthenticated', isAuthenticated);
         if (isAuthenticated) {
+          fetchTeamsHistoric();
           setIsAuthenticated(true);
           setIsTeamsListLoading(true);
           const teamsData = await fetchUserTeams();
@@ -253,7 +255,6 @@ function CopilotDashboard() {
       }
     };
 
-    fetchTeamsHistoric();
     authenticateGitHubUser();
   }, []);
 

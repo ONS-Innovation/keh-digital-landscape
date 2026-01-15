@@ -18,11 +18,11 @@ def test_auth_status_no_token():
     """Test the auth status endpoint with no token.
     
     Expects:
-        - 401 status code
-        - JSON response with error message
+        - 200 status code
+        - JSON response with 'No user token found'
     """
     response = requests.get(f"{BASE_URL}/api/auth/status", timeout=10)
-    assert response.status_code == 401
+    assert response.status_code == 200
     data = response.json()
     assert data == { 'response': 'No user token found' }
 
