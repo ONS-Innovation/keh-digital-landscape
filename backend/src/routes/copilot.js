@@ -2,6 +2,9 @@ const logger = require('../config/logger');
 const express = require('express');
 const s3Service = require('../services/s3Service');
 const { checkCopilotAdminStatus } = require('../utilities/copilotAdminChecker');
+const {
+  getTeamsHistoricDataWithCache,
+} = require('../utilities/teamsHistoricCache');
 
 const router = express.Router();
 
@@ -63,11 +66,10 @@ router.get('/teams/historic', async (req, res) => {
     // This will throw an error if the token is invalid
     await checkCopilotAdminStatus(userToken);
 
-    // Token is valid, fetch and return the data
-    const data = await s3Service.getObjectViaSignedUrl(
-      'copilot',
-      'teams_history.json'
-    );
+    // Token is valid, fetch and return the cached data (if available)
+    const copilotBucketName =
+      process.env.COPILOT_BUCKET_NAME || 'sdp-dev-copilot-usage-dashboard';
+    const data = await getTeamsHistoricDataWithCache(copilotBucketName);
     res.json(data);
   } catch (error) {
     logger.error('Error fetching teams historic JSON:', {
