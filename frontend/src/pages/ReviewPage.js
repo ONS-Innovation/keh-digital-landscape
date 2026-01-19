@@ -64,7 +64,9 @@ const ReviewPage = () => {
   const [selectedDirectorate, setSelectedDirectorate] = useState(null);
   const [defaultDirectorate, setDefaultDirectorate] = useState(null);
   const [directorateColour, setDirectorateColour] = useState('var(--accent)');
-  const [directorateName, setDirectorateName] = useState('Unknown Directorate');
+  const [directorateName, setDirectorateName] = useState(
+    'Digital Services (DS)'
+  );
   const [directorates, setDirectorates] = useState([]);
 
   const [highlightedTechnologies, setHighlightedTechnologies] = useState([]);
