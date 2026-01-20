@@ -41,4 +41,4 @@ async function postToWebhook(obj) {
   return text;
 }
 
-module.exports =  postToWebhook ;
+module.exports = postToWebhook;

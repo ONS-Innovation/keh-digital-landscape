@@ -113,8 +113,14 @@ function RadarPage() {
     if (fetchedOnce.current) return;
     fetchedOnce.current = true;
     getTechRadarData()
-    .then(data => setData(data))
-    .catch(err => sendAlert('Error 🚨', err.message, 'Failed to fetch data for the radar data'));
+      .then(data => setData(data))
+      .catch(err =>
+        sendAlert(
+          'Error 🚨',
+          err.message,
+          'Failed to fetch data for the radar data'
+        )
+      );
   }, [getTechRadarData]);
 
   /**

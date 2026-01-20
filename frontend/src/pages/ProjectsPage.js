@@ -38,7 +38,11 @@ function ProjectsPage() {
         setProjectsData(csvData);
         setRadarData(techData);
       } catch (error) {
-        sendAlert('Error 🚨', error, 'Failed to fetch data for the Projects page!')
+        sendAlert(
+          'Error 🚨',
+          error,
+          'Failed to fetch data for the Projects page!'
+        );
         toast.error('Unexpected error occurred.');
       }
     };
