@@ -83,7 +83,6 @@ Some Copilot API endpoints require authentication. To test these endpoints, you 
 
 ```bash
 export TEST_GITHUBUSERTOKEN="your_github_token"
-export TEST_GITHUBTEAM="your_team_slug"  # defaults to "keh-dev" if not set
 ```
 
 3. Run the Copilot tests:

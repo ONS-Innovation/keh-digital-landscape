@@ -99,21 +99,18 @@ function HelpModal({ show, onClose }) {
         <ul className="help-modal-list">
           <li>
             Click &quot;Organisation Usage&quot; to view Copilot usage across
-            the ONS Digital organisation. You can view live and historic data.
+            the ONS Digital organisation. You can view historic data grouped by
+            day, week, month, or year.
           </li>
           <li>
             Click &quot;Team Usage&quot; to view Copilot usage for a specific
             team within ONS Digital. You must have permissions to view this
-            team. You can view only live data.
+            team. You can filter the data by date range.
           </li>
         </ul>
         <ul className="help-modal-list">
           <li>
-            On the live page you can slide the slider to change the start and
-            end date of the data.
-          </li>
-          <li>
-            On the historic page you can view dates by certain time ranges.
+            On the Organisation page you can view dates by certain time ranges.
             These are:
             <ul className="help-modal-list">
               <li>By day</li>
@@ -121,8 +118,6 @@ function HelpModal({ show, onClose }) {
               <li>By month</li>
               <li>By year</li>
             </ul>
-            The data only backdates for up to 100 days prior due to GitHub API
-            limits.
           </li>
         </ul>
         <span>
@@ -490,7 +485,6 @@ function HelpModal({ show, onClose }) {
             </div>
           ),
         };
-      case '/copilot/org/live':
       case '/copilot/org/historic':
         return {
           title: 'Copilot Dashboard',

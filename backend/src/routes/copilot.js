@@ -1,8 +1,10 @@
 const logger = require('../config/logger');
 const express = require('express');
 const s3Service = require('../services/s3Service');
-const githubService = require('../services/githubService');
 const { checkCopilotAdminStatus } = require('../utilities/copilotAdminChecker');
+const {
+  getTeamsHistoricDataWithCache,
+} = require('../utilities/teamsHistoricCache');
 
 const router = express.Router();
 
@@ -22,23 +24,6 @@ router.get('/auth/status', (req, res) => {
     });
   } catch (error) {
     logger.error('Error fetching auth status:', { error: error.message });
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// TODO: Remove this endpoint once we refactor organisation usage page
-/**
- * Endpoint for fetching Copilot organisation usage data from the Github API.
- * @route GET /copilot/api/org/live
- * @returns {Object} Organisation usage JSON data
- * @throws {Error} 500 - If fetching fails
- */
-router.get('/org/live', async (req, res) => {
-  try {
-    const data = await githubService.getCopilotOrgMetrics();
-    res.json(data);
-  } catch (error) {
-    logger.error('GitHub API error:', { error: error.message });
     res.status(500).json({ error: error.message });
   }
 });
@@ -66,15 +51,40 @@ router.get('/org/historic', async (req, res) => {
  * Endpoint for fetching all teams' historic usage data from S3.
  * @route GET /copilot/api/teams/historic
  * @returns {Object} All teams historic usage JSON data
- * @throws {Error} 500 - If fetching fails
+ * @throws {Error} 401 - If user token is missing
+ * @throws {Error} 500 - If token validation or fetching fails
  */
 router.get('/teams/historic', async (req, res) => {
+  const userToken = req.cookies?.githubUserToken;
+
+  if (!userToken) {
+    return res.status(401).json({ response: 'No user token found' });
+  }
+
   try {
-    const data = await s3Service.getObjectViaSignedUrl(
-      'copilot',
-      'teams_history.json'
-    );
-    res.json(data);
+    // Validate token by checking copilot admin status
+    // This will throw an error if the token is invalid
+    const adminStatus = await checkCopilotAdminStatus(userToken);
+
+    // Fetch the cached data (contains all teams)
+    const copilotBucketName =
+      process.env.COPILOT_BUCKET_NAME || 'sdp-dev-copilot-usage-dashboard';
+    const fullData = await getTeamsHistoricDataWithCache(copilotBucketName);
+
+    // Filter data based on permissions
+    let filteredData;
+    if (adminStatus.isAdmin) {
+      // Admin can see data for all teams
+      filteredData = fullData;
+    } else {
+      // Non-admin can only see data for their own teams
+      const userTeamSlugs = adminStatus.userTeamSlugs;
+      filteredData = fullData.filter(teamEntry =>
+        userTeamSlugs.includes(teamEntry.team?.slug)
+      );
+    }
+
+    res.json(filteredData);
   } catch (error) {
     logger.error('Error fetching teams historic JSON:', {
       error: error.message,

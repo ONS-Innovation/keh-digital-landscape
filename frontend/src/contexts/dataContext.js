@@ -6,10 +6,7 @@ import {
   fetchRepositoryStats,
 } from '../utilities/getRepositoryData';
 import { fetchBanners } from '../utilities/getBanner';
-import {
-  fetchOrgLiveUsageData,
-  fetchOrgHistoricUsageData,
-} from '../utilities/getUsageData';
+import { fetchOrgHistoricUsageData } from '../utilities/getUsageData';
 import { fetchUserInfo } from '../utilities/getUser';
 /**
  * DataContext provides centralized data management and caching for the application.
@@ -31,7 +28,6 @@ export function DataProvider({ children }) {
   const [repositoryData, setRepositoryData] = useState(new Map());
   const [repositoryStats, setRepositoryStats] = useState(new Map());
   const [pageBanners, setPageBanners] = useState(new Map());
-  const [liveUsageData, setLiveUsageData] = useState(null);
   const [historicUsageData, setHistoricUsageData] = useState(null);
   const [userData, setUserData] = useState(null);
 
@@ -41,7 +37,6 @@ export function DataProvider({ children }) {
     repository: new Map(),
     repositoryStats: new Map(),
     banners: new Map(),
-    liveUsageData: null,
     historicUsageData: null,
     userData: null,
   });
@@ -205,32 +200,6 @@ export function DataProvider({ children }) {
   };
 
   /**
-   * Fetches and caches live usage data for the organisation.
-   *
-   *
-   * @param {boolean} [forceRefresh=false] - Whether to force a refresh of the cached data
-   * @returns {Promise<Object>} The live usage data
-   */
-  const getLiveUsageData = async (forceRefresh = false) => {
-    if (!forceRefresh && liveUsageData) {
-      return liveUsageData;
-    }
-
-    if (pendingRequests.current.usageData) {
-      return pendingRequests.current.usageData;
-    }
-
-    const promise = fetchOrgLiveUsageData().then(data => {
-      setLiveUsageData(data);
-      pendingRequests.current.usageData = null;
-      return data;
-    });
-
-    pendingRequests.current.usageData = promise;
-    return promise;
-  };
-
-  /**
    * Fetches and caches historic usage data for the organisation.
    *
    * @param {boolean} [forceRefresh=false] - Whether to force a refresh of the cached data
@@ -286,7 +255,6 @@ export function DataProvider({ children }) {
     setRepositoryData(new Map());
     setRepositoryStats(new Map());
     setPageBanners(new Map());
-    setLiveUsageData(null);
     setHistoricUsageData(null);
     setUserData(null);
     pendingRequests.current = {
@@ -295,7 +263,6 @@ export function DataProvider({ children }) {
       repository: new Map(),
       repositoryStats: new Map(),
       banners: new Map(),
-      liveUsageData: null,
       historicUsageData: null,
       userData: null,
     };
@@ -313,7 +280,6 @@ export function DataProvider({ children }) {
         getRepositoryStats,
         getPageBanners,
         clearCache,
-        getLiveUsageData,
         getHistoricUsageData,
         getUserData,
       }}
