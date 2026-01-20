@@ -342,3 +342,64 @@ The project documentation is located in the `mkdocs/docs` directory. To build an
 pip install -r mkdocs_requirements.txt
 mkdocs serve
 ```
+
+## Alerts (Azure Webhook)
+
+The application supports sending alerts from the frontend to the backend, which then authenticates to Azure and forwards the alert payload to an Azure webhook.
+
+### Backend endpoint
+
+**POST** `/postalerts/api/postalert`
+
+- **Content-Type:** `application/json`
+- **Body:** JSON object. The backend forwards this object to the Azure webhook as JSON.
+
+Example request:
+
+```bash
+curl -X POST http://localhost:5001/postalerts/api/postalert \
+  -H "Content-Type: application/json" \
+  -d '{"channel":"<channel-id>","message":"Radar page failed to load"}'
+```
+
+### Backend configuration (environment variables)
+
+The backend needs Azure credentials and the webhook target.
+
+The required variables:
+
+- `AZURE_TENANT_ID`
+- `AZURE_CLIENT_ID`
+- `AZURE_CLIENT_SECRET`
+- `WEBHOOK_SCOPE`
+- `WEBHOOK_URL` (the URL of the Azure webhook endpoint)
+
+Set these in `backend/.env` (see `backend/.env.example`). **Security reminder to not commit secrets.**
+
+### Frontend usage
+
+Frontend pages call the alert endpoint using the helper:
+
+`frontend/src/components/Alerts/Alerts.js`
+
+Example:
+
+```js
+import sendAlert from '../components/Alerts/Alerts';
+
+// ...
+try {
+  // ...
+} catch (err) {
+  await sendAlert(
+    'Error 🚨',
+    err?.message || String(err),
+    'Failed to fetch data for the Radar page'
+  );
+}
+```
+
+Frontend environment variables:
+
+- `VITE_BACKEND_URL` (local: `http://localhost:5001`)
+- `VITE_ALERTS_CHANNEL_ID` (channel identifier used by the webhook)
