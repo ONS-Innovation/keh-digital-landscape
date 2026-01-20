@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header/Header';
 import Projects from '../components/Projects/Projects';
@@ -7,6 +7,8 @@ import { useData } from '../contexts/dataContext';
 import toast from 'react-hot-toast';
 import { useTechnologyStatus } from '../utilities/getTechnologyStatus';
 import { BannerContainer } from '../components/Banner';
+import sendAlert from '../components/Alerts/Alerts';
+
 /**
  * ProjectsPage component for displaying the projects page.
  *
@@ -23,7 +25,10 @@ function ProjectsPage() {
   const { getCsvData, getTechRadarData } = useData();
   const getTechnologyStatus = useTechnologyStatus();
 
+  const fetchedOnce = useRef(false);
   useEffect(() => {
+    if (fetchedOnce.current) return;
+    fetchedOnce.current = true;
     const fetchData = async () => {
       try {
         const [csvData, techData] = await Promise.all([
@@ -33,6 +38,7 @@ function ProjectsPage() {
         setProjectsData(csvData);
         setRadarData(techData);
       } catch (error) {
+        sendAlert('Error 🚨', error, 'Failed to fetch data for the Projects page!')
         toast.error('Unexpected error occurred.');
       }
     };
