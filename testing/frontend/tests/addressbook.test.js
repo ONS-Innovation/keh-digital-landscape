@@ -106,7 +106,7 @@ test('Active input container is highlighted', async ({ page }) => {
 
   // Verify focus and CSS change
   await expect(inputContainer).toBeFocused();
-  await expect(inputContainer).toHaveCSS('border-color', 'rgb(37, 99, 235)');
+  await expect(inputContainer).toHaveCSS('border-color', 'rgb(29, 78, 216)');
 });
 
 // Click search, with empty input, gives 'No results.'
