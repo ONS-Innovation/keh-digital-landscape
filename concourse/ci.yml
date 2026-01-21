@@ -61,7 +61,6 @@ terraform-task: &terraform-task
       args:
         - -cx
         - |
-          exit 1
           echo "DEBUG: Environment is ${env}"
           echo "DEBUG: Tag is ${tag}"
           export tag=$(cat github-release-tag/tag)
@@ -79,11 +78,12 @@ terraform-task: &terraform-task
     timeout: 30m
 
 notify-azure-webhook-task: &notify-azure-webhook-task
-  params:
-    secrets: ((sdp_azure_webhook_secrets))
-    branch: ((branch))
   config:
     platform: linux
+    params:
+      secrets: ((sdp_azure_webhook_secrets))
+      branch: ((branch))
+      env: ((env))
     image_resource:
       type: registry-image
       source:
@@ -94,10 +94,10 @@ notify-azure-webhook-task: &notify-azure-webhook-task
       args:
         - -euc
         - |
-          # if [ "$branch" != "main" ]; then
-          #   echo "Branch is '${branch}', skipping webhook notification."
-          #   exit 0
-          # fi
+          if [ "$branch" != "main" ]; then
+            echo "Branch is '${branch}', skipping webhook notification."
+            exit 0
+          fi
           apk add --no-cache curl jq
 
           AZURE_CLIENT_ID=$(echo "$secrets" | jq -r .azure_client_id)
@@ -122,14 +122,12 @@ notify-azure-webhook-task: &notify-azure-webhook-task
             exit 1
           fi
 
-          msg="status: Concourse failure<br>service: Digital Landscape<br> event: Pipeline failure  <br> description: Pipeline failure."
+          msg="status:🚨 Concourse failure<br>service: Digital Landscape<br> event: Pipeline failure in the ${env} environment."
 
           payload="$(cat <<JSON
           {"channel":"${CHANNEL_ID}","message":"${msg}"}
           JSON
           )"
-
-          echo $payload
 
           curl -sS -X POST "$AZURE_WEBHOOK_URL" \
             -H "Authorization: Bearer ${access_token}" \
@@ -254,6 +252,8 @@ jobs:
           do:
             - task: notify-azure-webhook
               <<: *notify-azure-webhook-task
+              params:
+                env: dev
 
   - name: release-build-and-push-prod
     public: true
@@ -311,4 +311,6 @@ jobs:
           do:
             - task: notify-azure-webhook
               <<: *notify-azure-webhook-task
+              params:
+                env: prod
             
