@@ -1,3 +1,17 @@
+:root {
+  --dark-mode: #23272f;
+}
+
+html.dark {
+  --dark-mode: #23272f;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --dark-mode: #23272f;
+  }
+}
+
 .addressbook-howto {
   background: #f8fbff;
   border: 1px solid #dfe7f3;
@@ -121,19 +135,19 @@
 }
 
 .dark .addressbook-howto {
-  background: #23272f;
-  border-color: #23272f;
+  background: var(--dark-mode);
+  border-color: var(--dark-mode);
   color: #e6eaf3;
 }
 
 .dark .addressbook-howto__example {
-  background: #23272f;
-  border-color: #23272f;
+  background: var(--dark-mode);
+  border-color: var(--dark-mode);
   color: #c7d0e0;
 }
 
 .dark .addressbook-search__input {
-  background: #23272f;
+  background: var(--dark-mode);
   color: #e6eaf3;
   border-color: #33405a;
 }
@@ -145,7 +159,7 @@
 
 .dark .addressbook-search__button {
   background: #e6eaf3;
-  color: #23272f;
+  color: var(--dark-mode);
 }
 
 .dark .addressbook-search__button:hover {
