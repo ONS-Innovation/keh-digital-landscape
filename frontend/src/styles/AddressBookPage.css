@@ -119,3 +119,39 @@
     border-radius: 10px;
   }
 }
+
+.singular-card {
+  padding-bottom: 3px;
+}
+
+.dark .addressbook-howto {
+  background: #23272f;
+  border-color: #23272f;
+  color: #e6eaf3;
+}
+
+.dark .addressbook-howto__example {
+  background: #23272f;
+  border-color: #23272f;
+  color: #c7d0e0;
+}
+
+.dark .addressbook-search__input {
+  background: #23272f;
+  color: #e6eaf3;
+  border-color: #33405a;
+}
+
+.dark .addressbook-search__input:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
+}
+
+.dark .addressbook-search__button {
+  background: #e6eaf3;
+  color: #23272f;
+}
+
+.dark .addressbook-search__button:hover {
+  background: #bfc8db;
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../styles/components/ShortUserCard.css';
+import '../../styles/components/UserCard.css';
 
 const UserCard = ({ username, email, githubUrl, fullName, avatarUrl }) => {
   const displayName = fullName || username || '';
