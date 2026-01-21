@@ -220,11 +220,11 @@ Tests authentication handling for the API:
 
 Tests retrieving historic Copilot usage data for all teams:
 
-:::: testing.backend.src.test_copilot.test_teams_historic_get_no_auth
+::: testing.backend.src.test_copilot.test_teams_historic_get_no_auth
 
-:::: testing.backend.src.test_copilot.test_teams_historic_get_invalid_token
+::: testing.backend.src.test_copilot.test_teams_historic_get_invalid_token
 
-:::: testing.backend.src.test_copilot.test_teams_historic_get_with_auth
+::: testing.backend.src.test_copilot.test_teams_historic_get_with_auth
 
 These tests verify:
 
