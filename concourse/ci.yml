@@ -125,9 +125,11 @@ notify-azure-webhook-task: &notify-azure-webhook-task
           msg="status: Concourse failure<br>service: Digital Landscape<br> event: Pipeline failure  <br> description: Pipeline failure."
 
           payload="$(cat <<JSON
-          {"channelId":"${CHANNEL_ID}","message":"${msg}"}
+          {"channel":"${CHANNEL_ID}","message":"${msg}"}
           JSON
           )"
+
+          echo $payload
 
           curl -sS -X POST "$AZURE_WEBHOOK_URL" \
             -H "Authorization: Bearer ${access_token}" \
