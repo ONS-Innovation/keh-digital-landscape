@@ -61,6 +61,7 @@ terraform-task: &terraform-task
       args:
         - -cx
         - |
+          exit 1
           echo "DEBUG: Environment is ${env}"
           echo "DEBUG: Tag is ${tag}"
           export tag=$(cat github-release-tag/tag)
