@@ -342,4 +342,3 @@ The project documentation is located in the `mkdocs/docs` directory. To build an
 pip install -r mkdocs_requirements.txt
 mkdocs serve
 ```
-
