@@ -26,7 +26,19 @@ jobs:
             cd mkdocs
             pip install -r mkdocs_requirements.txt
       - name: Verify MkDocs Build
+        id: build
         run: |
-          PYTHONPATH=. mkdocs build -f mkdocs/mkdocs.yml
-            
-      - run: echo "MkDocs build completed successfully."
+          output=$(PYTHONPATH=. mkdocs build -f mkdocs/mkdocs.yml)
+          echo "$output"
+          status=$(echo "$output" | grep 'Documentation built in')
+          echo "status=$status" >> $GITHUB_OUTPUT
+      - name: Check Build Status
+        run: |
+          if [ -z "${{ steps.build.outputs.status }}" ]; then
+            echo "MkDocs build failed."
+            exit 1
+          else
+            echo "MkDocs build succeeded."
+            echo "${{ steps.build.outputs.status }}"
+          fi
+          
