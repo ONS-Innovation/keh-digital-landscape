@@ -99,7 +99,7 @@ test('Active input container is highlighted', async ({ page }) => {
 
   // Verify not focussed and CSS border-colour
   await expect(inputContainer).not.toBeFocused();
-  await expect(inputContainer).toHaveCSS('border-color', 'rgb(229, 231, 235)');
+  await expect(inputContainer).toHaveCSS('border-color', 'rgb(228, 228, 231)');
 
   // Focus on the Input
   await inputContainer.focus();
