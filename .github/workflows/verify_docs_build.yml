@@ -1,0 +1,31 @@
+# A GitHub Actions workflow to verify MkDocs documentation builds successfully on pull requests.
+---
+name: Verify MkDocs Build
+on:
+  pull_request:
+    branches:
+      - master
+      - main
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - name: Set up cache
+        run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
+      - uses: actions/cache@v4
+        with:
+          key: mkdocs-material-${{ env.cache_id }}
+      - run: |
+            cd mkdocs
+            pip install -r mkdocs_requirements.txt
+      - name: Verify MkDocs Build
+        run: |
+          PYTHONPATH=. mkdocs build -f mkdocs/mkdocs.yml
+            
+      - run: echo "MkDocs build completed successfully."
