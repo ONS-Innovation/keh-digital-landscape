@@ -2,6 +2,9 @@ const logger = require('../config/logger');
 const express = require('express');
 const s3Service = require('../services/s3Service');
 const { checkCopilotAdminStatus } = require('../utilities/copilotAdminChecker');
+const {
+  getTeamsHistoricDataWithCache,
+} = require('../utilities/teamsHistoricCache');
 
 const router = express.Router();
 
@@ -61,14 +64,27 @@ router.get('/teams/historic', async (req, res) => {
   try {
     // Validate token by checking copilot admin status
     // This will throw an error if the token is invalid
-    await checkCopilotAdminStatus(userToken);
+    const adminStatus = await checkCopilotAdminStatus(userToken);
 
-    // Token is valid, fetch and return the data
-    const data = await s3Service.getObjectViaSignedUrl(
-      'copilot',
-      'teams_history.json'
-    );
-    res.json(data);
+    // Fetch the cached data (contains all teams)
+    const copilotBucketName =
+      process.env.COPILOT_BUCKET_NAME || 'sdp-dev-copilot-usage-dashboard';
+    const fullData = await getTeamsHistoricDataWithCache(copilotBucketName);
+
+    // Filter data based on permissions
+    let filteredData;
+    if (adminStatus.isAdmin) {
+      // Admin can see data for all teams
+      filteredData = fullData;
+    } else {
+      // Non-admin can only see data for their own teams
+      const userTeamSlugs = adminStatus.userTeamSlugs;
+      filteredData = fullData.filter(teamEntry =>
+        userTeamSlugs.includes(teamEntry.team?.slug)
+      );
+    }
+
+    res.json(filteredData);
   } catch (error) {
     logger.error('Error fetching teams historic JSON:', {
       error: error.message,
