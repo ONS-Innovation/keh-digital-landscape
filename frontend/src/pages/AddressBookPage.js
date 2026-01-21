@@ -109,7 +109,7 @@ const AddressBookPage = () => {
             <div aria-label="No result text">No results.</div>
           )}
           {users.map((userInfo, index) => (
-            <div className="singular_card" key={index}>
+            <div className="singular-card" key={index}>
               <UserCard
                 key={index}
                 username={userInfo.username}
