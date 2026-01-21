@@ -56,6 +56,10 @@ resource "aws_ecs_task_definition" "ecs_service_definition" {
           value = var.support_mail
         },
         {
+          name  = "VITE_ALERTS_CHANNEL_ID",
+          value = var.alerts_channel_id
+        },
+        {
           name  = "IMAGE_TAG",
           value = data.aws_ecr_image.frontend_image.image_tag
         },

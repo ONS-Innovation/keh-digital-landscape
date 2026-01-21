@@ -208,6 +208,11 @@ variable "support_mail" {
   type        = string
 }
 
+variable "alerts_channel_id" {
+  description = "AZURE Webhook Alerts Channel ID"
+  type        = string
+}
+
 locals {
   url         = "${var.domain}.${var.domain_extension}"
   service_url = "${var.service_subdomain}.${local.url}"
