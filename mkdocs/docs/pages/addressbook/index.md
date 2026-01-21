@@ -6,8 +6,8 @@ The Address Book page allows users to resolve employee information from GitHub u
 
 ### Inputs
 
-- Accepts GitHub usernames and ONS email addresses.
-- Case-insensitive matching; inputs are trimmed.
+- Accepts GitHub usernames and ONS email addresses
+- Case-insensitive matching; inputs are trimmed
 
 ### Returned Data
 
