@@ -66,9 +66,9 @@ INFO    -  Documentation built in 2.62 seconds
 
 ### GitHub Action Build Testing
 
-A GitHub Action is available in `.github/workflows/verify_docs_build.yml`.
+A GitHub Action is available in `.github/workflows/ci_mkdocs.yml`.
 
-This action will run on pull request to the `main` branch and simply follows the above process to catch build errors.
+This action will run on pull request to the `main` branch and simply follows the above process to catch build errors (it also handles automated linting - see below).
 
 ## Deploying to GitHub Pages
 
