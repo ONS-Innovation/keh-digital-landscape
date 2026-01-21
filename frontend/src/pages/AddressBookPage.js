@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Header from '../components/Header/Header';
 import PageBanner from '../components/PageBanner/PageBanner';
-import ShortUserCard from '../components/AddressBook/UserCard';
+import UserCard from '../components/AddressBook/UserCard';
 import '../styles/components/PageBanner.css';
 import '../styles/AddressBookPage.css';
 
@@ -109,15 +109,17 @@ const AddressBookPage = () => {
             <div aria-label="No result text">No results.</div>
           )}
           {users.map((userInfo, index) => (
-            <ShortUserCard
-              key={index}
-              username={userInfo.username}
-              email={userInfo.email}
-              avatarUrl={userInfo.avatarUrl}
-              githubUrl={userInfo.url}
-              fullName={userInfo.fullname}
-              aria-label={`User Card ${index + 1}`}
-            />
+            <div className="singular-card" key={index}>
+              <UserCard
+                key={index}
+                username={userInfo.username}
+                email={userInfo.email}
+                avatarUrl={userInfo.avatarUrl}
+                githubUrl={userInfo.url}
+                fullName={userInfo.fullname}
+                aria-label={`User Card ${index + 1}`}
+              />
+            </div>
           ))}
         </div>
       </div>

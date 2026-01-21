@@ -1,4 +1,4 @@
-name: (MkDocs) - Linting and Formatting
+name: MkDocs CI
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
       - 'mkdocs/**'
 
 jobs:
-  lint:
+  lint-docs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -28,3 +28,26 @@ jobs:
 
       - name: Run Linting
         run: cd mkdocs && make lint
+
+  verify-docs-build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - name: Set up cache
+        run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
+      - uses: actions/cache@v4
+        with:
+          key: mkdocs-material-${{ env.cache_id }}
+          path: .cache
+      - run: |
+            cd mkdocs
+            pip install -r mkdocs_requirements.txt
+      - name: Verify MkDocs Build
+        id: build
+        run: |
+          PYTHONPATH=. mkdocs build -f mkdocs/mkdocs.yml
