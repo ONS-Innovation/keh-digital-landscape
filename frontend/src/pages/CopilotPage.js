@@ -164,9 +164,9 @@ function CopilotDashboard() {
       if (teamParam) {
         setTeamSlug(teamParam);
         setIsSelectingTeam(false);
-        // Fetch team data if we have a team slug from URL and teams data is loaded
-        if (teamsHistoricData) {
-          fetchTeamData(teamParam);
+        // Set loading state if we don't have teams historic data yet
+        if (!teamsHistoricData) {
+          setIsTeamLoading(true);
         }
       } else {
         setIsSelectingTeam(true);
@@ -238,7 +238,12 @@ function CopilotDashboard() {
           fetchTeamsHistoric();
           setIsAuthenticated(true);
           setIsTeamsListLoading(true);
-          const teamsData = await fetchUserTeams();
+
+          const [teamsData] = await Promise.all([
+            fetchUserTeams(),
+            fetchTeamsHistoric(),
+          ]);
+
           if (teamsData && teamsData.teams && teamsData.teams.length >= 0) {
             setAvailableTeams(teamsData.teams);
             setIsCopilotAdmin(teamsData.isAdmin);
@@ -284,6 +289,15 @@ function CopilotDashboard() {
     };
     fetchHistoricData();
   }, [hasFetchedHistoric]);
+
+  /**
+   * Extract team data when we have both a team slug and historic data available
+   */
+  useEffect(() => {
+    if (teamSlug && teamsHistoricData && scope === 'team' && !isSelectingTeam) {
+      fetchTeamData(teamSlug);
+    }
+  }, [teamSlug, teamsHistoricData, scope, isSelectingTeam]);
 
   /**
    * Filter and then process team usage data based on start and end date

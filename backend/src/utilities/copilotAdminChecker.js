@@ -1,50 +1,17 @@
 const s3Service = require('../services/s3Service');
 const githubService = require('../services/githubService');
 const logger = require('../config/logger');
-
-let teamsCache = null;
-let teamsCacheTimestamp = null;
-const TEAMS_CACHE_TTL = 1 * 60 * 1000; // 1 hour
+const { getTeamsHistoricDataWithCache } = require('./teamsHistoricCache');
 
 /**
- * Get Copilot teams list from S3
+ * Get Copilot team slugs extracted from cached historic data
  * @param {string} bucketName - The S3 bucket name
- * @returns {Promise<Array>} Array of team slugs
- */
-async function getCopilotTeamSlugsFromS3(bucketName) {
-  const teamsHistory = await s3Service.getObject(
-    bucketName,
-    'teams_history.json'
-  );
-  return teamsHistory.map(entry => entry.team);
-}
-
-/**
- * Get Copilot teams from S3 with caching
- * @param {string} bucketName - The S3 bucket name
- * @returns {Promise<Array>} Array of team objects
+ * @returns {Promise<Array>} Array of team metadata objects
  */
 async function getCopilotTeamsWithCache(bucketName) {
-  const now = Date.now();
-
-  if (teamsCache && teamsCacheTimestamp) {
-    if (now - teamsCacheTimestamp < TEAMS_CACHE_TTL) {
-      logger.info(
-        `Returning team slugs from cache, cache is now ${now - teamsCacheTimestamp}ms old`
-      );
-      return teamsCache;
-    } else {
-      logger.info('Cache expired, fetching team slugs from S3');
-      teamsCache = await getCopilotTeamSlugsFromS3(bucketName);
-      teamsCacheTimestamp = now;
-      return teamsCache;
-    }
-  } else {
-    logger.info('No cache found, fetching team slugs from S3');
-    teamsCache = await getCopilotTeamSlugsFromS3(bucketName);
-    teamsCacheTimestamp = now;
-    return teamsCache;
-  }
+  const teamsHistoricData = await getTeamsHistoricDataWithCache(bucketName);
+  // Extract just the team metadata (name, slug, url, description)
+  return teamsHistoricData.map(entry => entry.team);
 }
 
 /**
