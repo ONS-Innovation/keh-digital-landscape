@@ -44,7 +44,7 @@ Technology management - manage new technologies and the autocomplete list to ens
 **Copilot
 Page**
 
-Displays both live and historical statistics on Copilot usage within ONS.
+Displays historical statistics on Copilot usage within ONS.
 
 - Statistics can be viewed organisation-wide or for a specific team.
 - On Team Usage view, it is possible to search for teams using the "Search teams" input within the header.
