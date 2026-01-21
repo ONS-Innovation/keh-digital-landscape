@@ -1,24 +1,11 @@
-:root {
-  --dark-mode: #23272f;
-}
-
-html.dark {
-  --dark-mode: #23272f;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --dark-mode: #23272f;
-  }
-}
 
 .addressbook-howto {
-  background: #f8fbff;
-  border: 1px solid #dfe7f3;
+  background: hsl(var(--background));
+  border: 1px solid hsl(var(--border));
   border-radius: 8px;
   padding: 16px 20px;
   margin: 16px;
-  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+  box-shadow: 0 1px 2px hsl(var(--card-foreground));
 }
 
 .addressbook-howto__title {
@@ -37,11 +24,8 @@ html.dark {
 }
 
 .addressbook-howto__example {
-  font-family:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
-    'Courier New', monospace;
-  background: #eef4ff;
-  border: 1px solid #d6e2ff;
+  background: hsl(var(--secondary));
+  border: 1px solid hsl(var(--border));
   border-radius: 4px;
   padding: 1px 6px;
   margin-left: 4px;
@@ -69,11 +53,10 @@ html.dark {
   flex: 1 1 auto;
   height: 44px;
   padding: 0 14px;
-  border: 1px solid #e5e7eb;
+  border: 2px solid hsl(var(--input));
   border-radius: 12px;
-  background: #ffffff;
-  color: #111827;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
   outline: none;
   transition:
     box-shadow 120ms ease,
@@ -81,12 +64,12 @@ html.dark {
 }
 
 .addressbook-search__input::placeholder {
-  color: #9ca3af;
+  color: hsl(var(--muted-foreground));
 }
 
 .addressbook-search__input:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  border-color: var(--color-assess);
+  box-shadow: 0 0 0 1px var(--color-assess);
 }
 
 .addressbook-search__button {
@@ -95,12 +78,11 @@ html.dark {
   padding: 0 16px;
   border: none;
   border-radius: 12px;
-  background: #000000;
-  color: #ffffff;
+  background: hsl(var(--foreground));
+  color: hsl(var(--background));
   font-weight: 600;
   letter-spacing: 0.01em;
   cursor: pointer;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
   transition:
     background-color 120ms ease,
     box-shadow 120ms ease,
@@ -108,18 +90,12 @@ html.dark {
 }
 
 .addressbook-search__button:hover {
-  background: #3b3b3b;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  background: var(--color-review);
+  box-shadow: 0 6px 16px hsl(var(--background));
 }
 
 .addressbook-search__button:active {
   transform: translateY(0.5px);
-}
-
-.addressbook-search__button:disabled {
-  background: #93c5fd;
-  cursor: not-allowed;
-  box-shadow: none;
 }
 
 @media (max-width: 520px) {
@@ -134,34 +110,6 @@ html.dark {
   }
 }
 
-.dark .addressbook-howto {
-  background: var(--dark-mode);
-  border-color: var(--dark-mode);
-  color: #e6eaf3;
-}
-
-.dark .addressbook-howto__example {
-  background: var(--dark-mode);
-  border-color: var(--dark-mode);
-  color: #c7d0e0;
-}
-
-.dark .addressbook-search__input {
-  background: var(--dark-mode);
-  color: #e6eaf3;
-  border-color: #33405a;
-}
-
-.dark .addressbook-search__input:focus {
-  border-color: #60a5fa;
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
-}
-
-.dark .addressbook-search__button {
-  background: #e6eaf3;
-  color: var(--dark-mode);
-}
-
-.dark .addressbook-search__button:hover {
-  background: #bfc8db;
+.singular-card {
+  padding-bottom: 3px;
 }
