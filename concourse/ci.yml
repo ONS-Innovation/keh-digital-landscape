@@ -80,15 +80,15 @@ terraform-task: &terraform-task
 
 notify-azure-webhook-task: &notify-azure-webhook-task
   params:
-    secrets: ((sdp_((env))_azure_webhook_secrets))
+    secrets: ((sdp_azure_webhook_secrets))
     branch: ((branch))
   config:
     platform: linux
     image_resource:
       type: registry-image
       source:
-        repository: curlimages/curl
-        tag: "8.6.0"
+        repository: alpine
+        tag: latest
     run:
       path: sh
       args:
@@ -98,7 +98,8 @@ notify-azure-webhook-task: &notify-azure-webhook-task
           #   echo "Branch is '${branch}', skipping webhook notification."
           #   exit 0
           # fi
-          apk add --no-cache jq
+          apk add --no-cache curl jq
+
           AZURE_CLIENT_ID=$(echo "$secrets" | jq -r .azure_client_id)
           AZURE_CLIENT_SECRET=$(echo "$secrets" | jq -r .azure_client_secret)
           AZURE_SCOPE=$(echo "$secrets" | jq -r .azure_scope)
