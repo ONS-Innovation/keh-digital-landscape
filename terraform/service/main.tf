@@ -268,7 +268,7 @@ resource "aws_cloudwatch_metric_alarm" "ALB_5xx_alarm" {
   alarm_description         = "This metric monitors the number of ALB_5xx errors for Digital Landscape"
   insufficient_data_actions = []
   treat_missing_data        = "ignore"
-  dimensions                = {LoadBalancer = "sdp-dev-service-lb"}
+  dimensions                = { LoadBalancer = "sdp-dev-service-lb" }
 }
 
 
