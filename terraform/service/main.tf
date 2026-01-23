@@ -270,3 +270,22 @@ resource "aws_cloudwatch_metric_alarm" "ALB_5xx_alarm" {
   treat_missing_data        = "ignore"
   dimensions                = {LoadBalancer = "sdp-dev-service-lb"}
 }
+
+
+# Cloudwatch alarm that sounds when we have >0 health checks fail
+resource "aws_cloudwatch_metric_alarm" "ecs_unhealthy_alarm" {
+  alarm_name          = "Digital_Landscape_unhealthy_alarm"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 1
+  metric_name         = "UnhealthyTaskCount"
+  namespace           = "AWS/ECS"
+  period              = 60
+  statistic           = "Sum"
+  threshold           = 0
+  alarm_description   = "Alarm when ECS service has unhealthy tasks"
+  dimensions = {
+    ClusterName = "service-cluster"
+    ServiceName = "digital-landscape-service"
+  }
+  treat_missing_data = "notBreaching"
+}
