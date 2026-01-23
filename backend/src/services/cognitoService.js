@@ -76,6 +76,7 @@ const verifyTokensAndExtractUser = async req => {
 
   // Extract groups and return user data
   const groups = extractGroups(access_payload['cognito:groups']);
+  logger.info('Successfully fetched Cognito authentication data', { service: 'AWS Cognito' });
   return createUserObject(data_payload.email, groups);
 };
 
