@@ -29,7 +29,9 @@ class AddressBookService {
       const emailToUsernameData = this.normaliseMap(emailToUsernameRaw);
       const usernameToEmailData = this.normaliseMap(usernameToEmailRaw);
       const usernameToIDData = this.normaliseMap(usernameToIdRaw);
-      logger.info('Successfully fetched address book data', {'service': 'AWS S3 Bucket'});
+      logger.info('Successfully fetched address book data', {
+        service: 'AWS S3 Bucket',
+      });
       return { emailToUsernameData, usernameToEmailData, usernameToIDData };
     } catch (error) {
       logger.error('Error fetching address book data', {

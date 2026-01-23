@@ -39,7 +39,9 @@ class S3Service {
       });
 
       const { Body } = await this.s3Client.send(command);
-      logger.info(`Successfully fetched ${bucket}/${key} object`, {'service': 'AWS S3 Bucket'});
+      logger.info(`Successfully fetched ${bucket}/${key} object`, {
+        service: 'AWS S3 Bucket',
+      });
       const data = await Body.transformToString();
       return JSON.parse(data);
     } catch (error) {
@@ -68,7 +70,9 @@ class S3Service {
       });
 
       await this.s3Client.send(command);
-      logger.info(`Successfully put object to S3: ${bucket}/${key}`, {'service': 'AWS S3 Bucket'});
+      logger.info(`Successfully put object to S3: ${bucket}/${key}`, {
+        service: 'AWS S3 Bucket',
+      });
     } catch (error) {
       logger.error(`Error putting object to S3: ${bucket}/${key}`, {
         error: error.message,
@@ -102,7 +106,10 @@ class S3Service {
       }
 
       const jsonData = await response.json();
-      logger.info(`Successfully fetched ${bucket}/${key} object via signed URL`, {'service': 'AWS S3 Bucket'});
+      logger.info(
+        `Successfully fetched ${bucket}/${key} object via signed URL`,
+        { service: 'AWS S3 Bucket' }
+      );
       return jsonData;
     } catch (error) {
       logger.error(

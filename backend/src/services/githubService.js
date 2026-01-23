@@ -45,7 +45,9 @@ class GitHubService {
           per_page: 100,
         }
       );
-      logger.info('Successfully fetched GitHub team members', {'service': 'GitHub API'});
+      logger.info('Successfully fetched GitHub team members', {
+        service: 'GitHub API',
+      });
 
       // Only return login, name, and url for each member
       return response.data || [];
@@ -74,7 +76,9 @@ class GitHubService {
         },
         per_page: 100,
       });
-      logger.info('Successfully fetched GitHub teams', {'service': 'GitHub API'});
+      logger.info('Successfully fetched GitHub teams', {
+        service: 'GitHub API',
+      });
 
       // Only return slug, name, description, and url for each team
       return (response.data || []).map(team => ({
@@ -109,7 +113,9 @@ class GitHubService {
           per_page: 100,
         }
       );
-      logger.info('Successfully fetched GitHub team members as admin',  {'service': 'GitHub API'});
+      logger.info('Successfully fetched GitHub team members as admin', {
+        service: 'GitHub API',
+      });
 
       return response.data || [];
     } catch (error) {
