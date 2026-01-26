@@ -294,13 +294,9 @@ resource "aws_cloudwatch_metric_alarm" "Backend_health_check_alarm" {
   evaluation_periods  = 1
   metric_name         = "BackendHealthCheckFailureCount"
   namespace           = "ECS/ContainerInsights"
-  period              = 60
+  period              = 120
   statistic           = "Sum"
   threshold           = 0
   alarm_description   = "Alarm when ECS service has unhealthy tasks"
-  dimensions = {
-    ClusterName = "service-cluster"
-    ServiceName = "digital-landscape-service"
-  }
   treat_missing_data = "breaching"
 }
