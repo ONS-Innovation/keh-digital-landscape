@@ -272,13 +272,28 @@ resource "aws_cloudwatch_metric_alarm" "Application-ELB_5xx_alarm" {
 }
 
 
-# Cloudwatch alarm that sounds when we have >0 health checks fail
-resource "aws_cloudwatch_metric_alarm" "ecs_unhealthy_alarm" {
-  alarm_name          = "Digital_Landscape_unhealthy_alarm"
+# Cloudwatch metric filter which checks if the backend health check endpoint is called, if so return 0, else add 1 to current failure count
+resource "aws_cloudwatch_log_metric_filter" "Backend_health_check_filter" {
+  name           = "Digital_Landscape_backend_health_check_filter"
+  pattern        = "Health check endpoint called"
+  log_group_name = aws_cloudwatch_log_group.backend_logs.name
+
+  metric_transformation {
+    name            = "BackendHealthCheckFailureCount"
+    namespace       = "ECS/ContainerInsights"
+    value           = "0"
+    default_value   = "1"
+  }
+}
+
+
+# Cloudwatch alarm that sounds when we have >0 health checks fail, or if there is no data every minute it sounds
+resource "aws_cloudwatch_metric_alarm" "Backend_health_check_alarm" {
+  alarm_name          = "Digital_Landscape_backend_health_alarm"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
-  metric_name         = "UnhealthyTaskCount"
-  namespace           = "AWS/ECS"
+  metric_name         = "BackendHealthCheckFailureCount"
+  namespace           = "ECS/ContainerInsights"
   period              = 60
   statistic           = "Sum"
   threshold           = 0
@@ -287,5 +302,5 @@ resource "aws_cloudwatch_metric_alarm" "ecs_unhealthy_alarm" {
     ClusterName = "service-cluster"
     ServiceName = "digital-landscape-service"
   }
-  treat_missing_data = "notBreaching"
+  treat_missing_data = "breaching"
 }
