@@ -110,7 +110,7 @@ function MenuDropdown({ setShowHelpModal }) {
             </button>
             <button
               onClick={() => handleNavClick('/copilot')}
-              className={location.pathname === '/copilot' ? 'active' : ''}
+              className={location.pathname.includes('/copilot') ? 'active' : ''}
             >
               <VscCopilot size={16} />
               GitHub Copilot
