@@ -113,13 +113,13 @@ class GitHubService {
           per_page: 100,
         }
       );
-      logger.info('Successfully fetched GitHub team members as admin', {
+      logger.info('Successfully fetched GitHub team members', {
         service: 'GitHub API',
       });
 
       return response.data || [];
     } catch (error) {
-      logger.error('GitHub API error while fetching team members as admin:', {
+      logger.error('GitHub API error while fetching team members:', {
         error: error.message,
       });
       throw error;
