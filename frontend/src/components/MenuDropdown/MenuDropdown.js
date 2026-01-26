@@ -15,6 +15,7 @@ import {
 import { VscCopilot } from 'react-icons/vsc';
 import { IoMenu } from 'react-icons/io5';
 import { MdOutlineRadar } from 'react-icons/md';
+import { FaRegAddressBook } from 'react-icons/fa';
 
 /**
  * MenuDropdown component for displaying a dropdown menu with navigation links.
@@ -109,10 +110,17 @@ function MenuDropdown({ setShowHelpModal }) {
             </button>
             <button
               onClick={() => handleNavClick('/copilot')}
-              className={location.pathname === '/copilot' ? 'active' : ''}
+              className={location.pathname.includes('/copilot') ? 'active' : ''}
             >
               <VscCopilot size={16} />
               GitHub Copilot
+            </button>
+            <button
+              onClick={() => handleNavClick('/addressbook')}
+              className={location.pathname === '/addressbook' ? 'active' : ''}
+            >
+              <FaRegAddressBook size={16} />
+              Address Book
             </button>
           </div>
 
