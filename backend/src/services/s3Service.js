@@ -39,6 +39,7 @@ class S3Service {
       });
 
       const { Body } = await this.s3Client.send(command);
+      logger.info(`Successfully fetched ${bucket}/${key} object`);
       const data = await Body.transformToString();
       return JSON.parse(data);
     } catch (error) {
@@ -101,6 +102,9 @@ class S3Service {
       }
 
       const jsonData = await response.json();
+      logger.info(
+        `Successfully fetched ${bucket}/${key} object via signed URL`
+      );
       return jsonData;
     } catch (error) {
       logger.error(

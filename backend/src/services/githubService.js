@@ -45,6 +45,7 @@ class GitHubService {
           per_page: 100,
         }
       );
+      logger.info('Successfully fetched GitHub team members');
 
       // Only return login, name, and url for each member
       return response.data || [];
@@ -73,6 +74,7 @@ class GitHubService {
         },
         per_page: 100,
       });
+      logger.info('Successfully fetched GitHub teams');
 
       // Only return slug, name, description, and url for each team
       return (response.data || []).map(team => ({
@@ -107,10 +109,11 @@ class GitHubService {
           per_page: 100,
         }
       );
+      logger.info('Successfully fetched GitHub team members');
 
       return response.data || [];
     } catch (error) {
-      logger.error('GitHub API error while fetching team members as admin:', {
+      logger.error('GitHub API error while fetching team members:', {
         error: error.message,
       });
       throw error;
