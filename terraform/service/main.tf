@@ -268,7 +268,7 @@ resource "aws_cloudwatch_metric_alarm" "Application-ELB_5xx_alarm" {
   alarm_description         = "Alarm when Application ELB produces 5xx Errors"
   insufficient_data_actions = []
   treat_missing_data        = "notBreaching"
-  dimensions                = { LoadBalancer = "sdp-dev-service-lb" }
+  dimensions                = { LoadBalancer = "${var.domain}-service-lb" }
 }
 
 
