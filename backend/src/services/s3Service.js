@@ -103,7 +103,8 @@ class S3Service {
 
       const jsonData = await response.json();
       logger.info(
-        `Successfully fetched ${bucket}/${key} object via signed URL`);
+        `Successfully fetched ${bucket}/${key} object via signed URL`
+      );
       return jsonData;
     } catch (error) {
       logger.error(
