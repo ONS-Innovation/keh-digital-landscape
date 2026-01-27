@@ -279,10 +279,10 @@ resource "aws_cloudwatch_log_metric_filter" "Backend_health_check_filter" {
   log_group_name = aws_cloudwatch_log_group.backend_logs.name
 
   metric_transformation {
-    name            = "BackendHealthCheckFailureCount"
-    namespace       = "ECS/ContainerInsights"
-    value           = "0"
-    default_value   = "1"
+    name          = "BackendHealthCheckFailureCount"
+    namespace     = "ECS/ContainerInsights"
+    value         = "0"
+    default_value = "1"
   }
 }
 
@@ -298,5 +298,5 @@ resource "aws_cloudwatch_metric_alarm" "Backend_health_check_alarm" {
   statistic           = "Sum"
   threshold           = 0
   alarm_description   = "Alarm when ECS service has unhealthy tasks"
-  treat_missing_data = "breaching"
+  treat_missing_data  = "breaching"
 }
