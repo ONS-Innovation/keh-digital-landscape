@@ -37,7 +37,11 @@ async function postToWebhook(obj) {
     body: JSON.stringify(obj),
   });
   const text = await resp.text();
-  if (!resp.ok) throw new Error(text || 'Error has occurred during sending an alert message! Please investigate the alert service.');
+  if (!resp.ok)
+    throw new Error(
+      text ||
+        'Error has occurred during sending an alert message! Please investigate the alert service.'
+    );
   return text;
 }
 
