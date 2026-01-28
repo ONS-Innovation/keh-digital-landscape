@@ -113,7 +113,7 @@ function RadarPage() {
     if (fetchedOnce.current) return;
     fetchedOnce.current = true;
     getTechRadarData()
-      .then(data => setData(datarrr))
+      .then(data => setData(data))
       .catch(err =>
         sendAlert(
           'Error on the Radar Page',
