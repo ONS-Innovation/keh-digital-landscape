@@ -4,9 +4,9 @@ metadata:
   name: keh-digital-landscape
   description: "An internally developed Digital Landscape platform that presents the organisation’s repositories, projects, technology stack and GitHub Copilot usage."
   annotations:
-    github.com/project-slug: ONS-Innovation/keh-digital-landscape
+    github.com/project-slug: ONSDigital/keh-digital-landscape
   links:
-    - url: https://ons-innovation.github.io/keh-digital-landscape
+    - url: https://onsdigital.github.io/keh-digital-landscape
       title: Digital Landscape Documentation  
 spec:
   type: website

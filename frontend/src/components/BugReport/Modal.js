@@ -7,7 +7,7 @@ const Modal = ({ isOpen, onClose }) => {
 
   const handleCreateIssue = () => {
     window.open(
-      'https://github.com/ONS-Innovation/keh-digital-landscape/issues/new?labels=bug&template=bug_report.md',
+      'https://github.com/ONSDigital/keh-digital-landscape/issues/new?labels=bug&template=bug_report.md',
       '_blank'
     );
   };
