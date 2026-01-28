@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../styles/App.css';
 import Header from '../components/Header/Header';
@@ -19,6 +19,7 @@ import {
   getDirectorateColour,
   getDirectorateName,
 } from '../utilities/directorateUtils';
+import sendAlert from '../components/Alerts/Alerts';
 
 /**
  * RadarPage component for displaying the radar page.
@@ -26,6 +27,8 @@ import {
  * @returns {JSX.Element} - The RadarPage component.
  */
 function RadarPage() {
+  const fetchedOnce = useRef(false);
+  const projectsFetchedOnce = useRef(false);
   const [data, setData] = useState(null);
   const [selectedBlip, setSelectedBlip] = useState(null);
   const [lockedBlip, setLockedBlip] = useState(null);
@@ -107,16 +110,36 @@ function RadarPage() {
    * useEffect hook to fetch the tech radar data from S3.
    */
   useEffect(() => {
-    getTechRadarData().then(data => setData(data));
+    if (fetchedOnce.current) return;
+    fetchedOnce.current = true;
+    getTechRadarData()
+      .then(data => setData(data))
+      .catch(err =>
+        sendAlert(
+          'Error on the Radar Page',
+          err,
+          'Failed to fetch data for the radar data'
+        )
+      );
   }, [getTechRadarData]);
 
   /**
    * useEffect hook to fetch the projects data from S3.
    */
   useEffect(() => {
+    if (projectsFetchedOnce.current) return;
+    projectsFetchedOnce.current = true;
     const fetchData = async () => {
-      const data = await getCsvData();
-      setProjectsData(data);
+      try {
+        const data = await getCsvData();
+        setProjectsData(data);
+      } catch (err) {
+        sendAlert(
+          'Error 🚨',
+          err.message,
+          'Failed to fetch data for the projects data in the Radar page.'
+        );
+      }
     };
 
     fetchData();
