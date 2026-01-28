@@ -39,7 +39,7 @@ function ProjectsPage() {
         setRadarData(techData);
       } catch (error) {
         sendAlert(
-          'Error 🚨',
+          'Error on the Projects Page',
           error,
           'Failed to fetch data for the Projects page!'
         );

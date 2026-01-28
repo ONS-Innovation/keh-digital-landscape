@@ -1,11 +1,11 @@
 const sendAlert = async (statusInfo, errorInfo, moreInfo) => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
-  const baseUrl = `${backendUrl}/postalerts/api/postalert`;
+  const baseUrl = `${backendUrl}/alerts/api/alert`;
   const payload = {
     channel: import.meta.env.VITE_ALERTS_CHANNEL_ID,
     message: `
+        <b>🚨 Digital Landscape Error 🚨</b><br>    
         status: ${statusInfo}, <br>
-        service: Digital Landscape,<br>
         event: ${errorInfo}, <br>
         description: ${moreInfo} <br>
         `,

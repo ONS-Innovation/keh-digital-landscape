@@ -349,7 +349,7 @@ The application supports sending alerts from the frontend to the backend, which 
 
 ### Backend endpoint
 
-**POST** `/postalerts/api/postalert`
+**POST** `/alerts/api/alert`
 
 - **Content-Type:** `application/json`
 - **Body:** JSON object. The backend forwards this object to the Azure webhook as JSON.
@@ -357,7 +357,7 @@ The application supports sending alerts from the frontend to the backend, which 
 Example request:
 
 ```bash
-curl -X POST http://localhost:5001/postalerts/api/postalert \
+curl -X POST http://localhost:5001/alerts/api/alert \
   -H "Content-Type: application/json" \
   -d '{"channel":"<channel-id>","message":"Radar page failed to load"}'
 ```

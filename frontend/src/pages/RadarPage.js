@@ -113,11 +113,11 @@ function RadarPage() {
     if (fetchedOnce.current) return;
     fetchedOnce.current = true;
     getTechRadarData()
-      .then(data => setData(data))
+      .then(data => setData(datarrr))
       .catch(err =>
         sendAlert(
-          'Error 🚨',
-          err.message,
+          'Error on the Radar Page',
+          err,
           'Failed to fetch data for the radar data'
         )
       );

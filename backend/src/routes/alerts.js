@@ -4,11 +4,11 @@ const postToWebhookJson = require('../services/alertService');
 
 /**
  * Endpoint for fetching token and posting alert.
- * @route GET /api/postalert
+ * @route POST /api/alert
  * @returns {String} Status code after sending alert to webhook
  * @throws {Error} 500 - If token fails or webhook posting fails
  */
-router.post('/postalert', async (req, res) => {
+router.post('/alert', async (req, res) => {
   try {
     if (!req.body || typeof req.body !== 'object') {
       return res.status(400).send('Invalid payload: expected JSON object');
