@@ -44,7 +44,7 @@ const Changelog = () => {
   const fetchReleases = async pageNum => {
     try {
       const response = await fetch(
-        `https://api.github.com/repos/ONS-Innovation/keh-digital-landscape/releases?per_page=3&page=${pageNum}`
+        `https://api.github.com/repos/ONSDigital/keh-digital-landscape/releases?per_page=3&page=${pageNum}`
       );
       if (!response.ok) {
         throw new Error('Failed to fetch releases');
@@ -107,7 +107,7 @@ const Changelog = () => {
         you have any features or changes you would like to see, please let us
         know by adding to the{' '}
         <a
-          href="https://github.com/ONS-Innovation/keh-digital-landscape/discussions"
+          href="https://github.com/ONSDigital/keh-digital-landscape/discussions"
           target="_blank"
           rel="noopener noreferrer"
         >

@@ -115,7 +115,7 @@ variable "log_retention_days" {
 variable "github_org" {
   description = "Github Organisation"
   type        = string
-  default     = "ONS-Innovation"
+  default     = "ONSDigital"
 }
 
 variable "project_tag" {
