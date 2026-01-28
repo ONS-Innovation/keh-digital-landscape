@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
+
+:root {
+  --md-text-font: 'Geist';
+  --md-code-font: 'Geist';
+}
+
+/* Remove header shadow and add border instead */
+.md-header {
+  box-shadow: none;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.md-search__form {
+  border-radius: 12px !important;
+}
+
+/* Style the main content area differently from sidebars */
+.md-main {
+  background-color: var(--md-default-bg-color);
+}
+
+.md-main__inner {
+  display: flex;
+}
+
+/* Target the main content area */
+.md-content {
+  background-color: white; /* Light mode background */
+}
+
+/* Handle dark mode */
+[data-md-color-scheme='slate'] .md-content {
+  background-color: #1e1e1e; /* Dark mode background */
+}
+
+/* Optional: Add some padding and rounded corners to the content container */
+.md-content__inner {
+  padding: 1.2rem;
+  margin-top: 1rem;
+  border-radius: 6px;
+}
+
+/* Optional: Add a subtle border to the content area for better definition */
+.md-content {
+  border-radius: 6px;
+}
+
+.md-copyright {
+  color: #333;
+}
+
+.md-footer-meta.md-typeset a {
+  color: #333 !important;
+}
+
+.md-social__link svg {
+  fill: #333;
+}
+
+/* Custom footer styling */
+.md-footer {
+  background-color: #f5f5f5;
+  color: #333;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* Footer in dark mode */
+[data-md-color-scheme='slate'] .md-footer {
+  background-color: #1a1a1a;
+  color: #f5f5f5;
+  border-top: 1px solid #333;
+}
+
+[data-md-color-scheme='slate'] .md-copyright {
+  color: white;
+}
+
+[data-md-color-scheme='slate'] .md-footer-meta.md-typeset a {
+  color: white !important;
+}
+
+[data-md-color-scheme='slate'] .md-social__link svg {
+  fill: white;
+}
+
+/* Style the social icons */
+.md-footer-social {
+  padding: 1rem 0;
+}
+
+.md-footer-social__link {
+  margin: 0 0.5rem;
+}
+
+/* Make social links bigger and change their color */
+.md-footer-social__link svg {
+  height: 1.6rem;
+  width: 1.6rem;
+  color: #555;
+}
+
+[data-md-color-scheme='slate'] .md-footer-social__link svg {
+  color: #aaa;
+}
+
+/* Style the footer navigation and copyright section */
+.md-footer-nav,
+.md-footer-meta {
+  background-color: inherit;
+}
+
+.md-footer-copyright {
+  color: #666;
+}
+
+[data-md-color-scheme='slate'] .md-footer-copyright {
+  color: #999;
+}
+
+[data-md-color-scheme='slate'] .md-header__button.md-logo {
+  background-color: #fff;
+  border-radius: 4px;
+}
