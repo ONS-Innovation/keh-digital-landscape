@@ -108,7 +108,7 @@
 
 .sort-options {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 16px;
   margin-bottom: 2px;
 }
@@ -209,7 +209,7 @@
   border: 1px solid hsl(var(--border));
   box-shadow: 0 4px 0 hsl(var(--border));
   transition: all 0.2s ease;
-  max-height: 100px;
+  max-height: 120px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -450,4 +450,9 @@
   background: hsl(var(--accent));
   color: hsl(var(--accent-foreground));
   border-color: transparent;
+}
+
+.helpful-hint-text {
+  color: gray;
+  opacity: 80%;
 }
